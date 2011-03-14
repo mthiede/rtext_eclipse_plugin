@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            name="Rtext Editor"
+            icon="icons/sample.gif"
+            contributorClass="org.eclipse.ui.texteditor.BasicTextEditorActionContributor"
+            class="rtext.editors.Editor"
+            id="rtext.editors.XMLEditor">
+      </editor>
+   </extension>
+
+</plugin>
