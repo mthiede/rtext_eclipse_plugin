@@ -1,4 +1,4 @@
-package rtext.editors;
+package rtext.editor;
 
 import java.util.HashMap;
 import java.util.Iterator;

@@ -6,6 +6,8 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
+import rtext.backend.ConnectorManager;
+
 /**
  * The activator class controls the plug-in life cycle
  */
@@ -33,6 +35,7 @@ public class RTextPlugin extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
+		ConnectorManager.start();
 	}
 
 	/*
@@ -40,6 +43,7 @@ public class RTextPlugin extends AbstractUIPlugin {
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
 	 */
 	public void stop(BundleContext context) throws Exception {
+		ConnectorManager.stop();
 		plugin = null;
 		super.stop(context);
 	}

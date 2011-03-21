@@ -1,14 +1,19 @@
-package rtext.editors;
+package rtext.editor;
 
+import java.util.StringTokenizer;
 import java.util.Vector;
 
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.CompletionProposal;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
+
+import rtext.backend.Command;
+import rtext.backend.Connector;
 
 public class ContentAssistProcessor implements IContentAssistProcessor {
 
@@ -18,16 +23,46 @@ public class ContentAssistProcessor implements IContentAssistProcessor {
 		keywords.add("mouse");
 		keywords.add("monster");
 	}
-	@Override
-	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer,
-			int offset) {
+	
+	private Editor editor;
+	
+	public ContentAssistProcessor(Editor editor) {
+		this.editor = editor;
+	}
+	
+	private String getCompletionContext(ITextViewer viewer, int offset) {
+		IDocument doc = viewer.getDocument();
+		try {
+			int line = doc.getLineOfOffset(offset);
+			int startLine = line >= 10 ? line - 10 : 0;
+			int startOffset = doc.getLineOffset(startLine);
+			return viewer.getDocument().get(startOffset, offset-startOffset);
+		} catch (BadLocationException e) {
+			return "";
+		}		
+	}
+	
+	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer,	int offset) {
 		
 		Vector<CompletionProposal> proposals = new Vector<CompletionProposal>();
 		String wordStart = wordStart(viewer, offset);
 		int wordStartOffset = offset-wordStart.length();
-		for (String k : keywords) {
-			if (k.startsWith(wordStart)) {
-				proposals.add(new CompletionProposal(k, wordStartOffset, wordStart.length(), k.length()));
+		
+		Connector bc = editor.getBackendConnector();
+		if (bc != null) {
+			StringTokenizer st = bc.executeCommand(
+				new Command("complete", getCompletionContext(viewer, offset)), 1000, null);
+			if (st != null) {
+				while (st.hasMoreTokens()) {
+					String line = st.nextToken();
+					StringTokenizer st2 = new StringTokenizer(line, ";");
+					if (st2.hasMoreTokens()) {
+						String option = st2.nextToken();
+						if (option.startsWith(wordStart)) {
+							proposals.add(new CompletionProposal(option, wordStartOffset, wordStart.length(), option.length()));
+						}
+					}
+				}
 			}
 		}
 

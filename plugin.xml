@@ -8,7 +8,7 @@
             name="Rtext Editor"
             icon="icons/sample.gif"
             contributorClass="org.eclipse.ui.texteditor.BasicTextEditorActionContributor"
-            class="rtext.editors.Editor"
+            class="rtext.editor.Editor"
             id="rtext.editors.XMLEditor">
       </editor>
    </extension>

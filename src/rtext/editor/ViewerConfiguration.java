@@ -1,5 +1,6 @@
-package rtext.editors;
+package rtext.editor;
 
+import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
@@ -13,8 +14,10 @@ import org.eclipse.jface.text.source.SourceViewerConfiguration;
 public class ViewerConfiguration extends SourceViewerConfiguration {
 	private SyntaxScanner scanner;
 	private ColorManager colorManager;
+	private Editor editor;
 
-	public ViewerConfiguration(ColorManager colorManager) {
+	public ViewerConfiguration(Editor editor, ColorManager colorManager) {
+		this.editor = editor;
 		this.colorManager = colorManager;
 	}
 	public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {
@@ -41,9 +44,8 @@ public class ViewerConfiguration extends SourceViewerConfiguration {
 	public IContentAssistant getContentAssistant(ISourceViewer sourceViewer)
 	{
 	    ContentAssistant assistant = new ContentAssistant();
-
 	    IContentAssistProcessor tagContentAssistProcessor 
-	        = new ContentAssistProcessor();
+	        = new ContentAssistProcessor(editor);
 	    assistant.setContentAssistProcessor(tagContentAssistProcessor,
 	    		IDocument.DEFAULT_CONTENT_TYPE);
 	    assistant.enableAutoActivation(true);
@@ -52,5 +54,11 @@ public class ViewerConfiguration extends SourceViewerConfiguration {
 	    assistant.setContextInformationPopupOrientation(IContentAssistant.CONTEXT_INFO_BELOW);
 	    return assistant;
 	}
-
+	@Override
+	public IAutoEditStrategy[] getAutoEditStrategies(
+			ISourceViewer sourceViewer, String contentType) {
+		// TODO Auto-generated method stub
+		return super.getAutoEditStrategies(sourceViewer, contentType);
+	}
+	
 }
