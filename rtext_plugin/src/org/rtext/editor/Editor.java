@@ -1,4 +1,4 @@
-package rtext.editor;
+package org.rtext.editor;
 
 import java.util.ResourceBundle;
 
@@ -13,10 +13,10 @@ import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 import org.eclipse.ui.texteditor.TextOperationAction;
+import org.rtext.RTextPlugin;
+import org.rtext.backend.Connector;
+import org.rtext.backend.ConnectorManager;
 
-import rtext.RTextPlugin;
-import rtext.backend.Connector;
-import rtext.backend.ConnectorManager;
 
 public class Editor extends TextEditor {
 
@@ -30,9 +30,9 @@ public class Editor extends TextEditor {
 	
 	public void createPartControl(Composite parent) {
 		IContextService cs = (IContextService)getSite().getService(IContextService.class);
-		cs.activateContext("rtext.EditorContext");
+		cs.activateContext("org.rtext.EditorContext");
 		IHandlerService hs = (IHandlerService)getSite().getService(IHandlerService.class);
-		hs.activateHandler("rtext.OpenElementCommand", new OpenElementHandler(this));
+		hs.activateHandler("org.rtext.OpenElementCommand", new OpenElementHandler(this));
 		super.createPartControl(parent);
 	}
 

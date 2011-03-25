@@ -1,4 +1,4 @@
-package rtext.editor;
+package org.rtext.editor;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,10 +25,10 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.SelectionStatusDialog;
+import org.rtext.backend.Command;
+import org.rtext.backend.Connector;
+import org.rtext.backend.IResponseListener;
 
-import rtext.backend.Command;
-import rtext.backend.Connector;
-import rtext.backend.IResponseListener;
 
 public class OpenElementDialog extends SelectionStatusDialog implements IResponseListener {
 	private Text pattern;

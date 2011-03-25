@@ -1,12 +1,12 @@
-package rtext;
+package org.rtext;
 
 import java.util.ResourceBundle;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
+import org.rtext.backend.ConnectorManager;
 
-import rtext.backend.ConnectorManager;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -25,7 +25,7 @@ public class RTextPlugin extends AbstractUIPlugin {
 	 * The constructor
 	 */
 	public RTextPlugin() {
-		resourceBundle = ResourceBundle.getBundle("rtext.RTextPluginResources");
+		resourceBundle = ResourceBundle.getBundle("org.rtext.RTextPluginResources");
 	}
 
 	/*

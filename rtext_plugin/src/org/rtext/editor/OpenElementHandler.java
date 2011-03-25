@@ -1,10 +1,10 @@
-package rtext.editor;
+package org.rtext.editor;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.rtext.editor.OpenElementDialog.ElementDescriptor;
 
-import rtext.editor.OpenElementDialog.ElementDescriptor;
 
 public class OpenElementHandler extends AbstractHandler {
 	Editor editor;

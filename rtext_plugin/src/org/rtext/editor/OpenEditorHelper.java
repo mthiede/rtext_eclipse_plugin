@@ -1,4 +1,4 @@
-package rtext.editor;
+package org.rtext.editor;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,7 +20,7 @@ public class OpenEditorHelper {
 		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(path);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put(IMarker.LINE_NUMBER, new Integer(line));
-		map.put(IDE.EDITOR_ID_ATTR,	"rtext.Editor");
+		map.put(IDE.EDITOR_ID_ATTR,	"org.rtext.Editor");
 		IMarker marker = null;
 		try {
 			marker = file.createMarker(IMarker.TEXT);

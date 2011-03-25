@@ -1,4 +1,4 @@
-package rtext.editor;
+package org.rtext.editor;
 
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.hyperlink.IHyperlink;

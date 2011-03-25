@@ -1,4 +1,4 @@
-package rtext.backend;
+package org.rtext.backend;
 
 public class Command {
 	private String name;

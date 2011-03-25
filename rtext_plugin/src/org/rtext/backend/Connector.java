@@ -1,4 +1,4 @@
-package rtext.backend;
+package org.rtext.backend;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;

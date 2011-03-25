@@ -1,4 +1,4 @@
-package rtext.editor;
+package org.rtext.editor;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,11 +11,11 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.ui.texteditor.MarkerUtilities;
+import org.rtext.backend.Command;
+import org.rtext.backend.Connector;
+import org.rtext.backend.ConnectorManager;
+import org.rtext.backend.IResponseListener;
 
-import rtext.backend.Command;
-import rtext.backend.Connector;
-import rtext.backend.ConnectorManager;
-import rtext.backend.IResponseListener;
 
 public class ProblemUpdater implements IResponseListener {
 	private IPath path;

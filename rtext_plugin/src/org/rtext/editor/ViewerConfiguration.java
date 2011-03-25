@@ -1,4 +1,4 @@
-package rtext.editor;
+package org.rtext.editor;
 
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.IDocument;

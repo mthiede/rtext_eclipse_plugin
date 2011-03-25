@@ -1,4 +1,4 @@
-package rtext.editor;
+package org.rtext.editor;
 
 import java.util.List;
 import java.util.StringTokenizer;
@@ -11,8 +11,8 @@ import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
+import org.rtext.backend.Command;
 
-import rtext.backend.Command;
 
 public class HyperlinkDetector implements IHyperlinkDetector {
 	private Editor editor;

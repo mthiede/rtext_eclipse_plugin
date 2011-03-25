@@ -1,4 +1,4 @@
-package rtext.editor;
+package org.rtext.editor;
 
 import java.util.StringTokenizer;
 import java.util.Vector;
@@ -11,9 +11,9 @@ import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
+import org.rtext.backend.Command;
+import org.rtext.backend.Connector;
 
-import rtext.backend.Command;
-import rtext.backend.Connector;
 
 public class ContentAssistProcessor implements IContentAssistProcessor {
 
