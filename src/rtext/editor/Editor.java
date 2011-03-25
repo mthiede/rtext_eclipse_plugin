@@ -5,9 +5,12 @@ import java.util.ResourceBundle;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.text.source.ISourceViewer;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPathEditorInput;
+import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.editors.text.TextEditor;
+import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 import org.eclipse.ui.texteditor.TextOperationAction;
 
@@ -25,6 +28,15 @@ public class Editor extends TextEditor {
 		setSourceViewerConfiguration(new ViewerConfiguration(this, colorManager));
 	}
 	
+	public void createPartControl(Composite parent) {
+		IContextService cs = (IContextService)getSite().getService(IContextService.class);
+		cs.activateContext("rtext.EditorContext");
+		IHandlerService hs = (IHandlerService)getSite().getService(IHandlerService.class);
+		hs.activateHandler("rtext.OpenElementCommand", new OpenElementHandler(this));
+		super.createPartControl(parent);
+	}
+
+
 	public void dispose() {
 		colorManager.dispose();
 		super.dispose();
@@ -39,7 +51,7 @@ public class Editor extends TextEditor {
 	        ISourceViewer.CONTENTASSIST_PROPOSALS);
 
 	    a.setActionDefinitionId(ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS);
-	    setAction("ContentAssistProposal", a);		
+	    setAction("ContentAssistProposal", a);
 	}
 	
 	protected void editorSaved() {

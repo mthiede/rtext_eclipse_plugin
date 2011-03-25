@@ -51,7 +51,7 @@ public class ContentAssistProcessor implements IContentAssistProcessor {
 		Connector bc = editor.getBackendConnector();
 		if (bc != null) {
 			StringTokenizer st = bc.executeCommand(
-				new Command("complete", getCompletionContext(viewer, offset)), 1000, null);
+				new Command("complete", getCompletionContext(viewer, offset)), 1000);
 			if (st != null) {
 				while (st.hasMoreTokens()) {
 					String line = st.nextToken();

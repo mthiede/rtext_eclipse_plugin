@@ -5,12 +5,41 @@
    <extension
          point="org.eclipse.ui.editors">
       <editor
-            name="Rtext Editor"
-            icon="icons/sample.gif"
-            contributorClass="org.eclipse.ui.texteditor.BasicTextEditorActionContributor"
             class="rtext.editor.Editor"
-            id="rtext.editors.XMLEditor">
+            contributorClass="org.eclipse.ui.texteditor.BasicTextEditorActionContributor"
+            icon="icons/sample.gif"
+            id="rtext.Editor"
+            name="RText Editor">
       </editor>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            categoryId="rtext.Category"
+            id="rtext.OpenElementCommand"
+            name="RText Open Element">
+      </command>
+      <category
+            id="rtext.Category"
+            name="RText">
+      </category>
+   </extension>
+   <extension
+         point="org.eclipse.ui.bindings">
+      <key
+            commandId="rtext.OpenElementCommand"
+            contextId="rtext.EditorContext"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+M2+T">
+      </key>
+   </extension>
+   <extension
+         point="org.eclipse.ui.contexts">
+      <context
+            id="rtext.EditorContext"
+            name="RText Editor"
+            parentId="org.eclipse.ui.contexts.window">
+      </context>
    </extension>
 
 </plugin>

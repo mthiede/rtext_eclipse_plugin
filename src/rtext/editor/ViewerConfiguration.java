@@ -5,6 +5,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
+import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.text.presentation.IPresentationReconciler;
 import org.eclipse.jface.text.presentation.PresentationReconciler;
 import org.eclipse.jface.text.rules.DefaultDamagerRepairer;
@@ -54,11 +55,15 @@ public class ViewerConfiguration extends SourceViewerConfiguration {
 	    assistant.setContextInformationPopupOrientation(IContentAssistant.CONTEXT_INFO_BELOW);
 	    return assistant;
 	}
-	@Override
+
 	public IAutoEditStrategy[] getAutoEditStrategies(
 			ISourceViewer sourceViewer, String contentType) {
 		// TODO Auto-generated method stub
 		return super.getAutoEditStrategies(sourceViewer, contentType);
+	}
+	
+	public IHyperlinkDetector[] getHyperlinkDetectors(ISourceViewer sourceViewer) {
+		return new IHyperlinkDetector[] { new HyperlinkDetector(editor) };
 	}
 	
 }

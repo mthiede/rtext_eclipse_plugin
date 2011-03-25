@@ -29,7 +29,7 @@ public class ProblemUpdater implements IResponseListener {
 		Connector bc = ConnectorManager.getConnector(path);
 		if (bc != null) {
 			bc.executeCommand(
-				new Command("show_problems", path.toString()), 1, this);
+				new Command("show_problems", path.toString()), this, 60000);
 		}
 	}
 	
@@ -65,6 +65,10 @@ public class ProblemUpdater implements IResponseListener {
 	    while (st.hasMoreTokens()) {
 			showProblem(st.nextToken(), wsFile);
 		}
+	}
+	
+	public void requestTimedOut() {
+		
 	}
 
 }

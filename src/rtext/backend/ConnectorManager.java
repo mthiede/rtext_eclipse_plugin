@@ -9,17 +9,19 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.ui.progress.UIJob;
 
 public class ConnectorManager {
 	private static Map<File, Connector> connectorMap = new HashMap<File, Connector>();
-	private static PeriodicJob periodicJob;
+	private static ConnectorUpdaterJob periodicJob;
+	private static ProcessOutputHandlerJob outputHandlerJob;
 	
-	private static class PeriodicJob extends UIJob {
-		private static long UpdateCycle = 1000;
+	private static class ConnectorUpdaterJob extends UIJob {
+		private static long UpdateCycle = 100;
 		private boolean stop = false;
 		
-		public PeriodicJob() {
+		public ConnectorUpdaterJob() {
 			super("RText Backend Connector Job");
 			setSystem(true);
 		}
@@ -41,12 +43,40 @@ public class ConnectorManager {
 		}
 	}
 
+	private static class ProcessOutputHandlerJob extends Job {
+		private static long UpdateCycle = 100;
+		private boolean stop = false;
+		
+		public ProcessOutputHandlerJob() {
+			super("RText Process Output Handler Job");
+			setSystem(true);
+		}
+		
+		public void start() {
+			schedule(UpdateCycle);
+		}
+	
+		public void stop() {
+			stop = true;
+		}
+	
+		protected IStatus run(IProgressMonitor monitor) {
+			if (!stop) {
+				handleProcessOutput();
+				schedule(UpdateCycle);
+			}
+			return Status.OK_STATUS;
+		}
+	}
+
 	public static void start() {
-		getPeriodicJob().start();
+		getConnectorUpdaterJob().start();
+		getProcessOutputHandlerJob().start();
 	}
 
 	public static void stop() {
-		getPeriodicJob().stop();
+		getConnectorUpdaterJob().stop();
+		getProcessOutputHandlerJob().stop();
 		disposeConnectors();
 	}
 
@@ -71,10 +101,17 @@ public class ConnectorManager {
 	private static void updateConnectors() {
 		for (Iterator<Connector> it = connectorMap.values().iterator(); it.hasNext();) {
 			Connector bc = (Connector) it.next();
-			bc.update();
+			bc.updateConnector();
 		} 
 	}
-
+	
+	private static void handleProcessOutput() {
+		for (Iterator<Connector> it = connectorMap.values().iterator(); it.hasNext();) {
+			Connector bc = (Connector) it.next();
+			bc.handleProcessOutput();
+		} 
+	}
+	
 	private static void disposeConnectors() {
 		for (Iterator<Connector> it = connectorMap.values().iterator(); it.hasNext();) {
 			Connector bc = (Connector) it.next();
@@ -82,13 +119,20 @@ public class ConnectorManager {
 		} 		
 	}
 
-	private static PeriodicJob getPeriodicJob() {
+	private static ConnectorUpdaterJob getConnectorUpdaterJob() {
 		if (periodicJob == null) {
-			periodicJob = new PeriodicJob();
+			periodicJob = new ConnectorUpdaterJob();
 		}
 		return periodicJob;
 	}
 
+	private static ProcessOutputHandlerJob getProcessOutputHandlerJob() {
+		if (outputHandlerJob == null) {
+			outputHandlerJob = new ProcessOutputHandlerJob();
+		}
+		return outputHandlerJob;
+	}
+	
 	static File findDescriptorFileFor(IPath file) {
 		IPath path = file;
 		while (true) {

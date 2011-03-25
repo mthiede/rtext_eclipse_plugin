@@ -13,6 +13,7 @@ import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.net.SocketException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -39,11 +40,24 @@ public class Connector {
 	private BufferedInputStream errorStream;
 	private String port;
 
-	private Map<String, IResponseListener> responseListeners = new HashMap<String, IResponseListener>();
+	private Map<String, Invocation> invocations = new HashMap<String, Invocation>();
 	
+	private Pattern portPattern = Pattern.compile("listening on port (\\d+)");
+		
 	private static int OFF = 0;
 	private static int STARTUP = 1;
 	private static int CONNECTED = 2;
+	
+	private class Invocation {
+		String id;
+		IResponseListener listener;
+		long expireTime;
+		Invocation (String id, IResponseListener listener, int timeout) {
+			this.id = id;
+			this.listener = listener;
+			this.expireTime = new Date().getTime() + timeout;
+		}
+	}
 	
 	Connector(File descFile) {
 		this.descFile = descFile;
@@ -55,10 +69,29 @@ public class Connector {
 		invocationId = 0;
 	}
 	
-	void update() {
+	public StringTokenizer executeCommand(Command command, int timeout) {
+		String invId = String.valueOf(invocationId++);
+		sendRequest(command.getName()+"\n"+invId+"\n"+command.getData());
+		String response = receiveResponse(timeout);
+		if (response != null) {
+			StringTokenizer st = new StringTokenizer(response, "\n");
+			if (st.hasMoreTokens() && st.nextToken().equals(invId)) {
+				return st;
+			}
+		}
+		return null;
+	}
+	
+	public void executeCommand(Command command, IResponseListener listener, int timeout) {
+		String invId = String.valueOf(invocationId++);
+		sendRequest(command.getName()+"\n"+invId+"\n"+command.getData());
+		String key = String.valueOf(invId);
+		invocations.put(key, new Invocation(key, listener, timeout));
+	}
+	
+	void updateConnector() {
 		if (isProcessRunning()) {
 			if (state == STARTUP) {
-				handleProcessOutput();
 				if (port != null) {
 					if (connectSocket(Integer.parseInt(port))) {
 						state = CONNECTED;
@@ -71,39 +104,42 @@ public class Connector {
 					StringTokenizer st = new StringTokenizer(response, "\n");
 					if (st.hasMoreTokens()) {
 						String key = st.nextToken();
-						IResponseListener listener = responseListeners.get(key);
-						if (listener != null) {
-							listener.responseReceived(st);
-							responseListeners.remove(key);
+						Invocation inv = invocations.get(key);
+						if (inv != null) {
+							inv.listener.responseReceived(st);
+							invocations.remove(key);
 						}
 					}
 				}
 			}
 		}
 		else {
-			handleProcessOutput();
 			port = null;
 			startProcess();
 			state = STARTUP;
 		}
+		handleInvocationTimeouts();
 	}
 	
-	public StringTokenizer executeCommand(Command command, int timeout, IResponseListener listener) {
-		String invId = String.valueOf(invocationId++);
-		sendRequest(command.getName()+"\n"+invId+"\n"+command.getData());
-		String response = receiveResponse(timeout);
-		if (response == null) {
-			if (listener != null) {
-				responseListeners.put(String.valueOf(invId), listener);
+	void handleProcessOutput() {
+		if (console != null && consoleOutputStream != null) {
+			if (inputStream != null && errorStream != null) {
+				String output = handleStreamOutput(inputStream);
+				if (output != null) {
+					String port = parsePort(output);
+					if (port != null) {
+						this.port = port;
+					}
+				}
+				handleStreamOutput(errorStream);
 			}
 		}
-		else {
-			StringTokenizer st = new StringTokenizer(response, "\n");
-			if (st.hasMoreTokens() && st.nextToken().equals(invId)) {
-				return st;
-			}
+	}
+	
+	void killProcess() {
+		if (isProcessRunning()) {
+			process.destroy();
 		}
-		return null;
 	}
 	
 	private void sendRequest(String request) {
@@ -128,6 +164,18 @@ public class Connector {
 			}
 		}
 		return null;
+	}
+	
+	private void handleInvocationTimeouts() {
+		long now = new Date().getTime();
+		Object[] currentValues = invocations.values().toArray();
+		for (int i = 0; i < currentValues.length; i++) {
+			Invocation inv = (Invocation)currentValues[i];
+			if (now > inv.expireTime) {
+				inv.listener.requestTimedOut();
+				invocations.remove(inv.id);
+			}
+		}
 	}
 	
 	private boolean isProcessRunning() {
@@ -161,25 +209,8 @@ public class Connector {
 		}		
 	}
 	
-	void killProcess() {
-		if (isProcessRunning()) {
-			process.destroy();
-		}
-	}
-	
-	private void handleProcessOutput() {
-		String output = handleStreamOutput(inputStream);
-		if (output != null) {
-			String port = parsePort(output);
-			if (port != null) {
-				this.port = port;
-			}
-		}
-		handleStreamOutput(errorStream);
-	}
-	
 	private String parsePort(String text) {
-		Matcher matcher = Pattern.compile("listening on port (\\d+)").matcher(text);
+		Matcher matcher = portPattern.matcher(text);
 		if (matcher.find()) {
 			return matcher.toMatchResult().group(1).toString();
 		}
