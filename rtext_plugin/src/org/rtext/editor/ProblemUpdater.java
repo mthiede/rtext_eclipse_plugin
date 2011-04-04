@@ -43,19 +43,21 @@ public class ProblemUpdater implements IResponseListener {
 	
 	private void showProblem(String desc, IFile wsFile) {
 		StringTokenizer st = new StringTokenizer(desc, ";");
-		String line = st.nextToken();
-		String message = st.nextToken();
-		if (line != null && message != null) {
-			Map<String, Object> map = new HashMap<String, Object>();
-		    MarkerUtilities.setLineNumber(map, Integer.valueOf(line));
-		    MarkerUtilities.setMessage(map, message);
-		    map.put(IMarker.SEVERITY, new Integer(IMarker.SEVERITY_ERROR));
-		    if (wsFile != null) {
-				try {
-					MarkerUtilities.createMarker(wsFile, map, IMarker.PROBLEM);
-				} catch (CoreException e) {
-				}
-		    }
+		if (st.countTokens() == 2) {
+			String line = st.nextToken();
+			String message = st.nextToken();
+			if (line != null && message != null) {
+				Map<String, Object> map = new HashMap<String, Object>();
+			    MarkerUtilities.setLineNumber(map, Integer.valueOf(line));
+			    MarkerUtilities.setMessage(map, message);
+			    map.put(IMarker.SEVERITY, new Integer(IMarker.SEVERITY_ERROR));
+			    if (wsFile != null) {
+					try {
+						MarkerUtilities.createMarker(wsFile, map, IMarker.PROBLEM);
+					} catch (CoreException e) {
+					}
+			    }
+			}
 		}
 	}
 	

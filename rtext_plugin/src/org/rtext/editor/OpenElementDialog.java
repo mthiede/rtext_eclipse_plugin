@@ -158,10 +158,10 @@ public class OpenElementDialog extends SelectionStatusDialog implements IRespons
 	private void requestElements() {
 		// while a request is ongoing, no new request will be made
 		// however after a timeout, the request is considered to be lost a new request will be made anyway
-		if (requestSentDate == null || (new Date().getTime() - requestSentDate.getTime()) > 1000) {
+		if (requestSentDate == null || (new Date().getTime() - requestSentDate.getTime()) > 10000) {
 			Connector bc = editor.getBackendConnector();
 			if (bc != null) {
-				bc.executeCommand(new Command("get_elements", pattern.getText()), this, 1000);
+				bc.executeCommand(new Command("get_elements", pattern.getText()), this, 10000);
 				requestSentDate = new Date();
 				lastRequestedPattern = pattern.getText();
 				indicateStartSearch();

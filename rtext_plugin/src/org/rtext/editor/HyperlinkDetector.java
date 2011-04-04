@@ -12,6 +12,7 @@ import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.rtext.backend.Command;
+import org.rtext.backend.Connector;
 
 
 public class HyperlinkDetector implements IHyperlinkDetector {
@@ -61,22 +62,29 @@ public class HyperlinkDetector implements IHyperlinkDetector {
 				links.add(new Hyperlink(editor.getSite().getPage(), linkRegion, filename, line));
 			}
 		}
-		return links.toArray(new IHyperlink[0]);
+		if (links.size() > 0) {
+			return links.toArray(new IHyperlink[0]);
+		}
+		else {
+			return null;
+		}
 	}
 	
 	public IHyperlink[] detectHyperlinks(ITextViewer textViewer,
 			IRegion region, boolean canShowMultipleHyperlinks) {
 		String context = getContext(textViewer, region.getOffset());
 		if (context != null) {
-			StringTokenizer st = editor.getBackendConnector().executeCommand(
-					new Command("get_reference_targets", context), 1000);
-			if (st != null) {
-				if (st.hasMoreTokens()) {
-					Region linkRegion = getLinkRegion(textViewer, region.getOffset(), st.nextToken());
-					if (linkRegion != null) {
-						return createHyperlinks(linkRegion, st);						
-					}
-				}				
+			Connector bc = editor.getBackendConnector();
+			if (bc != null) {
+				StringTokenizer st = bc.executeCommand(new Command("get_reference_targets", context), 1000);
+				if (st != null) {
+					if (st.hasMoreTokens()) {
+						Region linkRegion = getLinkRegion(textViewer, region.getOffset(), st.nextToken());
+						if (linkRegion != null) {
+							return createHyperlinks(linkRegion, st);						
+						}
+					}				
+				}
 			}
 		}
 		return null;
