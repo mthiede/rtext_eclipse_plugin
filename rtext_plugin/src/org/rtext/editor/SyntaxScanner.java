@@ -10,16 +10,13 @@ import org.eclipse.swt.graphics.RGB;
 
 public class SyntaxScanner implements ITokenScanner {
 
-	private static final int LINESTART = 0;
-	private static final int COMMAND = 1;
-
 	private ColorManager fColorManager;
 	private IDocument fDocument;
 	private int fOffset;
-	private int fState;
 	private int fTokenLength;
 	private int fTokenStart;
 	private int fEndOffset;
+	private boolean fNewLine;
 
 	public SyntaxScanner(ColorManager manager) {
 		fColorManager = manager;
@@ -37,61 +34,55 @@ public class SyntaxScanner implements ITokenScanner {
 		if (fOffset >= fEndOffset-1) {
 			return Token.EOF;
 		}
-		switch (fState) {
-		case LINESTART:
-			consumeWhitespace();
-			tokenStart();
-			if (nextIsChar('#')) {
-				consumeUntilEOL();
-				return createToken(IColorConstants.COMMENT);
-			}
-			else {
-				if (consumeWord() && nextIsWhitespace()) {
-					fState = COMMAND;
-					return createToken(IColorConstants.COMMAND);
-				}
-				else {
-					consumeUntilEOL();
-					return createToken(IColorConstants.DEFAULT);
-				}
-			}
-		case COMMAND:
-			consumeWhitespace();
-			consumeChar(',');
-			consumeWhitespace();
-			tokenStart();
-			if (nextIsChar('"')) {
-				consumeString();
-				return createToken(IColorConstants.STRING);
-			}
-			else if (nextIsDigit()) {
-				consumeNumber();
-				return createToken(IColorConstants.NUMBER);
-			}
-			else {
-				if (consumeWord()) {
-					if (consumeChar(':')) {
-						return createToken(IColorConstants.LABEL);
-					}
-					else if (nextIsWhitespace() || nextIsChar(',')){
-						return createToken(IColorConstants.IDENTIFIER);
-					}
-					else {
-						consumeUntilEOL();
-						fState = LINESTART;
-						return createToken(IColorConstants.DEFAULT);
-					}
-				}
-				else {
-					consumeUntilEOL();
-					fState = LINESTART;
-					return createToken(IColorConstants.DEFAULT);
-				}
-			}
-		default:
-			break;
+		IToken result;
+		tokenStart();
+		consumeWhitespace();
+		if (nextIsChar('#')) {
+			consumeUntilEOL();
+			result = createToken(IColorConstants.COMMENT);
 		}
-		return createToken(IColorConstants.DEFAULT);		
+		else if (nextIsWordStartCharacter()) {
+			consumeWord();
+			if (consumeChar(':')) {
+				result = createToken(IColorConstants.LABEL);
+			}
+			else if (consumeChar('/')) {
+				consumeWord();
+				while (consumeChar('/')) {
+					consumeWord();
+				}
+				result = createToken(IColorConstants.REFERENCE);
+			}
+			else {
+				if (fNewLine) {
+					result = createToken(IColorConstants.COMMAND);
+				}
+				else {
+					result = createToken(IColorConstants.IDENTIFIER);
+				}
+			}
+		}
+		else if (nextIsDigit())	{
+			consumeNumber();
+			result = createToken(IColorConstants.NUMBER);
+		}
+		else if (consumeChar('/')) {
+			consumeWord();
+			while (consumeChar('/')) {
+				consumeWord();
+			}
+			result = createToken(IColorConstants.REFERENCE);
+		}
+		else if (nextIsChar('"')) {
+			consumeString();
+			result = createToken(IColorConstants.STRING);
+		}
+		else {
+			consumeAnyChar();
+			result = createToken(IColorConstants.DEFAULT);
+		}
+		fNewLine = false;
+		return result;
 	}
 
 	private void consumeNumber() {
@@ -114,6 +105,11 @@ public class SyntaxScanner implements ITokenScanner {
 		}
 		unreadChar();
 		return result;
+	}
+	
+	private boolean consumeAnyChar() {
+		readChar();
+		return true;
 	}
 	
 	private boolean consumeChar(char c) {
@@ -139,7 +135,10 @@ public class SyntaxScanner implements ITokenScanner {
 	private boolean consumeWhitespace() {
 		boolean result = false;
 		char c = readChar();
-		while (c == ' ' || c == '\t') {
+		while (c == ' ' || c == '\t' || c == '\n' || c == '\r') {
+			if (c == '\n') {
+				fNewLine = true;
+			}
 			c = readChar();
 			result = true;
 		}
@@ -159,32 +158,35 @@ public class SyntaxScanner implements ITokenScanner {
 		unreadChar();
 		return result;
 	}
+
+	private boolean nextIsWordStartCharacter() {
+		char c = readChar();
+		boolean result = (Character.isLetter(c) || c == '_');
+		unreadChar();
+		return result;
+	}
 	
 	private boolean nextIsDigit() {
 		boolean result = Character.isDigit(readChar());
 		unreadChar();
 		return result;
 	}
-
-	private boolean nextIsWhitespace() {
-		char c = readChar();
-		boolean result = (c == ' ' || c == '\t');
-		unreadChar();
-		return result;
-	}
 	
 	private void unreadChar() {
-		fOffset--;
+		if (fOffset < fEndOffset) {
+			fOffset--;
+		}
 	}
 
 	private char readChar() {
+		char result = (char)0;
 		try {
 			if (fOffset < fEndOffset) {
-				return fDocument.getChar(fOffset++);
+				result = fDocument.getChar(fOffset++);
 			}
 		} catch (BadLocationException e) {
 		}
-		return (char)0;
+		return result;
 	}
 
 
@@ -198,6 +200,7 @@ public class SyntaxScanner implements ITokenScanner {
 	}
 
 	public void setRange(IDocument document, int offset, int length) {
+		fNewLine = true;
 		fDocument = document;
 		fOffset = offset;
 		fEndOffset = fOffset + length;
