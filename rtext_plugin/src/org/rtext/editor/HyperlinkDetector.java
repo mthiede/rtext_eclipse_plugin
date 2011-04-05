@@ -22,20 +22,6 @@ public class HyperlinkDetector implements IHyperlinkDetector {
 		this.editor = editor;
 	}
 	
-	private String getContext(ITextViewer viewer, int offset) {
-		IDocument doc = viewer.getDocument();
-		try {
-			int line = doc.getLineOfOffset(offset);
-			int startLine = line >= 10 ? line - 10 : 0;
-			int startOffset = doc.getLineInformation(startLine).getOffset();
-			int endOffset = doc.getLineOffset(line)+doc.getLineInformation(line).getLength();
-			int offsetInLine = offset - doc.getLineOffset(line);
-			return String.valueOf(offsetInLine)+"\n"+viewer.getDocument().get(startOffset, endOffset-startOffset);
-		} catch (BadLocationException e) {
-			return null;
-		}		
-	}
-	
 	private Region getLinkRegion(ITextViewer viewer, int currentOffset, String regionDesc) {
 		String[] regionParts = regionDesc.split(";");
 		int regionStart = Integer.parseInt(regionParts[0]);
@@ -72,7 +58,7 @@ public class HyperlinkDetector implements IHyperlinkDetector {
 	
 	public IHyperlink[] detectHyperlinks(ITextViewer textViewer,
 			IRegion region, boolean canShowMultipleHyperlinks) {
-		String context = getContext(textViewer, region.getOffset());
+		String context = new ContextParser(textViewer.getDocument()).getContext(region.getOffset());
 		if (context != null) {
 			Connector bc = editor.getBackendConnector();
 			if (bc != null) {

@@ -4,7 +4,6 @@ import java.util.StringTokenizer;
 import java.util.Vector;
 
 import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.CompletionProposal;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
@@ -27,19 +26,7 @@ public class ContentAssistProcessor implements IContentAssistProcessor {
 	private Editor editor;
 	
 	public ContentAssistProcessor(Editor editor) {
-		this.editor = editor;
-	}
-	
-	private String getCompletionContext(ITextViewer viewer, int offset) {
-		IDocument doc = viewer.getDocument();
-		try {
-			int line = doc.getLineOfOffset(offset);
-			int startLine = line >= 10 ? line - 10 : 0;
-			int startOffset = doc.getLineOffset(startLine);
-			return viewer.getDocument().get(startOffset, offset-startOffset);
-		} catch (BadLocationException e) {
-			return "";
-		}		
+		this.editor = editor;		
 	}
 	
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer,	int offset) {
@@ -51,7 +38,7 @@ public class ContentAssistProcessor implements IContentAssistProcessor {
 		Connector bc = editor.getBackendConnector();
 		if (bc != null) {
 			StringTokenizer st = bc.executeCommand(
-				new Command("complete", getCompletionContext(viewer, offset)), 1000);
+				new Command("complete", new ContextParser(viewer.getDocument()).getContext(offset)), 1000);
 			if (st != null) {
 				while (st.hasMoreTokens()) {
 					String line = st.nextToken();
