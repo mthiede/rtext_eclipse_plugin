@@ -9,12 +9,14 @@ public class Hyperlink implements IHyperlink {
 	private IRegion region;
 	private String filename;
 	private int line;
+	private String text;
 	
-	public Hyperlink(IWorkbenchPage workbenchPart, IRegion region, String filename, int line) {
+	public Hyperlink(IWorkbenchPage workbenchPart, IRegion region, String filename, int line, String text) {
 		this.workbenchPage = workbenchPart;
 		this.region = region;
 		this.filename = filename;
 		this.line = line;
+		this.text = text;
 	}
 	
 	public IRegion getHyperlinkRegion() {
@@ -22,7 +24,7 @@ public class Hyperlink implements IHyperlink {
 	}
 
 	public String getHyperlinkText() {
-		return null;
+		return text;
 	}
 
 	public String getTypeLabel() {

@@ -42,10 +42,11 @@ public class HyperlinkDetector implements IHyperlinkDetector {
 
 		while (st.hasMoreTokens()) {
 			String[] parts = st.nextToken().split(";");
-			if (parts.length == 2) {
+			if (parts.length == 3) {
 				String filename = parts[0];
 				int line = Integer.parseInt(parts[1]);
-				links.add(new Hyperlink(editor.getSite().getPage(), linkRegion, filename, line));
+				String displayName = parts[2];
+				links.add(new Hyperlink(editor.getSite().getPage(), linkRegion, filename, line, displayName));
 			}
 		}
 		if (links.size() > 0) {
