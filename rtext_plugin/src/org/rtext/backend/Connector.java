@@ -1,13 +1,8 @@
 package org.rtext.backend;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
@@ -30,7 +25,7 @@ import org.eclipse.ui.console.IOConsoleOutputStream;
 public class Connector {
 	private DatagramSocket socket;
 	private Process process;
-	private File descFile;
+	private ConnectorConfig config;
 	private int state;
 	private IOConsole console;
 	private IOConsoleOutputStream consoleOutputStream;
@@ -59,9 +54,9 @@ public class Connector {
 		}
 	}
 	
-	Connector(File descFile) {
-		this.descFile = descFile;
-		console = new IOConsole("RText ["+descFile+"]", null);
+	Connector(ConnectorConfig config) {
+		this.config = config;
+		console = new IOConsole("RText ["+config.getConfigFile()+"]", null);
 		consoleOutputStream = console.newOutputStream();
 		IConsoleManager manager = ConsolePlugin.getDefault().getConsoleManager();
 		manager.addConsoles(new IConsole[] { console });
@@ -87,6 +82,10 @@ public class Connector {
 		sendRequest(command.getName()+"\n"+invId+"\n"+command.getData());
 		String key = String.valueOf(invId);
 		invocations.put(key, new Invocation(key, listener, timeout));
+	}
+	
+	public ConnectorConfig getConfig() {
+		return config;
 	}
 	
 	void updateConnector() {
@@ -195,16 +194,9 @@ public class Connector {
 	
 	private void startProcess() {
 		try {
-			FileInputStream fis = new FileInputStream(descFile);
-			BufferedReader br = new BufferedReader(new InputStreamReader(fis));
-			String cmd = br.readLine();
-			fis.close();
-			if (cmd != null) {
-				process = Runtime.getRuntime().exec(cmd, null, descFile.getParentFile());
-				inputStream = new BufferedInputStream(process.getInputStream());
-				errorStream = new BufferedInputStream(process.getErrorStream());
-			}
-		} catch (FileNotFoundException e) {
+			process = Runtime.getRuntime().exec(config.getCommand(), null, config.getConfigFile().getParentFile());
+			inputStream = new BufferedInputStream(process.getInputStream());
+			errorStream = new BufferedInputStream(process.getErrorStream());
 		} catch (IOException e) {
 		}		
 	}

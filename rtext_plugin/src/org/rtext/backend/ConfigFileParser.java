@@ -11,38 +11,24 @@ import java.util.List;
 
 public class ConfigFileParser {
 
-	public static class Config {
-		String[] patterns;
-		String command;
-		Config(String[] patterns, String command) {
-			this.patterns = patterns;
-			this.command = command;
-		}
-		public String[] getPatterns() {
-			return patterns;
-		}
-		public String getCommand() {
-			return command;
-		}
-	}
-	public static Config[] parse(File configFile) {
+	public static List<ConnectorConfig> parse(File configFile) {
 		try {
 			FileInputStream fis = new FileInputStream(configFile);
 			BufferedReader br = new BufferedReader(new InputStreamReader(fis));
 			String line = br.readLine();
-			List<Config> result = new ArrayList<Config>();
+			List<ConnectorConfig> result = new ArrayList<ConnectorConfig>();
 			while (line != null) {
 				if (line.trim().length() > 1 && line.trim().endsWith(":")) {
-					String[] patterns = line.split(",");
+					String[] patterns = line.substring(0, line.length()-1).split(",");
 					String nextLine = br.readLine();
 					if (nextLine != null && nextLine.trim().length() > 0 && !nextLine.trim().endsWith(":")) {
-						result.add(new Config(patterns, nextLine));
+						result.add(new ConnectorConfig(configFile, patterns, nextLine));
 					}
 				}
 				line = br.readLine();
 			}
 			fis.close();
-			return (Config[]) result.toArray();
+			return result;
 		} catch (FileNotFoundException e) {
 		} catch (IOException e) {
 		}

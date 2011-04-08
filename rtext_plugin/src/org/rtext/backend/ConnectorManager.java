@@ -3,6 +3,7 @@ package org.rtext.backend;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IPath;
@@ -13,7 +14,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.ui.progress.UIJob;
 
 public class ConnectorManager {
-	private static Map<File, Connector> connectorMap = new HashMap<File, Connector>();
+	private static Map<String, Connector> connectorMap = new HashMap<String, Connector>();
 	private static ConnectorUpdaterJob periodicJob;
 	private static ProcessOutputHandlerJob outputHandlerJob;
 	
@@ -81,15 +82,16 @@ public class ConnectorManager {
 	}
 
 	public static Connector getConnector(IPath file) {
-		File descFile = findDescriptorFileFor(file);
-		if (descFile != null) {
-			Connector bc = connectorMap.get(descFile);
+		ConnectorConfig config = findConnectorConfig(file);
+		if (config != null) {
+			String key = config.getIdentifier();
+			Connector bc = connectorMap.get(key);
 			if (bc != null) {
 				return bc;
 			}
 			else {
-				bc = new Connector(descFile);
-				connectorMap.put(descFile, bc);
+				bc = new Connector(config);
+				connectorMap.put(key, bc);
 				return bc;
 			}
 		}
@@ -133,14 +135,22 @@ public class ConnectorManager {
 		return outputHandlerJob;
 	}
 	
-	static File findDescriptorFileFor(IPath file) {
+	private static ConnectorConfig findConnectorConfig(IPath file) {
 		IPath path = file;
+		String specifierPattern = extractLanguageSpecifierPattern(file); 
 		while (true) {
 			path = path.removeLastSegments(1);
 			if (path.segmentCount() > 0) {
 				File descFile = path.append("/.rtext").toFile();
 				if (descFile.exists()) {
-					return descFile;
+					List<ConnectorConfig> configs = ConfigFileParser.parse(descFile);
+					for (ConnectorConfig config : configs) {
+						for (String pattern : config.getPatterns()) {
+							if (pattern.trim().equals(specifierPattern)) {
+								return config;
+							}
+						}
+					}
 				}
 			}
 			else {
@@ -149,4 +159,13 @@ public class ConnectorManager {
 		}
 	}
 
+	private static String extractLanguageSpecifierPattern(IPath file) {
+		String extension = file.getFileExtension();
+		if (extension != null) {
+			return "*."+extension;
+		}
+		else {
+			return file.lastSegment();
+		}
+	}
 }

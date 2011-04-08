@@ -10,6 +10,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.ui.texteditor.MarkerUtilities;
 import org.rtext.backend.Command;
 import org.rtext.backend.Connector;
@@ -18,24 +19,30 @@ import org.rtext.backend.IResponseListener;
 
 
 public class ProblemUpdater implements IResponseListener {
-	private IPath path;
+	private Connector connector;
 	
 	public ProblemUpdater(IPath path) {
-		this.path = path;
+		connector = ConnectorManager.getConnector(path);
 	}
 	
 	public void updateProblems()
 	{
-		Connector bc = ConnectorManager.getConnector(path);
-		if (bc != null) {
-			bc.executeCommand(
-				new Command("show_problems", path.toString()), this, 60000);
+		if (connector != null) {
+			connector.executeCommand(new Command("show_problems", ""), this, 60000);
 		}
 	}
 	
-	private void deleteProblems(IFile wsFile) {
+	private void deleteProblems() {
 		try {
-			wsFile.deleteMarkers(IMarker.PROBLEM, false, IResource.DEPTH_ZERO);
+			Path path = new Path(connector.getConfig().getConfigFile().getAbsolutePath());
+			IFile wsFile = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(path);
+			IMarker[] markers = wsFile.getParent().findMarkers(IMarker.PROBLEM, false, IResource.DEPTH_INFINITE);
+			for (IMarker marker : markers) {
+				Object sourceId = marker.getAttribute(IMarker.SOURCE_ID);
+				if (sourceId != null && sourceId.equals(connector.getConfig().getIdentifier())) {
+					marker.delete();
+				}
+			}
 		} catch (CoreException e) {
 			e.printStackTrace();
 		}		
@@ -51,6 +58,7 @@ public class ProblemUpdater implements IResponseListener {
 			    MarkerUtilities.setLineNumber(map, Integer.valueOf(line));
 			    MarkerUtilities.setMessage(map, message);
 			    map.put(IMarker.SEVERITY, new Integer(IMarker.SEVERITY_ERROR));
+			    map.put(IMarker.SOURCE_ID, connector.getConfig().getIdentifier());
 			    if (wsFile != null) {
 					try {
 						MarkerUtilities.createMarker(wsFile, map, IMarker.PROBLEM);
@@ -62,10 +70,16 @@ public class ProblemUpdater implements IResponseListener {
 	}
 	
 	public void responseReceived(StringTokenizer st) {
-	    IFile wsFile = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(path);
-	    deleteProblems(wsFile);
+		deleteProblems();
+	    IFile wsFile = null;
 	    while (st.hasMoreTokens()) {
-			showProblem(st.nextToken(), wsFile);
+	    	String line = st.nextToken();
+	    	if (line.split(";").length == 1) {
+	    	    wsFile = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(new Path(line));
+	    	}
+	    	else if (wsFile != null) {
+	    		showProblem(line, wsFile);
+	    	}
 		}
 	}
 	
