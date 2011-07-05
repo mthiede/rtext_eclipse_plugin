@@ -65,8 +65,9 @@ public class ContentAssistProcessor implements IContentAssistProcessor {
 		try {
 		  int start = offset - 1;
 	      while (((start) >= viewer.getTopIndexStartOffset())
-	          && Character.isLetterOrDigit(viewer.getDocument()
-	              .getChar(start))) {
+	          && (Character.isLetterOrDigit(viewer.getDocument().getChar(start)) ||
+	        	viewer.getDocument().getChar(start) == '/')
+	          ) {
 	        start--;
 	      }
 	      start++;
