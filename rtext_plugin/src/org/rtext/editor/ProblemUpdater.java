@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
@@ -34,9 +35,19 @@ public class ProblemUpdater implements IResponseListener {
 	
 	private void deleteProblems() {
 		try {
-			Path path = new Path(connector.getConfig().getConfigFile().getAbsolutePath());
-			IFile wsFile = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(path);
-			IMarker[] markers = wsFile.getParent().findMarkers(IMarker.PROBLEM, false, IResource.DEPTH_INFINITE);
+			Path configFilePath = new Path(connector.getConfig().getConfigFile().getAbsolutePath());
+			IFile configFile = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(configFilePath);
+			IContainer markerScope;
+			if (configFile != null) {
+				markerScope = configFile.getParent();
+			}
+			else {
+				// if the config file is not in the workspace, search for markers in the whole workspace
+				// this strategy will be inefficient in case only one out of many projects in the workspace
+				// is located below the config file in the file system
+				markerScope = ResourcesPlugin.getWorkspace().getRoot();
+			}
+			IMarker[] markers = markerScope.findMarkers(IMarker.PROBLEM, false, IResource.DEPTH_INFINITE);
 			for (IMarker marker : markers) {
 				Object sourceId = marker.getAttribute(IMarker.SOURCE_ID);
 				if (sourceId != null && sourceId.equals(connector.getConfig().getIdentifier())) {
@@ -71,14 +82,16 @@ public class ProblemUpdater implements IResponseListener {
 	
 	public void responseReceived(StringTokenizer st) {
 		deleteProblems();
-	    IFile wsFile = null;
+	    IFile[] wsFiles = null;
 	    while (st.hasMoreTokens()) {
 	    	String line = st.nextToken();
 	    	if (line.split(";").length == 1) {
-	    	    wsFile = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(new Path(line));
+	    	    wsFiles = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation(new Path(line));
 	    	}
-	    	else if (wsFile != null) {
-	    		showProblem(line, wsFile);
+	    	else if (wsFiles != null) {
+	    		for (IFile file : wsFiles) {
+		    		showProblem(line, file);					
+				}
 	    	}
 		}
 	}
