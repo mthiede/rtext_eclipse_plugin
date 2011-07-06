@@ -51,7 +51,7 @@ public class ContentAssistProcessor implements IContentAssistProcessor,	IComplet
 	
 	private boolean filterCompletionOption(String option, String wordStart) {
 		if (wordStart.contains("/")) {
-			return option.startsWith(wordStart);
+			return option.toLowerCase().startsWith(wordStart.toLowerCase());
 		}
 		else {
 			String[] parts = option.split("/");
