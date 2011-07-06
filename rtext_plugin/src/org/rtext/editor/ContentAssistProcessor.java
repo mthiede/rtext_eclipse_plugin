@@ -1,5 +1,6 @@
 package org.rtext.editor;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.Vector;
@@ -7,6 +8,8 @@ import java.util.Vector;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.CompletionProposal;
+import org.eclipse.jface.text.contentassist.ContentAssistEvent;
+import org.eclipse.jface.text.contentassist.ICompletionListener;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContextInformation;
@@ -15,19 +18,14 @@ import org.rtext.backend.Command;
 import org.rtext.backend.Connector;
 
 
-public class ContentAssistProcessor implements IContentAssistProcessor {
+public class ContentAssistProcessor implements IContentAssistProcessor,	ICompletionListener {
 
-	public static Vector<String> keywords = new Vector<String>();
-	static {
-		keywords.add("house");
-		keywords.add("mouse");
-		keywords.add("monster");
-	}
-	
 	private Editor editor;
+	private List<String> allCompletionOptions;
 	
 	public ContentAssistProcessor(Editor editor) {
-		this.editor = editor;		
+		this.editor = editor;
+		this.allCompletionOptions = null;
 	}
 	
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer,	int offset) {
@@ -36,20 +34,10 @@ public class ContentAssistProcessor implements IContentAssistProcessor {
 		String wordStart = wordStart(viewer, offset);
 		int wordStartOffset = offset-wordStart.length();
 		
-		Connector bc = editor.getBackendConnector();
-		if (bc != null) {
-			List<String> responseLines = bc.executeCommand(
-				new Command("complete", new ContextParser(viewer.getDocument()).getContext(offset)), 1000);
-			if (responseLines != null) {
-				for (String line : responseLines) {
-					StringTokenizer st2 = new StringTokenizer(line, ";");
-					if (st2.hasMoreTokens()) {
-						String option = st2.nextToken();
-						if (option.startsWith(wordStart)) {
-							proposals.add(new CompletionProposal(option, wordStartOffset, wordStart.length(), option.length()));
-						}
-					}
-				}
+		loadCompletions(viewer, offset);
+		for (String option : allCompletionOptions) {
+			if (filterCompletionOption(option, wordStart)) {
+				proposals.add(new CompletionProposal(option, wordStartOffset, wordStart.length(), option.length()));
 			}
 		}
 
@@ -59,6 +47,18 @@ public class ContentAssistProcessor implements IContentAssistProcessor {
 		}
 	    
         return result;
+	}
+	
+	private boolean filterCompletionOption(String option, String wordStart) {
+		if (wordStart.contains("/")) {
+			return option.startsWith(wordStart);
+		}
+		else {
+			String[] parts = option.split("/");
+			String lastPart = parts[parts.length-1];
+			return option.toLowerCase().startsWith(wordStart.toLowerCase()) || 
+				lastPart.toLowerCase().startsWith(wordStart.toLowerCase());	
+		}			
 	}
 	
 	private String wordStart(ITextViewer viewer, int offset) {
@@ -108,6 +108,41 @@ public class ContentAssistProcessor implements IContentAssistProcessor {
 	public String getErrorMessage() {
 		// no error
 		return null;
+	}
+
+	@Override
+	public void assistSessionEnded(ContentAssistEvent event) {
+		allCompletionOptions = null;
+	}
+
+	private void loadCompletions(ITextViewer viewer, int offset) {
+		if (allCompletionOptions == null) {
+			allCompletionOptions = new ArrayList<String>();
+			Connector bc = editor.getBackendConnector();
+			if (bc != null) {
+				List<String> responseLines = bc.executeCommand(
+					new Command("complete", new ContextParser(viewer.getDocument()).getContext(offset)), 1000);
+				if (responseLines != null) {
+					for (String line : responseLines) {
+						StringTokenizer st2 = new StringTokenizer(line, ";");
+						if (st2.hasMoreTokens()) {
+							allCompletionOptions.add(st2.nextToken());
+						}
+					}
+				}
+			}			
+		}
+	}
+	
+	@Override
+	public void assistSessionStarted(ContentAssistEvent event) {
+	}
+
+	@Override
+	public void selectionChanged(ICompletionProposal proposal,
+			boolean smartToggle) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

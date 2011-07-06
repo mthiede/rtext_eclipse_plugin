@@ -3,7 +3,6 @@ package org.rtext.editor;
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
-import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.text.hyperlink.IHyperlinkPresenter;
@@ -48,8 +47,8 @@ public class ViewerConfiguration extends SourceViewerConfiguration {
 	public IContentAssistant getContentAssistant(ISourceViewer sourceViewer)
 	{
 	    ContentAssistant assistant = new ContentAssistant();
-	    IContentAssistProcessor tagContentAssistProcessor 
-	        = new ContentAssistProcessor(editor);
+	    ContentAssistProcessor tagContentAssistProcessor = new ContentAssistProcessor(editor);
+	    assistant.addCompletionListener(tagContentAssistProcessor);
 	    assistant.setContentAssistProcessor(tagContentAssistProcessor,
 	    		IDocument.DEFAULT_CONTENT_TYPE);
 	    assistant.enableAutoActivation(true);
