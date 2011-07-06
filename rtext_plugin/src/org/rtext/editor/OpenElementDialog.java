@@ -36,7 +36,6 @@ public class OpenElementDialog extends SelectionStatusDialog implements IRespons
 	private Editor editor;
 	private Date requestSentDate;
 	private String lastRequestedPattern;
-	private boolean isClosed;
 
 	class ElementDescriptor {
 		private String display;
@@ -65,7 +64,6 @@ public class OpenElementDialog extends SelectionStatusDialog implements IRespons
 	public OpenElementDialog(Editor editor) {
 		super(editor.getSite().getShell());
 		this.editor = editor;
-		isClosed = false;
 		requestSentDate = null;
 		setHelpAvailable(false);
 		setTitle("RText Open Element");
@@ -172,7 +170,7 @@ public class OpenElementDialog extends SelectionStatusDialog implements IRespons
 	}
 
 	public void responseReceived(List<String> responseLines) {
-		if (!isClosed) {
+		if (getContents() != null && !getContents().isDisposed()) {
 			indicateStopSearch();
 			requestSentDate = null;
 			List<ElementDescriptor>descs = new ArrayList<ElementDescriptor>();
@@ -189,14 +187,12 @@ public class OpenElementDialog extends SelectionStatusDialog implements IRespons
 		}
 	}
 
-	
 	protected void handleShellCloseEvent() {
-		isClosed = true;
 		super.handleShellCloseEvent();
 	}
 
 	public void requestTimedOut() {
-		if (!isClosed) {
+		if (getContents() != null && !getContents().isDisposed()) {
 			indicateStopSearch();
 			requestSentDate = null;		
 			requestElements();
