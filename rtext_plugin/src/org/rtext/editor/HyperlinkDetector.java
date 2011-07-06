@@ -1,7 +1,6 @@
 package org.rtext.editor;
 
 import java.util.List;
-import java.util.StringTokenizer;
 import java.util.Vector;
 
 import org.eclipse.jface.text.BadLocationException;
@@ -37,11 +36,11 @@ public class HyperlinkDetector implements IHyperlinkDetector {
 		return null;
 	}
 	
-	private IHyperlink[] createHyperlinks(Region linkRegion, StringTokenizer st) {
+	private IHyperlink[] createHyperlinks(Region linkRegion, List<String> responseLines) {
 		List<IHyperlink> links = new Vector<IHyperlink>();
 
-		while (st.hasMoreTokens()) {
-			String[] parts = st.nextToken().split(";");
+		for (String responseLine : responseLines) {
+			String[] parts = responseLine.split(";");
 			if (parts.length == 3) {
 				String filename = parts[0];
 				int line = Integer.parseInt(parts[1]);
@@ -63,13 +62,12 @@ public class HyperlinkDetector implements IHyperlinkDetector {
 		if (context != null) {
 			Connector bc = editor.getBackendConnector();
 			if (bc != null) {
-				StringTokenizer st = bc.executeCommand(new Command("get_reference_targets", context), 1000);
-				if (st != null) {
-					if (st.hasMoreTokens()) {
-						Region linkRegion = getLinkRegion(textViewer, region.getOffset(), st.nextToken());
-						if (linkRegion != null) {
-							return createHyperlinks(linkRegion, st);						
-						}
+				List<String> responseLines = bc.executeCommand(new Command("get_reference_targets", context), 1000);
+				if (responseLines != null && responseLines.size() > 0) {
+					String regionDesc = responseLines.remove(0);
+					Region linkRegion = getLinkRegion(textViewer, region.getOffset(), regionDesc);
+					if (linkRegion != null) {
+						return createHyperlinks(linkRegion, responseLines);						
 					}				
 				}
 			}

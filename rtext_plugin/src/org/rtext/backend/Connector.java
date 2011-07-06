@@ -8,8 +8,10 @@ import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.net.SocketException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
@@ -47,10 +49,12 @@ public class Connector {
 		String id;
 		IResponseListener listener;
 		long expireTime;
+		ArrayList<String> responseLines;
 		Invocation (String id, IResponseListener listener, int timeout) {
 			this.id = id;
 			this.listener = listener;
 			this.expireTime = new Date().getTime() + timeout;
+			this.responseLines = new ArrayList<String>();
 		}
 	}
 	
@@ -64,15 +68,18 @@ public class Connector {
 		invocationId = 0;
 	}
 	
-	public StringTokenizer executeCommand(Command command, int timeout) {
+	public List<String> executeCommand(Command command, int timeout) {
 		String invId = String.valueOf(invocationId++);
 		sendRequest(command.getName()+"\n"+invId+"\n"+command.getData());
+		String key = String.valueOf(invId);
+		invocations.put(key, new Invocation(key, null, timeout));
 		String response = receiveResponse(timeout);
-		if (response != null) {
-			StringTokenizer st = new StringTokenizer(response, "\n");
-			if (st.hasMoreTokens() && st.nextToken().equals(invId)) {
-				return st;
+		while (response != null) {
+			List<String> responseLines = handleResponse(response);
+			if (responseLines != null) {
+				return responseLines;
 			}
+			response = receiveResponse(100);
 		}
 		return null;
 	}
@@ -99,16 +106,9 @@ public class Connector {
 			}
 			else {
 				String response = receiveResponse(1);
-				if (response != null) {
-					StringTokenizer st = new StringTokenizer(response, "\n");
-					if (st.hasMoreTokens()) {
-						String key = st.nextToken();
-						Invocation inv = invocations.get(key);
-						if (inv != null) {
-							inv.listener.responseReceived(st);
-							invocations.remove(key);
-						}
-					}
+				while (response != null) {
+					handleResponse(response);
+					response = receiveResponse(1);
 				}
 			}
 		}
@@ -118,6 +118,33 @@ public class Connector {
 			state = STARTUP;
 		}
 		handleInvocationTimeouts();
+	}
+
+	private List<String> handleResponse(String response) {
+		StringTokenizer st = new StringTokenizer(response, "\n");
+		if (st.hasMoreTokens()) {
+			String key = st.nextToken();
+			Invocation inv = invocations.get(key);
+			if (inv != null) {
+				if (st.hasMoreTokens()) {
+					String packetType = st.nextToken();
+					while (st.hasMoreTokens()) {
+						inv.responseLines.add(st.nextToken());
+					}
+					if (packetType.equals("last")) {
+						invocations.remove(key);
+						if (inv.listener != null) {
+							inv.listener.responseReceived(inv.responseLines);
+							return null;
+						}
+						else {
+							return inv.responseLines;
+						}
+					}
+				}
+			}
+		}
+		return null;
 	}
 	
 	void handleProcessOutput() {
@@ -153,8 +180,8 @@ public class Connector {
 	
 	private String receiveResponse(int timeout) {
 		if (state == CONNECTED) {
-			byte[] data = new byte[65000];
-			DatagramPacket packet = new DatagramPacket(data, 65000);
+			byte[] data = new byte[65536];
+			DatagramPacket packet = new DatagramPacket(data, 65536);
 			try {
 				socket.setSoTimeout(timeout);
 				socket.receive(packet);
@@ -171,7 +198,9 @@ public class Connector {
 		for (int i = 0; i < currentValues.length; i++) {
 			Invocation inv = (Invocation)currentValues[i];
 			if (now > inv.expireTime) {
-				inv.listener.requestTimedOut();
+				if (inv.listener != null) {
+					inv.listener.requestTimedOut();
+				}
 				invocations.remove(inv.id);
 			}
 		}
@@ -230,6 +259,7 @@ public class Connector {
 			SocketAddress sa = new InetSocketAddress("localhost", port);
 			socket = new DatagramSocket();
 			socket.connect(sa);
+			socket.setReceiveBufferSize(655360);
 			return true;
 		} catch (SocketException e) {
 			return false;

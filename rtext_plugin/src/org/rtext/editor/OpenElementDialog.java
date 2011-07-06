@@ -3,7 +3,6 @@ package org.rtext.editor;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.StringTokenizer;
 
 import org.eclipse.jface.dialogs.DialogSettings;
 import org.eclipse.jface.dialogs.IDialogSettings;
@@ -172,16 +171,16 @@ public class OpenElementDialog extends SelectionStatusDialog implements IRespons
 		setResult(((StructuredSelection) list.getSelection()).toList());	
 	}
 
-	public void responseReceived(StringTokenizer st) {
+	public void responseReceived(List<String> responseLines) {
 		if (!isClosed) {
 			indicateStopSearch();
 			requestSentDate = null;
 			List<ElementDescriptor>descs = new ArrayList<ElementDescriptor>();
-			while (st.hasMoreTokens()) {
-				String[] parts = st.nextToken().split(";");
+			for (String line : responseLines) {
+				String[] parts = line.split(";");
 				if (parts.length == 3) {
 					descs.add(new ElementDescriptor(parts[0], parts[1], Integer.parseInt(parts[2])));
-				}
+				}				
 			}
 			list.setInput(descs);
 			if (!(lastRequestedPattern != null && lastRequestedPattern.equals(pattern.getText()))) {

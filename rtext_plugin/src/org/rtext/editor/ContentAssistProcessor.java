@@ -1,5 +1,6 @@
 package org.rtext.editor;
 
+import java.util.List;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
@@ -37,11 +38,10 @@ public class ContentAssistProcessor implements IContentAssistProcessor {
 		
 		Connector bc = editor.getBackendConnector();
 		if (bc != null) {
-			StringTokenizer st = bc.executeCommand(
+			List<String> responseLines = bc.executeCommand(
 				new Command("complete", new ContextParser(viewer.getDocument()).getContext(offset)), 1000);
-			if (st != null) {
-				while (st.hasMoreTokens()) {
-					String line = st.nextToken();
+			if (responseLines != null) {
+				for (String line : responseLines) {
 					StringTokenizer st2 = new StringTokenizer(line, ";");
 					if (st2.hasMoreTokens()) {
 						String option = st2.nextToken();

@@ -1,10 +1,10 @@
 package org.rtext.backend;
 
-import java.util.StringTokenizer;
+import java.util.List;
 
 public interface IResponseListener {
 
-	void responseReceived(StringTokenizer st);
+	void responseReceived(List<String> responseLines);
 	void requestTimedOut();
 	
 }

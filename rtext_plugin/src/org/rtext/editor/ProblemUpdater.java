@@ -1,6 +1,7 @@
 package org.rtext.editor;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
@@ -80,11 +81,10 @@ public class ProblemUpdater implements IResponseListener {
 		}
 	}
 	
-	public void responseReceived(StringTokenizer st) {
+	public void responseReceived(List<String> responseLines) {
 		deleteProblems();
 	    IFile[] wsFiles = null;
-	    while (st.hasMoreTokens()) {
-	    	String line = st.nextToken();
+	    for (String line : responseLines) {
 	    	if (line.split(";").length == 1) {
 	    	    wsFiles = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation(new Path(line));
 	    	}
