@@ -12,6 +12,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.ui.progress.UIJob;
+import org.rtext.RTextPlugin;
 
 public class ConnectorManager {
 	private static Map<String, Connector> connectorMap = new HashMap<String, Connector>();
@@ -37,7 +38,14 @@ public class ConnectorManager {
 	
 		public IStatus runInUIThread(IProgressMonitor monitor) {
 			if (!stop) {
-				updateConnectors();
+				try {
+					updateConnectors();
+				}
+				catch (Exception e) {
+					RTextPlugin.getDefault().getLog().log(
+					  new Status(Status.ERROR, RTextPlugin.PLUGIN_ID, Status.OK, 
+					  	"exception in ConnectorUpdaterJob", e));
+				}				
 				schedule(UpdateCycle);
 			}
 			return Status.OK_STATUS;
@@ -63,13 +71,20 @@ public class ConnectorManager {
 	
 		protected IStatus run(IProgressMonitor monitor) {
 			if (!stop) {
-				handleProcessOutput();
+				try {
+					handleProcessOutput();
+				}
+				catch (Exception e) {
+					RTextPlugin.getDefault().getLog().log(
+					  new Status(Status.ERROR, RTextPlugin.PLUGIN_ID, Status.OK, 
+					  	"exception in ProcessOutputHandlerJob", e));
+				}
 				schedule(UpdateCycle);
 			}
 			return Status.OK_STATUS;
 		}
 	}
-
+	
 	public static void start() {
 		getConnectorUpdaterJob().start();
 		getProcessOutputHandlerJob().start();
