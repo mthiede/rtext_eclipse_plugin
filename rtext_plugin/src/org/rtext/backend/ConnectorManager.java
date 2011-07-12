@@ -91,9 +91,9 @@ public class ConnectorManager {
 	}
 
 	public static void stop() {
+		stopBackends();
 		getConnectorUpdaterJob().stop();
 		getProcessOutputHandlerJob().stop();
-		disposeConnectors();
 	}
 
 	public static Connector getConnector(IPath file) {
@@ -129,10 +129,10 @@ public class ConnectorManager {
 		} 
 	}
 	
-	private static void disposeConnectors() {
+	private static void stopBackends() {
 		for (Iterator<Connector> it = connectorMap.values().iterator(); it.hasNext();) {
 			Connector bc = (Connector) it.next();
-			bc.killProcess();
+			bc.executeCommand(new Command("stop", ""), 1);
 		} 		
 	}
 
