@@ -151,6 +151,7 @@ public class SyntaxScanner implements ITokenScanner {
 		while (c != '\n' && c != (char)0) {
 			c = readChar();
 		}
+		unreadChar();
 	}
 
 	private boolean nextIsChar(char c) {
