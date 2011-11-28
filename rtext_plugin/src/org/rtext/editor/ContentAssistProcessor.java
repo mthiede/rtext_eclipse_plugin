@@ -64,10 +64,11 @@ public class ContentAssistProcessor implements IContentAssistProcessor,	IComplet
 	private String wordStart(ITextViewer viewer, int offset) {
 		try {
 		  int start = offset - 1;
-	      while (((start) >= viewer.getTopIndexStartOffset())
-	          && (Character.isLetterOrDigit(viewer.getDocument().getChar(start)) ||
-	        	viewer.getDocument().getChar(start) == '/')
-	          ) {
+	      while (((start) >= viewer.getTopIndexStartOffset()) && (
+	    		Character.isLetterOrDigit(viewer.getDocument().getChar(start)) ||
+	        	viewer.getDocument().getChar(start) == '/' ||
+	        	viewer.getDocument().getChar(start) == '_'
+	          )) {
 	        start--;
 	      }
 	      start++;
