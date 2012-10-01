@@ -55,8 +55,8 @@ public class Editor extends TextEditor {
 	}
 	
 	protected void editorSaved() {
-		new ProblemUpdater(getInputPath()).updateProblems();
 		super.editorSaved();
+		new ProblemUpdater(ConnectorManager.getConnector(getInputPath()), getStatusLineManager()).schedule();
 	}
 	
 	private IPath getInputPath() {

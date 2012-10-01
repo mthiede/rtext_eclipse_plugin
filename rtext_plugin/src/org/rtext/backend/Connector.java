@@ -32,6 +32,7 @@ public class Connector {
 	private IOConsole console;
 	private IOConsoleOutputStream consoleOutputStream;
 	private long invocationId;
+	private int protocolVersion = -1;
 
 	private BufferedInputStream inputStream;
 	private BufferedInputStream errorStream;
@@ -90,6 +91,19 @@ public class Connector {
 		String key = String.valueOf(invId);
 		invocations.put(key, new Invocation(key, listener, timeout));
 	}
+
+	public int getProtocolVersion() {
+		if (protocolVersion < 0) {
+			List<String> result = executeCommand(new Command("protocol_version", ""), 10000);
+			if (result != null && result.size() > 0) {
+				protocolVersion = Integer.parseInt(result.get(0));
+			}
+			else {
+				protocolVersion = 0;
+			}
+		}
+		return protocolVersion;
+	}
 	
 	public ConnectorConfig getConfig() {
 		return config;
@@ -130,6 +144,9 @@ public class Connector {
 					String packetType = st.nextToken();
 					while (st.hasMoreTokens()) {
 						inv.responseLines.add(st.nextToken());
+						if (inv.listener != null) {
+							inv.listener.responseUpdate(inv.responseLines);
+						}
 					}
 					if (packetType.equals("last")) {
 						invocations.remove(key);
@@ -159,12 +176,6 @@ public class Connector {
 				}
 				handleStreamOutput(errorStream);
 			}
-		}
-	}
-	
-	void killProcess() {
-		if (isProcessRunning()) {
-			process.destroy();
 		}
 	}
 	
@@ -222,6 +233,7 @@ public class Connector {
 	}
 	
 	private void startProcess() {
+		protocolVersion = -1;
 		try {
 			process = Runtime.getRuntime().exec(config.getCommand(), null, config.getConfigFile().getParentFile());
 			inputStream = new BufferedInputStream(process.getInputStream());

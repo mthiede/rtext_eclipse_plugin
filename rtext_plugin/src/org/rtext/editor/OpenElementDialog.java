@@ -169,6 +169,10 @@ public class OpenElementDialog extends SelectionStatusDialog implements IRespons
 		setResult(((StructuredSelection) list.getSelection()).toList());	
 	}
 
+	public void responseUpdate(List<String> responseLines) {
+		// do nothing
+	}
+	
 	public void responseReceived(List<String> responseLines) {
 		if (getContents() != null && !getContents().isDisposed()) {
 			indicateStopSearch();

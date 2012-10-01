@@ -13,7 +13,6 @@ import org.eclipse.ui.texteditor.MarkerAnnotation;
 
 public class ProblemMarkerHover implements IAnnotationHover {
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public String getHoverInfo(ISourceViewer sourceViewer, int lineNumber) {
 		IAnnotationModel annotationModel = sourceViewer.getAnnotationModel();
