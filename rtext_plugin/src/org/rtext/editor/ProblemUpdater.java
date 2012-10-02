@@ -27,7 +27,7 @@ public class ProblemUpdater extends Job implements IResponseListener {
 	private HashMap<String, Integer> severityMap;
 	private IProgressMonitor progressMonitor;
 	private int lastProgress;
-	
+
 	public ProblemUpdater(Connector connector, IStatusLineManager statusLineManager) {
 		super("Loading Model");
 		this.connector = connector;
@@ -39,7 +39,7 @@ public class ProblemUpdater extends Job implements IResponseListener {
 		severityMap.put("e", new Integer(IMarker.SEVERITY_ERROR));
 		severityMap.put("f", new Integer(IMarker.SEVERITY_ERROR));		
 	}
-	
+
 	protected IStatus run(IProgressMonitor monitor) {
 		progressMonitor = monitor;
 		lastProgress = 0;
@@ -55,7 +55,7 @@ public class ProblemUpdater extends Job implements IResponseListener {
 		}
 		return Job.ASYNC_FINISH;
 	}
-	
+
 	private void initProblems(HashMap<String, IMarker> problems) {
 		try {
 			Path configFilePath = new Path(connector.getConfig().getConfigFile().getAbsolutePath());
@@ -81,18 +81,18 @@ public class ProblemUpdater extends Job implements IResponseListener {
 			}			
 			for (IMarker marker : markers) {
 				Object sourceId = marker.getAttribute(IMarker.SOURCE_ID);
-			    if (sourceId != null && sourceId.equals("RText") && extensions.contains(marker.getResource().getFileExtension())) {
-			    	String message = (String)marker.getAttribute(IMarker.MESSAGE);
-			    	Integer line = (Integer)marker.getAttribute(IMarker.LINE_NUMBER);
-			    	Integer severity = (Integer)marker.getAttribute(IMarker.SEVERITY);
-			    	problems.put(problemKey(message, line.intValue(), severity, marker.getResource().getFullPath()), marker);
+				if (sourceId != null && sourceId.equals("RText") && extensions.contains(marker.getResource().getFileExtension())) {
+					String message = (String)marker.getAttribute(IMarker.MESSAGE);
+					Integer line = (Integer)marker.getAttribute(IMarker.LINE_NUMBER);
+					Integer severity = (Integer)marker.getAttribute(IMarker.SEVERITY);
+					problems.put(problemKey(message, line.intValue(), severity, marker.getResource().getFullPath()), marker);
 				}
 			}
 		} catch (CoreException e) {
 			e.printStackTrace();
 		}		
 	}
-	
+
 	private int problemLineNumber(String desc) {
 		int index = desc.indexOf(';');
 		if (connector.getProtocolVersion() >= 1 && index >= 0) {
@@ -106,7 +106,7 @@ public class ProblemUpdater extends Job implements IResponseListener {
 			return -1;
 		}
 	}
-	
+
 	private String problemMessage(String desc) {
 		int index = desc.indexOf(';');
 		if (connector.getProtocolVersion() >= 1 && index >= 0) {
@@ -120,7 +120,7 @@ public class ProblemUpdater extends Job implements IResponseListener {
 			return null;
 		}
 	}
-	
+
 	private Integer problemSeverity(String desc) {
 		int index = desc.indexOf(';');
 		Integer severity = null;
@@ -135,11 +135,11 @@ public class ProblemUpdater extends Job implements IResponseListener {
 		}
 		return severity;
 	}
-	
+
 	private String problemKey(String message, int line, Integer severity, IPath fullPath) {
 		return fullPath.toString()+"|"+String.valueOf(severity)+"|"+String.valueOf(line)+"|"+message;
 	}
-	
+
 	private void addProblem(HashMap<String, IMarker> problems, String message, int line, Integer severity, IFile wsFile) {
 		try {
 			IMarker marker = wsFile.createMarker(IMarker.PROBLEM);
@@ -151,7 +151,7 @@ public class ProblemUpdater extends Job implements IResponseListener {
 		} catch (CoreException e) {
 		}
 	}
-	
+
 	public void responseReceived(List<String> responseLines) {
 		HashMap<String, IMarker> problems = new HashMap<String, IMarker>();
 		initProblems(problems);
@@ -160,29 +160,29 @@ public class ProblemUpdater extends Job implements IResponseListener {
 		int numProblems = 0;
 		for (String line : responseLines) {
 			if (!line.startsWith("progress:")) {
-		    	if (line.split(";").length == 1) {
-		    	    wsFiles = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation(new Path(line));
-		    	}
-		    	else if (wsFiles != null) {
-		    		String message = problemMessage(line);
-		    		int lineNumber = problemLineNumber(line);
-		    		Integer severity = problemSeverity(line);
-		    		numProblems++;
-		    		if (message != null && lineNumber >= 0) {
-			    		for (IFile file : wsFiles) {
-			    			String key = problemKey(message, lineNumber, severity, file.getFullPath());
-			    			if (problems.get(key) != null) {
-			    				toBeRemoved.remove(key);
-			    			}
-			    			else {
-				    		  addProblem(problems, message, lineNumber, severity, file);
-			    			}
+				if (line.split(";").length == 1) {
+					wsFiles = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation(new Path(line));
+				}
+				else if (wsFiles != null) {
+					String message = problemMessage(line);
+					int lineNumber = problemLineNumber(line);
+					Integer severity = problemSeverity(line);
+					numProblems++;
+					if (message != null && lineNumber >= 0) {
+						for (IFile file : wsFiles) {
+							String key = problemKey(message, lineNumber, severity, file.getFullPath());
+							if (problems.get(key) != null) {
+								toBeRemoved.remove(key);
+							}
+							else {
+								addProblem(problems, message, lineNumber, severity, file);
+							}
 						}
-		    		}
-		    	}
-		    	else {
-		    		// ignore progress information
-		    	}
+					}
+				}
+				else {
+					// ignore progress information
+				}
 			}
 		}
 		for (String key : toBeRemoved.keySet()) {
@@ -197,7 +197,7 @@ public class ProblemUpdater extends Job implements IResponseListener {
 		progressMonitor.done();
 		done(Status.OK_STATUS);
 	}
-	
+
 	public void responseUpdate(List<String> responseLines) {
 		if (connector.getProtocolVersion() >= 1) {
 			int progress = getProgress(responseLines);
@@ -207,7 +207,7 @@ public class ProblemUpdater extends Job implements IResponseListener {
 			}
 		}
 	}
-	
+
 	private int getProgress(List<String> responseLines) {
 		String line = responseLines.get(responseLines.size()-1);
 		int progress = -1;
@@ -225,7 +225,7 @@ public class ProblemUpdater extends Job implements IResponseListener {
 		}
 		return progress;
 	}
-	
+
 	public void requestTimedOut() {
 		statusLineManager.setMessage("Model loading timed out.");
 		progressMonitor.done();
