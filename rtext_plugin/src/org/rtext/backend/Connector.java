@@ -46,6 +46,9 @@ public class Connector {
 	private static int STARTUP = 1;
 	private static int CONNECTED = 2;
 	
+	public static int ERROR_OK = 0;
+	public static int ERROR_NOT_CONNECTED = 1;
+	
 	private class Invocation {
 		String id;
 		IResponseListener listener;
@@ -70,26 +73,34 @@ public class Connector {
 	}
 	
 	public List<String> executeCommand(Command command, int timeout) {
-		String invId = String.valueOf(invocationId++);
-		sendRequest(command.getName()+"\n"+invId+"\n"+command.getData());
-		String key = String.valueOf(invId);
-		invocations.put(key, new Invocation(key, null, timeout));
-		String response = receiveResponse(timeout);
-		while (response != null) {
-			List<String> responseLines = handleResponse(response);
-			if (responseLines != null) {
-				return responseLines;
+		if (state == CONNECTED) {
+			String invId = String.valueOf(invocationId++);
+			sendRequest(command.getName()+"\n"+invId+"\n"+command.getData());
+			String key = String.valueOf(invId);
+			invocations.put(key, new Invocation(key, null, timeout));
+			String response = receiveResponse(timeout);
+			while (response != null) {
+				List<String> responseLines = handleResponse(response);
+				if (responseLines != null) {
+					return responseLines;
+				}
+				response = receiveResponse(100);
 			}
-			response = receiveResponse(100);
 		}
 		return null;
 	}
 	
-	public void executeCommand(Command command, IResponseListener listener, int timeout) {
-		String invId = String.valueOf(invocationId++);
-		sendRequest(command.getName()+"\n"+invId+"\n"+command.getData());
-		String key = String.valueOf(invId);
-		invocations.put(key, new Invocation(key, listener, timeout));
+	public int executeCommand(Command command, IResponseListener listener, int timeout) {
+		if (state == CONNECTED) {
+			String invId = String.valueOf(invocationId++);
+			sendRequest(command.getName()+"\n"+invId+"\n"+command.getData());
+			String key = String.valueOf(invId);
+			invocations.put(key, new Invocation(key, listener, timeout));
+			return ERROR_OK;
+		}
+		else {
+			return ERROR_NOT_CONNECTED;
+		}
 	}
 
 	public int getProtocolVersion() {
@@ -271,7 +282,7 @@ public class Connector {
 			SocketAddress sa = new InetSocketAddress("localhost", port);
 			socket = new DatagramSocket();
 			socket.connect(sa);
-			socket.setReceiveBufferSize(655360);
+			socket.setReceiveBufferSize(6553600);
 			return true;
 		} catch (SocketException e) {
 			return false;

@@ -45,15 +45,19 @@ public class ProblemUpdater extends Job implements IResponseListener {
 		lastProgress = 0;
 		if (connector != null) {
 			if (connector.getProtocolVersion() >= 1) {
-				connector.executeCommand(new Command("show_problems2", ""), this, 300000);
-				progressMonitor.beginTask("update problems", 100);
+				if (connector.executeCommand(new Command("show_problems2", ""), this, 300000) != Connector.ERROR_NOT_CONNECTED) {
+					progressMonitor.beginTask("", 100);
+					return Job.ASYNC_FINISH;
+				}
 			}
 			else {
-				connector.executeCommand(new Command("show_problems", ""), this, 300000);
-				progressMonitor.beginTask("update problems", IProgressMonitor.UNKNOWN);
+				if (connector.executeCommand(new Command("show_problems", ""), this, 300000) != Connector.ERROR_NOT_CONNECTED) {
+					progressMonitor.beginTask("", IProgressMonitor.UNKNOWN);
+					return Job.ASYNC_FINISH;
+				}
 			}
 		}
-		return Job.ASYNC_FINISH;
+		return Status.OK_STATUS;
 	}
 
 	private void initProblems(HashMap<String, IMarker> problems) {
@@ -158,24 +162,31 @@ public class ProblemUpdater extends Job implements IResponseListener {
 		HashMap<String, IMarker> toBeRemoved = (HashMap<String, IMarker>)problems.clone();
 		IFile[] wsFiles = null;
 		int numProblems = 0;
+		int numAnnotatedProblems = 0;
+		int perFileProblems = 0;
 		for (String line : responseLines) {
 			if (!line.startsWith("progress:")) {
 				if (line.split(";").length == 1) {
 					wsFiles = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation(new Path(line));
+					perFileProblems = 0;
 				}
 				else if (wsFiles != null) {
-					String message = problemMessage(line);
-					int lineNumber = problemLineNumber(line);
-					Integer severity = problemSeverity(line);
 					numProblems++;
-					if (message != null && lineNumber >= 0) {
-						for (IFile file : wsFiles) {
-							String key = problemKey(message, lineNumber, severity, file.getFullPath());
-							if (problems.get(key) != null) {
-								toBeRemoved.remove(key);
-							}
-							else {
-								addProblem(problems, message, lineNumber, severity, file);
+					if (perFileProblems < 100) {
+						String message = problemMessage(line);
+						int lineNumber = problemLineNumber(line);
+						Integer severity = problemSeverity(line);
+						perFileProblems++;
+						numAnnotatedProblems++;
+						if (message != null && lineNumber >= 0 && severity != null) {
+							for (IFile file : wsFiles) {
+								String key = problemKey(message, lineNumber, severity, file.getFullPath());
+								if (problems.get(key) != null) {
+									toBeRemoved.remove(key);
+								}
+								else {
+									addProblem(problems, message, lineNumber, severity, file);
+								}
 							}
 						}
 					}
@@ -193,7 +204,11 @@ public class ProblemUpdater extends Job implements IResponseListener {
 			}
 			problems.remove(key);
 		}
-		statusLineManager.setMessage("Model loaded. " + String.valueOf(numProblems) + " problems.");
+		String message = "Model loaded. " + String.valueOf(numProblems) + " problems.";
+		if (numAnnotatedProblems < numProblems) {
+			message += " (showing only "+ String.valueOf(numAnnotatedProblems) + ")";
+		}
+		statusLineManager.setMessage(message);
 		progressMonitor.done();
 		done(Status.OK_STATUS);
 	}
@@ -211,7 +226,7 @@ public class ProblemUpdater extends Job implements IResponseListener {
 	private int getProgress(List<String> responseLines) {
 		String line = responseLines.get(responseLines.size()-1);
 		int progress = -1;
-		if (line.startsWith("progress:")) {
+		if (line != null && line.startsWith("progress:")) {
 			String[] parts = line.split(":");
 			if (parts.length == 2) {
 				progress = Integer.parseInt(parts[1].trim());
