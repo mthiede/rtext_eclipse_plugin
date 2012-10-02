@@ -6,11 +6,11 @@
 	<parent>
 		<groupId>org.rtext</groupId>
 		<artifactId>rtext_eclipse_plugin</artifactId>
-		<version>0.0.6-SNAPSHOT</version>
+		<version>0.0.7-SNAPSHOT</version>
 	</parent>
 	<groupId>org.rtext</groupId>
 	<artifactId>rtext_update_site</artifactId>
-	<version>0.0.6-SNAPSHOT</version>
+	<version>0.0.7-SNAPSHOT</version>
 	<packaging>eclipse-repository</packaging>
 	<build>
 		<plugins>
