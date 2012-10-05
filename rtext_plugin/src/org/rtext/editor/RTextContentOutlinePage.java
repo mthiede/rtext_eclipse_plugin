@@ -50,7 +50,18 @@ public class RTextContentOutlinePage extends ContentOutlinePage implements Model
 		viewer.setContentProvider(new RTextContentProvider());
 		viewer.setLabelProvider(new RTextLabelProvider());
 		viewer.addSelectionChangedListener(this);
+		configureTreeContent();
+	}
+
+	private void configureTreeContent() {
 		getDocument().addModelListener(this);
+		getDocument().readOnly(new IUnitOfWork.Void<RootElement>() {
+
+			@Override
+			public void process(RootElement state) throws Exception {
+				handleModelChange(state);
+			}
+		});
 	}
 
 	private RTextDocument getDocument() {
