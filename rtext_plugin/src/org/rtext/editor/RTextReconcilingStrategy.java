@@ -6,11 +6,12 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
-import org.rtext.model.Element;
+import org.rtext.model.RTextModelParser;
 import org.rtext.model.RootElement;
 public class RTextReconcilingStrategy implements IReconcilingStrategy {
 
 	private RTextDocument document;
+	private RTextModelParser modelParser = new RTextModelParser();
 
 	@Override
 	public void setDocument(IDocument document) {
@@ -28,7 +29,8 @@ public class RTextReconcilingStrategy implements IReconcilingStrategy {
 		document.modify(new IUnitOfWork.Void<RootElement>(){
 			@Override
 			public void process(RootElement state) throws Exception {
-				state.update(new Element("example " + System.currentTimeMillis(), state));
+				modelParser.setRange(document, 0, document.getLength());
+				state.update(modelParser.parse());
 			}
 		});
 	}

@@ -93,7 +93,7 @@ public class RTextContentOutlinePage extends ContentOutlinePage implements Model
 			refreshJob.cancel();
 		}
 		refreshJob = new RefreshJob(root);
-		refreshJob.schedule(100);
+		refreshJob.schedule(50);
 	}
 
 	public void setSourceViewer(ISourceViewer sourceViewer) {

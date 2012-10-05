@@ -17,11 +17,16 @@ public class RTextLabelProvider extends LabelProvider {
 	}
 
 	@Override
-	public String getText(Object element) {
-		if (element instanceof Element) {
-			return ((Element) element).getName();
+	public String getText(Object obj) {
+		if (!(obj instanceof Element)) {
+			return super.getText(obj);
 		}
-		return super.getText(element);
+		Element element = (Element) obj;
+		String name = element.getName();
+		if(name != null && name.length() > 0){
+			return name;
+		}
+		return element.getType();
 	}
 
 	@Override
