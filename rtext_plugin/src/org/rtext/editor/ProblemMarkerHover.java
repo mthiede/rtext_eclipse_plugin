@@ -33,7 +33,6 @@ public class ProblemMarkerHover implements IAnnotationHover {
 				} catch (BadLocationException e) {
 				} catch (CoreException e) {
 				}
-				
 			}
 		}
 		return result;

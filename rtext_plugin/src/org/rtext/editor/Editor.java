@@ -13,6 +13,7 @@ import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 import org.eclipse.ui.texteditor.TextOperationAction;
+import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.rtext.RTextPlugin;
 import org.rtext.backend.Connector;
 import org.rtext.backend.ConnectorManager;
@@ -21,11 +22,13 @@ import org.rtext.backend.ConnectorManager;
 public class Editor extends TextEditor {
 
 	private ColorManager colorManager;
+	private RTextContentOutlinePage myOutlinePage;
 
 	public Editor() {
 		super();
 		colorManager = new ColorManager();
 		setSourceViewerConfiguration(new ViewerConfiguration(this, colorManager));
+		setDocumentProvider(new RTextDocumentProvider());
 	}
 	
 	public void createPartControl(Composite parent) {
@@ -67,5 +70,17 @@ public class Editor extends TextEditor {
 	public Connector getBackendConnector() {
 		return ConnectorManager.getConnector(getInputPath());
 	}
-
+	
+	@Override
+	public Object getAdapter(@SuppressWarnings("rawtypes") Class required) {
+		if (IContentOutlinePage.class.equals(required)) {
+			if (myOutlinePage == null) {
+				myOutlinePage = new RTextContentOutlinePage(this);
+				myOutlinePage.setSourceViewer(getSourceViewer());
+			}
+			return myOutlinePage;
+		}
+		return super.getAdapter(required);
+	}
+	
 }

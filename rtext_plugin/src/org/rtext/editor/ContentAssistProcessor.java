@@ -29,12 +29,11 @@ public class ContentAssistProcessor implements IContentAssistProcessor,	IComplet
 	}
 	
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer,	int offset) {
-		
 		Vector<CompletionProposal> proposals = new Vector<CompletionProposal>();
 		String wordStart = wordStart(viewer, offset);
 		int wordStartOffset = offset-wordStart.length();
 		
-		loadCompletions(viewer, offset);
+		loadCompletions(viewer, offset);		
 		for (String option : allCompletionOptions) {
 			if (filterCompletionOption(option, wordStart)) {
 				proposals.add(new CompletionProposal(option, wordStartOffset, wordStart.length(), option.length()));
@@ -81,13 +80,11 @@ public class ContentAssistProcessor implements IContentAssistProcessor,	IComplet
 	@Override
 	public IContextInformation[] computeContextInformation(ITextViewer viewer,
 			int offset) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public char[] getCompletionProposalAutoActivationCharacters() {
-		// TODO Auto-generated method stub
 		char[] result = new char[1];
 		result[0] = 'a';
 		return result;
@@ -95,13 +92,11 @@ public class ContentAssistProcessor implements IContentAssistProcessor,	IComplet
 
 	@Override
 	public char[] getContextInformationAutoActivationCharacters() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public IContextInformationValidator getContextInformationValidator() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -142,8 +137,6 @@ public class ContentAssistProcessor implements IContentAssistProcessor,	IComplet
 	@Override
 	public void selectionChanged(ICompletionProposal proposal,
 			boolean smartToggle) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }
