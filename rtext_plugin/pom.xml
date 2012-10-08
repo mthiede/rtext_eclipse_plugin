@@ -5,10 +5,10 @@
   <parent>
     <groupId>org.rtext</groupId>
     <artifactId>rtext_eclipse_plugin</artifactId>
-    <version>0.0.7-SNAPSHOT</version>
+    <version>0.0.8-SNAPSHOT</version>
   </parent>
   <groupId>org.rtext</groupId>
   <artifactId>org.rtext.RTextPlugin</artifactId>
-  <version>0.0.7-SNAPSHOT</version>
+  <version>0.0.8-SNAPSHOT</version>
   <packaging>eclipse-plugin</packaging>
 </project>
