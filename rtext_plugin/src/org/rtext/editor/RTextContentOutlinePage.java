@@ -12,14 +12,14 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
 import org.rtext.model.Element;
-import org.rtext.model.RootElement;
+import org.rtext.model.RTextResource;
 
 public class RTextContentOutlinePage extends ContentOutlinePage implements ModelChangeListener{
 
 	public class RefreshJob extends Job {
-		private final RootElement root;
+		private final RTextResource root;
 
-		public RefreshJob(RootElement root) {
+		public RefreshJob(RTextResource root) {
 			super("Refreshing outline view");
 			this.root = root;
 		}
@@ -55,10 +55,10 @@ public class RTextContentOutlinePage extends ContentOutlinePage implements Model
 
 	private void configureTreeContent() {
 		getDocument().addModelListener(this);
-		getDocument().readOnly(new IUnitOfWork.Void<RootElement>() {
+		getDocument().readOnly(new IUnitOfWork.Void<RTextResource>() {
 
 			@Override
-			public void process(RootElement state) throws Exception {
+			public void process(RTextResource state) throws Exception {
 				handleModelChange(state);
 			}
 		});
@@ -88,7 +88,7 @@ public class RTextContentOutlinePage extends ContentOutlinePage implements Model
 	}
 
 	@Override
-	public void handleModelChange(final RootElement root) {
+	public void handleModelChange(final RTextResource root) {
 		if(refreshJob != null){
 			refreshJob.cancel();
 		}
