@@ -20,10 +20,10 @@ import org.rtext.backend.Connector;
 
 public class ContentAssistProcessor implements IContentAssistProcessor,	ICompletionListener {
 
-	private Editor editor;
+	private RTextEditor editor;
 	private List<String> allCompletionOptions;
 	
-	public ContentAssistProcessor(Editor editor) {
+	public ContentAssistProcessor(RTextEditor editor) {
 		this.editor = editor;
 		this.allCompletionOptions = null;
 	}

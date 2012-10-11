@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.jface.text.Position;
+
 public class ElementBuilder {
 
 	private String name = "";
@@ -60,7 +62,12 @@ public class ElementBuilder {
 		}else{
 			newChildren = new ArrayList<Element>(children.size());
 		}
-		Element result = new Element(type, name, parent, offset, length, newChildren);
+		Element result = new Element(
+				type, 
+				name, 
+				parent, 
+				new Position(offset, length),
+				newChildren);
 		for (ElementBuilder childBuilder : children) {
 			newChildren.add(childBuilder.parent(result).build());
 		}
@@ -82,5 +89,9 @@ public class ElementBuilder {
 	public ElementBuilder addChild(ElementBuilder builder) {
 		getChildren().add(builder);
 		return this;
+	}
+	
+	public int getOffset() {
+		return offset;
 	}
 }

@@ -3,12 +3,18 @@ package org.rtext.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RTextResource  {
+import org.eclipse.jface.text.Position;
 
-	private List<Element> contents = new ArrayList<Element>();
+public class RTextResource extends Element{
 
-	public List<Element> getContents() {
-		return contents;
+	public RTextResource() {
+		super("Document", "", null, new Position(0, 0), new ArrayList<Element>());
+	}
+
+	public void update(int length, List<Element> elements) {
+		this.getPosition().setLength(length);
+		getChildren().clear();
+		getChildren().addAll(elements);
 	}
  
 }

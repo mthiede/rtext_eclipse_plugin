@@ -13,13 +13,11 @@ public class RTextModelParser extends AbstractRTextParser<Element> {
 	private ElementBuilder current;
 	private ElementBuilder root;
 	
-	private int start = 0;
-	
-	
 	public List<Element> parse(){
 		init();
-		while(nextToken() != EOF){
-			nextToken();
+		Element token = nextToken();
+		while(token != EOF){
+			token = nextToken();
 		}
 		Element result = root.build();
 		return singletonList(result);
@@ -58,7 +56,6 @@ public class RTextModelParser extends AbstractRTextParser<Element> {
 		add(element()
 			.offset(getTokenOffset())
 			.type(currentText()));
-		start = getTokenOffset();
 		increaseLength();
 		return null;
 	}
@@ -74,8 +71,7 @@ public class RTextModelParser extends AbstractRTextParser<Element> {
 	}
 
 	private void increaseLength() {
-		int length = getTokenOffset() + getTokenLength() - start;
-		current.length(length);
+		current.length(currentOffset() - current.getOffset());
 	}
 
 	private String currentText() {
@@ -103,7 +99,6 @@ public class RTextModelParser extends AbstractRTextParser<Element> {
 
 	@Override
 	protected Element createDefault() {
-		increaseLength();
 		return null;
 	}
 	
@@ -114,6 +109,12 @@ public class RTextModelParser extends AbstractRTextParser<Element> {
 	
 	@Override
 	protected void closeBlock() {
+		if(parents.isEmpty()){
+			return; // syntax error
+		}
+		ElementBuilder parent = parents.peek();
+		int length = currentOffset() - parent.getOffset() + 1;
+		parent.length(length);
 		parents.pop();
 	}
 }

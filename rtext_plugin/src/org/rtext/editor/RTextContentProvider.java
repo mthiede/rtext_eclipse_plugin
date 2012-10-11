@@ -3,7 +3,6 @@ package org.rtext.editor;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.rtext.model.Element;
-import org.rtext.model.RTextResource;
 
 public class RTextContentProvider implements ITreeContentProvider {
 
@@ -22,9 +21,6 @@ public class RTextContentProvider implements ITreeContentProvider {
 
 	@Override
 	public Object[] getChildren(Object parentElement) {
-		if (parentElement instanceof RTextResource) {
-			return ((RTextResource)parentElement).getContents().toArray();
-		}
 		if (parentElement instanceof Element) {
 			return ((Element) parentElement).getChildren().toArray();
 		}

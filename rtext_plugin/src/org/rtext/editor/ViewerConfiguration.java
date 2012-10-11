@@ -20,9 +20,9 @@ import org.eclipse.swt.graphics.RGB;
 public class ViewerConfiguration extends SourceViewerConfiguration {
 	private SyntaxScanner scanner;
 	private ColorManager colorManager;
-	private Editor editor;
+	private RTextEditor editor;
 
-	public ViewerConfiguration(Editor editor, ColorManager colorManager) {
+	public ViewerConfiguration(RTextEditor editor, ColorManager colorManager) {
 		this.editor = editor;
 		this.colorManager = colorManager;
 	}

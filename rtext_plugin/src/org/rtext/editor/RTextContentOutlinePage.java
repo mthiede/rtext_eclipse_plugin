@@ -4,6 +4,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -36,11 +37,11 @@ public class RTextContentOutlinePage extends ContentOutlinePage implements Model
 		}
 	}
 
-	private Editor editor;
+	private RTextEditor editor;
 	private Job refreshJob;
 	private ISourceViewer sourceViewer;
 
-	public RTextContentOutlinePage(Editor editor) {
+	public RTextContentOutlinePage(RTextEditor editor) {
 		this.editor = editor;
 	}
 
@@ -77,10 +78,9 @@ public class RTextContentOutlinePage extends ContentOutlinePage implements Model
 			editor.resetHighlightRange();
 		else {
 			Element element = (Element) ((IStructuredSelection) selection).getFirstElement();
-			int start= element.getOffset();
-			int length= element.getLength();
 			try {
-				editor.setHighlightRange(start, length, true);
+				Position position = element.getPosition();
+				editor.setHighlightRange(position.offset, position.length, true);
 			} catch (IllegalArgumentException x) {
 				editor.resetHighlightRange();
 			}
@@ -93,7 +93,7 @@ public class RTextContentOutlinePage extends ContentOutlinePage implements Model
 			refreshJob.cancel();
 		}
 		refreshJob = new RefreshJob(root);
-		refreshJob.schedule(50);
+		refreshJob.schedule();
 	}
 
 	public void setSourceViewer(ISourceViewer sourceViewer) {

@@ -27,13 +27,12 @@ public class RTextReconcilingStrategy implements IReconcilingStrategy {
 	}
 
 	@Override
-	public void reconcile(IRegion partition) {
+	public void reconcile(final IRegion partition) {
 		document.modify(new IUnitOfWork.Void<RTextResource>(){
 			@Override
 			public void process(RTextResource state) throws Exception {
 				modelParser.setRange(document, 0, document.getLength());
-				state.getContents().clear();
-				state.getContents().addAll(modelParser.parse());
+				state.update(partition.getLength(), modelParser.parse());
 			}
 		});
 	}

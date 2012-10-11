@@ -7,9 +7,9 @@ import org.rtext.editor.OpenElementDialog.ElementDescriptor;
 
 
 public class OpenElementHandler extends AbstractHandler {
-	Editor editor;
+	RTextEditor editor;
 	
-	public OpenElementHandler(Editor editor) {
+	public OpenElementHandler(RTextEditor editor) {
 		this.editor = editor;
 	}
 	

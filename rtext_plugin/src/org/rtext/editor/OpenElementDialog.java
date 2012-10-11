@@ -33,7 +33,7 @@ public class OpenElementDialog extends SelectionStatusDialog implements IRespons
 	private Text pattern;
 	private TableViewer list;
 	private Label statusLabel;
-	private Editor editor;
+	private RTextEditor editor;
 	private Date requestSentDate;
 	private String lastRequestedPattern;
 
@@ -61,7 +61,7 @@ public class OpenElementDialog extends SelectionStatusDialog implements IRespons
 		}
 	}
 	
-	public OpenElementDialog(Editor editor) {
+	public OpenElementDialog(RTextEditor editor) {
 		super(editor.getSite().getShell());
 		this.editor = editor;
 		requestSentDate = null;

@@ -8,6 +8,5 @@ public class RTextDocumentProvider extends FileDocumentProvider {
 	protected IDocument createEmptyDocument() {
 		return new RTextDocument();
 	}
-	
 		
 }

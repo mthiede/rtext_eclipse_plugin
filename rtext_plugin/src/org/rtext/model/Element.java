@@ -2,23 +2,38 @@ package org.rtext.model;
 
 import java.util.List;
 
+import org.eclipse.jface.text.Position;
+
 public class Element {
 
 	private final String name;
 	private final Element parent;
-	private final int offset;
-	private final int length;
 	private final List<Element> children;
-	private String type;
+	private final String type;
+	private Position position;
 	
-	public Element(String type, String name, Element parent, int offset, int length, List<Element> children) {
+	public Element(String type, String name, Element parent, Position position, List<Element> children) {
 		this.type = type;
 		this.name = name;
 		this.parent = parent;
-		this.offset = offset;
-		this.length = length;
+		this.position = position;
 		this.children = children;
+//		assertInRange(parent);
 	}
+
+//	private void assertInRange(Element container) {
+//		while(container != null){
+//			Position containerPosition = container.getPosition();
+//			if(containerPosition.getOffset() >= position.getOffset()){
+//				throw new IllegalArgumentException(this + ": offset out of range: " + position.offset);
+//			}
+//			int containerEndOffset = containerPosition.offset + containerPosition.length;
+//			if(containerEndOffset < position.offset + position.length){
+//				throw new IllegalArgumentException(this + ": length out of range: " + position.length);
+//			}
+//			container = container.getParent();
+//		}
+//	}
 
 	public String getName() {
 		return name;
@@ -32,16 +47,30 @@ public class Element {
 		return children;
 	}
 
-	public int getOffset() {
-		return offset;
+	public Position getPosition() {
+		return position;
 	}
 
-	public int getLength() {
-		return length;
-	}
-	
 	public String getType() {
 		return type;
+	}
+
+	@Override
+	public String toString() {
+		String parentString = "";
+		if(parent != null){
+			parentString = parent.name + "/";
+		}
+		String result = type + " " + name + "(" + parentString + position.getOffset() + "/" + position.getLength() + ")";
+		
+		if(!children.isEmpty()){
+			result += " {\n";
+			for (Element child : children) {
+				result += child + "\n";
+			}
+			result += "}";
+		}
+		return result;
 	}
 
 	@Override
@@ -49,11 +78,7 @@ public class Element {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
-				+ ((children == null) ? 0 : children.hashCode());
-		result = prime * result + length;
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + offset;
-		result = prime * result + ((type == null) ? 0 : type.hashCode());
+				+ ((position == null) ? 0 : position.hashCode());
 		return result;
 	}
 
@@ -66,46 +91,13 @@ public class Element {
 		if (getClass() != obj.getClass())
 			return false;
 		Element other = (Element) obj;
-		if (children == null) {
-			if (other.children != null)
+		if (position == null) {
+			if (other.position != null)
 				return false;
-		} else if (!children.equals(other.children))
-			return false;
-		if (length != other.length)
-			return false;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		if (offset != other.offset)
-			return false;
-		if (type == null) {
-			if (other.type != null)
-				return false;
-		} else if (!type.equals(other.type))
+		} else if (!position.equals(other.position))
 			return false;
 		return true;
 	}
 
-	@Override
-	public String toString() {
-		String parentString = "";
-		if(parent != null){
-			parentString = parent.name + "/";
-		}
-		String result = type + " " + name + "(" + parentString + offset + "/" + length + ")";
-		
-		if(!children.isEmpty()){
-			result += " {\n";
-			for (Element child : children) {
-				result += child + "\n";
-			}
-			result += "}";
-		}
-		return result;
-	}
-
 	
-
 }

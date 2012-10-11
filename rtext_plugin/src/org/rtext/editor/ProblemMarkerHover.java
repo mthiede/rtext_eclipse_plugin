@@ -16,7 +16,7 @@ public class ProblemMarkerHover implements IAnnotationHover {
 	@Override
 	public String getHoverInfo(ISourceViewer sourceViewer, int lineNumber) {
 		IAnnotationModel annotationModel = sourceViewer.getAnnotationModel();
-		Iterator it = annotationModel.getAnnotationIterator();
+		Iterator<?> it = annotationModel.getAnnotationIterator();
 		String result = null;
 		while (it.hasNext()) {
 			Annotation annotation = (Annotation)it.next();

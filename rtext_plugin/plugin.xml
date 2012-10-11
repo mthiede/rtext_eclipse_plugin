@@ -5,7 +5,7 @@
    <extension
          point="org.eclipse.ui.editors">
       <editor
-            class="org.rtext.editor.Editor"
+            class="org.rtext.editor.RTextEditor"
             contributorClass="org.eclipse.ui.texteditor.BasicTextEditorActionContributor"
             icon="icons/sample.gif"
             id="org.rtext.Editor"

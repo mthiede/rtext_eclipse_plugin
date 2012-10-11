@@ -9,6 +9,8 @@ import org.rtext.editor.ColorManager;
 
 public abstract class AbstractRTextParser<T> {
 
+	private static final char PATH_SEPARATOR = '/';
+
 	public static final char EOL = (char)0;
 
 	protected ColorManager fColorManager;
@@ -31,23 +33,19 @@ public abstract class AbstractRTextParser<T> {
 			return createEndOfFile();
 		}
 		T result;
-		tokenStart();
 		consumeWhitespace();
+		tokenStart();
 		if (nextIsChar('#')) {
 			consumeUntilEOL();
 			result = createComment();
 		}
 		else if (nextIsWordStartCharacter()) {
 			consumeWord();
-			if (consumeChar(':')) {
+			if (consumeChar(':') && !fNewLine) {
 				result = createLabel();
 			}
-			else if (consumeChar('/')) {
-				consumeWord();
-				while (consumeChar('/')) {
-					consumeWord();
-				}
-				result = createReference();
+			else if (isReference()) {
+				result = consumeReference();
 			}
 			else {
 				if (fNewLine) {
@@ -62,12 +60,8 @@ public abstract class AbstractRTextParser<T> {
 			consumeNumber();
 			result = createNumber();
 		}
-		else if (consumeChar('/')) {
-			consumeWord();
-			while (consumeChar('/')) {
-				consumeWord();
-			}
-			result = createReference();
+		else if (isReference()) {
+			result = consumeReference();
 		}
 		else if (nextIsChar('"')) {
 			consumeString();
@@ -85,6 +79,20 @@ public abstract class AbstractRTextParser<T> {
 		}
 		fNewLine = false;
 		return result;
+	}
+
+	private T consumeReference() {
+		T result;
+		consumeWord();
+		while (isReference()) {
+			consumeWord();
+		}
+		result = createReference();
+		return result;
+	}
+
+	private boolean isReference() {
+		return consumeChar(PATH_SEPARATOR);
 	}
 
 	protected void openBlock() {
@@ -184,18 +192,14 @@ public abstract class AbstractRTextParser<T> {
 	}
 
 	private void unreadChar() {
-		if (fOffset < fEndOffset) {
-			fOffset--;
-		}
+		fOffset--;
 	}
 
 	private char readChar() {
 		char result = EOL;
 		try {
-			if (fOffset < fEndOffset) {
-				result = fDocument.getChar(fOffset++);
-			}
-		} catch (BadLocationException e) {
+			result = fDocument.getChar(fOffset++);
+		} catch (Exception e) {
 		}
 		return result;
 	}
@@ -234,5 +238,9 @@ public abstract class AbstractRTextParser<T> {
 	protected abstract T createString();
 
 	protected abstract T createDefault();
+	
+	protected int currentOffset() {
+		return fOffset;
+	}
 
 }

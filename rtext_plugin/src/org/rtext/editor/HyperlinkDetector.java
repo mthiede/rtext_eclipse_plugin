@@ -15,9 +15,9 @@ import org.rtext.backend.Connector;
 
 
 public class HyperlinkDetector implements IHyperlinkDetector {
-	private Editor editor;
+	private RTextEditor editor;
 	
-	public HyperlinkDetector(Editor editor) {
+	public HyperlinkDetector(RTextEditor editor) {
 		this.editor = editor;
 	}
 	
