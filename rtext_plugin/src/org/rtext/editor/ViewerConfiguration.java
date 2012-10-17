@@ -1,5 +1,7 @@
 package org.rtext.editor;
 
+import java.util.List;
+
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
@@ -21,10 +23,16 @@ public class ViewerConfiguration extends SourceViewerConfiguration {
 	private SyntaxScanner scanner;
 	private ColorManager colorManager;
 	private RTextEditor editor;
+	private EditStrategyProvider editStrategyProvider;
 
 	public ViewerConfiguration(RTextEditor editor, ColorManager colorManager) {
+		this(editor, colorManager, new EditStrategyProvider());
+	}
+	
+	public ViewerConfiguration(RTextEditor editor, ColorManager colorManager, EditStrategyProvider editStrategyProvider) {
 		this.editor = editor;
 		this.colorManager = colorManager;
+		this.editStrategyProvider = editStrategyProvider;
 	}
 	public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {
 		return new String[] { IDocument.DEFAULT_CONTENT_TYPE };
@@ -68,7 +76,8 @@ public class ViewerConfiguration extends SourceViewerConfiguration {
 
 	public IAutoEditStrategy[] getAutoEditStrategies(
 			ISourceViewer sourceViewer, String contentType) {
-		return super.getAutoEditStrategies(sourceViewer, contentType);
+		List<IAutoEditStrategy> strategies = editStrategyProvider.getStrategies(sourceViewer, contentType);
+		return strategies.toArray(new IAutoEditStrategy[strategies.size()]);
 	}
 	
 	public IHyperlinkDetector[] getHyperlinkDetectors(ISourceViewer sourceViewer) {

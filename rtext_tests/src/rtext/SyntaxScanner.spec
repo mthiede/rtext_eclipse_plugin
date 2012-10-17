@@ -13,7 +13,7 @@ import static extension org.jnario.lib.JnarioIterableExtensions.*
 import static extension org.jnario.lib.Should.*
 
 describe SyntaxScanner {
- 
+ 	
 	before subject = new SyntaxScanner(new ColorManager)
 	
 	fact "parse comments"{

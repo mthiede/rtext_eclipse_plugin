@@ -69,7 +69,6 @@ public class RTextContentOutlinePage extends ContentOutlinePage implements Model
 		return (RTextDocument)sourceViewer.getDocument();
 	}
 
-	
 	public void selectionChanged(SelectionChangedEvent event) {
 		super.selectionChanged(event);
 
