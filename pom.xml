@@ -8,13 +8,21 @@
   <packaging>pom</packaging>
 
   <properties>
-   <tycho-version>0.15.0</tycho-version>
+    <tycho-version>0.15.0</tycho-version>
     <tycho-groupid>org.eclipse.tycho</tycho-groupid>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.build.resourceEncoding>UTF-8</project.build.resourceEncoding>
+    <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
   </properties>
+
+  <prerequisites>
+    <maven>3.0</maven>
+  </prerequisites>
+
   <modules>
     <module>rtext_plugin</module>
     <module>rtext_feature</module>
+    <module>rtext_target</module>
     <module>rtext_update_site</module>
   </modules>
      <repositories>
@@ -32,6 +40,50 @@
         <artifactId>tycho-maven-plugin</artifactId>
         <version>${tycho-version}</version>
         <extensions>true</extensions>
+      </plugin>
+      <plugin>
+        <groupId>${tycho-groupid}</groupId>
+        <artifactId>target-platform-configuration</artifactId>
+        <version>${tycho-version}</version>
+        <configuration>
+          <resolver>p2</resolver>
+          <target>
+            <artifact>
+              <groupId>org.rtext</groupId>
+              <artifactId>org.rtext.target</artifactId>
+              <version>${project.version}</version>
+              <classifier>juno</classifier>
+            </artifact>
+          </target>
+          <ignoreTychoRepositories>true</ignoreTychoRepositories>
+          <environments>
+            <environment>
+              <os>macosx</os>
+              <ws>cocoa</ws>
+              <arch>x86_64</arch>
+            </environment>
+            <environment>
+              <os>win32</os>
+              <ws>win32</ws>
+              <arch>x86</arch>
+            </environment>
+            <environment>
+              <os>win32</os>
+              <ws>win32</ws>
+              <arch>x86_64</arch>
+            </environment>
+            <environment>
+              <os>linux</os>
+              <ws>gtk</ws>
+              <arch>x86</arch>
+            </environment>
+            <environment>
+              <os>linux</os>
+              <ws>gtk</ws>
+              <arch>x86_64</arch>
+            </environment>
+          </environments>
+        </configuration>
       </plugin>
     </plugins>
   </build>
