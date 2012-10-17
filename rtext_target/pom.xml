@@ -6,11 +6,11 @@ xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLS
   <parent>
     <groupId>org.rtext</groupId>
     <artifactId>rtext_eclipse_plugin</artifactId>
-    <version>0.0.7-SNAPSHOT</version>
+    <version>0.0.8-SNAPSHOT</version>
   </parent>
   <groupId>org.rtext</groupId>
   <artifactId>org.rtext.target</artifactId>
-  <version>0.0.7-SNAPSHOT</version>
+  <version>0.0.8-SNAPSHOT</version>
   <packaging>pom</packaging>
 
 <build>
