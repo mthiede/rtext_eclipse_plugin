@@ -1,0 +1,22 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: RText Editor Plug-in
+Bundle-SymbolicName: org.rtext.lang.editor;singleton:=true
+Bundle-Version: 0.0.8.qualifier
+Bundle-Activator: org.rtext.lang.RTextPlugin
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.ui.editors,
+ org.eclipse.jface.text,
+ org.eclipse.core.resources,
+ org.eclipse.ui.console,
+ org.eclipse.core.expressions,
+ org.eclipse.ui.ide,
+ org.eclipse.ui.views
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Export-Package: org.rtext.lang,
+ org.rtext.lang.backend,
+ org.rtext.lang.editor,
+ org.rtext.lang.model
+Bundle-Vendor: E.S.R. Labs

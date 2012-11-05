@@ -2,8 +2,8 @@
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.rtext</groupId>
-  <artifactId>rtext_eclipse_plugin</artifactId>
+  <groupId>org.rtext.lang</groupId>
+  <artifactId>org.rtext.lang</artifactId>
   <version>0.0.8-SNAPSHOT</version>
   <packaging>pom</packaging>
 
@@ -20,10 +20,11 @@
   </prerequisites>
 
   <modules>
-    <module>rtext_plugin</module>
-    <module>rtext_feature</module>
-    <module>rtext_target</module>
-    <module>rtext_update_site</module>
+    <module>org.rtext.lang.editor</module>
+    <module>org.rtext.lang.feature</module>
+    <module>org.rtext.lang.target</module>
+    <module>org.rtext.lang.update-site</module>
+    <module>org.rtext.lang.tests</module>
   </modules>
      <repositories>
    <repository>
