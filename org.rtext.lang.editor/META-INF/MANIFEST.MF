@@ -17,6 +17,8 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.rtext.lang,
  org.rtext.lang.backend,
+ org.rtext.lang.backend2,
  org.rtext.lang.editor,
  org.rtext.lang.model
 Bundle-Vendor: E.S.R. Labs
+

@@ -1,0 +1,6 @@
+[submodule "org.rtext.lang.tests/backends/head/rgen"]
+	path = org.rtext.lang.tests/backends/head/rgen
+	url = https://github.com/mthiede/rgen.git
+[submodule "org.rtext.lang.tests/backends/head/rtext"]
+	path = org.rtext.lang.tests/backends/head/rtext
+	url = https://github.com/mthiede/rtext.git

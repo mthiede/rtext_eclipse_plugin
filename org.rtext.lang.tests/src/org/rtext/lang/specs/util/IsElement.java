@@ -46,7 +46,7 @@ public class IsElement extends TypeSafeMatcher<Element> {
 	public void describeTo(Description description) {
 		description.appendText(type + " " + name);
 		if(childMatchers.size() > 0){
-			description.appendValueList("{\n", "\n", "\n}", childMatchers);
+			description.appendValueList("{\n", "\n\t", "\n}", childMatchers);
 		}
 	}
 

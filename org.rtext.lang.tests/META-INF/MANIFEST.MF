@@ -14,5 +14,8 @@ Require-Bundle: org.jnario.lib;bundle-version="0.2.1",
  org.eclipse.core.expressions,
  org.eclipse.ui.ide,
  org.eclipse.ui.views,
- org.rtext.lang.editor
+ org.rtext.lang.editor,
+ org.eclipse.xtend.lib,
+ org.mockito;bundle-version="1.8.4",
+ org.objenesis;bundle-version="1.0.0"
 Bundle-Vendor: E.S.R. Labs
