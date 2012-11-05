@@ -1,4 +1,7 @@
+.metadata
 bin
 target
 runtime-*
 *._trace
+External*
+
