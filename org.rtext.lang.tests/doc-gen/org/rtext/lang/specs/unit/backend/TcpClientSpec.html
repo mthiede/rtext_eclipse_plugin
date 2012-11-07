@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>TcpClient</title>
+<meta name="description" content="">
+<meta name="author" content="Jnario">
+
+<!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+<link rel="stylesheet" href="../../../../../../css/bootstrap.min.css">
+<link rel="stylesheet" href="../../../../../../css/bootstrap-responsive.min.css">
+<link rel="stylesheet" href="../../../../../../css/custom.css">
+<link rel="stylesheet" href="../../../../../../css/prettify.css">
+<script type="text/javascript" src="../../../../../../js/prettify.js"></script>
+<script type="text/javascript" src="../../../../../../js/lang-jnario.js"></script>
+<script type="text/javascript" src="../../../../../../js/jquery.js"></script>
+<script type="text/javascript" src="../../../../../../js/bootstrap-tab.js"></script>
+</head>
+
+<body onload="prettyPrint()">
+	<div class="container">
+		<div class="tabbable">
+			<div class="content">
+				<div class="page-header notrun">
+					<h1>TcpClient</h1>
+					  <ul class="nav nav-tabs pull-right">
+					    <li class="active"><a href="#spec" data-toggle="tab">Spec</a></li>
+						<li><a href="#source" data-toggle="tab">Source</a></li>
+					  </ul>
+				</div>
+				<div class="row">
+					<div class="span12">
+						  <div class="tab-content">
+							  	<div class="tab-pane active" id="spec">
+<h3 class="exampleGroup notrun"  id="Sending_requests">Sending requests</h3>
+<ul><li><p id="Receives_responses_from_server" class="example notrun"><strong>Receives responses from server</strong></p>
+<pre class="prettyprint lang-spec linenums">
+server.responses += responseMessage
+subject.connect(ADDRESS, PORT)
+subject.sendRequest(ANY_COMMAND, callback)
+
+waitUntil[callback.response != null]
+callback.response =&gt; [
+  type =&gt; &quot;response&quot;
+]</pre>
+</li><li><p id="Receives_progress_from_server" class="example notrun"><strong>Receives progress from server</strong></p>
+<pre class="prettyprint lang-spec linenums">
+server.responses += progressMessage
+server.responses += responseMessage
+  
+subject.connect(ADDRESS, PORT)
+subject.sendRequest(ANY_COMMAND, callback)
+waitUntil[callback.response != null]
+  
+callback.progress.size =&gt; 1
+callback.response =&gt; [
+  type =&gt; &quot;response&quot;
+]</pre>
+</li><li><p id="Throws_exception_if_not_connected" class="example notrun"><strong>Throws exception if not connected</strong></p>
+<pre class="prettyprint lang-spec linenums">
+subject.sendRequest(ANY_COMMAND, callback) throws BackendException</pre>
+</li></ul>
+<h3 class="exampleGroup notrun"  id="connection_errors">Connection errors</h3>
+<ul><li><p id="throws_exception_when_server_does_not_exist" class="example notrun"><strong>throws exception when server does not exist</strong></p>
+<pre class="prettyprint lang-spec linenums">
+subject.connect(&quot;6.6.6.6&quot;, 6666) throws BackendException</pre>
+</li><li><p id="throws_exception_when_server_is_not_running" class="example notrun"><strong>throws exception when server is not running</strong></p>
+<pre class="prettyprint lang-spec linenums">
+server.shutdown
+subject.connect(ADDRESS, PORT) throws BackendException</pre>
+</li><li><p id="callback_receives_error_if_connection_is_closed" class="example notrun"><strong>callback receives error if connection is closed</strong></p>
+<pre class="prettyprint lang-spec linenums">
+subject.connect(ADDRESS, PORT)
+server.shutdown
+subject.sendRequest(ANY_COMMAND, callback) 
+waitUntil[callback.error != null]</pre>
+</li></ul>
+<h3 class="exampleGroup notrun"  id="connection_state">Connection state</h3>
+<ul><li><p id="is_initially_disconnected" class="example notrun"><strong>is initially disconnected</strong></p>
+<pre class="prettyprint lang-spec linenums">
+subject.isConnected =&gt; false</pre>
+</li><li><p id="is_connected_after_successful_connection_to_server" class="example notrun"><strong>is connected after successful connection to server</strong></p>
+<pre class="prettyprint lang-spec linenums">
+subject.connect(ADDRESS, PORT)
+subject.isConnected =&gt; true</pre>
+</li><li><p id="is_disconnected_when_server_shuts_down" class="example notrun"><strong>is disconnected when server shuts down</strong></p>
+<pre class="prettyprint lang-spec linenums">
+subject.connect(ADDRESS, PORT)
+server.shutdown
+subject.sendRequest(ANY_COMMAND, callback) 
+waitUntil[callback.error != null]
+subject.isConnected =&gt; false</pre>
+</li></ul>
+<ul><li><p id="subject_connect_ADDRESS_INVALID_PORT_throws_IllegalArgumentException" class="example notrun"><strong>subject.connect[ADDRESS, INVALID_PORT] throws IllegalArgumentException</strong></p>
+</li></ul>
+							</div>
+						    <div class="tab-pane" id="source">
+						    	<h3>TcpClient.spec</h3>
+						    	<p>
+<pre class="prettyprint lang-spec linenums">
+package org.rtext.lang.specs.unit.backend
+
+import java.util.concurrent.CountDownLatch
+import org.rtext.lang.backend2.Response
+import org.rtext.lang.backend2.TcpClient
+import org.rtext.lang.specs.util.TcpTestServer
+import org.rtext.lang.specs.util.TestCallBack
+
+import static org.junit.Assert.*
+import static org.rtext.lang.specs.util.Commands.*
+import static org.rtext.lang.specs.util.Wait.*
+
+import static extension org.jnario.lib.Should.*
+import org.rtext.lang.backend2.BackendException
+
+describe TcpClient{
+  int INVALID_PORT = -1
+  
+  val progressMessage = '{&quot;type&quot;:&quot;progress&quot;,&quot;invocation_id&quot;:111,&quot;percentage&quot;:100}'
+  val responseMessage = '{&quot;type&quot;:&quot;response&quot;, &quot;invocation_id&quot;:111, &quot;problems&quot;:[], &quot;total_problems&quot;:0}'
+  
+  val PORT = 12345
+  val ADDRESS = &quot;127.0.0.1&quot;
+  val startSignal = new CountDownLatch(1);
+  val server = new TcpTestServer(ADDRESS, PORT)
+  val callback = new TestCallBack
+  
+  before {
+    server.start(startSignal)
+    println(&quot;wait for server&quot;)
+    startSignal.await();
+    subject = TcpClient::create
+  }
+  
+  context &quot;Sending requests&quot;{
+    fact &quot;Receives responses from server&quot;{
+      server.responses += responseMessage
+      subject.connect(ADDRESS, PORT)
+      subject.sendRequest(ANY_COMMAND, callback)
+      
+      waitUntil[callback.response != null]
+      callback.response =&gt; [
+        type =&gt; &quot;response&quot;
+      ]
+    }
+    
+    fact &quot;Receives progress from server&quot;{
+      server.responses += progressMessage
+      server.responses += responseMessage
+  
+      subject.connect(ADDRESS, PORT)
+      subject.sendRequest(ANY_COMMAND, callback)
+      waitUntil[callback.response != null]
+  
+      callback.progress.size =&gt; 1
+      callback.response =&gt; [
+        type =&gt; &quot;response&quot;
+      ]
+    }
+    fact &quot;Throws exception if not connected&quot;{
+      subject.sendRequest(ANY_COMMAND, callback) throws BackendException
+    }
+  }
+  
+  context &quot;connection errors&quot;{
+    
+    fact &quot;throws exception when server does not exist&quot;{
+      subject.connect(&quot;6.6.6.6&quot;, 6666) throws BackendException
+    }
+    
+    fact &quot;throws exception when server is not running&quot;{
+      server.shutdown
+      subject.connect(ADDRESS, PORT) throws BackendException
+    }
+    
+    fact &quot;callback receives error if connection is closed&quot;{
+      subject.connect(ADDRESS, PORT)
+      server.shutdown
+      subject.sendRequest(ANY_COMMAND, callback) 
+      waitUntil[callback.error != null]
+    }
+  }
+  
+  context &quot;connection state&quot;{
+    fact &quot;is initially disconnected&quot;{
+      subject.isConnected =&gt; false 
+    }
+    
+    fact &quot;is connected after successful connection to server&quot;{
+      subject.connect(ADDRESS, PORT)
+      subject.isConnected =&gt; true 
+    }
+    
+    fact &quot;is disconnected when server shuts down&quot;{
+      subject.connect(ADDRESS, PORT)
+      server.shutdown
+      subject.sendRequest(ANY_COMMAND, callback) 
+      waitUntil[callback.error != null]
+      subject.isConnected =&gt; false 
+    }
+  }
+  
+  fact subject.connect(ADDRESS, INVALID_PORT) throws IllegalArgumentException
+  
+  after server.shutdown
+  
+  def is(Response actual, CharSequence expected){
+    assertEquals(expected.toString, actual)
+  }
+}
+</pre>
+						    </p></div>
+						  </div>
+					</div> 
+				</div> <!-- /row -->
+			</div> <!-- /content -->
+		</div> <!-- /tabbable -->
+		<footer>
+			<p><small>Generated by <a href="http://www.jnario.org">Jnario</a>.</small></p>
+		</footer>
+	</div> <!-- /container -->
+
+</body>
+</html>

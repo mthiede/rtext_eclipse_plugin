@@ -15,7 +15,7 @@ class WaitConfig {
 
 class Wait {
 	
-	def static waitUntil(Functions$Function1<WaitConfig> initializer){
+	def static waitUntil(Functions$Function1<WaitConfig, Boolean> initializer){
 		val config = new WaitConfig
 		val wait = new Wait(SYSTEM_SLEEPER, SYSTEM_CLOCK)
 		val Functions$Function0<Boolean> condition = [

@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SyntaxScanner</title>
+<meta name="description" content="">
+<meta name="author" content="Jnario">
+
+<!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+<link rel="stylesheet" href="../../../../../css/bootstrap.min.css">
+<link rel="stylesheet" href="../../../../../css/bootstrap-responsive.min.css">
+<link rel="stylesheet" href="../../../../../css/custom.css">
+<link rel="stylesheet" href="../../../../../css/prettify.css">
+<script type="text/javascript" src="../../../../../js/prettify.js"></script>
+<script type="text/javascript" src="../../../../../js/lang-jnario.js"></script>
+<script type="text/javascript" src="../../../../../js/jquery.js"></script>
+<script type="text/javascript" src="../../../../../js/bootstrap-tab.js"></script>
+</head>
+
+<body onload="prettyPrint()">
+	<div class="container">
+		<div class="tabbable">
+			<div class="content">
+				<div class="page-header notrun">
+					<h1>SyntaxScanner</h1>
+					  <ul class="nav nav-tabs pull-right">
+					    <li class="active"><a href="#spec" data-toggle="tab">Spec</a></li>
+						<li><a href="#source" data-toggle="tab">Source</a></li>
+					  </ul>
+				</div>
+				<div class="row">
+					<div class="span12">
+						  <div class="tab-content">
+							  	<div class="tab-pane active" id="spec">
+<ul><li><p id="parse_comments" class="example notrun"><strong>parse comments</strong></p>
+<pre class="prettyprint lang-spec linenums">
+'''
+#a comment
+'''.scan.first =&gt; COMMENT</pre>
+</li><li><p id="parse_comments_until_EOL" class="example notrun"><strong>parse comments until EOL</strong></p>
+<pre class="prettyprint lang-spec linenums">
+(&quot;#a comment&quot; + EOL).scan.first =&gt; COMMENT</pre>
+</li><li><p id="parse_command" class="example notrun"><strong>parse command</strong></p>
+<pre class="prettyprint lang-spec linenums">
+'''
+Type name, label: /a/Reference
+'''.scan.first =&gt; COMMAND</pre>
+</li><li><p id="parse_command_starting_with" class="example notrun"><strong>parse command starting with '_'</strong></p>
+<pre class="prettyprint lang-spec linenums">
+'''
+Type _name, label: /a/Reference
+'''.scan.first =&gt; COMMAND</pre>
+</li><li><p id="parse_identifier" class="example notrun"><strong>parse identifier</strong></p>
+<pre class="prettyprint lang-spec linenums">
+'''
+Type name, label: /a/Reference
+'''.scan.second =&gt; IDENTIFIER</pre>
+</li><li><p id="parse_identifier_with" class="example notrun"><strong>parse identifier with '_'</strong></p>
+<pre class="prettyprint lang-spec linenums">
+'''
+Type name_with, label: /a/Reference
+'''.scan.second =&gt; IDENTIFIER</pre>
+</li><li><p id="parse_separator" class="example notrun"><strong>parse separator</strong></p>
+<pre class="prettyprint lang-spec linenums">
+'''
+Type name, label: /a/Reference
+'''.scan.third =&gt; DEFAULT</pre>
+</li><li><p id="parse_label" class="example notrun"><strong>parse label</strong></p>
+<pre class="prettyprint lang-spec linenums">
+'''
+Type name, label: /a/Reference
+'''.scan.forth =&gt; LABEL</pre>
+</li><li><p id="parse_reference" class="example notrun"><strong>parse reference</strong></p>
+<pre class="prettyprint lang-spec linenums">
+'''
+Type name, label: /long/a/Reference
+'''.scan.fifth =&gt; REFERENCE</pre>
+</li><li><p id="parse_reference_without_leading" class="example notrun"><strong>parse reference without leading '/'</strong></p>
+<pre class="prettyprint lang-spec linenums">
+'''
+Type name, label: a/long/Reference
+'''.scan.fifth =&gt; REFERENCE</pre>
+</li><li><p id="parse_number" class="example notrun"><strong>parse number</strong></p>
+<pre class="prettyprint lang-spec linenums">
+'''
+Type name, label: 8
+'''.scan.fifth =&gt; NUMBER</pre>
+</li><li><p id="parse_string" class="example notrun"><strong>parse string</strong></p>
+<pre class="prettyprint lang-spec linenums">
+'''
+Type name, label: &quot;a string&quot;
+'''.scan.fifth =&gt; STRING</pre>
+</li><li><p id="parse_enum" class="example notrun"><strong>parse enum</strong></p>
+<pre class="prettyprint lang-spec linenums">
+'''
+Type name, label: enum
+'''.scan.fifth =&gt; IDENTIFIER</pre>
+</li><li><p id="parse_whitespace" class="example notrun"><strong>parse whitespace</strong></p>
+<pre class="prettyprint lang-spec linenums">
+&quot;Type name, label: enum\r\n&quot;.scan.fifth =&gt; IDENTIFIER</pre>
+</li><li><p id="parse_string_until_EOL" class="example notrun"><strong>parse string until EOL</strong></p>
+<pre class="prettyprint lang-spec linenums">
+('Type name, label: &quot;a string ' + EOL).scan.fifth =&gt; STRING</pre>
+</li><li><p id="parse_nested_elements" class="example notrun"><strong>parse nested elements</strong></p>
+<pre class="prettyprint lang-spec linenums">
+'''
+  AUTOSAR {
+    CalprmElementPrototype cpSorolloTMax, type: /AUTOSAR/DataTypes/UInt2 {
+      SwDataDefProps swCalibrationAccess: readOnly, swImplPolicy: standard, swVariableAccessImplPolicy: optimized
+    } 
+    
+    CalprmElementPrototype cpSoroTuerTRelax,   type: /AUTOSAR/DataTypes/UInt4 {
+      SwDataDefProps swCalibrationAccess: readOnly, swImplPolicy: standard, swVariableAccessImplPolicy: optimized
+    }
+  }
+'''.scan =&gt; list(COMMAND, DEFAULT, 
+          COMMAND, IDENTIFIER, DEFAULT, LABEL, REFERENCE, DEFAULT, 
+             COMMAND, LABEL, IDENTIFIER, DEFAULT, LABEL, IDENTIFIER, DEFAULT, LABEL, IDENTIFIER,
+           DEFAULT,
+           COMMAND, IDENTIFIER, DEFAULT, LABEL, REFERENCE, DEFAULT, 
+             COMMAND, LABEL, IDENTIFIER, DEFAULT, LABEL, IDENTIFIER, DEFAULT, LABEL, IDENTIFIER,
+           DEFAULT,
+         DEFAULT)</pre>
+</li></ul>
+							</div>
+						    <div class="tab-pane" id="source">
+						    	<h3>SyntaxScanner.spec</h3>
+						    	<p>
+<pre class="prettyprint lang-spec linenums">
+/*******************************************************************************
+ * Copyright (c) 2012 E.S.R. Labs and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the MIT License
+ * which accompanies this distribution, and is available at
+ * http://opensource.org/licenses/MIT
+ *******************************************************************************/
+package org.rtext.lang.specs.unit
+
+import org.eclipse.jface.text.TextAttribute
+import org.eclipse.jface.text.rules.IToken
+import org.rtext.lang.editor.ColorManager
+import org.rtext.lang.editor.SyntaxScanner
+
+import static org.jnario.lib.JnarioCollectionLiterals.*
+import static org.rtext.lang.model.AbstractRTextParser.*
+import static org.rtext.lang.editor.IColorConstants.*
+
+import static extension org.jnario.lib.JnarioIterableExtensions.*
+import static extension org.jnario.lib.Should.*
+import org.rtext.lang.specs.util.SimpleDocument
+
+describe SyntaxScanner {
+   
+  before subject = new SyntaxScanner(new ColorManager)
+  
+  fact &quot;parse comments&quot;{
+    '''
+    #a comment
+    '''.scan.first =&gt; COMMENT
+  }
+  
+  fact &quot;parse comments until EOL&quot;{
+    (&quot;#a comment&quot; + EOL).scan.first =&gt; COMMENT
+  }
+
+  fact &quot;parse command&quot;{
+    '''
+    Type name, label: /a/Reference
+    '''.scan.first =&gt; COMMAND
+  }
+  
+  fact &quot;parse command starting with '_'&quot;{
+    '''
+    Type _name, label: /a/Reference
+    '''.scan.first =&gt; COMMAND
+  }
+  
+  fact &quot;parse identifier&quot;{
+    '''
+    Type name, label: /a/Reference
+    '''.scan.second =&gt; IDENTIFIER
+  }
+  
+  fact &quot;parse identifier with '_'&quot;{
+    '''
+    Type name_with, label: /a/Reference
+    '''.scan.second =&gt; IDENTIFIER
+  }
+  
+  fact &quot;parse separator&quot;{
+    '''
+    Type name, label: /a/Reference
+    '''.scan.third =&gt; DEFAULT
+  }
+  
+  
+  fact &quot;parse label&quot;{
+    '''
+    Type name, label: /a/Reference
+    '''.scan.forth =&gt; LABEL
+  }
+  
+  fact &quot;parse reference&quot;{
+    '''
+    Type name, label: /long/a/Reference
+    '''.scan.fifth =&gt; REFERENCE
+  }
+  
+  fact &quot;parse reference without leading '/'&quot;{
+    '''
+    Type name, label: a/long/Reference
+    '''.scan.fifth =&gt; REFERENCE
+  }
+  
+  fact &quot;parse number&quot;{
+    '''
+    Type name, label: 8
+    '''.scan.fifth =&gt; NUMBER
+  }
+  
+  fact &quot;parse string&quot;{
+    '''
+    Type name, label: &quot;a string&quot;
+    '''.scan.fifth =&gt; STRING
+  }
+  
+  fact &quot;parse enum&quot;{
+    '''
+    Type name, label: enum
+    '''.scan.fifth =&gt; IDENTIFIER
+  }
+  
+  fact &quot;parse whitespace&quot;{
+    &quot;Type name, label: enum\r\n&quot;.scan.fifth =&gt; IDENTIFIER
+  }
+  
+  fact &quot;parse string until EOL&quot;{
+    ('Type name, label: &quot;a string ' + EOL).scan.fifth =&gt; STRING
+  }
+  
+  fact &quot;parse nested elements&quot;{
+    '''
+      AUTOSAR {
+        CalprmElementPrototype cpSorolloTMax, type: /AUTOSAR/DataTypes/UInt2 {
+          SwDataDefProps swCalibrationAccess: readOnly, swImplPolicy: standard, swVariableAccessImplPolicy: optimized
+        } 
+        
+        CalprmElementPrototype cpSoroTuerTRelax,   type: /AUTOSAR/DataTypes/UInt4 {
+          SwDataDefProps swCalibrationAccess: readOnly, swImplPolicy: standard, swVariableAccessImplPolicy: optimized
+        }
+      }
+    '''.scan =&gt; list(COMMAND, DEFAULT, 
+              COMMAND, IDENTIFIER, DEFAULT, LABEL, REFERENCE, DEFAULT, 
+                 COMMAND, LABEL, IDENTIFIER, DEFAULT, LABEL, IDENTIFIER, DEFAULT, LABEL, IDENTIFIER,
+               DEFAULT,
+               COMMAND, IDENTIFIER, DEFAULT, LABEL, REFERENCE, DEFAULT, 
+                 COMMAND, LABEL, IDENTIFIER, DEFAULT, LABEL, IDENTIFIER, DEFAULT, LABEL, IDENTIFIER,
+               DEFAULT,
+             DEFAULT)
+        
+  }
+  
+  
+  def scan(CharSequence s){
+    val document = new SimpleDocument(s.toString)
+    subject.setRange(document, 0, s.length)
+    
+    val tokens = &lt;IToken&gt;list
+    var token= subject.nextToken()
+    while (!token.isEOF()) {
+      tokens += token
+      token= subject.nextToken()
+    }
+    tokens.map[
+      val attr = it.data as TextAttribute
+      attr.foreground.RGB
+    ]
+  }
+}
+</pre>
+						    </p></div>
+						  </div>
+					</div> 
+				</div> <!-- /row -->
+			</div> <!-- /content -->
+		</div> <!-- /tabbable -->
+		<footer>
+			<p><small>Generated by <a href="http://www.jnario.org">Jnario</a>.</small></p>
+		</footer>
+	</div> <!-- /container -->
+
+</body>
+</html>

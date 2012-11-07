@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: RText Tests
-Bundle-SymbolicName: org.rtext.lang.tests
+Bundle-SymbolicName: org.rtext.lang.tests;singleton:=true
 Bundle-Version: 0.0.8.qualifier
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Require-Bundle: org.jnario.lib;bundle-version="0.2.1",
@@ -19,3 +19,5 @@ Require-Bundle: org.jnario.lib;bundle-version="0.2.1",
  org.mockito;bundle-version="1.8.4",
  org.objenesis;bundle-version="1.0.0"
 Bundle-Vendor: E.S.R. Labs
+Bundle-Activator: org.rtext.lang.specs.RTextTestActivator
+Bundle-ActivationPolicy: lazy

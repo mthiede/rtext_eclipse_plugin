@@ -165,7 +165,7 @@ public class ConnectorManager {
 			if (path.segmentCount() > 0) {
 				File descFile = path.append("/.rtext").toFile();
 				if (descFile.exists()) {
-					List<ConnectorConfig> configs = ConfigFileParser.parse(descFile);
+					List<ConnectorConfig> configs = RTextFileParser.parse(descFile);
 					for (ConnectorConfig config : configs) {
 						for (String pattern : config.getPatterns()) {
 							if (pattern.trim().equals(specifierPattern)) {

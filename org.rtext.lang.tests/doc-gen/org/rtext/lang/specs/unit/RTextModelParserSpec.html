@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>RTextModelParser</title>
+<meta name="description" content="">
+<meta name="author" content="Jnario">
+
+<!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+<link rel="stylesheet" href="../../../../../css/bootstrap.min.css">
+<link rel="stylesheet" href="../../../../../css/bootstrap-responsive.min.css">
+<link rel="stylesheet" href="../../../../../css/custom.css">
+<link rel="stylesheet" href="../../../../../css/prettify.css">
+<script type="text/javascript" src="../../../../../js/prettify.js"></script>
+<script type="text/javascript" src="../../../../../js/lang-jnario.js"></script>
+<script type="text/javascript" src="../../../../../js/jquery.js"></script>
+<script type="text/javascript" src="../../../../../js/bootstrap-tab.js"></script>
+</head>
+
+<body onload="prettyPrint()">
+	<div class="container">
+		<div class="tabbable">
+			<div class="content">
+				<div class="page-header pending">
+					<h1>RTextModelParser</h1>
+					  <ul class="nav nav-tabs pull-right">
+					    <li class="active"><a href="#spec" data-toggle="tab">Spec</a></li>
+						<li><a href="#source" data-toggle="tab">Source</a></li>
+					  </ul>
+				</div>
+				<div class="row">
+					<div class="span12">
+						  <div class="tab-content">
+							  	<div class="tab-pane active" id="spec">
+<h3 class="exampleGroup pending"  id="structure">Structure</h3>
+<ul><li><p id="parse_command" class="example notrun"><strong>parse command</strong></p>
+<pre class="prettyprint lang-spec linenums">
+&quot;Type&quot;.parse.first       =&gt; element(&quot;Type&quot;)
+&quot;OtherType&quot;.parse.first    =&gt; element(&quot;OtherType&quot;)</pre>
+</li><li><p id="parse_name" class="example notrun"><strong>parse name</strong></p>
+<pre class="prettyprint lang-spec linenums">
+&quot;Type name1&quot;.parse.first     =&gt; element(&quot;Type&quot;, &quot;name1&quot;)
+&quot;OtherType name2&quot;.parse.first =&gt; element(&quot;OtherType&quot;, &quot;name2&quot;)</pre>
+</li><li><p id="parse_attributes" class="example notrun"><strong>parse attributes</strong></p>
+<pre class="prettyprint lang-spec linenums">
+&quot;Type name1, label: 10&quot;.parse.first =&gt;   element(&quot;Type&quot;, &quot;name1&quot;)
+'Type name1, label: &quot;a string&quot;'.parse.first =&gt;   element(&quot;Type&quot;, &quot;name1&quot;)
+'Type name1, label: /a/reference'.parse.first =&gt; element(&quot;Type&quot;, &quot;name1&quot;)</pre>
+</li><li><p id="TEXT" class="example pending"><strong>TEXT [PENDING]</strong></p>
+</li><li><p id="ignores_comments" class="example notrun"><strong>ignores comments</strong></p>
+<pre class="prettyprint lang-spec linenums">
+'''
+# a comment
+Type'''.parse.size =&gt; 1</pre>
+</li><li><p id="nests_list" class="example notrun"><strong>nests list</strong></p>
+<pre class="prettyprint lang-spec linenums">
+'''
+Type parent{
+  Child child1{
+  }
+  Child child2{
+  }
+}
+'''.parse.first =&gt; 
+  element(&quot;Type&quot;, &quot;parent&quot;, 
+    element(&quot;Child&quot;, &quot;child1&quot;),
+    element(&quot;Child&quot;, &quot;child2&quot;)
+  )</pre>
+</li><li><p id="nests_list_without_curly_braces" class="example notrun"><strong>nests list without curly braces</strong></p>
+<pre class="prettyprint lang-spec linenums">
+'''
+Type parent{
+  Child child1
+  Child child2
+}
+'''.parse.first =&gt; 
+  element(&quot;Type&quot;, &quot;parent&quot;, 
+    element(&quot;Child&quot;, &quot;child1&quot;),
+    element(&quot;Child&quot;, &quot;child2&quot;)
+  )</pre>
+</li></ul>
+<h3 class="exampleGroup notrun"  id="full_text_region">Full text region</h3>
+<ul><li><p id="spans_type_and_name" class="example notrun"><strong>spans type and name</strong></p>
+<pre class="prettyprint lang-spec linenums">
+var input = &quot;Type parent&quot;
+var region = input.parse.first.fullText(input)
+region =&gt; input</pre>
+</li><li><p id="spans_over_children" class="example notrun"><strong>spans over children</strong></p>
+<pre class="prettyprint lang-spec linenums">
+var input = '''
+  Type{
+    Child{
+    }
+    Child{
+    }
+  }'''
+var content = input.parse.first.fullText(input)
+content =&gt; input.toString</pre>
+</li><li><p id="spans_children_with_feature_def" class="example notrun"><strong>spans children with feature def</strong></p>
+<pre class="prettyprint lang-spec linenums">
+val input = '''
+IntegerType myType { 
+  lowerLimit: [
+    ARLimit   
+  ]
+}'''
+var content = input.parse.first.fullText(input)
+content =&gt; input.toString</pre>
+</li><li><p id="child_element_region_spans_all_child_childs" class="example notrun"><strong>child element region spans all child childs</strong></p>
+<pre class="prettyprint lang-spec linenums">
+val input = '''
+  Type parent{
+    Child child{
+      ChildChild childChild
+    }
+  }
+'''
+val content = input.parse.first.children.first.fullText(input)
+content =&gt; '''
+Child child{
+    ChildChild childChild
+  }'''.toString</pre>
+</li><li><p id="deeply_nested_elements" class="example notrun"><strong>deeply nested elements</strong></p>
+<pre class="prettyprint lang-spec linenums">
+val input = '''
+  Type parent{
+    Child child{
+      ChildChild childChild{
+        ChildChildChild childChildChild  {
+          X x
+        }
+      }
+    }
+    
+  }
+'''
+val region = input.elements(&quot;childChildChild&quot;).fullText(input)
+region =&gt; '''
+ChildChildChild childChildChild  {
+        X x
+      }'''.toString</pre>
+</li></ul>
+<h3 class="exampleGroup notrun"  id="error_handling">Error handling</h3>
+<ul><li><p id="ignores_too_many_closing_curly_braces" class="example notrun"><strong>ignores too many closing curly braces</strong></p>
+<pre class="prettyprint lang-spec linenums">
+val input = '''
+  Type parent{
+    Child
+    }          
+  }
+'''
+input.parse.first =&gt; element(&quot;Type&quot;, &quot;parent&quot;,
+  element(&quot;Child&quot;)
+)</pre>
+</li></ul>
+							</div>
+						    <div class="tab-pane" id="source">
+						    	<h3>RTextModelParser.spec</h3>
+						    	<p>
+<pre class="prettyprint lang-spec linenums">
+/*******************************************************************************
+ * Copyright (c) 2012 E.S.R. Labs and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the MIT License
+ * which accompanies this distribution, and is available at
+ * http://opensource.org/licenses/MIT
+ *******************************************************************************/
+package org.rtext.lang.specs.unit
+
+import org.jnario.lib.Should
+import org.junit.Assert
+import org.rtext.lang.model.Element
+import org.rtext.lang.model.RTextModelParser
+
+import static org.rtext.lang.specs.util.IsElement.*
+
+import static extension org.jnario.lib.JnarioIterableExtensions.*
+import java.util.List
+import org.rtext.lang.specs.util.SimpleDocument
+
+describe RTextModelParser {
+  SimpleDocument document
+  
+  describe &quot;structure&quot;{
+  
+    fact &quot;parse command&quot;{
+      &quot;Type&quot;.parse.first       =&gt; element(&quot;Type&quot;)
+      &quot;OtherType&quot;.parse.first    =&gt; element(&quot;OtherType&quot;)
+    }
+    
+    fact &quot;parse name&quot;{
+      &quot;Type name1&quot;.parse.first     =&gt; element(&quot;Type&quot;, &quot;name1&quot;)
+      &quot;OtherType name2&quot;.parse.first =&gt; element(&quot;OtherType&quot;, &quot;name2&quot;)
+    }
+    
+    fact &quot;parse attributes&quot;{
+      &quot;Type name1, label: 10&quot;.parse.first =&gt;   element(&quot;Type&quot;, &quot;name1&quot;)
+      'Type name1, label: &quot;a string&quot;'.parse.first =&gt;   element(&quot;Type&quot;, &quot;name1&quot;)
+      'Type name1, label: /a/reference'.parse.first =&gt; element(&quot;Type&quot;, &quot;name1&quot;)
+    }
+    
+    fact &quot;TEXT&quot;{
+      
+    }    
+    fact &quot;ignores comments&quot;{
+      '''
+      # a comment
+      Type'''.parse.size =&gt; 1
+    }
+    
+    fact &quot;nests list&quot;{
+      '''
+      Type parent{
+        Child child1{
+        }
+        Child child2{
+        }
+      }
+      '''.parse.first =&gt; 
+        element(&quot;Type&quot;, &quot;parent&quot;, 
+          element(&quot;Child&quot;, &quot;child1&quot;),
+          element(&quot;Child&quot;, &quot;child2&quot;)
+        )
+    }
+    
+    fact &quot;nests list without curly braces&quot;{
+      '''
+      Type parent{
+        Child child1
+        Child child2
+      }
+      '''.parse.first =&gt; 
+        element(&quot;Type&quot;, &quot;parent&quot;, 
+          element(&quot;Child&quot;, &quot;child1&quot;),
+          element(&quot;Child&quot;, &quot;child2&quot;)
+        )
+    }
+
+  }
+
+  describe &quot;full text region&quot;{
+    fact &quot;spans type and name&quot;{
+      var input = &quot;Type parent&quot;
+      var region = input.parse.first.fullText(input)
+      region =&gt; input
+    }
+    
+    fact &quot;spans over children&quot;{
+      var input = '''
+        Type{
+          Child{
+          }
+          Child{
+          }
+        }'''
+      var content = input.parse.first.fullText(input)
+      content =&gt; input.toString
+    }
+    
+    fact &quot;spans children with feature def&quot;{
+      val input = '''
+      IntegerType myType { 
+        lowerLimit: [
+          ARLimit   
+        ]
+      }'''
+      var content = input.parse.first.fullText(input)
+      content =&gt; input.toString
+    }
+    
+    fact &quot;child element region spans all child childs&quot;{
+      val input = '''
+        Type parent{
+          Child child{
+            ChildChild childChild
+          }
+        }
+      '''
+      val content = input.parse.first.children.first.fullText(input)
+      content =&gt; '''
+      Child child{
+          ChildChild childChild
+        }'''.toString
+    }
+    
+    fact &quot;deeply nested elements&quot;{
+      val input = '''
+        Type parent{
+          Child child{
+            ChildChild childChild{
+              ChildChildChild childChildChild  {
+                X x
+              }
+            }
+          }
+          
+        }
+      '''
+      val region = input.elements(&quot;childChildChild&quot;).fullText(input)
+      region =&gt; '''
+      ChildChildChild childChildChild  {
+              X x
+            }'''.toString
+    }
+  }
+  
+  describe &quot;error handling&quot;{
+    fact &quot;ignores too many closing curly braces&quot;{
+      val input = '''
+        Type parent{
+          Child
+          }          
+        }
+      '''
+      input.parse.first =&gt; element(&quot;Type&quot;, &quot;parent&quot;,
+        element(&quot;Child&quot;)
+      )
+    }
+  }
+  
+  def operator_doubleArrow(Object actual, Object expected){
+    if((actual instanceof String) &amp;&amp; (expected instanceof String)){
+      Assert::assertEquals(expected, actual)
+      return true
+    }else{
+      return Should::operator_doubleArrow(actual, expected)
+    }
+  }
+  
+  def fullText(Element element, CharSequence s){
+    document.get(element.position.offset, element.position.length)    
+  }
+  
+  def elements(CharSequence input, String name){
+    input.parse.find(name)
+  }
+  
+  def find(List&lt;Element&gt; elements, String name){
+    var result = elements.findFirst[candidate | candidate.name == name ]
+    if(result != null) return result
+    for(candidate : elements){
+      if(candidate.name == name){
+        return candidate
+      }
+      result = candidate.children.find(name)
+      if(result != null){
+        return result
+      }
+    }
+    return null
+  }
+  
+  def parse(CharSequence s){
+    document = new SimpleDocument(s.toString)
+    subject.setRange(document, 0, s.length)
+    subject.parse    
+  }
+
+}
+</pre>
+						    </p></div>
+						  </div>
+					</div> 
+				</div> <!-- /row -->
+			</div> <!-- /content -->
+		</div> <!-- /tabbable -->
+		<footer>
+			<p><small>Generated by <a href="http://www.jnario.org">Jnario</a>.</small></p>
+		</footer>
+	</div> <!-- /container -->
+
+</body>
+</html>

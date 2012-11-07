@@ -1,23 +1,24 @@
 package org.rtext.lang.backend2;
 
-import java.util.List;
+import com.google.gson.annotations.SerializedName;
 
 public class Response {
 	
 	private final String type;
-	private final List<String> problems;
+
+	@SerializedName("invocation_id") private int invocationId;
 	
-	public Response(String type, List<String> problems) {
+	public Response(int invocationId, String type) {
+		this.invocationId = invocationId;
 		this.type = type;
-		this.problems = problems;
 	}
-	
 	
 	public String getType() {
 		return type;
 	}
 	
-	public List<String> getProblems() {
-		return problems;
+	public int getInvocationId() {
+		return invocationId;
 	}
+	
 }

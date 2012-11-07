@@ -10,14 +10,14 @@ import org.rtext.lang.specs.util.WaitConfig;
 
 @SuppressWarnings("all")
 public class Wait {
-  public static void waitUntil(final Function1<WaitConfig> initializer) {
+  public static void waitUntil(final Function1<WaitConfig,Boolean> initializer) {
     WaitConfig _waitConfig = new WaitConfig();
     final WaitConfig config = _waitConfig;
     Wait _wait = new Wait(Sleeper.SYSTEM_SLEEPER, Clock.SYSTEM_CLOCK);
     final Wait wait = _wait;
     final Function0<Boolean> _function = new Function0<Boolean>() {
         public Boolean apply() {
-          Boolean _apply = (Function1<WaitConfig,Boolean>)initializer.apply(config);
+          Boolean _apply = initializer.apply(config);
           return _apply;
         }
       };

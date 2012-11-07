@@ -11,6 +11,8 @@ package org.rtext.lang.specs
 
 ##Progress
 
+- \.*integration.*\
+
 ##Regression
 
 - \.*unit.*\

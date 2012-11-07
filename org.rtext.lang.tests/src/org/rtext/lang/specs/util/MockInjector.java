@@ -1,6 +1,5 @@
 package org.rtext.lang.specs.util;
 
-import org.jnario.lib.AbstractSpecCreator;
 import org.jnario.runner.SimpleSpecCreator;
 import org.mockito.MockitoAnnotations;
 

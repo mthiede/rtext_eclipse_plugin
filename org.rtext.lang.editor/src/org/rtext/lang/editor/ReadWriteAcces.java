@@ -10,6 +10,8 @@ package org.rtext.lang.editor;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import org.rtext.lang.util.Exceptions;
+
 public abstract class ReadWriteAcces<P>{
 
 	protected abstract P getState();
@@ -24,10 +26,9 @@ public abstract class ReadWriteAcces<P>{
 			P state = getState();
 			T exec = work.exec(state);
 			return exec;
-		} catch (RuntimeException e) {
-			throw e;
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			Exceptions.rethrow(e);
+			return null; //not reachable
 		} finally {
 			readLock.unlock();
 		}
@@ -40,10 +41,9 @@ public abstract class ReadWriteAcces<P>{
 			T exec = work.exec(state);
 			afterModify(state,exec,work);
 			return exec;
-		} catch (RuntimeException e) {
-			throw e;
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			Exceptions.rethrow(e);
+			return null; //not reachable
 		} finally {
 			writeLock.unlock();
 		}
