@@ -13,6 +13,7 @@ import org.rtext.lang.backend2.BackendStarter;
 import org.rtext.lang.backend2.Callback;
 import org.rtext.lang.backend2.Command;
 import org.rtext.lang.backend2.Connection;
+import org.rtext.lang.backend2.Response;
 import org.rtext.lang.specs.unit.backend.ConnectorSpec;
 
 @SuppressWarnings("all")
@@ -23,7 +24,7 @@ public class ConnectorExecuteCommandSpec extends ConnectorSpec {
   @Named("Starts backend process")
   @Order(1)
   public void _startsBackendProcess() throws Exception {
-    this.subject.execute(this.anyCommand, this.callback);
+    this.subject.<Response>execute(this.anyCommand, this.callback);
     BackendStarter _verify = Mockito.<BackendStarter>verify(this.processRunner);
     _verify.startProcess(this.config);
   }
@@ -32,11 +33,11 @@ public class ConnectorExecuteCommandSpec extends ConnectorSpec {
   @Named("Backend process is started only once")
   @Order(2)
   public void _backendProcessIsStartedOnlyOnce() throws Exception {
-    this.subject.execute(this.anyCommand, this.callback);
+    this.subject.<Response>execute(this.anyCommand, this.callback);
     boolean _isRunning = this.processRunner.isRunning();
     OngoingStubbing<Boolean> _when = Mockito.<Boolean>when(Boolean.valueOf(_isRunning));
     _when.thenReturn(Boolean.valueOf(true));
-    this.subject.execute(this.anyCommand, this.callback);
+    this.subject.<Response>execute(this.anyCommand, this.callback);
     VerificationMode _times = Mockito.times(1);
     BackendStarter _verify = Mockito.<BackendStarter>verify(this.processRunner, _times);
     _verify.startProcess(this.config);
@@ -46,7 +47,7 @@ public class ConnectorExecuteCommandSpec extends ConnectorSpec {
   @Named("Connects to 127.0.0.1 on specified port")
   @Order(3)
   public void _connectsTo127001OnSpecifiedPort() throws Exception {
-    this.subject.execute(this.anyCommand, this.callback);
+    this.subject.<Response>execute(this.anyCommand, this.callback);
     Connection _verify = Mockito.<Connection>verify(this.connection);
     _verify.connect("127.0.0.1", this.PORT);
   }
@@ -55,21 +56,21 @@ public class ConnectorExecuteCommandSpec extends ConnectorSpec {
   @Named("Sends command\\\'s request via connection")
   @Order(4)
   public void _sendsCommandSRequestViaConnection() throws Exception {
-    this.subject.execute(this.anyCommand, this.callback);
+    this.subject.<Response>execute(this.anyCommand, this.callback);
     Connection _verify = Mockito.<Connection>verify(this.connection);
-    Command _eq = Matchers.<Command>eq(this.anyCommand);
-    Callback _any = Matchers.<Callback>any();
-    _verify.sendRequest(_eq, _any);
+    Command<Response> _eq = Matchers.<Command<Response>>eq(this.anyCommand);
+    Callback<Response> _any = Matchers.<Callback<Response>>any();
+    _verify.<Response>sendRequest(_eq, _any);
   }
   
   @Test
   @Named("Returns commands response")
   @Order(5)
   public void _returnsCommandsResponse() throws Exception {
-    this.subject.execute(this.anyCommand, this.callback);
+    this.subject.<Response>execute(this.anyCommand, this.callback);
     Connection _verify = Mockito.<Connection>verify(this.connection);
-    Command _eq = Matchers.<Command>eq(this.anyCommand);
-    Callback _any = Matchers.<Callback>any();
-    _verify.sendRequest(_eq, _any);
+    Command<Response> _eq = Matchers.<Command<Response>>eq(this.anyCommand);
+    Callback<Response> _any = Matchers.<Callback<Response>>any();
+    _verify.<Response>sendRequest(_eq, _any);
   }
 }

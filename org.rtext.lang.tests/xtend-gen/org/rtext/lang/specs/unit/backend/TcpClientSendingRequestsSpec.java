@@ -33,7 +33,7 @@ public class TcpClientSendingRequestsSpec extends TcpClientSpec {
     ArrayList<String> _responses = this.server.getResponses();
     _responses.add(this.responseMessage);
     this.subject.connect(this.ADDRESS, this.PORT);
-    this.subject.sendRequest(Commands.ANY_COMMAND, this.callback);
+    this.subject.<Response>sendRequest(Commands.ANY_COMMAND, this.callback);
     final Function1<WaitConfig,Boolean> _function = new Function1<WaitConfig,Boolean>() {
         public Boolean apply(final WaitConfig it) {
           Response _response = TcpClientSendingRequestsSpec.this.callback.getResponse();
@@ -64,7 +64,7 @@ public class TcpClientSendingRequestsSpec extends TcpClientSpec {
     ArrayList<String> _responses_1 = this.server.getResponses();
     _responses_1.add(this.responseMessage);
     this.subject.connect(this.ADDRESS, this.PORT);
-    this.subject.sendRequest(Commands.ANY_COMMAND, this.callback);
+    this.subject.<Response>sendRequest(Commands.ANY_COMMAND, this.callback);
     final Function1<WaitConfig,Boolean> _function = new Function1<WaitConfig,Boolean>() {
         public Boolean apply(final WaitConfig it) {
           Response _response = TcpClientSendingRequestsSpec.this.callback.getResponse();
@@ -99,7 +99,7 @@ public class TcpClientSendingRequestsSpec extends TcpClientSpec {
   @Order(3)
   public void _throwsExceptionIfNotConnected() throws Exception {
     try{
-      this.subject.sendRequest(Commands.ANY_COMMAND, this.callback);
+      this.subject.<Response>sendRequest(Commands.ANY_COMMAND, this.callback);
       Assert.fail("Expected " + BackendException.class.getName() + " in \n     subject.sendRequest(ANY_COMMAND, callback)\n with:"
        + "\n     subject is " + new StringDescription().appendValue(this.subject).toString()
        + "\n     ANY_COMMAND is " + new StringDescription().appendValue(Commands.ANY_COMMAND).toString()

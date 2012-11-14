@@ -23,7 +23,7 @@ describe TcpClient{
 	val ADDRESS = "127.0.0.1"
 	val startSignal = new CountDownLatch(1);
 	val server = new TcpTestServer(ADDRESS, PORT)
-	val callback = new TestCallBack
+	val callback = new TestCallBack<Response>
 	
 	before {
 		server.start(startSignal)

@@ -6,13 +6,12 @@ public class ResponseParser {
 	
 	Gson jsonParser = new Gson();
 
-	public boolean parse(String message, Callback callback) {
-		System.out.println(message);
+	public <T extends Response> boolean parse(String message, Callback<T> callback, Class<T> responseType) {
 		if(message.startsWith("{\"type\":\"progress\"")){
 			callback.handleProgress(parse(message, Progress.class));
 			return false;
 		}else{
-			callback.handleResponse(parse(message, Response.class));
+			callback.handleResponse(parse(message, responseType));
 			return true;
 		}
 	}

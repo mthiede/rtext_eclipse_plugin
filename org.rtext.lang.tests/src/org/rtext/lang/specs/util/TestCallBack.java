@@ -8,9 +8,9 @@ import org.rtext.lang.backend2.Callback;
 import org.rtext.lang.backend2.Progress;
 import org.rtext.lang.backend2.Response;
 
-public class TestCallBack implements Callback {
+public class TestCallBack<T extends Response> implements Callback<T> {
 	
-	private Response response;
+	private T response;
 	private List<Progress> progress = newArrayList();
 	private String error;
 	
@@ -18,7 +18,7 @@ public class TestCallBack implements Callback {
 		this.progress.add(progress);
 	}
 
-	public void handleResponse(Response response) {
+	public void handleResponse(T response) {
 		this.response = response;
 	}
 	

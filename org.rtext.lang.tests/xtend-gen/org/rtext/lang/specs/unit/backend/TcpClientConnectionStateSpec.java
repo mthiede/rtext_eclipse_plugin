@@ -10,6 +10,7 @@ import org.jnario.runner.Order;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.rtext.lang.backend2.Response;
 import org.rtext.lang.specs.unit.backend.TcpClientSpec;
 import org.rtext.lang.specs.util.Commands;
 import org.rtext.lang.specs.util.Wait;
@@ -50,7 +51,7 @@ public class TcpClientConnectionStateSpec extends TcpClientSpec {
   public void _isDisconnectedWhenServerShutsDown() throws Exception {
     this.subject.connect(this.ADDRESS, this.PORT);
     this.server.shutdown();
-    this.subject.sendRequest(Commands.ANY_COMMAND, this.callback);
+    this.subject.<Response>sendRequest(Commands.ANY_COMMAND, this.callback);
     final Function1<WaitConfig,Boolean> _function = new Function1<WaitConfig,Boolean>() {
         public Boolean apply(final WaitConfig it) {
           String _error = TcpClientConnectionStateSpec.this.callback.getError();

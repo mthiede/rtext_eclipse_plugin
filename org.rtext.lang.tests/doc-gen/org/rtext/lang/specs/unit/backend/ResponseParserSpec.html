@@ -37,18 +37,21 @@
 							  	<div class="tab-pane active" id="spec">
 <ul><li><p id="parses_generic_response" class="example notrun"><strong>parses generic response</strong></p>
 <pre class="prettyprint lang-spec linenums">
-'{&quot;type&quot;:&quot;response&quot;, &quot;invocation_id&quot;:111, &quot;problems&quot;:[], &quot;total_problems&quot;:0}'.parse
+'{&quot;type&quot;:&quot;response&quot;, &quot;invocation_id&quot;:111, &quot;problems&quot;:[], &quot;total_problems&quot;:0}'.parse(typeof(Response))
 callback.response =&gt; [
   type =&gt; &quot;response&quot;
   invocationId =&gt; 111
 ]</pre>
 </li><li><p id="parses_progress" class="example notrun"><strong>parses progress</strong></p>
 <pre class="prettyprint lang-spec linenums">
-'{&quot;type&quot;:&quot;progress&quot;,&quot;invocation_id&quot;:111,&quot;percentage&quot;:100}'.parse
+'{&quot;type&quot;:&quot;progress&quot;,&quot;invocation_id&quot;:111,&quot;percentage&quot;:100}'.parse(typeof(Response))
 callback.progress.first =&gt; [
   it =&gt; typeof(Progress)
   type =&gt; &quot;progress&quot;
 ]</pre>
+</li><li><p id="parses_proposal_response_type" class="example notrun"><strong>parses proposal response type</strong></p>
+<pre class="prettyprint lang-spec linenums">
+'{&quot;type&quot;:&quot;response&quot;,&quot;invocation_id&quot;:1,&quot;options&quot;:[{&quot;insert&quot;:&quot;EAnnotation&quot;,&quot;display&quot;:&quot;EAnnotation &quot;},{&quot;insert&quot;:&quot;EClass&quot;,&quot;display&quot;:&quot;EClass &lt;name&gt;&quot;}]}'</pre>
 </li></ul>
 							</div>
 						    <div class="tab-pane" id="source">
@@ -60,12 +63,13 @@ package org.rtext.lang.specs.unit.backend
 import org.rtext.lang.backend2.ResponseParser
 import org.rtext.lang.backend2.Progress
 import org.rtext.lang.specs.util.TestCallBack
+import org.rtext.lang.backend2.Response
 
 describe ResponseParser {
-  val callback = new TestCallBack
+  TestCallBack&lt;? extends Response&gt; callback 
   
   fact &quot;parses generic response&quot;{
-    '{&quot;type&quot;:&quot;response&quot;, &quot;invocation_id&quot;:111, &quot;problems&quot;:[], &quot;total_problems&quot;:0}'.parse
+    '{&quot;type&quot;:&quot;response&quot;, &quot;invocation_id&quot;:111, &quot;problems&quot;:[], &quot;total_problems&quot;:0}'.parse(typeof(Response))
     callback.response =&gt; [
       type =&gt; &quot;response&quot;
       invocationId =&gt; 111
@@ -73,15 +77,21 @@ describe ResponseParser {
   }
   
   fact &quot;parses progress&quot;{
-    '{&quot;type&quot;:&quot;progress&quot;,&quot;invocation_id&quot;:111,&quot;percentage&quot;:100}'.parse
+    '{&quot;type&quot;:&quot;progress&quot;,&quot;invocation_id&quot;:111,&quot;percentage&quot;:100}'.parse(typeof(Response))
     callback.progress.first =&gt; [
       it =&gt; typeof(Progress)
       type =&gt; &quot;progress&quot;
     ]
   }
   
-  def parse(String input){
-    subject.parse(input, callback)
+  fact &quot;parses proposal response type&quot;{
+    '{&quot;type&quot;:&quot;response&quot;,&quot;invocation_id&quot;:1,&quot;options&quot;:[{&quot;insert&quot;:&quot;EAnnotation&quot;,&quot;display&quot;:&quot;EAnnotation &quot;},{&quot;insert&quot;:&quot;EClass&quot;,&quot;display&quot;:&quot;EClass &lt;name&gt;&quot;}]}'
+  }
+  
+  def &lt;T extends Response&gt; parse(String input, Class&lt;T&gt; responseType){
+    val callback = new TestCallBack&lt;T&gt;
+    subject.parse(input, callback, responseType)
+    this.callback = callback
   }
 
 }

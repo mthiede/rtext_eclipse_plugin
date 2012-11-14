@@ -7,6 +7,7 @@
  *******************************************************************************/
 package org.rtext.lang.editor;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -20,10 +21,11 @@ public class ContextParser {
 		this.doc = doc;
 	}
 	
-	public String getContext(int offset) {
-		String result = String.valueOf(offsetInLine(offset))+"\n";
+	public List<String> getContext(int offset) {
+		List<String> result = new ArrayList<String>();
+//		String result = String.valueOf(offsetInLine(offset))+"\n";
 		for (String line : parseContext(offset)) {
-			result += line + "\n";
+			result.add(line);
 		}
 		return result;		
 	}

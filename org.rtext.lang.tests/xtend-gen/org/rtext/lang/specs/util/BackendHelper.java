@@ -35,9 +35,9 @@ public class BackendHelper {
     }
   }.apply();
   
-  private final TestCallBack callback = new Function0<TestCallBack>() {
-    public TestCallBack apply() {
-      TestCallBack _testCallBack = new TestCallBack();
+  private final TestCallBack<Response> callback = new Function0<TestCallBack<Response>>() {
+    public TestCallBack<Response> apply() {
+      TestCallBack<Response> _testCallBack = new TestCallBack<Response>();
       return _testCallBack;
     }
   }.apply();
@@ -99,8 +99,8 @@ public class BackendHelper {
   public void executeSynchronousCommand() {
     try {
       Connector _connector = this.getConnector();
-      Command _command = new Command(1, "request", "load_model");
-      Response _execute = _connector.execute(_command);
+      Command<Response> _command = new Command<Response>(1, "request", "load_model");
+      Response _execute = _connector.<Response>execute(_command);
       this.setResponse(_execute);
     } catch (Exception _e) {
       throw Exceptions.sneakyThrow(_e);
@@ -114,8 +114,8 @@ public class BackendHelper {
             boolean _xblockexpression = false;
             {
               Connector _connector = BackendHelper.this.getConnector();
-              Command _command = new Command(2, "request", "load_model");
-              _connector.execute(_command, BackendHelper.this.callback);
+              Command<Response> _command = new Command<Response>(2, "request", "load_model");
+              _connector.<Response>execute(_command, BackendHelper.this.callback);
               Response _response = BackendHelper.this.callback.getResponse();
               boolean _notEquals = (!Objects.equal(_response, null));
               _xblockexpression = (_notEquals);

@@ -57,9 +57,9 @@ public class TcpClientSpec {
     }
   }.apply();
   
-  final TestCallBack callback = new Function0<TestCallBack>() {
-    public TestCallBack apply() {
-      TestCallBack _testCallBack = new TestCallBack();
+  final TestCallBack<Response> callback = new Function0<TestCallBack<Response>>() {
+    public TestCallBack<Response> apply() {
+      TestCallBack<Response> _testCallBack = new TestCallBack<Response>();
       return _testCallBack;
     }
   }.apply();

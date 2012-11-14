@@ -23,7 +23,7 @@ public class TcpClient implements Connection {
 		public void run() {
 			while (running) {
 				try {
-					Task task = tasks.take();
+					Task<?> task = tasks.take();
 					executeCommand(task);
 					try {
 						receiveResponse(task);
@@ -38,25 +38,25 @@ public class TcpClient implements Connection {
 			}
 		}
 
-		protected void receiveResponse(Task task) throws IOException {
+		protected <T extends Response> void receiveResponse(Task<T> task) throws IOException {
 			boolean responseReceived = false;
 			while(!responseReceived){
 				int messageLength = readMessageLength();
 				String message = readMessage(messageLength);
-				responseReceived = responseParser.parse(message, task.callback);
+				responseReceived = responseParser.parse(message, task.callback, task.command.getResponseType());
 			}
 		}
 
-		protected void executeCommand(Task task) {
+		protected void executeCommand(Task<?> task) {
 			out.println(serializer.serialize(task.command));
 		}
 	}
 
-	public static class Task {
-		private final Command command;
-		private final Callback callback;
+	public static class Task<T extends Response> {
+		private final Command<T> command;
+		private final Callback<T> callback;
 
-		public Task(Command command, Callback callback) {
+		public Task(Command<T> command, Callback<T> callback) {
 			this.command = command;
 			this.callback = callback;
 		}
@@ -72,7 +72,7 @@ public class TcpClient implements Connection {
 	private CommandSerializer serializer;
 
 	private ResponseParser responseParser;
-	private BlockingQueue<Task> tasks = new LinkedBlockingQueue<Task>();
+	private BlockingQueue<Task<?>> tasks = new LinkedBlockingQueue<Task<?>>();
 	private Worker worker;
 
 	public TcpClient(CommandSerializer serializer, ResponseParser responseParser) {
@@ -120,11 +120,11 @@ public class TcpClient implements Connection {
 		}
 	}
 
-	public void sendRequest(Command request, Callback callback) {
+	public <T extends Response> void sendRequest(Command<T> request, Callback<T> callback) {
 		if(!isConnected()){
 			throw new BackendException("Not connected"); 
 		}
-		tasks.add(new Task(request, callback));
+		tasks.add(new Task<T>(request, callback));
 	}
 
 	protected String readMessage(int messageLength) throws IOException {

@@ -1,14 +1,21 @@
 package org.rtext.lang.backend2;
 
-public class ProposalsCommand extends Command {
+import java.util.List;
 
-	private String context;
+public class ProposalsCommand extends Command<Proposals> {
+
+	private List<String> context;
 	private int column;
 
-	public ProposalsCommand(String context, int lineOffset) {
+	public ProposalsCommand(List<String> context, int lineOffset) {
 		super("content_complete");
 		this.context = context;
 		this.column = lineOffset;
+	}
+	
+	@Override
+	protected void setReturnType(Proposals type) {
+		super.setReturnType(type);
 	}
 
 }

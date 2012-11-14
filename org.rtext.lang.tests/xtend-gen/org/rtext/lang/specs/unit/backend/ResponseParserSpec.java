@@ -1,7 +1,6 @@
 package org.rtext.lang.specs.unit.backend;
 
 import java.util.List;
-import org.eclipse.xtext.xbase.lib.Functions.Function0;
 import org.eclipse.xtext.xbase.lib.ObjectExtensions;
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
 import org.hamcrest.StringDescription;
@@ -26,18 +25,13 @@ public class ResponseParserSpec {
   @Subject
   public ResponseParser subject;
   
-  final TestCallBack callback = new Function0<TestCallBack>() {
-    public TestCallBack apply() {
-      TestCallBack _testCallBack = new TestCallBack();
-      return _testCallBack;
-    }
-  }.apply();
+  TestCallBack<? extends Response> callback;
   
   @Test
   @Named("parses generic response")
   @Order(0)
   public void _parsesGenericResponse() throws Exception {
-    this.parse("{\"type\":\"response\", \"invocation_id\":111, \"problems\":[], \"total_problems\":0}");
+    this.<Response>parse("{\"type\":\"response\", \"invocation_id\":111, \"problems\":[], \"total_problems\":0}", Response.class);
     Response _response = this.callback.getResponse();
     final Procedure1<Response> _function = new Procedure1<Response>() {
         public void apply(final Response it) {
@@ -60,7 +54,7 @@ public class ResponseParserSpec {
   @Named("parses progress")
   @Order(1)
   public void _parsesProgress() throws Exception {
-    this.parse("{\"type\":\"progress\",\"invocation_id\":111,\"percentage\":100}");
+    this.<Response>parse("{\"type\":\"progress\",\"invocation_id\":111,\"percentage\":100}", Response.class);
     List<Progress> _progress = this.callback.getProgress();
     Progress _first = JnarioIterableExtensions.<Progress>first(_progress);
     final Procedure1<Progress> _function = new Procedure1<Progress>() {
@@ -79,8 +73,22 @@ public class ResponseParserSpec {
     ObjectExtensions.<Progress>operator_doubleArrow(_first, _function);
   }
   
-  public boolean parse(final String input) {
-    boolean _parse = this.subject.parse(input, this.callback);
-    return _parse;
+  @Test
+  @Named("parses proposal response type")
+  @Order(2)
+  public void _parsesProposalResponseType() throws Exception {
+    /* "{\"type\":\"response\",\"invocation_id\":1,\"options\":[{\"insert\":\"EAnnotation\",\"display\":\"EAnnotation \"},{\"insert\":\"EClass\",\"display\":\"EClass <name>\"}]}" */
+  }
+  
+  public <T extends Response> TestCallBack<? extends Response> parse(final String input, final Class<T> responseType) {
+    TestCallBack<? extends Response> _xblockexpression = null;
+    {
+      TestCallBack<T> _testCallBack = new TestCallBack<T>();
+      final TestCallBack<T> callback = _testCallBack;
+      this.subject.<T>parse(input, callback, responseType);
+      TestCallBack<? extends Response> _callback = this.callback = callback;
+      _xblockexpression = (_callback);
+    }
+    return _xblockexpression;
   }
 }

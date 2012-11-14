@@ -5,13 +5,12 @@ import static org.rtext.lang.util.Wait.waitUntil;
 import java.util.concurrent.TimeoutException;
 
 import org.rtext.lang.util.Condition;
-import org.rtext.lang.util.Exceptions;
 
-class SynchronousCallBack implements Callback {
+class SynchronousCallBack<T extends Response> implements Callback<T> {
 
-	private Response response;
+	private T response;
 
-	public void handleResponse(Response response) {
+	public void handleResponse(T response) {
 		this.response = response;
 	}
 
@@ -26,7 +25,7 @@ class SynchronousCallBack implements Callback {
 		});
 	}
 
-	public Response response() {
+	public T response() {
 		return response;
 	}
 

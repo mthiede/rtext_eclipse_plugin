@@ -15,6 +15,7 @@ import org.rtext.lang.specs.util.MockInjector
 
 import static org.mockito.Matchers.*
 import static org.mockito.Mockito.*
+import static org.rtext.lang.specs.util.Commands.*
 
 @CreateWith(typeof(MockInjector))
 describe Connector {
@@ -25,7 +26,7 @@ describe Connector {
 	@Mock Callback callback
 
 	val PORT = 1234
-	val anyCommand = new Command(0, "type", "command")
+	val anyCommand = ANY_COMMAND
 	val COMMAND = "cmd"
 	File executionDir
 

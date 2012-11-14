@@ -1,5 +1,6 @@
 package org.rtext.lang.backend2;
 
+import java.util.List;
 import java.util.concurrent.TimeoutException;
 
 import org.eclipse.jface.text.IDocument;
@@ -20,8 +21,9 @@ public class ProposalProvider {
 	public void calculateProposals(IDocument document, int offset, ProposalAcceptor acceptor){
 		try {
 			ContextParser contextParser = new ContextParser(document);
-			String context = contextParser.getContext(offset);
-			Response response = connector.execute(new ProposalsCommand(context, 0));
+			List<String> context = contextParser.getContext(offset);
+			Proposals response = connector.execute(new ProposalsCommand(context, 0));
+			System.out.println(response.getOptions());
 		} catch (TimeoutException e) {
 			e.printStackTrace();
 		}

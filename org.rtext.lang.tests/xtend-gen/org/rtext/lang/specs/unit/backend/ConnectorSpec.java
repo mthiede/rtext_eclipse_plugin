@@ -22,7 +22,9 @@ import org.rtext.lang.backend2.Callback;
 import org.rtext.lang.backend2.Command;
 import org.rtext.lang.backend2.Connection;
 import org.rtext.lang.backend2.Connector;
+import org.rtext.lang.backend2.Response;
 import org.rtext.lang.specs.unit.backend.ConnectorExecuteCommandSpec;
+import org.rtext.lang.specs.util.Commands;
 import org.rtext.lang.specs.util.MockInjector;
 
 @Contains(ConnectorExecuteCommandSpec.class)
@@ -53,12 +55,7 @@ public class ConnectorSpec {
   
   final int PORT = 1234;
   
-  final Command anyCommand = new Function0<Command>() {
-    public Command apply() {
-      Command _command = new Command(0, "type", "command");
-      return _command;
-    }
-  }.apply();
+  final Command<Response> anyCommand = Commands.ANY_COMMAND;
   
   final String COMMAND = "cmd";
   

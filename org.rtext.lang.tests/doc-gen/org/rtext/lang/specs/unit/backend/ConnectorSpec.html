@@ -87,6 +87,7 @@ import org.rtext.lang.specs.util.MockInjector
 
 import static org.mockito.Matchers.*
 import static org.mockito.Mockito.*
+import static org.rtext.lang.specs.util.Commands.*
 
 @CreateWith(typeof(MockInjector))
 describe Connector {
@@ -97,7 +98,7 @@ describe Connector {
   @Mock Callback callback
 
   val PORT = 1234
-  val anyCommand = new Command(0, &quot;type&quot;, &quot;command&quot;)
+  val anyCommand = ANY_COMMAND
   val COMMAND = &quot;cmd&quot;
   File executionDir
 

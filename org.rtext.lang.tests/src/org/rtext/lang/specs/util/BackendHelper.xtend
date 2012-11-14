@@ -12,7 +12,7 @@ class BackendHelper {
 	extension TestFileLocator = new TestFileLocator("backends/head")
 	
 	val connectorProvider = CachingConnectorProvider::create
-	val callback = new TestCallBack
+	val callback = new TestCallBack<Response>
 	
 	@Property IDocument document
 	@Property var proposalAcceptor = new TestProposalAcceptor

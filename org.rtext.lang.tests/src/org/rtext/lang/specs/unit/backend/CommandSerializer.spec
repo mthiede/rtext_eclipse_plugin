@@ -3,6 +3,7 @@ package org.rtext.lang.specs.unit.backend
 import static org.junit.Assert.*
 import org.rtext.lang.backend2.CommandSerializer
 import org.rtext.lang.backend2.Command
+import org.rtext.lang.backend2.Response
 
 describe "Converting Commands to JSON"{
 

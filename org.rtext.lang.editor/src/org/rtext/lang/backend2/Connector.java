@@ -22,8 +22,8 @@ public class Connector {
 		this.connection = connection;
 	}
 
-	public Response execute(Command command) throws TimeoutException{
-		SynchronousCallBack callback = new SynchronousCallBack();
+	public<T extends Response> T execute(Command<T> command) throws TimeoutException{
+		SynchronousCallBack<T> callback = new SynchronousCallBack<T>();
 		execute(command, callback);
 		callback.waitForResponse();
 		return callback.response();
@@ -36,7 +36,7 @@ public class Connector {
 		}
 	}
 
-	public void execute(Command command, Callback callback) throws TimeoutException{
+	public <T extends Response> void execute(Command<T> command, Callback<T> callback) throws TimeoutException{
 		ensureBackendIsConnected();
 		connection.sendRequest(command, callback);
 	}
