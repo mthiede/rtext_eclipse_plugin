@@ -5,6 +5,7 @@ import static org.rtext.lang.util.Wait.waitUntil;
 import java.util.concurrent.TimeoutException;
 
 import org.rtext.lang.util.Condition;
+import org.rtext.lang.util.Sleeper;
 
 class SynchronousCallBack<T extends Response> implements Callback<T> {
 

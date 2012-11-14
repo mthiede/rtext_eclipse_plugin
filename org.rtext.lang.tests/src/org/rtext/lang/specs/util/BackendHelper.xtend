@@ -47,4 +47,9 @@ class BackendHelper {
 	}
 	
 
+	def proposals(){
+		proposalAcceptor.proposals
+	}
+	
+
 }

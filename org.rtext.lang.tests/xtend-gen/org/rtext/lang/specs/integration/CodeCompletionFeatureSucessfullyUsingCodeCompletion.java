@@ -1,5 +1,6 @@
 package org.rtext.lang.specs.integration;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.xtext.xbase.lib.Conversions;
@@ -64,7 +65,7 @@ public class CodeCompletionFeatureSucessfullyUsingCodeCompletion extends CodeCom
   @Order(4)
   @Named("Then the proposals should be")
   public void thenTheProposalsShouldBe() {
-    StepArguments _stepArguments = new StepArguments("EAnnotation\n\t    EClass\n\t    EClassifier\n\t    EDataType\n\t    EEnum\n\t    EGenericType\n\t    EPackage\n\t");
+    StepArguments _stepArguments = new StepArguments("EAnnotation\n\t    EClass\n\t    EClassifier\n\t    EDataType\n\t    EEnum\n\t    EGenericType\n\t    EPackage");
     final StepArguments args = _stepArguments;
     String _first = JnarioIterableExtensions.<String>first(args);
     String[] _split = _first.split("\r?\n");
@@ -75,15 +76,14 @@ public class CodeCompletionFeatureSucessfullyUsingCodeCompletion extends CodeCom
         }
       };
     final List<String> expectedProposals = ListExtensions.<String, String>map(((List<String>)Conversions.doWrapArray(_split)), _function);
-    boolean _doubleArrow = Should.operator_doubleArrow(
-      this.proposals, expectedProposals);
-    Assert.assertTrue("\nExpected proposals => expectedProposals but"
-     + "\n     proposals is " + new StringDescription().appendValue(this.proposals).toString()
+    ArrayList<String> _proposals = this.b.proposals();
+    boolean _doubleArrow = Should.operator_doubleArrow(_proposals, expectedProposals);
+    Assert.assertTrue("\nExpected b.proposals => expectedProposals but"
+     + "\n     b.proposals is " + new StringDescription().appendValue(_proposals).toString()
+     + "\n     b is " + new StringDescription().appendValue(this.b).toString()
      + "\n     expectedProposals is " + new StringDescription().appendValue(expectedProposals).toString() + "\n", _doubleArrow);
     
   }
   
   ProposalProvider proposalProvider;
-  
-  List<String> proposals;
 }

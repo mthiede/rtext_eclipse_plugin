@@ -2,7 +2,6 @@ package org.rtext.lang.specs.integration
 
 import org.rtext.lang.specs.util.BackendHelper
 import org.rtext.lang.backend2.ProposalProvider
-import java.util.List
 
 Feature: Code completion
 	
@@ -17,7 +16,6 @@ Background:
 
 Scenario: Sucessfully using code completion
 	ProposalProvider proposalProvider
-	List<String> proposals 
 	Given a proposal provider
 		proposalProvider = ProposalProvider::create(b.connector) 
 	When I invoke the code completion after "EPackage StatemachineMM {\n"
@@ -30,7 +28,6 @@ Scenario: Sucessfully using code completion
 	    EDataType
 	    EEnum
 	    EGenericType
-	    EPackage
-	'''
+	    EPackage'''
 	val expectedProposals = args.first.split("\r?\n").map[trim]
-	proposals => expectedProposals
+	b.proposals => expectedProposals

@@ -5,7 +5,7 @@ import java.util.concurrent.TimeoutException;
 public class Wait {
 
 	private String message = "Timeout occurred";
-	private long duration = 500l;
+	private long duration = 5000l;
 	private long pollEvery = 50l;
 
 	public static void waitUntil(Condition condition) throws TimeoutException{

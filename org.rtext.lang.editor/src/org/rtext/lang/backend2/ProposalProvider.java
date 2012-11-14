@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.concurrent.TimeoutException;
 
 import org.eclipse.jface.text.IDocument;
+import org.rtext.lang.backend2.Proposals.Option;
 import org.rtext.lang.editor.ContextParser;
 
 public class ProposalProvider {
@@ -23,6 +24,9 @@ public class ProposalProvider {
 			ContextParser contextParser = new ContextParser(document);
 			List<String> context = contextParser.getContext(offset);
 			Proposals response = connector.execute(new ProposalsCommand(context, 0));
+			for (Option option : response.getOptions()) {
+				acceptor.accept(option.getInsert());
+			}
 			System.out.println(response.getOptions());
 		} catch (TimeoutException e) {
 			e.printStackTrace();

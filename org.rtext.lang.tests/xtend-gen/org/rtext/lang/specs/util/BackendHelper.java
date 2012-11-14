@@ -1,6 +1,7 @@
 package org.rtext.lang.specs.util;
 
 import com.google.common.base.Objects;
+import java.util.ArrayList;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.Functions.Function0;
@@ -144,5 +145,11 @@ public class BackendHelper {
     int _plus = (_indexOf + _length);
     int _plus_1 = (_plus + 1);
     return _plus_1;
+  }
+  
+  public ArrayList<String> proposals() {
+    TestProposalAcceptor _proposalAcceptor = this.getProposalAcceptor();
+    ArrayList<String> _proposals = _proposalAcceptor.getProposals();
+    return _proposals;
   }
 }
