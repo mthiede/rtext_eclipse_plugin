@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.concurrent.TimeoutException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -29,6 +30,8 @@ import org.eclipse.ui.console.IConsole;
 import org.eclipse.ui.console.IConsoleManager;
 import org.eclipse.ui.console.IOConsole;
 import org.eclipse.ui.console.IOConsoleOutputStream;
+import org.rtext.lang.backend2.CliBackendStarter;
+import org.rtext.lang.backend2.PortParser;
 
 
 public class Connector {
@@ -253,10 +256,14 @@ public class Connector {
 	private void startProcess() {
 		protocolVersion = -1;
 		try {
-			process = Runtime.getRuntime().exec(config.getCommand(), null, config.getConfigFile().getParentFile());
+			process = new ProcessBuilder("/bin/bash", "-c", config.getCommand())
+				.redirectErrorStream(true)
+				.directory(config.getWorkingDir())
+				.start();
 			inputStream = new BufferedInputStream(process.getInputStream());
 			errorStream = new BufferedInputStream(process.getErrorStream());
 		} catch (IOException e) {
+			e.printStackTrace();
 		}		
 	}
 	

@@ -3,6 +3,8 @@ package org.rtext.lang.backend2;
 import com.google.gson.annotations.SerializedName;
 
 public class Command {
+	
+	private static int COMMAND_COUNTER = 0;
 	private final String type;
 	private final String command;
 	@SerializedName("invocation_id") private final int invocationId;
@@ -11,6 +13,15 @@ public class Command {
 		this.type = type;
 		this.command = command;
 		this.invocationId = invocationId;
+	}
+
+	public Command(String command) {
+		this(newInvocationId(), "request", command);
+	}
+
+	private static int newInvocationId() {
+		COMMAND_COUNTER++;
+		return COMMAND_COUNTER;
 	}
 
 	public String getCommand() {

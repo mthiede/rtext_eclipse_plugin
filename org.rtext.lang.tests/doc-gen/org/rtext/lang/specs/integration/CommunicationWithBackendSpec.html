@@ -57,28 +57,15 @@ response.type =&gt; &quot;response&quot;</pre>
 <pre class="prettyprint lang-spec linenums">
 package org.rtext.lang.specs.integration
 
-import org.rtext.lang.backend2.CachingConnectorProvider
-import org.rtext.lang.backend2.Command
-import org.rtext.lang.backend2.Connector
-import org.rtext.lang.backend2.Response
-import org.rtext.lang.specs.util.TestFileLocator
-import org.rtext.lang.specs.util.TestCallBack
-
-import static org.rtext.lang.backend2.Response.*
-import static org.rtext.lang.specs.util.Wait.*
+import org.rtext.lang.specs.util.BackendHelper
 
 import static extension org.jnario.lib.Should.*
 
 describe &quot;Communication with Backend&quot;{
   
-  extension TestFileLocator = new TestFileLocator(&quot;backends/head&quot;)
-  val modelFile = &quot;rtext/test/integration/model/test_metamodel.ect&quot;.absolutPath
+  extension BackendHelper = new BackendHelper
+  val modelFile = &quot;rtext/test/integration/model/test_metamodel.ect&quot;
     
-  val connectorProvider = CachingConnectorProvider::create
-  val callback = new TestCallBack
-  Connector connector
-  Response response
-  
   fact &quot;Executing commands synchronously&quot;{
     startBackendFor(modelFile)
     
@@ -93,24 +80,6 @@ describe &quot;Communication with Backend&quot;{
     executeAsynchronousCommand() 
     
     response.type =&gt; &quot;response&quot;
-  }
-  
-  after connectorProvider.dispose
-    
-  def startBackendFor(String filePath) {
-    connector = connectorProvider.get(filePath)
-  }
-  
-  def executeSynchronousCommand() {
-    response = connector.execute(new Command(1, &quot;request&quot;, &quot;load_model&quot;))
-  }
-
-  def executeAsynchronousCommand() {
-    waitUntil[
-      connector.execute(new Command(2, &quot;request&quot;, &quot;load_model&quot;), callback)
-      callback.response != null
-    ]
-    response = callback.response
   }
 }
 </pre>

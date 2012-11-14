@@ -1,5 +1,6 @@
 package org.rtext.lang.backend2;
 
+import static java.lang.System.arraycopy;
 import static org.rtext.lang.util.Wait.waitUntil;
 
 import java.io.BufferedInputStream;
@@ -46,9 +47,11 @@ public final class CliBackendStarter implements BackendStarter {
 	private OutputMonitor outputMonitor;
 	private InputStream inputStream;
 	private PortParser portParser;
+	private OutputHandler[] outputHandlers;
 	
-	public CliBackendStarter(PortParser portParser) {
+	public CliBackendStarter(PortParser portParser, OutputHandler... outputHandlers) {
 		this.portParser = portParser;
+		this.outputHandlers = outputHandlers;
 	}
 
 	public void startProcess(ConnectorConfig connectorConfig) throws TimeoutException {
@@ -63,8 +66,16 @@ public final class CliBackendStarter implements BackendStarter {
 
 	protected void handleOutputStream() {
 		inputStream = new BufferedInputStream(process.getInputStream());
-		outputMonitor = new OutputMonitor(inputStream, portParser);
+		outputMonitor = new OutputMonitor(inputStream, listeners());
 		outputMonitor.start();
+	}
+
+	private OutputHandler[] listeners() {
+		int length = outputHandlers.length + 1;
+		OutputHandler[] listeners = new OutputHandler[length];
+		listeners[0] = portParser;
+		arraycopy(outputHandlers, 0, listeners, 1, outputHandlers.length);
+		return listeners;
 	}
 
 	protected void startRTextProcess(ConnectorConfig connectorConfig)
@@ -111,6 +122,6 @@ public final class CliBackendStarter implements BackendStarter {
 	}
 
 	public static BackendStarter create() {
-		return new CliBackendStarter(new PortParser());
+		return new CliBackendStarter(new PortParser(), new SystemOutDebug());
 	}
 }

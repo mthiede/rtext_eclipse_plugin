@@ -7,6 +7,7 @@ public class ResponseParser {
 	Gson jsonParser = new Gson();
 
 	public boolean parse(String message, Callback callback) {
+		System.out.println(message);
 		if(message.startsWith("{\"type\":\"progress\"")){
 			callback.handleProgress(parse(message, Progress.class));
 			return false;

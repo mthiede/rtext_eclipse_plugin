@@ -18,16 +18,12 @@ class SynchronousCallBack implements Callback {
 	public void handleProgress(Progress progress) {
 	}
 
-	public void waitForResponse() {
-		try {
-			waitUntil(new Condition() {
-				public boolean applies() {
-					return response != null;
-				}
-			});
-		} catch (TimeoutException e) {
-			Exceptions.rethrow(e);
-		}
+	public void waitForResponse() throws TimeoutException {
+		waitUntil(new Condition() {
+			public boolean applies() {
+				return response != null;
+			}
+		});
 	}
 
 	public Response response() {
