@@ -11,6 +11,24 @@ public class Connector {
 	private final ConnectorConfig connectorConfig;
 	private BackendStarter processRunner;
 	private Connection connection;
+
+	private Callback<LoadedModel> loadModelCallBack = new Callback<LoadedModel>() {
+		
+		public void handleResponse(LoadedModel response) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+		public void handleProgress(Progress progress) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+		public void handleError(String error) {
+			// TODO Auto-generated method stub
+			
+		}
+	};
 	
 	public static Connector create(ConnectorConfig connectorConfig){
 		return new Connector(connectorConfig, CliBackendStarter.create(), TcpClient.create());
@@ -34,6 +52,7 @@ public class Connector {
 			processRunner.startProcess(connectorConfig);
 			try{
 				connection.connect(ADDRESS, processRunner.getPort());
+				connection.sendRequest(new LoadModelCommand(), loadModelCallBack);
 			}catch(Exception e){
 				processRunner.stop();
 				callback.handleError("Could not connect to backend");

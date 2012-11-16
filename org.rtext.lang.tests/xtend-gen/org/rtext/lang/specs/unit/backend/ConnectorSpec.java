@@ -57,6 +57,8 @@ public class ConnectorSpec {
   
   final Command<Response> anyCommand = Commands.ANY_COMMAND;
   
+  final Command<Response> otherCommand = Commands.OTHER_COMMAND;
+  
   final String COMMAND = "cmd";
   
   File executionDir;

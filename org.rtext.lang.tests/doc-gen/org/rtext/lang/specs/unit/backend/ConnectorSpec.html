@@ -66,6 +66,16 @@ verify(connection, never).sendRequest(anyCommand, callback)</pre>
 <pre class="prettyprint lang-spec linenums">
 subject.execute(anyCommand, callback)
 verify(connection).sendRequest(eq(anyCommand), any)</pre>
+</li><li><p id="Loads_model_after_connection" class="example notrun"><strong>Loads model after connection</strong></p>
+<pre class="prettyprint lang-spec linenums">
+subject.execute(anyCommand, callback)
+when(processRunner.running).thenReturn(true)
+subject.execute(otherCommand, callback)
+inOrder(connection) =&gt; [
+  it.verify(connection).sendRequest(isA(typeof(LoadModelCommand)), any)
+  it.verify(connection).sendRequest(anyCommand, callback)
+  it.verify(connection).sendRequest(otherCommand, callback)
+]</pre>
 </li><li><p id="Returns_commands_response" class="example notrun"><strong>Returns commands response</strong></p>
 <pre class="prettyprint lang-spec linenums">
 subject.execute(anyCommand, callback)
@@ -91,15 +101,14 @@ import org.mockito.Mock
 import org.rtext.lang.backend.ConnectorConfig
 import org.rtext.lang.backend2.BackendStarter
 import org.rtext.lang.backend2.Callback
-import org.rtext.lang.backend2.Command
 import org.rtext.lang.backend2.Connection
 import org.rtext.lang.backend2.Connector
+import org.rtext.lang.backend2.LoadModelCommand
 import org.rtext.lang.specs.util.MockInjector
 
 import static org.mockito.Matchers.*
 import static org.mockito.Mockito.*
 import static org.rtext.lang.specs.util.Commands.*
-import java.net.ConnectException
 
 @CreateWith(typeof(MockInjector))
 describe Connector {
@@ -111,6 +120,7 @@ describe Connector {
 
   val PORT = 1234
   val anyCommand = ANY_COMMAND
+  val otherCommand = OTHER_COMMAND
   val COMMAND = &quot;cmd&quot;
   File executionDir
 
@@ -160,6 +170,17 @@ describe Connector {
     fact &quot;Sends command's request via connection&quot;{
       subject.execute(anyCommand, callback)
       verify(connection).sendRequest(eq(anyCommand), any)
+    }
+    
+    fact &quot;Loads model after connection&quot;{
+      subject.execute(anyCommand, callback)
+      when(processRunner.running).thenReturn(true)
+      subject.execute(otherCommand, callback)
+      inOrder(connection) =&gt; [
+        it.verify(connection).sendRequest(isA(typeof(LoadModelCommand)), any)
+        it.verify(connection).sendRequest(anyCommand, callback)
+        it.verify(connection).sendRequest(otherCommand, callback)
+      ]
     }
     
     fact &quot;Returns commands response&quot;{

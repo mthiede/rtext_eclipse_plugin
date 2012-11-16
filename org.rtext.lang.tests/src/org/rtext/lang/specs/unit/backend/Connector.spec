@@ -8,15 +8,14 @@ import org.mockito.Mock
 import org.rtext.lang.backend.ConnectorConfig
 import org.rtext.lang.backend2.BackendStarter
 import org.rtext.lang.backend2.Callback
-import org.rtext.lang.backend2.Command
 import org.rtext.lang.backend2.Connection
 import org.rtext.lang.backend2.Connector
+import org.rtext.lang.backend2.LoadModelCommand
 import org.rtext.lang.specs.util.MockInjector
 
 import static org.mockito.Matchers.*
 import static org.mockito.Mockito.*
 import static org.rtext.lang.specs.util.Commands.*
-import java.net.ConnectException
 
 @CreateWith(typeof(MockInjector))
 describe Connector {
@@ -28,6 +27,7 @@ describe Connector {
 
 	val PORT = 1234
 	val anyCommand = ANY_COMMAND
+	val otherCommand = OTHER_COMMAND
 	val COMMAND = "cmd"
 	File executionDir
 
@@ -77,6 +77,17 @@ describe Connector {
 		fact "Sends command's request via connection"{
 			subject.execute(anyCommand, callback)
 			verify(connection).sendRequest(eq(anyCommand), any)
+		}
+		
+		fact "Loads model after connection"{
+			subject.execute(anyCommand, callback)
+			when(processRunner.running).thenReturn(true)
+			subject.execute(otherCommand, callback)
+			inOrder(connection) => [
+				it.verify(connection).sendRequest(isA(typeof(LoadModelCommand)), any)
+				it.verify(connection).sendRequest(anyCommand, callback)
+				it.verify(connection).sendRequest(otherCommand, callback)
+			]
 		}
 		
 		fact "Returns commands response"{

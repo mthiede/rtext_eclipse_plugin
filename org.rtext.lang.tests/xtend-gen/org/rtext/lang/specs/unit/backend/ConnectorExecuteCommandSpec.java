@@ -1,10 +1,13 @@
 package org.rtext.lang.specs.unit.backend;
 
+import org.eclipse.xtext.xbase.lib.ObjectExtensions;
+import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
 import org.jnario.runner.ExampleGroupRunner;
 import org.jnario.runner.Named;
 import org.jnario.runner.Order;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InOrder;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
 import org.mockito.stubbing.OngoingStubbing;
@@ -14,6 +17,8 @@ import org.rtext.lang.backend2.BackendStarter;
 import org.rtext.lang.backend2.Callback;
 import org.rtext.lang.backend2.Command;
 import org.rtext.lang.backend2.Connection;
+import org.rtext.lang.backend2.LoadModelCommand;
+import org.rtext.lang.backend2.LoadedModel;
 import org.rtext.lang.backend2.Response;
 import org.rtext.lang.specs.unit.backend.ConnectorSpec;
 
@@ -98,8 +103,33 @@ public class ConnectorExecuteCommandSpec extends ConnectorSpec {
   }
   
   @Test
-  @Named("Returns commands response")
+  @Named("Loads model after connection")
   @Order(7)
+  public void _loadsModelAfterConnection() throws Exception {
+    this.subject.<Response>execute(this.anyCommand, this.callback);
+    boolean _isRunning = this.processRunner.isRunning();
+    OngoingStubbing<Boolean> _when = Mockito.<Boolean>when(Boolean.valueOf(_isRunning));
+    _when.thenReturn(Boolean.valueOf(true));
+    this.subject.<Response>execute(this.otherCommand, this.callback);
+    InOrder _inOrder = Mockito.inOrder(this.connection);
+    final Procedure1<InOrder> _function = new Procedure1<InOrder>() {
+        public void apply(final InOrder it) {
+          Connection _verify = it.<Connection>verify(ConnectorExecuteCommandSpec.this.connection);
+          LoadModelCommand _isA = Matchers.<LoadModelCommand>isA(LoadModelCommand.class);
+          Callback<LoadedModel> _any = Matchers.<Callback<LoadedModel>>any();
+          _verify.<LoadedModel>sendRequest(_isA, _any);
+          Connection _verify_1 = it.<Connection>verify(ConnectorExecuteCommandSpec.this.connection);
+          _verify_1.<Response>sendRequest(ConnectorExecuteCommandSpec.this.anyCommand, ConnectorExecuteCommandSpec.this.callback);
+          Connection _verify_2 = it.<Connection>verify(ConnectorExecuteCommandSpec.this.connection);
+          _verify_2.<Response>sendRequest(ConnectorExecuteCommandSpec.this.otherCommand, ConnectorExecuteCommandSpec.this.callback);
+        }
+      };
+    ObjectExtensions.<InOrder>operator_doubleArrow(_inOrder, _function);
+  }
+  
+  @Test
+  @Named("Returns commands response")
+  @Order(8)
   public void _returnsCommandsResponse() throws Exception {
     this.subject.<Response>execute(this.anyCommand, this.callback);
     Connection _verify = Mockito.<Connection>verify(this.connection);
