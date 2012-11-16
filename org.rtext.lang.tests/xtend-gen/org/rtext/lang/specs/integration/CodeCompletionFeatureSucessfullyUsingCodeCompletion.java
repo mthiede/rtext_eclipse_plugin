@@ -6,6 +6,8 @@ import org.eclipse.jface.text.contentassist.ContentAssistEvent;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
+import org.eclipse.xtext.xbase.lib.InputOutput;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.ListExtensions;
 import org.hamcrest.StringDescription;
 import org.jnario.lib.JnarioIterableExtensions;
@@ -59,7 +61,8 @@ public class CodeCompletionFeatureSucessfullyUsingCodeCompletion extends CodeCom
     final Function1<ICompletionProposal,String> _function = new Function1<ICompletionProposal,String>() {
         public String apply(final ICompletionProposal it) {
           String _displayString = it.getDisplayString();
-          return _displayString;
+          String _trim = _displayString.trim();
+          return _trim;
         }
       };
     List<String> _map = ListExtensions.<ICompletionProposal, String>map(((List<ICompletionProposal>)Conversions.doWrapArray(_computeCompletionProposals)), _function);
@@ -72,7 +75,7 @@ public class CodeCompletionFeatureSucessfullyUsingCodeCompletion extends CodeCom
   @Order(4)
   @Named("Then the proposals should be")
   public void thenTheProposalsShouldBe() {
-    StepArguments _stepArguments = new StepArguments("EAnnotation \nEClass\nEClassifier\nEDataType\nEEnum\nEGenericType\nEPackage\n\t");
+    StepArguments _stepArguments = new StepArguments("EAnnotation\nEClass <name>\nEClassifier <name>\nEDataType <name>\nEEnum <name>\nEGenericType <name>\nEPackage <name>\n\t");
     final StepArguments args = _stepArguments;
     String _first = JnarioIterableExtensions.<String>first(args);
     String _trim = _first.trim();
@@ -84,6 +87,8 @@ public class CodeCompletionFeatureSucessfullyUsingCodeCompletion extends CodeCom
         }
       };
     final List<String> expectedProposals = ListExtensions.<String, String>map(((List<String>)Conversions.doWrapArray(_split)), _function);
+    String _join = IterableExtensions.join(this.proposals, "\n");
+    InputOutput.<String>println(_join);
     boolean _doubleArrow = Should.operator_doubleArrow(
       this.proposals, expectedProposals);
     Assert.assertTrue("\nExpected proposals => expectedProposals but"
