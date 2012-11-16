@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.rtext.lang.backend2.Command;
 import org.rtext.lang.backend2.CommandSerializer;
+import org.rtext.lang.backend2.Response;
 
 @SuppressWarnings("all")
 @RunWith(ExampleGroupRunner.class)
@@ -34,7 +35,7 @@ public class ConvertingCommandsToJSONSpec {
   @Named("converts command to json")
   @Order(0)
   public void _convertsCommandToJson() throws Exception {
-    Command<?> _command = new Command<Object>(this.invocationId, this.type, this.command);
+    Command<Response> _command = new Command<Response>(this.invocationId, this.type, this.command);
     String _serialize = this.serializer.serialize(_command);
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("{");

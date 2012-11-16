@@ -20,7 +20,7 @@
 <listEntry value="1"/>
 </listAttribute>
 <mapAttribute key="org.eclipse.debug.core.environmentVariables">
-<mapEntry key="PATH" value="~/.rvm/rubies/ruby-1.9.2-p320/bin/"/>
+<mapEntry key="PATH" value="/Users/sebastian/.rvm/rubies/ruby-1.9.2-p320/bin"/>
 </mapAttribute>
 <stringAttribute key="org.eclipse.jdt.junit.CONTAINER" value=""/>
 <booleanAttribute key="org.eclipse.jdt.junit.KEEPRUNNING_ATTR" value="false"/>

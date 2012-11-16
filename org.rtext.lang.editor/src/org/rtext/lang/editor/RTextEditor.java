@@ -27,16 +27,23 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.rtext.lang.RTextPlugin;
 import org.rtext.lang.backend.Connector;
 import org.rtext.lang.backend.ConnectorManager;
+import org.rtext.lang.backend2.CachingConnectorProvider;
+import org.rtext.lang.backend2.ConnectorProvider;
 
-public class RTextEditor extends TextEditor {
+public class RTextEditor extends TextEditor implements Connected{
 
 	private ColorManager colorManager;
 	private RTextContentOutlinePage myOutlinePage;
 	private ProjectionSupport projectionSupport;
 	private FoldingStructureProvider foldingStructureProvider = new FoldingStructureProvider();
+	private final ConnectorProvider connectorProvider;
 	
 	public RTextEditor() {
-		super();
+		this(CachingConnectorProvider.create());
+	}
+	
+	public RTextEditor(ConnectorProvider connectorProvider) {
+		this.connectorProvider = connectorProvider;
 		colorManager = new ColorManager();
 		setSourceViewerConfiguration(new ViewerConfiguration(this, colorManager));
 		setDocumentProvider(new RTextDocumentProvider());
@@ -83,7 +90,7 @@ public class RTextEditor extends TextEditor {
 				getStatusLineManager()).schedule();
 	}
 
-	private IPath getInputPath() {
+	IPath getInputPath() {
 		IEditorInput input = getEditorInput();
 		return ((IPathEditorInput) input).getPath();
 	}
@@ -99,6 +106,10 @@ public class RTextEditor extends TextEditor {
 
 	public Connector getBackendConnector() {
 		return ConnectorManager.getConnector(getInputPath());
+	}
+	
+	public org.rtext.lang.backend2.Connector getConnector() {
+		return connectorProvider.get(getInputPath().toOSString());
 	}
 	
 	protected void installFoldingSupport(ProjectionViewer projectionViewer) {

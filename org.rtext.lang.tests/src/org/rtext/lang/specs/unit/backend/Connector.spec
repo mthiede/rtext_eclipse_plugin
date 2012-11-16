@@ -16,6 +16,7 @@ import org.rtext.lang.specs.util.MockInjector
 import static org.mockito.Matchers.*
 import static org.mockito.Mockito.*
 import static org.rtext.lang.specs.util.Commands.*
+import java.net.ConnectException
 
 @CreateWith(typeof(MockInjector))
 describe Connector {
@@ -57,6 +58,20 @@ describe Connector {
 		fact "Connects to 127.0.0.1 on specified port"{
 			subject.execute(anyCommand, callback)
 			verify(connection).connect("127.0.0.1", PORT)
+		}
+		
+		fact "Kills backend process if connection fails"{
+			doThrow(new RuntimeException()).when(connection).connect(anyString, anyInt) 
+			subject.execute(anyCommand, callback)
+			verify(processRunner).stop
+			
+		}
+		
+		fact "Notifies callback"{
+			doThrow(new RuntimeException()).when(connection).connect(anyString, anyInt) 
+			subject.execute(anyCommand, callback)
+			verify(callback).handleError("Could not connect to backend")
+			verify(connection, never).sendRequest(anyCommand, callback)
 		}
 		
 		fact "Sends command's request via connection"{

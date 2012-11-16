@@ -13,13 +13,13 @@ import org.rtext.lang.model.Element;
 
 public class RTextLabelProvider extends LabelProvider {
 	
-	private PluginImageHelper imageHelper;
+	private ImageHelper imageHelper;
 	
 	public RTextLabelProvider(){
 		this(new PluginImageHelper());
 	}
 
-	public RTextLabelProvider(PluginImageHelper imageHelper) {
+	public RTextLabelProvider(ImageHelper imageHelper) {
 		this.imageHelper = imageHelper;
 	}
 

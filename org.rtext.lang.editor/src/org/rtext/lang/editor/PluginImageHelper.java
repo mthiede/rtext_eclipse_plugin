@@ -22,7 +22,7 @@ import org.rtext.lang.RTextPlugin;
 /**
  * @author Sebastian Zarnekow
  */
-public class PluginImageHelper implements BundleListener {
+public class PluginImageHelper implements BundleListener, ImageHelper {
 	
 	private Map<ImageDescriptor, Image> registry = new HashMap<ImageDescriptor, Image>(10);
 
@@ -79,6 +79,9 @@ public class PluginImageHelper implements BundleListener {
 		registry.clear();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.rtext.lang.editor.ImageHelper#getImage(java.lang.String)
+	 */
 	public Image getImage(String imageName) {
 		String imgname = imageName == null ? defaultImage : imageName;
 		if (imgname != null) {

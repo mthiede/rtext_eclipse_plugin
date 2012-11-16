@@ -13,7 +13,7 @@ describe "Converting Commands to JSON"{
 
 	extension CommandSerializer serializer = new CommandSerializer
 	fact "converts command to json"{
-		new Command(invocationId, type, command).serialize.is('''
+		new Command<Response>(invocationId, type, command).serialize.is('''
 		{
 		    "type": "«type»",
 		    "command": "«command»",

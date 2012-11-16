@@ -17,7 +17,7 @@ import org.rtext.lang.util.Exceptions;
 
 public final class CliBackendStarter implements BackendStarter {
 	
-	private static final class OutputMonitor extends Thread {
+	private final class OutputMonitor extends Thread {
 		private InputStream inputStream;
 		private OutputHandler[] listeners;
 
@@ -38,7 +38,7 @@ public final class CliBackendStarter implements BackendStarter {
 					}
 				}
 			} catch (IOException e) {
-				Exceptions.rethrow(e);
+				CliBackendStarter.this.stop();
 			}
 		}
 	}
@@ -80,8 +80,10 @@ public final class CliBackendStarter implements BackendStarter {
 
 	protected void startRTextProcess(ConnectorConfig connectorConfig)
 			throws IOException {
-		process = new ProcessBuilder("/bin/bash", "-c", connectorConfig.getCommand())
-			.redirectErrorStream(true)
+		String command = connectorConfig.getCommand();
+		String[] commands = command.split("\\s");
+		ProcessBuilder processBuilder = new ProcessBuilder(commands);
+		process = processBuilder.redirectErrorStream(true)
 			.directory(connectorConfig.getWorkingDir())
 			.start();
 	}

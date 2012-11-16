@@ -51,6 +51,17 @@ verify(processRunner, times(1)).startProcess(config)</pre>
 <pre class="prettyprint lang-spec linenums">
 subject.execute(anyCommand, callback)
 verify(connection).connect(&quot;127.0.0.1&quot;, PORT)</pre>
+</li><li><p id="Kills_backend_process_if_connection_fails" class="example notrun"><strong>Kills backend process if connection fails</strong></p>
+<pre class="prettyprint lang-spec linenums">
+doThrow(new RuntimeException()).when(connection).connect(anyString, anyInt) 
+subject.execute(anyCommand, callback)
+verify(processRunner).stop</pre>
+</li><li><p id="Notifies_callback" class="example notrun"><strong>Notifies callback</strong></p>
+<pre class="prettyprint lang-spec linenums">
+doThrow(new RuntimeException()).when(connection).connect(anyString, anyInt) 
+subject.execute(anyCommand, callback)
+verify(callback).handleError(&quot;Could not connect to backend&quot;)
+verify(connection, never).sendRequest(anyCommand, callback)</pre>
 </li><li><p id="Sends_command_s_request_via_connection" class="example notrun"><strong>Sends command's request via connection</strong></p>
 <pre class="prettyprint lang-spec linenums">
 subject.execute(anyCommand, callback)
@@ -88,6 +99,7 @@ import org.rtext.lang.specs.util.MockInjector
 import static org.mockito.Matchers.*
 import static org.mockito.Mockito.*
 import static org.rtext.lang.specs.util.Commands.*
+import java.net.ConnectException
 
 @CreateWith(typeof(MockInjector))
 describe Connector {
@@ -129,6 +141,20 @@ describe Connector {
     fact &quot;Connects to 127.0.0.1 on specified port&quot;{
       subject.execute(anyCommand, callback)
       verify(connection).connect(&quot;127.0.0.1&quot;, PORT)
+    }
+    
+    fact &quot;Kills backend process if connection fails&quot;{
+      doThrow(new RuntimeException()).when(connection).connect(anyString, anyInt) 
+      subject.execute(anyCommand, callback)
+      verify(processRunner).stop
+      
+    }
+    
+    fact &quot;Notifies callback&quot;{
+      doThrow(new RuntimeException()).when(connection).connect(anyString, anyInt) 
+      subject.execute(anyCommand, callback)
+      verify(callback).handleError(&quot;Could not connect to backend&quot;)
+      verify(connection, never).sendRequest(anyCommand, callback)
     }
     
     fact &quot;Sends command's request via connection&quot;{

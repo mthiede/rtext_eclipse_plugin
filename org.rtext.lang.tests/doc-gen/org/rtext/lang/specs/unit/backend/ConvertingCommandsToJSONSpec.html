@@ -37,7 +37,7 @@
 							  	<div class="tab-pane active" id="spec">
 <ul><li><p id="converts_command_to_json" class="example notrun"><strong>converts command to json</strong></p>
 <pre class="prettyprint lang-spec linenums">
-new Command(invocationId, type, command).serialize.is('''
+new Command&lt;Response&gt;(invocationId, type, command).serialize.is('''
 {
     &quot;type&quot;: &quot;&laquo;type&raquo;&quot;,
     &quot;command&quot;: &quot;&laquo;command&raquo;&quot;,
@@ -65,7 +65,7 @@ describe &quot;Converting Commands to JSON&quot;{
 
   extension CommandSerializer serializer = new CommandSerializer
   fact &quot;converts command to json&quot;{
-    new Command(invocationId, type, command).serialize.is('''
+    new Command&lt;Response&gt;(invocationId, type, command).serialize.is('''
     {
         &quot;type&quot;: &quot;&laquo;type&raquo;&quot;,
         &quot;command&quot;: &quot;&laquo;command&raquo;&quot;,

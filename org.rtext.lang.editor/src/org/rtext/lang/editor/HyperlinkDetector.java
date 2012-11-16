@@ -65,7 +65,7 @@ public class HyperlinkDetector implements IHyperlinkDetector {
 	
 	public IHyperlink[] detectHyperlinks(ITextViewer textViewer,
 			IRegion region, boolean canShowMultipleHyperlinks) {
-		String context = new ContextParser(textViewer.getDocument()).getContext(region.getOffset());
+		String context = null;//new ContextParser(textViewer.getDocument()).getContext(region.getOffset());
 		if (context != null) {
 			Connector bc = editor.getBackendConnector();
 			if (bc != null) {

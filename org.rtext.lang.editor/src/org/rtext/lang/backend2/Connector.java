@@ -29,15 +29,24 @@ public class Connector {
 		return callback.response();
 	}
 
-	protected void ensureBackendIsConnected() throws TimeoutException {
+	protected boolean ensureBackendIsConnected(Callback<?> callback) throws TimeoutException {
 		if(!processRunner.isRunning()){
 			processRunner.startProcess(connectorConfig);
-			connection.connect(ADDRESS, processRunner.getPort());
+			try{
+				connection.connect(ADDRESS, processRunner.getPort());
+			}catch(Exception e){
+				processRunner.stop();
+				callback.handleError("Could not connect to backend");
+				return false;
+			}
 		}
+		return true;
 	}
 
 	public <T extends Response> void execute(Command<T> command, Callback<T> callback) throws TimeoutException{
-		ensureBackendIsConnected();
+		if(!ensureBackendIsConnected(callback)){
+			return;
+		}
 		connection.sendRequest(command, callback);
 	}
 	

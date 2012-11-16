@@ -24,8 +24,8 @@ public class TcpClient implements Connection {
 			while (running) {
 				try {
 					Task<?> task = tasks.take();
-					executeCommand(task);
 					try {
+						executeCommand(task);
 						receiveResponse(task);
 					} catch (Exception e) {
 						task.callback.handleError(e.getMessage());
@@ -38,17 +38,20 @@ public class TcpClient implements Connection {
 			}
 		}
 
-		protected <T extends Response> void receiveResponse(Task<T> task) throws IOException {
+		protected <T extends Response> void receiveResponse(Task<T> task)
+				throws IOException {
 			boolean responseReceived = false;
-			while(!responseReceived){
+			while (!responseReceived) {
 				int messageLength = readMessageLength();
 				String message = readMessage(messageLength);
-				responseReceived = responseParser.parse(message, task.callback, task.command.getResponseType());
+				responseReceived = responseParser.parse(message, task.callback,
+						task.command.getResponseType());
 			}
 		}
 
 		protected void executeCommand(Task<?> task) {
-			out.println(serializer.serialize(task.command));
+			out.print(serializer.serialize(task.command));
+			out.flush();
 		}
 	}
 
@@ -61,7 +64,7 @@ public class TcpClient implements Connection {
 			this.callback = callback;
 		}
 	}
-	
+
 	public static TcpClient create() {
 		return new TcpClient(new CommandSerializer(), new ResponseParser());
 	}
@@ -86,9 +89,11 @@ public class TcpClient implements Connection {
 			createSocket(address, port);
 			startCommandExecution();
 		} catch (UnknownHostException e) {
-			throw new BackendException("Unknown host " + address + ":" + port, e);
+			throw new BackendException("Unknown host " + address + ":" + port,
+					e);
 		} catch (IOException e) {
-			throw new BackendException("Exception when connecting to " + address + ":" + port, e);
+			throw new BackendException("Exception when connecting to "
+					+ address + ":" + port, e);
 		}
 	}
 
@@ -107,22 +112,24 @@ public class TcpClient implements Connection {
 	}
 
 	public void close() {
-		if (socket != null) {
-			try {
-				socket.close();
-				out.close();
-				in.close();
-				worker.running = false;
-				socket = null;
-			} catch (IOException e) {
-				// ignore
-			} 
+		if (socket == null) {
+			return;
+		}
+		try {
+			socket.close();
+			out.close();
+			in.close();
+			worker.running = false;
+			socket = null;
+		} catch (IOException e) {
+			// ignore
 		}
 	}
 
-	public <T extends Response> void sendRequest(Command<T> request, Callback<T> callback) {
-		if(!isConnected()){
-			throw new BackendException("Not connected"); 
+	public <T extends Response> void sendRequest(Command<T> request,
+			Callback<T> callback) {
+		if (!isConnected()) {
+			throw new BackendException("Not connected");
 		}
 		tasks.add(new Task<T>(request, callback));
 	}
@@ -149,7 +156,7 @@ public class TcpClient implements Connection {
 		return length;
 	}
 
-	public boolean isConnected(){
+	public boolean isConnected() {
 		return socket != null;
 	}
 

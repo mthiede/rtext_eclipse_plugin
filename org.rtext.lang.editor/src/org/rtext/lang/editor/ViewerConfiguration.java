@@ -65,7 +65,7 @@ public class ViewerConfiguration extends SourceViewerConfiguration {
 	public IContentAssistant getContentAssistant(ISourceViewer sourceViewer)
 	{
 	    ContentAssistant assistant = new ContentAssistant();
-	    ContentAssistProcessor tagContentAssistProcessor = new ContentAssistProcessor(editor);
+	    ContentAssistProcessor tagContentAssistProcessor = ContentAssistProcessor.create(editor);
 	    assistant.addCompletionListener(tagContentAssistProcessor);
 	    assistant.setContentAssistProcessor(tagContentAssistProcessor,
 	    		IDocument.DEFAULT_CONTENT_TYPE);

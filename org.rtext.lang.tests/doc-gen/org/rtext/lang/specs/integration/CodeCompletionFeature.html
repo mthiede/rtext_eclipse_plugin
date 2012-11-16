@@ -42,22 +42,22 @@
 </li>
 <li><span class="step notrun"><p>And a running backend</p></span>
 </li>
+<li><span class="step notrun"><p>And a proposal provider</p></span>
+</li>
 </ul>
 </div>
 <div><h3 class="scenario notrun"  id="Scenario_Sucessfully_using_code_completion">Scenario: Sucessfully using code completion
 </h3>
 <ul>
-<li><span class="step notrun"><p>Given a proposal provider</p></span>
-</li>
 <li><span class="step notrun"><p>When I invoke the code completion after <code>"EPackage StatemachineMM {n"</code></p></span>
 </li>
-<li><span class="step notrun"><p>Then the proposals should be</p><pre>EAnnotation
-      EClass
-      EClassifier
-      EDataType
-      EEnum
-      EGenericType
-      EPackage</pre></span>
+<li><span class="step notrun"><p>Then the proposals should be</p><pre>EAnnotation 
+EClass
+EClassifier
+EDataType
+EEnum
+EGenericType
+EPackage</pre></span>
 </li>
 </ul>
 </div>
@@ -69,36 +69,42 @@
 package org.rtext.lang.specs.integration
 
 import org.rtext.lang.specs.util.BackendHelper
-import org.rtext.lang.backend2.ProposalProvider
+import org.rtext.lang.editor.ContentAssistProcessor
+import java.util.List
+import org.junit.Assert
 
 Feature: Code completion
   
 Background:
   extension BackendHelper b = new BackendHelper
   String modelFile
+  List&lt;String&gt; proposals
+  ContentAssistProcessor proposalProvider
   
   Given a model file &quot;rtext/test/integration/model/test_metamodel.ect&quot;
     modelFile = args.first
   And a running backend
     b.startBackendFor(modelFile)
+  And a proposal provider
+    proposalProvider = ContentAssistProcessor::create([|b.connector]) 
 
 Scenario: Sucessfully using code completion
-  ProposalProvider proposalProvider
-  Given a proposal provider
-    proposalProvider = ProposalProvider::create(b.connector) 
   When I invoke the code completion after &quot;EPackage StatemachineMM {\n&quot;
-    proposalProvider.calculateProposals(b.document, b.offsetAfter(args.first), b.proposalAcceptor)
+    proposalProvider.assistSessionStarted(_)
+    proposals = proposalProvider.computeCompletionProposals(b.document, b.offsetAfter(args.first), 0).map[displayString]
+    proposalProvider.assistSessionEnded(_)
   Then the proposals should be
   '''
-    EAnnotation
-      EClass
-      EClassifier
-      EDataType
-      EEnum
-      EGenericType
-      EPackage'''
-  val expectedProposals = args.first.split(&quot;\r?\n&quot;).map[trim]
-  b.proposals =&gt; expectedProposals
+    EAnnotation 
+    EClass
+    EClassifier
+    EDataType
+    EEnum
+    EGenericType
+    EPackage
+  '''
+  val expectedProposals = args.first.trim.split(&quot;\r?\n&quot;).map[trim]
+  proposals =&gt; expectedProposals
 </pre>
 						    </p></div>
 						  </div>

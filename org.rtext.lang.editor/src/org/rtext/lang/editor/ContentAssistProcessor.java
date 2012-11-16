@@ -7,12 +7,14 @@
  *******************************************************************************/
 package org.rtext.lang.editor;
 
+import static java.util.Collections.emptyList;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.StringTokenizer;
-import java.util.Vector;
+import java.util.concurrent.TimeoutException;
 
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.CompletionProposal;
 import org.eclipse.jface.text.contentassist.ContentAssistEvent;
@@ -21,38 +23,58 @@ import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
-import org.rtext.lang.backend.Command;
-import org.rtext.lang.backend.Connector;
+import org.eclipse.swt.graphics.Image;
+import org.rtext.lang.backend2.Connector;
+import org.rtext.lang.backend2.Proposals;
+import org.rtext.lang.backend2.Proposals.Option;
+import org.rtext.lang.backend2.ProposalsCommand;
 
 
 public class ContentAssistProcessor implements IContentAssistProcessor,	ICompletionListener {
 
-	private RTextEditor editor;
-	private List<String> allCompletionOptions;
+	private Connected connected;
+	private Proposals proposals;
+	private ImageHelper imageHelper;
 	
-	public ContentAssistProcessor(RTextEditor editor) {
-		this.editor = editor;
-		this.allCompletionOptions = null;
+	public ContentAssistProcessor(Connected connected, ImageHelper imageHelper) {
+		this.connected = connected;
+		this.imageHelper = imageHelper;
 	}
 	
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer,	int offset) {
-		Vector<CompletionProposal> proposals = new Vector<CompletionProposal>();
-		String wordStart = wordStart(viewer, offset);
+		IDocument document = viewer.getDocument();
+		int topIndexStartOffset = viewer.getTopIndexStartOffset();
+		return computeCompletionProposals(document, offset, topIndexStartOffset);
+	}
+
+	public ICompletionProposal[] computeCompletionProposals(IDocument document,	int offset, int topIndexStartOffset) {
+		String wordStart = wordStart(document, topIndexStartOffset, offset);
 		int wordStartOffset = offset-wordStart.length();
-		
-		loadCompletions(viewer, offset);		
-		for (String option : allCompletionOptions) {
-			if (filterCompletionOption(option, wordStart)) {
-				proposals.add(new CompletionProposal(option, wordStartOffset, wordStart.length(), option.length()));
+		List<Option> options = loadCompletions(document, offset);	
+		List<ICompletionProposal> result = new ArrayList<ICompletionProposal>(options.size());
+		for (int i = 0; i < options.size(); i++) {
+			Option option = options.get(i);
+			String replacementString = option.getInsert();
+			if (filterCompletionOption(replacementString, wordStart)) {
+				result.add(createProposal(wordStart, wordStartOffset, option));
 			}
 		}
+        return result.toArray(new ICompletionProposal[result.size()]);
+	}
 
-		ICompletionProposal[] result = new ICompletionProposal[proposals.size()];
-		for (int i = 0; i < proposals.size(); i++) {
-			result[i] = proposals.elementAt(i); 
-		}
-	    
-        return result;
+	protected CompletionProposal createProposal(String wordStart,
+			int wordStartOffset, Option option) {
+		String replacementString = option.getInsert();
+		Image image = imageHelper.getImage("element.gif");
+		return new CompletionProposal(
+				replacementString , 
+				wordStartOffset, 
+				wordStart.length(), 
+				replacementString.length(),
+				image,
+				option.getDisplay(),
+				null,
+				null);
 	}
 	
 	private boolean filterCompletionOption(String option, String wordStart) {
@@ -67,18 +89,18 @@ public class ContentAssistProcessor implements IContentAssistProcessor,	IComplet
 		}			
 	}
 	
-	private String wordStart(ITextViewer viewer, int offset) {
+	private String wordStart(IDocument document, int topIndexStartOffset, int offset) {
 		try {
 		  int start = offset - 1;
-	      while (((start) >= viewer.getTopIndexStartOffset()) && (
-	    		Character.isLetterOrDigit(viewer.getDocument().getChar(start)) ||
-	        	viewer.getDocument().getChar(start) == '/' ||
-	        	viewer.getDocument().getChar(start) == '_'
+	      while (((start) >= topIndexStartOffset) && (
+	    		Character.isLetterOrDigit(document.getChar(start)) ||
+	    		document.getChar(start) == '/' ||
+	    				document.getChar(start) == '_'
 	          )) {
 	        start--;
 	      }
 	      start++;
-	      return viewer.getDocument().get(start, offset-start);
+	      return document.get(start, offset-start);
 	    } catch (BadLocationException e) {
 	      return "";
 	    }
@@ -109,33 +131,48 @@ public class ContentAssistProcessor implements IContentAssistProcessor,	IComplet
 	}
 
 	public void assistSessionEnded(ContentAssistEvent event) {
-		allCompletionOptions = null;
+		proposals = null;
 	}
 
-	private void loadCompletions(ITextViewer viewer, int offset) {
-		if (allCompletionOptions == null) {
-			allCompletionOptions = new ArrayList<String>();
-			Connector bc = editor.getBackendConnector();
-			if (bc != null) {
-				List<String> responseLines = bc.executeCommand(
-					new Command("complete", new ContextParser(viewer.getDocument()).getContext(offset)), 1000);
-				if (responseLines != null) {
-					for (String line : responseLines) {
-						StringTokenizer st2 = new StringTokenizer(line, ";");
-						if (st2.hasMoreTokens()) {
-							allCompletionOptions.add(st2.nextToken());
-						}
-					}
-				}
-			}			
+	private List<Option> loadCompletions(IDocument document, int offset) {
+		if (proposals != null) {
+			return emptyList();
 		}
+		Connector connector = getConnector();
+		if (connector  == null) {
+			return emptyList();
+		}
+		try {
+			int line = document.getLineOfOffset(offset);
+			int lineOffset = document.getLineOffset(line);
+			int offsetInLine = offset - lineOffset; 
+			proposals = connector.execute(new ProposalsCommand(createContext(document, offset), offsetInLine));
+		} catch (TimeoutException e) {
+			return emptyList();
+		} catch (BadLocationException e) {
+			return emptyList();
+		}
+		return proposals.getOptions();
+	}
+
+	public List<String> createContext(IDocument document, int offset) {
+		ContextParser contextParser = new ContextParser(document);
+		List<String> context = contextParser.getContext(offset);
+		return context;
 	}
 	
+	private Connector getConnector(){
+		return connected.getConnector();
+	}
+
 	public void assistSessionStarted(ContentAssistEvent event) {
 	}
 
-	public void selectionChanged(ICompletionProposal proposal,
-			boolean smartToggle) {
+	public void selectionChanged(ICompletionProposal proposal, boolean smartToggle) {
+	}
+
+	public static ContentAssistProcessor create(Connected connected) {
+		return new ContentAssistProcessor(connected, new PluginImageHelper());
 	}
 
 }

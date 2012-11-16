@@ -8,6 +8,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
 import org.mockito.stubbing.OngoingStubbing;
+import org.mockito.stubbing.Stubber;
 import org.mockito.verification.VerificationMode;
 import org.rtext.lang.backend2.BackendStarter;
 import org.rtext.lang.backend2.Callback;
@@ -53,8 +54,41 @@ public class ConnectorExecuteCommandSpec extends ConnectorSpec {
   }
   
   @Test
-  @Named("Sends command\\\'s request via connection")
+  @Named("Kills backend process if connection fails")
   @Order(4)
+  public void _killsBackendProcessIfConnectionFails() throws Exception {
+    RuntimeException _runtimeException = new RuntimeException();
+    Stubber _doThrow = Mockito.doThrow(_runtimeException);
+    Connection _when = _doThrow.<Connection>when(this.connection);
+    String _anyString = Matchers.anyString();
+    int _anyInt = Matchers.anyInt();
+    _when.connect(_anyString, _anyInt);
+    this.subject.<Response>execute(this.anyCommand, this.callback);
+    BackendStarter _verify = Mockito.<BackendStarter>verify(this.processRunner);
+    _verify.stop();
+  }
+  
+  @Test
+  @Named("Notifies callback")
+  @Order(5)
+  public void _notifiesCallback() throws Exception {
+    RuntimeException _runtimeException = new RuntimeException();
+    Stubber _doThrow = Mockito.doThrow(_runtimeException);
+    Connection _when = _doThrow.<Connection>when(this.connection);
+    String _anyString = Matchers.anyString();
+    int _anyInt = Matchers.anyInt();
+    _when.connect(_anyString, _anyInt);
+    this.subject.<Response>execute(this.anyCommand, this.callback);
+    Callback _verify = Mockito.<Callback>verify(this.callback);
+    _verify.handleError("Could not connect to backend");
+    VerificationMode _never = Mockito.never();
+    Connection _verify_1 = Mockito.<Connection>verify(this.connection, _never);
+    _verify_1.<Response>sendRequest(this.anyCommand, this.callback);
+  }
+  
+  @Test
+  @Named("Sends command\\\'s request via connection")
+  @Order(6)
   public void _sendsCommandSRequestViaConnection() throws Exception {
     this.subject.<Response>execute(this.anyCommand, this.callback);
     Connection _verify = Mockito.<Connection>verify(this.connection);
@@ -65,7 +99,7 @@ public class ConnectorExecuteCommandSpec extends ConnectorSpec {
   
   @Test
   @Named("Returns commands response")
-  @Order(5)
+  @Order(7)
   public void _returnsCommandsResponse() throws Exception {
     this.subject.<Response>execute(this.anyCommand, this.callback);
     Connection _verify = Mockito.<Connection>verify(this.connection);
