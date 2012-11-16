@@ -17,6 +17,14 @@ import org.rtext.lang.util.Exceptions;
 
 public final class CliBackendStarter implements BackendStarter {
 	
+	private final class ShutdownHook extends Thread {
+		public void run() {
+			if(process != null){
+				process.destroy();
+			}
+		}
+	}
+
 	private final class OutputMonitor extends Thread {
 		private InputStream inputStream;
 		private OutputHandler[] listeners;
@@ -48,6 +56,7 @@ public final class CliBackendStarter implements BackendStarter {
 	private InputStream inputStream;
 	private PortParser portParser;
 	private OutputHandler[] outputHandlers;
+	private ShutdownHook shutdownHook;
 	
 	public CliBackendStarter(PortParser portParser, OutputHandler... outputHandlers) {
 		this.portParser = portParser;
@@ -89,11 +98,8 @@ public final class CliBackendStarter implements BackendStarter {
 	}
 
 	private void registerShutDownHook() {
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			public void run() {
-				CliBackendStarter.this.stop();
-			}
-		});
+		shutdownHook = new ShutdownHook();
+		Runtime.getRuntime().addShutdownHook(shutdownHook);
 	}
 
 	public boolean isRunning() {
@@ -109,7 +115,8 @@ public final class CliBackendStarter implements BackendStarter {
 	}
 
 	public void stop() {
-		if (isRunning()) {
+		Runtime.getRuntime().removeShutdownHook(shutdownHook);
+		if (process != null) {
 			process.destroy();
 		}
 	}
