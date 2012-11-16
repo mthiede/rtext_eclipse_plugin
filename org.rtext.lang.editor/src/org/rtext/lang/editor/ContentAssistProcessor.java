@@ -25,6 +25,7 @@ import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 import org.eclipse.swt.graphics.Image;
+import org.rtext.lang.backend2.BackendException;
 import org.rtext.lang.backend2.Connector;
 import org.rtext.lang.backend2.Proposals;
 import org.rtext.lang.backend2.Proposals.Option;
@@ -153,6 +154,8 @@ public class ContentAssistProcessor implements IContentAssistProcessor,	IComplet
 			int lineOffset = document.getLineOffset(line);
 			int offsetInLine = offset - lineOffset; 
 			proposals = connector.execute(new ProposalsCommand(createContext(document, offset), offsetInLine));
+		}catch (BackendException e) {
+			proposals = errorProposal("Cannot load backend");
 		}catch (TimeoutException e) {
 			proposals = errorProposal("Cannot load backend");
 		}catch (BadLocationException e) {

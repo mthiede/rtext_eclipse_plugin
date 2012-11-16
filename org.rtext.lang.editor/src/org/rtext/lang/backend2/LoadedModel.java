@@ -5,4 +5,5 @@ public class LoadedModel extends Response {
 	public LoadedModel(int invocationId, String type) {
 		super(invocationId, type);
 	}
+	
 }
