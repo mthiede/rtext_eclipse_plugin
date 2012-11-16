@@ -35,20 +35,11 @@
 					<div class="span12">
 						  <div class="tab-content">
 							  	<div class="tab-pane active" id="spec">
-<div><h3 class="scenario notrun"  id="Background">Background:
-</h3>
-<ul>
-<li><span class="step notrun"><p>Given a model file <code>"rtext/test/integration/model/test_metamodel.ect"</code></p></span>
-</li>
-<li><span class="step notrun"><p>And a running backend</p></span>
-</li>
-<li><span class="step notrun"><p>And a proposal provider</p></span>
-</li>
-</ul>
-</div>
 <div><h3 class="scenario notrun"  id="Scenario_Sucessfully_using_code_completion">Scenario: Sucessfully using code completion
 </h3>
 <ul>
+<li><span class="step notrun"><p>Given a backend for <code>"rtext/test/integration/model/test_metamodel.ect"</code></p></span>
+</li>
 <li><span class="step notrun"><p>When I invoke the code completion after <code>"EPackage StatemachineMM {n"</code></p></span>
 </li>
 <li><span class="step notrun"><p>Then the proposals should be</p><pre>EAnnotation
@@ -58,6 +49,17 @@ EDataType &lt;name&gt;
 EEnum &lt;name&gt;
 EGenericType &lt;name&gt;
 EPackage &lt;name&gt;</pre></span>
+</li>
+</ul>
+</div>
+<div><h3 class="scenario notrun"  id="Scenario_Proposal_signals_backend_failure">Scenario: Proposal signals backend failure
+</h3>
+<ul>
+<li><span class="step notrun"><p>Given a backend for <code>"rtext/test/integration/model/test.crashing_backend"</code></p></span>
+</li>
+<li><span class="step notrun"><p>When I invoke the code completion after <code>"EPackage StatemachineMM {n"</code></p></span>
+</li>
+<li><span class="step notrun"><p>Then the proposals should be</p><pre>Cannot load backend</pre></span>
 </li>
 </ul>
 </div>
@@ -74,21 +76,16 @@ import java.util.List
 
 Feature: Code completion
   
-Background:
+Scenario: Sucessfully using code completion
   extension BackendHelper b = new BackendHelper
   String modelFile
   List&lt;String&gt; proposals
   ContentAssistProcessor proposalProvider
   
-  Given a model file &quot;rtext/test/integration/model/test_metamodel.ect&quot;
-    modelFile = args.first
-  And a running backend
-    b.startBackendFor(modelFile)
-  And a proposal provider
-    proposalProvider = ContentAssistProcessor::create([|b.connector]) 
-
-Scenario: Sucessfully using code completion
+  Given a backend for &quot;rtext/test/integration/model/test_metamodel.ect&quot;
+    b.startBackendFor(args.first)
   When I invoke the code completion after &quot;EPackage StatemachineMM {\n&quot;
+    proposalProvider = ContentAssistProcessor::create([|b.connector]) 
     proposalProvider.assistSessionStarted(_)
     proposals = proposalProvider.computeCompletionProposals(b.document, b.offsetAfter(args.first), 0).map[displayString.trim]
     proposalProvider.assistSessionEnded(_)
@@ -103,8 +100,16 @@ Scenario: Sucessfully using code completion
     EPackage &lt;name&gt;
   '''
   val expectedProposals = args.first.trim.split(&quot;\r?\n&quot;).map[trim]
-  println(proposals.join(&quot;\n&quot;))
   proposals =&gt; expectedProposals
+  
+Scenario: Proposal signals backend failure
+  
+  Given a backend for &quot;rtext/test/integration/model/test.crashing_backend&quot;
+  When I invoke the code completion after &quot;EPackage StatemachineMM {\n&quot;
+  Then the proposals should be
+  '''
+    Cannot load backend
+  '''
 </pre>
 						    </p></div>
 						  </div>

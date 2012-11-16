@@ -6,21 +6,16 @@ import java.util.List
 
 Feature: Code completion
 	
-Background:
+Scenario: Sucessfully using code completion
 	extension BackendHelper b = new BackendHelper
 	String modelFile
 	List<String> proposals
 	ContentAssistProcessor proposalProvider
 	
-	Given a model file "rtext/test/integration/model/test_metamodel.ect"
-		modelFile = args.first
-	And a running backend
-		b.startBackendFor(modelFile)
-	And a proposal provider
-		proposalProvider = ContentAssistProcessor::create([|b.connector]) 
-
-Scenario: Sucessfully using code completion
+	Given a backend for "rtext/test/integration/model/test_metamodel.ect"
+		b.startBackendFor(args.first)
 	When I invoke the code completion after "EPackage StatemachineMM {\n"
+		proposalProvider = ContentAssistProcessor::create([|b.connector]) 
 		proposalProvider.assistSessionStarted(_)
 		proposals = proposalProvider.computeCompletionProposals(b.document, b.offsetAfter(args.first), 0).map[displayString.trim]
 		proposalProvider.assistSessionEnded(_)
@@ -35,5 +30,13 @@ Scenario: Sucessfully using code completion
 		EPackage <name>
 	'''
 	val expectedProposals = args.first.trim.split("\r?\n").map[trim]
-	println(proposals.join("\n"))
 	proposals => expectedProposals
+	
+Scenario: Proposal signals backend failure
+	
+	Given a backend for "rtext/test/integration/model/test.crashing_backend"
+	When I invoke the code completion after "EPackage StatemachineMM {\n"
+	Then the proposals should be
+	'''
+		Cannot load backend
+	'''

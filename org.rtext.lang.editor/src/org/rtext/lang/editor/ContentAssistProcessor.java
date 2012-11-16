@@ -7,6 +7,7 @@
  *******************************************************************************/
 package org.rtext.lang.editor;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 
 import java.util.ArrayList;
@@ -32,6 +33,7 @@ import org.rtext.lang.backend2.ProposalsCommand;
 
 public class ContentAssistProcessor implements IContentAssistProcessor,	ICompletionListener {
 
+	private static final String ERROR_REPLACEMENT_STRING = "";
 	private Connected connected;
 	private Proposals proposals;
 	private ImageHelper imageHelper;
@@ -78,6 +80,9 @@ public class ContentAssistProcessor implements IContentAssistProcessor,	IComplet
 	}
 	
 	private boolean filterCompletionOption(String option, String wordStart) {
+		if(option.length() == 0){
+			return true;
+		}
 		if (wordStart.contains("/")) {
 			return option.toLowerCase().startsWith(wordStart.toLowerCase());
 		}
@@ -102,7 +107,7 @@ public class ContentAssistProcessor implements IContentAssistProcessor,	IComplet
 	      start++;
 	      return document.get(start, offset-start);
 	    } catch (BadLocationException e) {
-	      return "";
+	      return ERROR_REPLACEMENT_STRING;
 	    }
 	}
 
@@ -140,19 +145,26 @@ public class ContentAssistProcessor implements IContentAssistProcessor,	IComplet
 		}
 		Connector connector = getConnector();
 		if (connector  == null) {
-			return emptyList();
+			proposals = errorProposal("Could not locate .rtext file");
+			return proposals.getOptions();
 		}
 		try {
 			int line = document.getLineOfOffset(offset);
 			int lineOffset = document.getLineOffset(line);
 			int offsetInLine = offset - lineOffset; 
 			proposals = connector.execute(new ProposalsCommand(createContext(document, offset), offsetInLine));
-		} catch (TimeoutException e) {
-			return emptyList();
-		} catch (BadLocationException e) {
+		}catch (TimeoutException e) {
+			proposals = errorProposal("Cannot load backend");
+		}catch (BadLocationException e) {
 			return emptyList();
 		}
 		return proposals.getOptions();
+	}
+
+	public Proposals errorProposal(String message) {
+		Option[] options = {new Option(ERROR_REPLACEMENT_STRING, message)};
+		Proposals errorProposal = new Proposals(-1, ERROR_REPLACEMENT_STRING, asList(options));
+		return errorProposal;
 	}
 
 	public List<String> createContext(IDocument document, int offset) {
