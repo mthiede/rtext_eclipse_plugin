@@ -1,6 +1,6 @@
 package org.rtext.lang.specs.util
 
-import org.rtext.lang.specs.RTextTestActivator
+import org.rtext.lang.specs.RTextPluginActivator
 import org.eclipse.core.runtime.Path
 import org.eclipse.core.runtime.FileLocator
 import java.io.File
@@ -14,7 +14,7 @@ class TestFileLocator {
 	def file(String relativePath){
 		if(Platform::running){
 			val fullpath = relativePath.toFullPath
-			val url = RTextTestActivator::getDefault().find(fullpath)
+			val url = RTextPluginActivator::getDefault().find(fullpath)
 			val fileUrl = FileLocator::toFileURL(url)
 			new File(fileUrl.toURI)
 		}else{

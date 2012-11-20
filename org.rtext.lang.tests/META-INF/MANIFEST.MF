@@ -19,5 +19,5 @@ Require-Bundle: org.jnario.lib;bundle-version="0.2.1",
  org.mockito;bundle-version="1.8.4",
  org.objenesis;bundle-version="1.0.0"
 Bundle-Vendor: E.S.R. Labs
-Bundle-Activator: org.rtext.lang.specs.RTextTestActivator
+Bundle-Activator: org.rtext.lang.specs.RTextPluginActivator
 Bundle-ActivationPolicy: lazy

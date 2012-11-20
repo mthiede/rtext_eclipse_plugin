@@ -27,7 +27,6 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.rtext.lang.RTextPlugin;
 import org.rtext.lang.backend.Connector;
 import org.rtext.lang.backend.ConnectorManager;
-import org.rtext.lang.backend2.CachingConnectorProvider;
 import org.rtext.lang.backend2.ConnectorProvider;
 
 public class RTextEditor extends TextEditor implements Connected{
@@ -39,7 +38,7 @@ public class RTextEditor extends TextEditor implements Connected{
 	private final ConnectorProvider connectorProvider;
 	
 	public RTextEditor() {
-		this(CachingConnectorProvider.create());
+		this(RTextPlugin.getDefault().getConnectorProvider());
 	}
 	
 	public RTextEditor(ConnectorProvider connectorProvider) {

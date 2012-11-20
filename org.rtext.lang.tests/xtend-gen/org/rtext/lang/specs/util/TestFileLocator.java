@@ -9,7 +9,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.xtend.lib.Data;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.util.ToStringHelper;
-import org.rtext.lang.specs.RTextTestActivator;
+import org.rtext.lang.specs.RTextPluginActivator;
 
 @Data
 @SuppressWarnings("all")
@@ -28,7 +28,7 @@ public class TestFileLocator {
         File _xblockexpression = null;
         {
           final Path fullpath = this.toFullPath(relativePath);
-          RTextTestActivator _default = RTextTestActivator.getDefault();
+          RTextPluginActivator _default = RTextPluginActivator.getDefault();
           final URL url = _default.find(fullpath);
           final URL fileUrl = FileLocator.toFileURL(url);
           URI _uRI = fileUrl.toURI();
