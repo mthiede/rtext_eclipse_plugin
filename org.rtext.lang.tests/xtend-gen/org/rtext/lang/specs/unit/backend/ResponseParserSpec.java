@@ -29,7 +29,7 @@ public class ResponseParserSpec {
   
   @Test
   @Named("parses generic response")
-  @Order(0)
+  @Order(1)
   public void _parsesGenericResponse() throws Exception {
     this.<Response>parse("{\"type\":\"response\", \"invocation_id\":111, \"problems\":[], \"total_problems\":0}", Response.class);
     Response _response = this.callback.getResponse();
@@ -52,7 +52,7 @@ public class ResponseParserSpec {
   
   @Test
   @Named("parses progress")
-  @Order(1)
+  @Order(2)
   public void _parsesProgress() throws Exception {
     this.<Response>parse("{\"type\":\"progress\",\"invocation_id\":111,\"percentage\":100}", Response.class);
     List<Progress> _progress = this.callback.getProgress();
@@ -75,7 +75,7 @@ public class ResponseParserSpec {
   
   @Test
   @Named("parses proposal response type")
-  @Order(2)
+  @Order(3)
   public void _parsesProposalResponseType() throws Exception {
     /* "{\"type\":\"response\",\"invocation_id\":1,\"options\":[{\"insert\":\"EAnnotation\",\"display\":\"EAnnotation \"},{\"insert\":\"EClass\",\"display\":\"EClass <name>\"}]}" */
   }

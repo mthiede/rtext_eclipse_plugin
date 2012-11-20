@@ -2,15 +2,19 @@ package org.rtext.lang.specs.util;
 
 import com.google.common.base.Objects;
 import java.util.ArrayList;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.Functions.Function0;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.junit.After;
 import org.rtext.lang.backend2.CachingConnectorProvider;
+import org.rtext.lang.backend2.Callback;
 import org.rtext.lang.backend2.Command;
 import org.rtext.lang.backend2.Connector;
 import org.rtext.lang.backend2.ConnectorProvider;
+import org.rtext.lang.backend2.LoadModelCommand;
+import org.rtext.lang.backend2.LoadedModel;
 import org.rtext.lang.backend2.Response;
 import org.rtext.lang.specs.util.Files;
 import org.rtext.lang.specs.util.SimpleDocument;
@@ -19,13 +23,14 @@ import org.rtext.lang.specs.util.TestFileLocator;
 import org.rtext.lang.specs.util.TestProposalAcceptor;
 import org.rtext.lang.specs.util.Wait;
 import org.rtext.lang.specs.util.WaitConfig;
+import org.rtext.lang.specs.util.WrappingCallback;
 
 @SuppressWarnings("all")
 public class BackendHelper {
-  private TestFileLocator _testFileLocator = new Function0<TestFileLocator>() {
+  private TestFileLocator fileLocator = new Function0<TestFileLocator>() {
     public TestFileLocator apply() {
-      TestFileLocator _testFileLocator = new TestFileLocator("backends/head");
-      return _testFileLocator;
+      TestFileLocator _default = TestFileLocator.getDefault();
+      return _default;
     }
   }.apply();
   
@@ -88,8 +93,18 @@ public class BackendHelper {
     this._response = response;
   }
   
+  public void startBackendFor(final IPath filePath) {
+    String _oSString = filePath.toOSString();
+    this.startBackendFor(_oSString);
+  }
+  
+  public String absolutPath(final String relativePath) {
+    String _absolutPath = this.fileLocator.absolutPath(relativePath);
+    return _absolutPath;
+  }
+  
   public void startBackendFor(final String filePath) {
-    final String absolutePath = this._testFileLocator.absolutPath(filePath);
+    final String absolutePath = filePath;
     Connector _get = this.connectorProvider.get(absolutePath);
     this.setConnector(_get);
     String _read = Files.read(absolutePath);
@@ -100,9 +115,22 @@ public class BackendHelper {
   public void executeSynchronousCommand() {
     try {
       Connector _connector = this.getConnector();
-      Command<Response> _command = new Command<Response>(1, "request", "load_model", Response.class);
-      Response _execute = _connector.<Response>execute(_command);
+      LoadModelCommand _loadModelCommand = new LoadModelCommand();
+      LoadedModel _execute = _connector.<LoadedModel>execute(_loadModelCommand);
       this.setResponse(_execute);
+    } catch (Exception _e) {
+      throw Exceptions.sneakyThrow(_e);
+    }
+  }
+  
+  public void executeSynchronousCommand(final Callback<LoadedModel> callback) {
+    try {
+      WrappingCallback<LoadedModel> _wrappingCallback = new WrappingCallback<LoadedModel>(callback);
+      final WrappingCallback<LoadedModel> waitingCallback = _wrappingCallback;
+      Connector _connector = this.getConnector();
+      LoadModelCommand _loadModelCommand = new LoadModelCommand();
+      _connector.<LoadedModel>execute(_loadModelCommand, waitingCallback);
+      waitingCallback.waitForResponse();
     } catch (Exception _e) {
       throw Exceptions.sneakyThrow(_e);
     }

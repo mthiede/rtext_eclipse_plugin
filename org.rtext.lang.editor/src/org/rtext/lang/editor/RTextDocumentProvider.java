@@ -9,8 +9,9 @@ package org.rtext.lang.editor;
 
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.ui.editors.text.FileDocumentProvider;
+import org.eclipse.ui.editors.text.StorageDocumentProvider;
 
-public class RTextDocumentProvider extends FileDocumentProvider {
+public class RTextDocumentProvider extends StorageDocumentProvider {
 
 	protected IDocument createEmptyDocument() {
 		return new RTextDocument();

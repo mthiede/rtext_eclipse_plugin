@@ -8,6 +8,7 @@
 package org.rtext.lang.editor;
 
 import java.util.ResourceBundle;
+import java.util.concurrent.TimeoutException;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.action.IAction;
@@ -28,6 +29,7 @@ import org.rtext.lang.RTextPlugin;
 import org.rtext.lang.backend.Connector;
 import org.rtext.lang.backend.ConnectorManager;
 import org.rtext.lang.backend2.ConnectorProvider;
+import org.rtext.lang.backend2.LoadModelCommand;
 
 public class RTextEditor extends TextEditor implements Connected{
 
@@ -65,7 +67,6 @@ public class RTextEditor extends TextEditor implements Connected{
 		installFoldingSupport(viewer);
 	}
 	
-	
 	public void dispose() {
 		colorManager.dispose();
 		uninstallFoldingSupport();
@@ -85,8 +86,11 @@ public class RTextEditor extends TextEditor implements Connected{
 
 	protected void editorSaved() {
 		super.editorSaved();
-		new ProblemUpdater(ConnectorManager.getConnector(getInputPath()),
-				getStatusLineManager()).schedule();
+		try {
+			getConnector().execute(new LoadModelCommand(), LoadModelCallback.create());
+		} catch (TimeoutException e) {
+			RTextPlugin.logError("Timeout loading models", e);
+		}
 	}
 
 	IPath getInputPath() {

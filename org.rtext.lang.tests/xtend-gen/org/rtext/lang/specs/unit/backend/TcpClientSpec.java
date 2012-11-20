@@ -75,7 +75,7 @@ public class TcpClientSpec {
   
   @Test
   @Named("subject.connect[ADDRESS, INVALID_PORT] throws IllegalArgumentException")
-  @Order(0)
+  @Order(1)
   public void _subjectConnectADDRESSINVALIDPORTThrowsIllegalArgumentException() throws Exception {
     try{
       this.subject.connect(this.ADDRESS, this.INVALID_PORT);

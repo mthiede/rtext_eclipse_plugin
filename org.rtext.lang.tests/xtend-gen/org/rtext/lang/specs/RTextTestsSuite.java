@@ -7,9 +7,9 @@ import org.junit.runner.RunWith;
 import org.rtext.lang.specs.ProgressSuite;
 import org.rtext.lang.specs.RegressionSuite;
 
-@RunWith(ExampleGroupRunner.class)
 @Named("RText Tests")
 @Contains({ ProgressSuite.class, RegressionSuite.class })
 @SuppressWarnings("all")
+@RunWith(ExampleGroupRunner.class)
 public class RTextTestsSuite {
 }

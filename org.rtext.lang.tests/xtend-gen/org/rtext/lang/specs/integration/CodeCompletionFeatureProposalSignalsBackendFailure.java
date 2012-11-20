@@ -35,7 +35,8 @@ public class CodeCompletionFeatureProposalSignalsBackendFailure {
     StepArguments _stepArguments = new StepArguments("rtext/test/integration/model/test.crashing_backend");
     final StepArguments args = _stepArguments;
     String _first = JnarioIterableExtensions.<String>first(args);
-    this.b.startBackendFor(_first);
+    String _absolutPath = this.b.absolutPath(_first);
+    this.b.startBackendFor(_absolutPath);
   }
   
   @Test

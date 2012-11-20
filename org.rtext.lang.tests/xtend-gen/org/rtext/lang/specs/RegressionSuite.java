@@ -12,14 +12,15 @@ import org.rtext.lang.specs.unit.backend.ConnectorSpec;
 import org.rtext.lang.specs.unit.backend.ConvertingCommandsToJSONSpec;
 import org.rtext.lang.specs.unit.backend.DefaultConnectorProviderSpec;
 import org.rtext.lang.specs.unit.backend.FileSystemBasedConfigProviderSpec;
+import org.rtext.lang.specs.unit.backend.LoadModelCallbackSpec;
 import org.rtext.lang.specs.unit.backend.RTextFileParserSpec;
 import org.rtext.lang.specs.unit.backend.RTextFilesSpec;
 import org.rtext.lang.specs.unit.backend.ResponseParserSpec;
 import org.rtext.lang.specs.unit.backend.TcpClientSpec;
 
-@RunWith(ExampleGroupRunner.class)
 @Named("Regression")
-@Contains({ ConnectorSpec.class, ConnectorProviderSpec.class, ConvertingCommandsToJSONSpec.class, DefaultConnectorProviderSpec.class, FilesSpec.class, FileSystemBasedConfigProviderSpec.class, ResponseParserSpec.class, RTextFileParserSpec.class, RTextFilesSpec.class, RTextModelParserSpec.class, SyntaxScannerSpec.class, TcpClientSpec.class })
+@Contains({ ConnectorSpec.class, ConnectorProviderSpec.class, ConvertingCommandsToJSONSpec.class, DefaultConnectorProviderSpec.class, FilesSpec.class, FileSystemBasedConfigProviderSpec.class, LoadModelCallbackSpec.class, ResponseParserSpec.class, RTextFileParserSpec.class, RTextFilesSpec.class, RTextModelParserSpec.class, SyntaxScannerSpec.class, TcpClientSpec.class })
 @SuppressWarnings("all")
+@RunWith(ExampleGroupRunner.class)
 public class RegressionSuite {
 }

@@ -10,7 +10,7 @@ describe "Communication with Backend"{
 	val modelFile = "rtext/test/integration/model/test_metamodel.ect"
 		
 	fact "Executing commands synchronously"{
-		startBackendFor(modelFile)
+		startBackendFor(modelFile.absolutPath)
 		
 		executeSynchronousCommand() 
 		
@@ -18,7 +18,7 @@ describe "Communication with Backend"{
 	}
 	
 	fact "Executing commands asynchronously"{
-		startBackendFor(modelFile)
+		startBackendFor(modelFile.absolutPath)
 		
 		executeAsynchronousCommand() 
 		

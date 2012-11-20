@@ -73,7 +73,7 @@ public class FoldingStructureProvider implements ModelChangeListener {
 
 	protected void handleProjectionEnabled() {
 		handleProjectionDisabled();
-		if (isInstalled()) {
+		if (isInstalled() && editor.getDocument() != null) {
 			initialize();
 			editor.getDocument().addModelListener(this);
 		}

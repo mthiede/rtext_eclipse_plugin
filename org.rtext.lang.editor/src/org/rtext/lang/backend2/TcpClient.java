@@ -52,6 +52,7 @@ public class TcpClient implements Connection {
 		protected void executeCommand(Task<?> task) {
 			out.print(serializer.serialize(task.command));
 			out.flush();
+			task.callback.commandSent();
 		}
 	}
 

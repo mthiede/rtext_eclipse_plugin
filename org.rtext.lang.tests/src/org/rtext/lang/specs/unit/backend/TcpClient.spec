@@ -44,6 +44,14 @@ describe TcpClient{
 			]
 		}
 		
+		fact "Notifies callback when command is sent"{
+			server.responses += responseMessage
+			subject.connect(ADDRESS, PORT)
+			subject.sendRequest(ANY_COMMAND, callback)
+			waitUntil[callback.response != null]
+			assert callback.hasStarted
+		}
+		
 		fact "Receives progress from server"{
 			server.responses += progressMessage
 			server.responses += responseMessage

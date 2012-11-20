@@ -28,7 +28,7 @@ import org.rtext.lang.specs.util.WaitConfig;
 public class TcpClientSendingRequestsSpec extends TcpClientSpec {
   @Test
   @Named("Receives responses from server")
-  @Order(1)
+  @Order(2)
   public void _receivesResponsesFromServer() throws Exception {
     ArrayList<String> _responses = this.server.getResponses();
     _responses.add(this.responseMessage);
@@ -56,8 +56,30 @@ public class TcpClientSendingRequestsSpec extends TcpClientSpec {
   }
   
   @Test
+  @Named("Notifies callback when command is sent")
+  @Order(3)
+  public void _notifiesCallbackWhenCommandIsSent() throws Exception {
+    ArrayList<String> _responses = this.server.getResponses();
+    _responses.add(this.responseMessage);
+    this.subject.connect(this.ADDRESS, this.PORT);
+    this.subject.<Response>sendRequest(Commands.ANY_COMMAND, this.callback);
+    final Function1<WaitConfig,Boolean> _function = new Function1<WaitConfig,Boolean>() {
+        public Boolean apply(final WaitConfig it) {
+          Response _response = TcpClientSendingRequestsSpec.this.callback.getResponse();
+          boolean _notEquals = (!Objects.equal(_response, null));
+          return Boolean.valueOf(_notEquals);
+        }
+      };
+    Wait.waitUntil(_function);
+    boolean _hasStarted = this.callback.hasStarted();
+    Assert.assertTrue("\nExpected callback.hasStarted but"
+     + "\n     callback is " + new StringDescription().appendValue(this.callback).toString() + "\n", _hasStarted);
+    
+  }
+  
+  @Test
   @Named("Receives progress from server")
-  @Order(2)
+  @Order(4)
   public void _receivesProgressFromServer() throws Exception {
     ArrayList<String> _responses = this.server.getResponses();
     _responses.add(this.progressMessage);
@@ -96,7 +118,7 @@ public class TcpClientSendingRequestsSpec extends TcpClientSpec {
   
   @Test
   @Named("Throws exception if not connected")
-  @Order(3)
+  @Order(5)
   public void _throwsExceptionIfNotConnected() throws Exception {
     try{
       this.subject.<Response>sendRequest(Commands.ANY_COMMAND, this.callback);

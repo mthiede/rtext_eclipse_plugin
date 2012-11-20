@@ -13,6 +13,7 @@ public class TestCallBack<T extends Response> implements Callback<T> {
 	private T response;
 	private List<Progress> progress = newArrayList();
 	private String error;
+	private boolean hasStarted = false;
 	
 	public void handleProgress(Progress progress) {
 		this.progress.add(progress);
@@ -36,6 +37,14 @@ public class TestCallBack<T extends Response> implements Callback<T> {
 	
 	public String getError() {
 		return error;
+	}
+
+	public void commandSent() {
+		hasStarted = true;
+	}
+
+	public boolean hasStarted(){
+		return hasStarted ;
 	}
 
 }

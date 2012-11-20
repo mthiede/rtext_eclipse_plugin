@@ -16,6 +16,8 @@ import org.rtext.lang.specs.util.MockInjector
 import static org.mockito.Matchers.*
 import static org.mockito.Mockito.*
 import static org.rtext.lang.specs.util.Commands.*
+import org.rtext.lang.backend2.Response
+import org.rtext.lang.backend2.LoadedModel
 
 @CreateWith(typeof(MockInjector))
 describe Connector {
@@ -23,7 +25,8 @@ describe Connector {
 	@Rule extension TemporaryFolder = new TemporaryFolder
 	@Mock BackendStarter processRunner
 	@Mock Connection connection
-	@Mock Callback callback
+	@Mock Callback<Response> callback
+	@Mock Callback<LoadedModel> loadedModelCallback
 
 	val PORT = 1234
 	val anyCommand = ANY_COMMAND
@@ -36,7 +39,7 @@ describe Connector {
 	before {
 		executionDir = root
 		config = new ConnectorConfig(executionDir, COMMAND, "*.*")
-		subject = new Connector(config, processRunner, connection)
+		subject = new Connector(config, processRunner, connection, loadedModelCallback)
 		when(processRunner.getPort).thenReturn(PORT)
 	}
 	
@@ -84,7 +87,7 @@ describe Connector {
 			when(processRunner.running).thenReturn(true)
 			subject.execute(otherCommand, callback)
 			inOrder(connection) => [
-				it.verify(connection).sendRequest(isA(typeof(LoadModelCommand)), any)
+				it.verify(connection).sendRequest(isA(typeof(LoadModelCommand)), eq(loadedModelCallback))
 				it.verify(connection).sendRequest(anyCommand, callback)
 				it.verify(connection).sendRequest(otherCommand, callback)
 			]

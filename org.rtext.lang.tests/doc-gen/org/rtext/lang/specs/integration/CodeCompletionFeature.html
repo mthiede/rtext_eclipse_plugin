@@ -83,7 +83,7 @@ Scenario: Sucessfully using code completion
   ContentAssistProcessor proposalProvider
   
   Given a backend for &quot;rtext/test/integration/model/test_metamodel.ect&quot;
-    b.startBackendFor(args.first)
+    b.startBackendFor(args.first.absolutPath)
   When I invoke the code completion after &quot;EPackage StatemachineMM {\n&quot;
     proposalProvider = ContentAssistProcessor::create([|b.connector]) 
     proposalProvider.assistSessionStarted(_)

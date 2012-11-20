@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Communication with Backend</title>
+<title>Problem Markers</title>
 <meta name="description" content="">
 <meta name="author" content="Jnario">
 
@@ -25,7 +25,7 @@
 		<div class="tabbable">
 			<div class="content">
 				<div class="page-header notrun">
-					<h1>Communication with Backend</h1>
+					<h1>Problem Markers</h1>
 					  <ul class="nav nav-tabs pull-right">
 					    <li class="active"><a href="#spec" data-toggle="tab">Spec</a></li>
 						<li><a href="#source" data-toggle="tab">Source</a></li>
@@ -35,53 +35,40 @@
 					<div class="span12">
 						  <div class="tab-content">
 							  	<div class="tab-pane active" id="spec">
-<ul><li><p id="Executing_commands_synchronously" class="example notrun"><strong>Executing commands synchronously</strong></p>
-<pre class="prettyprint lang-spec linenums">
-startBackendFor(modelFile.absolutPath)
-
-executeSynchronousCommand() 
-
-response.type =&gt; &quot;response&quot;</pre>
-</li><li><p id="Executing_commands_asynchronously" class="example notrun"><strong>Executing commands asynchronously</strong></p>
-<pre class="prettyprint lang-spec linenums">
-startBackendFor(modelFile.absolutPath)
-
-executeAsynchronousCommand() 
-
-response.type =&gt; &quot;response&quot;</pre>
-</li></ul>
+<div><h3 class="scenario notrun"  id="Scenario_Sucessfully_using_code_completion">Scenario: Sucessfully using code completion
+</h3>
+<ul>
+<li><span class="step notrun"><p>Given a project <code>"test"</code> linked to <code>"rtext/test/integration/model/"</code></p></span>
+</li>
+<li><span class="step notrun"><p>When I load the model for <code>"test/test_metamodel.ect"</code></p></span>
+</li>
+</ul>
+</div>
 							</div>
 						    <div class="tab-pane" id="source">
-						    	<h3>BackendCommunication.spec</h3>
+						    	<h3>ProblemMarkers.feature</h3>
 						    	<p>
-<pre class="prettyprint lang-spec linenums">
+<pre class="prettyprint lang-feature linenums">
 package org.rtext.lang.specs.integration
 
+import org.rtext.lang.specs.util.WorkspaceHelper
+import org.rtext.lang.specs.util.TestFileLocator
 import org.rtext.lang.specs.util.BackendHelper
+import org.rtext.lang.editor.LoadModelCallback
 
-import static extension org.jnario.lib.Should.*
-
-describe &quot;Communication with Backend&quot;{
+Feature: Problem Markers
   
+Scenario: Sucessfully using code completion
+  extension WorkspaceHelper = new WorkspaceHelper
+  extension TestFileLocator = TestFileLocator::getDefault()
   extension BackendHelper = new BackendHelper
-  val modelFile = &quot;rtext/test/integration/model/test_metamodel.ect&quot;
-    
-  fact &quot;Executing commands synchronously&quot;{
-    startBackendFor(modelFile.absolutPath)
-    
-    executeSynchronousCommand() 
-    
-    response.type =&gt; &quot;response&quot;
-  }
   
-  fact &quot;Executing commands asynchronously&quot;{
-    startBackendFor(modelFile.absolutPath)
+  Given a project &quot;test&quot; linked to &quot;rtext/test/integration/model/&quot;
+    createProject(args.first, args.second.absolutPath)
     
-    executeAsynchronousCommand() 
-    
-    response.type =&gt; &quot;response&quot;
-  }
-}
+  When I load the model for &quot;test/test_metamodel.ect&quot; 
+    startBackendFor(file(args.first).location) 
+    executeSynchronousCommand(LoadModelCallback::create)
 </pre>
 						    </p></div>
 						  </div>

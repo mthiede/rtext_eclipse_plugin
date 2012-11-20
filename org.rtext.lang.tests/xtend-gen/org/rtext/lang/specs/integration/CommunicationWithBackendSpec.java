@@ -29,9 +29,10 @@ public class CommunicationWithBackendSpec {
   
   @Test
   @Named("Executing commands synchronously")
-  @Order(0)
+  @Order(1)
   public void _executingCommandsSynchronously() throws Exception {
-    this._backendHelper.startBackendFor(this.modelFile);
+    String _absolutPath = this._backendHelper.absolutPath(this.modelFile);
+    this._backendHelper.startBackendFor(_absolutPath);
     this._backendHelper.executeSynchronousCommand();
     Response _response = this._backendHelper.getResponse();
     String _type = _response.getType();
@@ -45,9 +46,10 @@ public class CommunicationWithBackendSpec {
   
   @Test
   @Named("Executing commands asynchronously")
-  @Order(1)
+  @Order(2)
   public void _executingCommandsAsynchronously() throws Exception {
-    this._backendHelper.startBackendFor(this.modelFile);
+    String _absolutPath = this._backendHelper.absolutPath(this.modelFile);
+    this._backendHelper.startBackendFor(_absolutPath);
     this._backendHelper.executeAsynchronousCommand();
     Response _response = this._backendHelper.getResponse();
     String _type = _response.getType();

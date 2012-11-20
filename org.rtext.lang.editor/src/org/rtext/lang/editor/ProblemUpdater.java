@@ -10,6 +10,7 @@ package org.rtext.lang.editor;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -31,7 +32,16 @@ import org.rtext.lang.backend.IResponseListener;
 public class ProblemUpdater extends Job implements IResponseListener {
 	private Connector connector;
 	private IStatusLineManager statusLineManager;
-	private HashMap<String, Integer> severityMap;
+	private static final Map<String, Integer> severityMap = new HashMap<String, Integer>();
+	
+	static{
+		severityMap.put("d", IMarker.SEVERITY_INFO);
+		severityMap.put("i", IMarker.SEVERITY_INFO);
+		severityMap.put("w", IMarker.SEVERITY_WARNING);
+		severityMap.put("e", IMarker.SEVERITY_ERROR);
+		severityMap.put("f", IMarker.SEVERITY_ERROR);	
+	}
+	
 	private IProgressMonitor progressMonitor;
 	private int lastProgress;
 
@@ -39,12 +49,6 @@ public class ProblemUpdater extends Job implements IResponseListener {
 		super("Loading Model");
 		this.connector = connector;
 		this.statusLineManager = statusLineManager;
-		severityMap = new HashMap<String, Integer>();
-		severityMap.put("d", new Integer(IMarker.SEVERITY_INFO));
-		severityMap.put("i", new Integer(IMarker.SEVERITY_INFO));
-		severityMap.put("w", new Integer(IMarker.SEVERITY_WARNING));
-		severityMap.put("e", new Integer(IMarker.SEVERITY_ERROR));
-		severityMap.put("f", new Integer(IMarker.SEVERITY_ERROR));		
 	}
 
 	protected IStatus run(IProgressMonitor monitor) {
@@ -142,7 +146,7 @@ public class ProblemUpdater extends Job implements IResponseListener {
 			}
 		}
 		if (severity == null) {
-			severity = new Integer(IMarker.SEVERITY_ERROR);
+			severity = IMarker.SEVERITY_ERROR;
 		}
 		return severity;
 	}
@@ -151,11 +155,11 @@ public class ProblemUpdater extends Job implements IResponseListener {
 		return fullPath.toString()+"|"+String.valueOf(severity)+"|"+String.valueOf(line)+"|"+message;
 	}
 
-	private void addProblem(HashMap<String, IMarker> problems, String message, int line, Integer severity, IFile wsFile) {
+	private void addProblem(Map<String, IMarker> problems, String message, int line, Integer severity, IFile wsFile) {
 		try {
 			IMarker marker = wsFile.createMarker(IMarker.PROBLEM);
 			marker.setAttribute(IMarker.MESSAGE, message);
-			marker.setAttribute(IMarker.LINE_NUMBER, new Integer(line));
+			marker.setAttribute(IMarker.LINE_NUMBER, line);
 			marker.setAttribute(IMarker.SEVERITY, severity);
 			marker.setAttribute(IMarker.SOURCE_ID, "RText");
 			problems.put(problemKey(message, line, severity, wsFile.getFullPath()), marker);

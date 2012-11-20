@@ -22,7 +22,7 @@ import org.rtext.lang.specs.util.WaitConfig;
 public class TcpClientConnectionErrorsSpec extends TcpClientSpec {
   @Test
   @Named("throws exception when server does not exist")
-  @Order(4)
+  @Order(6)
   public void _throwsExceptionWhenServerDoesNotExist() throws Exception {
     try{
       this.subject.connect("6.6.6.6", 6666);
@@ -34,7 +34,7 @@ public class TcpClientConnectionErrorsSpec extends TcpClientSpec {
   
   @Test
   @Named("throws exception when server is not running")
-  @Order(5)
+  @Order(7)
   public void _throwsExceptionWhenServerIsNotRunning() throws Exception {
     this.server.shutdown();
     try{
@@ -49,7 +49,7 @@ public class TcpClientConnectionErrorsSpec extends TcpClientSpec {
   
   @Test
   @Named("callback receives error if connection is closed")
-  @Order(6)
+  @Order(8)
   public void _callbackReceivesErrorIfConnectionIsClosed() throws Exception {
     this.subject.connect(this.ADDRESS, this.PORT);
     this.server.shutdown();

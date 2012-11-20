@@ -14,13 +14,18 @@ import org.rtext.lang.specs.RTextPluginActivator;
 @Data
 @SuppressWarnings("all")
 public class TestFileLocator {
+  public static TestFileLocator getDefault() {
+    TestFileLocator _testFileLocator = new TestFileLocator("backends/head");
+    return _testFileLocator;
+  }
+  
   private final String _root;
   
   public String getRoot() {
     return this._root;
   }
   
-  public File file(final String relativePath) {
+  private File file(final String relativePath) {
     try {
       File _xifexpression = null;
       boolean _isRunning = Platform.isRunning();

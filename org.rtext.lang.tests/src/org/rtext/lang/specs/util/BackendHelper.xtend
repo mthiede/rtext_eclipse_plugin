@@ -7,9 +7,13 @@ import org.rtext.lang.backend2.Response
 import static org.rtext.lang.specs.util.Wait.*
 import org.rtext.lang.backend2.Command
 import org.eclipse.jface.text.IDocument
+import org.eclipse.core.runtime.IPath
+import org.rtext.lang.backend2.LoadModelCommand
+import org.rtext.lang.backend2.LoadedModel
+import org.rtext.lang.backend2.Callback
 
 class BackendHelper {
-	extension TestFileLocator = new TestFileLocator("backends/head")
+	extension TestFileLocator fileLocator = TestFileLocator::getDefault()
 	
 	val connectorProvider = CachingConnectorProvider::create
 	val callback = new TestCallBack<Response>
@@ -20,14 +24,28 @@ class BackendHelper {
 	@Property Connector connector
 	@Property Response response
 	
+	def startBackendFor(IPath filePath) {
+		startBackendFor(filePath.toOSString)
+	}	
+	
+	def absolutPath(String relativePath){
+		fileLocator.absolutPath(relativePath)
+	}
+	
 	def startBackendFor(String filePath) {
-		val absolutePath = filePath.absolutPath
+		val absolutePath = filePath
 		connector = connectorProvider.get(absolutePath)
 		document = new SimpleDocument(Files::read(absolutePath))
 	}
 	
 	def executeSynchronousCommand() {
-		response = connector.execute(new Command(1, "request", "load_model", typeof(Response)))
+		response = connector.execute(new LoadModelCommand)
+	}
+	
+	def executeSynchronousCommand(Callback<LoadedModel> callback) {
+		val waitingCallback = new WrappingCallback(callback)
+		connector.execute(new LoadModelCommand, waitingCallback)
+		waitingCallback.waitForResponse
 	}
 
 	def executeAsynchronousCommand() {

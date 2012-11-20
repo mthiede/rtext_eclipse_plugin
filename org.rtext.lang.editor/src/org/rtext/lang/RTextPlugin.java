@@ -9,6 +9,8 @@ package org.rtext.lang;
 
 import java.util.ResourceBundle;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -60,13 +62,17 @@ public class RTextPlugin extends AbstractUIPlugin {
 	}
 	
 	public Connector getConnector(String modelFilePath){
-		if(connectorProvider == null){
-			connectorProvider = CachingConnectorProvider.create();
-		}
-		return connectorProvider.get(modelFilePath);
+		return getConnectorProvider().get(modelFilePath);
 	}
 
 	public ConnectorProvider getConnectorProvider() {
+		if(connectorProvider == null){
+			connectorProvider = CachingConnectorProvider.create();
+		}
 		return connectorProvider;
+	}
+	
+	public static void logError(String message, Exception e){
+		getDefault().getLog().log(new Status(IStatus.ERROR, PLUGIN_ID, message, e));
 	}
 }

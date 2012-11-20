@@ -3,6 +3,7 @@ package org.rtext.lang.backend2;
 import java.util.concurrent.TimeoutException;
 
 import org.rtext.lang.backend.ConnectorConfig;
+import org.rtext.lang.editor.LoadModelCallback;
 
 public class Connector {
 	
@@ -12,32 +13,17 @@ public class Connector {
 	private BackendStarter processRunner;
 	private Connection connection;
 
-	private Callback<LoadedModel> loadModelCallBack = new Callback<LoadedModel>() {
-		
-		public void handleResponse(LoadedModel response) {
-			// TODO Auto-generated method stub
-			
-		}
-		
-		public void handleProgress(Progress progress) {
-			// TODO Auto-generated method stub
-			
-		}
-		
-		public void handleError(String error) {
-			// TODO Auto-generated method stub
-			
-		}
-	};
+	private Callback<LoadedModel> loadModelCallBack;
 	
 	public static Connector create(ConnectorConfig connectorConfig){
-		return new Connector(connectorConfig, CliBackendStarter.create(), TcpClient.create());
+		return new Connector(connectorConfig, CliBackendStarter.create(), TcpClient.create(), LoadModelCallback.create());
 	}
 	
-	public Connector(ConnectorConfig connectorConfig, BackendStarter processRunner, Connection connection) {
+	public Connector(ConnectorConfig connectorConfig, BackendStarter processRunner, Connection connection, Callback<LoadedModel> loadModelCallBack) {
 		this.connectorConfig = connectorConfig;
 		this.processRunner = processRunner;
 		this.connection = connection;
+		this.loadModelCallBack = loadModelCallBack;
 	}
 
 	public<T extends Response> T execute(Command<T> command) throws TimeoutException{
@@ -46,13 +32,24 @@ public class Connector {
 		callback.waitForResponse();
 		return callback.response();
 	}
+	
+	public <T extends Response> void execute(Command<T> command, Callback<T> callback) throws TimeoutException{
+		if(!ensureBackendIsConnected(callback)){
+			return;
+		}
+		connection.sendRequest(command, callback);
+	}
 
 	protected boolean ensureBackendIsConnected(Callback<?> callback) throws TimeoutException {
 		if(processRunner.isRunning()){
 			return true;
 		}
-		processRunner.startProcess(connectorConfig);
+		return startBackend(callback);
+	}
+
+	public boolean startBackend(Callback<?> callback) throws TimeoutException {
 		try{
+			processRunner.startProcess(connectorConfig);
 			connection.connect(ADDRESS, processRunner.getPort());
 			connection.sendRequest(new LoadModelCommand(), loadModelCallBack);
 			return true;
@@ -63,16 +60,8 @@ public class Connector {
 		}
 	}
 
-	public <T extends Response> void execute(Command<T> command, Callback<T> callback) throws TimeoutException{
-		if(!ensureBackendIsConnected(callback)){
-			return;
-		}
-		connection.sendRequest(command, callback);
-	}
-	
 	public void dispose(){
 		processRunner.stop();
 		connection.close();
 	}
-	
 }

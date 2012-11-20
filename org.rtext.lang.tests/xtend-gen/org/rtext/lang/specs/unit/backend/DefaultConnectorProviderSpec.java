@@ -59,7 +59,7 @@ public class DefaultConnectorProviderSpec {
   
   @Test
   @Named("Creates connector with file specific configuration")
-  @Order(0)
+  @Order(1)
   public void _createsConnectorWithFileSpecificConfiguration() throws Exception {
     Connector _get = this.subject.get(this.aModelPath);
     boolean _doubleArrow = Should.operator_doubleArrow(_get, Connector.class);
@@ -74,7 +74,7 @@ public class DefaultConnectorProviderSpec {
   
   @Test
   @Named("disposes all connectors")
-  @Order(1)
+  @Order(2)
   public void _disposesAllConnectors() throws Exception {
     this.subject.get(this.aModelPath);
     this.subject.dispose();

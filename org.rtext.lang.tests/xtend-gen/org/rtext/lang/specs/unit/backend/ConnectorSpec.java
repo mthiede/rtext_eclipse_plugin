@@ -22,6 +22,7 @@ import org.rtext.lang.backend2.Callback;
 import org.rtext.lang.backend2.Command;
 import org.rtext.lang.backend2.Connection;
 import org.rtext.lang.backend2.Connector;
+import org.rtext.lang.backend2.LoadedModel;
 import org.rtext.lang.backend2.Response;
 import org.rtext.lang.specs.unit.backend.ConnectorExecuteCommandSpec;
 import org.rtext.lang.specs.util.Commands;
@@ -51,7 +52,10 @@ public class ConnectorSpec {
   Connection connection;
   
   @Mock
-  Callback callback;
+  Callback<Response> callback;
+  
+  @Mock
+  Callback<LoadedModel> loadedModelCallback;
   
   final int PORT = 1234;
   
@@ -71,7 +75,7 @@ public class ConnectorSpec {
     this.executionDir = _root;
     ConnectorConfig _connectorConfig = new ConnectorConfig(this.executionDir, this.COMMAND, "*.*");
     this.config = _connectorConfig;
-    Connector _connector = new Connector(this.config, this.processRunner, this.connection);
+    Connector _connector = new Connector(this.config, this.processRunner, this.connection, this.loadedModelCallback);
     this.subject = _connector;
     int _port = this.processRunner.getPort();
     OngoingStubbing<Integer> _when = Mockito.<Integer>when(Integer.valueOf(_port));

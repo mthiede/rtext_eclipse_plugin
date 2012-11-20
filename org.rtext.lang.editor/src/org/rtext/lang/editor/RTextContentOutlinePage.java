@@ -60,9 +60,12 @@ public class RTextContentOutlinePage extends ContentOutlinePage implements Model
 	}
 
 	private void configureTreeContent() {
-		getDocument().addModelListener(this);
-		getDocument().readOnly(new IUnitOfWork.Void<RTextResource>() {
-
+		RTextDocument document = getDocument();
+		if(document == null){
+			return;
+		}
+		document.addModelListener(this);
+		document.readOnly(new IUnitOfWork.Void<RTextResource>() {
 			@Override
 			public void process(RTextResource state) throws Exception {
 				handleModelChange(state);
@@ -106,7 +109,12 @@ public class RTextContentOutlinePage extends ContentOutlinePage implements Model
 	@Override
 	public void dispose() {
 		super.dispose();
-		getDocument().removeModelListener(this);
+		RTextDocument document = getDocument();
+		if(document == null)
+		{
+			return;
+		}
+		document.removeModelListener(this);
 	}
 
 }

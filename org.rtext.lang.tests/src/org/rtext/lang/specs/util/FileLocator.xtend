@@ -9,9 +9,13 @@ import org.eclipse.core.runtime.Platform
 @Data
 class TestFileLocator {
 	
+	def static getDefault(){
+		new TestFileLocator("backends/head")
+	}
+	
 	String root
 	
-	def file(String relativePath){
+	def private file(String relativePath){
 		if(Platform::running){
 			val fullpath = relativePath.toFullPath
 			val url = RTextPluginActivator::getDefault().find(fullpath)

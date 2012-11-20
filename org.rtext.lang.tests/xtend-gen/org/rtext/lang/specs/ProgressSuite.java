@@ -6,10 +6,11 @@ import org.jnario.runner.Named;
 import org.junit.runner.RunWith;
 import org.rtext.lang.specs.integration.CodeCompletionFeature;
 import org.rtext.lang.specs.integration.CommunicationWithBackendSpec;
+import org.rtext.lang.specs.integration.ProblemMarkersFeature;
 
-@RunWith(ExampleGroupRunner.class)
 @Named("Progress")
-@Contains({ CodeCompletionFeature.class, CommunicationWithBackendSpec.class })
+@Contains({ CodeCompletionFeature.class, CommunicationWithBackendSpec.class, ProblemMarkersFeature.class })
 @SuppressWarnings("all")
+@RunWith(ExampleGroupRunner.class)
 public class ProgressSuite {
 }

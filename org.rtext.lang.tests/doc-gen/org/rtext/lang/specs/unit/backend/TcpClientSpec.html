@@ -46,6 +46,13 @@ waitUntil[callback.response != null]
 callback.response =&gt; [
   type =&gt; &quot;response&quot;
 ]</pre>
+</li><li><p id="Notifies_callback_when_command_is_sent" class="example notrun"><strong>Notifies callback when command is sent</strong></p>
+<pre class="prettyprint lang-spec linenums">
+server.responses += responseMessage
+subject.connect(ADDRESS, PORT)
+subject.sendRequest(ANY_COMMAND, callback)
+waitUntil[callback.response != null]
+assert callback.hasStarted</pre>
 </li><li><p id="Receives_progress_from_server" class="example notrun"><strong>Receives progress from server</strong></p>
 <pre class="prettyprint lang-spec linenums">
 server.responses += progressMessage
@@ -145,6 +152,14 @@ describe TcpClient{
       callback.response =&gt; [
         type =&gt; &quot;response&quot;
       ]
+    }
+    
+    fact &quot;Notifies callback when command is sent&quot;{
+      server.responses += responseMessage
+      subject.connect(ADDRESS, PORT)
+      subject.sendRequest(ANY_COMMAND, callback)
+      waitUntil[callback.response != null]
+      assert callback.hasStarted
     }
     
     fact &quot;Receives progress from server&quot;{

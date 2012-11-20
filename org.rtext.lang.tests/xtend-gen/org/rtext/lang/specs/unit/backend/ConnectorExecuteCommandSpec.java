@@ -84,7 +84,7 @@ public class ConnectorExecuteCommandSpec extends ConnectorSpec {
     int _anyInt = Matchers.anyInt();
     _when.connect(_anyString, _anyInt);
     this.subject.<Response>execute(this.anyCommand, this.callback);
-    Callback _verify = Mockito.<Callback>verify(this.callback);
+    Callback<Response> _verify = Mockito.<Callback<Response>>verify(this.callback);
     _verify.handleError("Could not connect to backend");
     VerificationMode _never = Mockito.never();
     Connection _verify_1 = Mockito.<Connection>verify(this.connection, _never);
@@ -116,8 +116,8 @@ public class ConnectorExecuteCommandSpec extends ConnectorSpec {
         public void apply(final InOrder it) {
           Connection _verify = it.<Connection>verify(ConnectorExecuteCommandSpec.this.connection);
           LoadModelCommand _isA = Matchers.<LoadModelCommand>isA(LoadModelCommand.class);
-          Callback<LoadedModel> _any = Matchers.<Callback<LoadedModel>>any();
-          _verify.<LoadedModel>sendRequest(_isA, _any);
+          Callback<LoadedModel> _eq = Matchers.<Callback<LoadedModel>>eq(ConnectorExecuteCommandSpec.this.loadedModelCallback);
+          _verify.<LoadedModel>sendRequest(_isA, _eq);
           Connection _verify_1 = it.<Connection>verify(ConnectorExecuteCommandSpec.this.connection);
           _verify_1.<Response>sendRequest(ConnectorExecuteCommandSpec.this.anyCommand, ConnectorExecuteCommandSpec.this.callback);
           Connection _verify_2 = it.<Connection>verify(ConnectorExecuteCommandSpec.this.connection);

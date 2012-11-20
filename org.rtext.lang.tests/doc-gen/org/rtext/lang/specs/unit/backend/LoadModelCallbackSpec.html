@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>LoadModelCallback</title>
+<meta name="description" content="">
+<meta name="author" content="Jnario">
+
+<!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+<link rel="stylesheet" href="../../../../../../css/bootstrap.min.css">
+<link rel="stylesheet" href="../../../../../../css/bootstrap-responsive.min.css">
+<link rel="stylesheet" href="../../../../../../css/custom.css">
+<link rel="stylesheet" href="../../../../../../css/prettify.css">
+<script type="text/javascript" src="../../../../../../js/prettify.js"></script>
+<script type="text/javascript" src="../../../../../../js/lang-jnario.js"></script>
+<script type="text/javascript" src="../../../../../../js/jquery.js"></script>
+<script type="text/javascript" src="../../../../../../js/bootstrap-tab.js"></script>
+</head>
+
+<body onload="prettyPrint()">
+	<div class="container">
+		<div class="tabbable">
+			<div class="content">
+				<div class="page-header notrun">
+					<h1>LoadModelCallback</h1>
+					  <ul class="nav nav-tabs pull-right">
+					    <li class="active"><a href="#spec" data-toggle="tab">Spec</a></li>
+						<li><a href="#source" data-toggle="tab">Source</a></li>
+					  </ul>
+				</div>
+				<div class="row">
+					<div class="span12">
+						  <div class="tab-content">
+							  	<div class="tab-pane active" id="spec">
+<ul><li><p id="creates_update_job_on_response_with_problems_per_file" class="example notrun"><strong>creates update job on response with problems per file</strong></p>
+<pre class="prettyprint lang-spec linenums">
+subject.commandSent
+subject.handleResponse(loadedModel)
+
+verify(jobFactory).create( argThat(matches(&quot;problems&quot;)[
+  if(!containsKey(resolvedFile1)) return false
+  if(!containsKey(resolvedFile2)) return false
+  if(!containsValue(problems1))   return false
+  if(!containsValue(problems2))   return false
+  return true
+]))</pre>
+</li><li><p id="schedules_update_job" class="example notrun"><strong>schedules update job</strong></p>
+<pre class="prettyprint lang-spec linenums">
+subject.commandSent
+subject.handleResponse(loadedModel)
+
+verify(updateJob).schedule</pre>
+</li><li><p id="does_not_create_job_if_there_are_no_problems" class="example notrun"><strong>does not create job if there are no problems</strong></p>
+<pre class="prettyprint lang-spec linenums">
+subject.commandSent
+subject.handleResponse(new LoadedModel)
+
+verify(jobFactory, never).create(anyMap)</pre>
+</li></ul>
+							</div>
+						    <div class="tab-pane" id="source">
+						    	<h3>LoadModelCallback.spec</h3>
+						    	<p>
+<pre class="prettyprint lang-spec linenums">
+package org.rtext.lang.specs.unit.backend
+
+import org.eclipse.core.resources.IFile
+import org.jnario.runner.CreateWith
+import org.mockito.Mock
+import org.rtext.lang.backend2.LoadedModel
+import org.rtext.lang.backend2.LoadedModel$FileProblems
+import org.rtext.lang.backend2.LoadedModel$Problem
+import org.rtext.lang.editor.FileLocator
+import org.rtext.lang.editor.LoadModelCallback
+import org.rtext.lang.editor.LoadModelCallback$ProblemUpdateJob
+import org.rtext.lang.editor.LoadModelCallback$ProblemUpdateJobFactory
+import org.rtext.lang.specs.util.MockInjector
+import org.rtext.lang.specs.util.WorkspaceHelper
+
+import static org.jnario.lib.JnarioCollectionLiterals.*
+import static org.jnario.lib.Should.*
+import static org.mockito.Matchers.*
+import static org.mockito.Mockito.*
+
+@CreateWith(typeof(MockInjector))
+describe LoadModelCallback {
+  
+  extension WorkspaceHelper = new WorkspaceHelper
+  
+  @Mock ProblemUpdateJobFactory jobFactory
+  @Mock FileLocator fileLocator
+  @Mock ProblemUpdateJob updateJob
+  @Mock IFile resolvedFile1
+  @Mock IFile resolvedFile2
+   
+  val problems1 = list(
+    new Problem(&quot;message1&quot;, &quot;error&quot;,   1),
+    new Problem(&quot;message2&quot;, &quot;warning&quot;, 2)
+  )
+  
+  val problems2 = list(
+    new Problem(&quot;message3&quot;, &quot;error&quot;,   1),
+    new Problem(&quot;message4&quot;, &quot;warning&quot;, 2)
+  )
+  
+  val loadedModel = new LoadedModel =&gt; [
+    problems += new FileProblems(&quot;myfile1.txt&quot;, problems1)
+    problems += new FileProblems(&quot;myfile2.txt&quot;, problems2)
+  ]
+  
+  before {
+    subject = new LoadModelCallback(jobFactory, fileLocator)
+    when(jobFactory.create(anyMap)).thenReturn(updateJob)
+    when(fileLocator.locate(&quot;myfile1.txt&quot;)).thenReturn(list(resolvedFile1))
+    when(fileLocator.locate(&quot;myfile2.txt&quot;)).thenReturn(list(resolvedFile2))
+    
+    when(resolvedFile1.contains(resolvedFile1)).thenReturn(true)
+    when(resolvedFile2.contains(resolvedFile2)).thenReturn(true)
+    
+    when(resolvedFile1.isConflicting(resolvedFile1)).thenReturn(true)
+    when(resolvedFile2.isConflicting(resolvedFile2)).thenReturn(true)
+  }
+  
+  fact &quot;creates update job on response with problems per file&quot;{
+    subject.commandSent
+    subject.handleResponse(loadedModel)
+    
+    verify(jobFactory).create( argThat(matches(&quot;problems&quot;)[
+      if(!containsKey(resolvedFile1)) return false
+      if(!containsKey(resolvedFile2)) return false
+      if(!containsValue(problems1))   return false
+      if(!containsValue(problems2))   return false
+      return true
+    ]))
+  }
+  
+  fact &quot;schedules update job&quot;{
+    subject.commandSent
+    subject.handleResponse(loadedModel)
+    
+    verify(updateJob).schedule
+  }
+
+  fact &quot;does not create job if there are no problems&quot;{
+    subject.commandSent
+    subject.handleResponse(new LoadedModel)
+    
+    verify(jobFactory, never).create(anyMap)
+  }
+  
+}
+</pre>
+						    </p></div>
+						  </div>
+					</div> 
+				</div> <!-- /row -->
+			</div> <!-- /content -->
+		</div> <!-- /tabbable -->
+		<footer>
+			<p><small>Generated by <a href="http://www.jnario.org">Jnario</a>.</small></p>
+		</footer>
+	</div> <!-- /container -->
+
+</body>
+</html>

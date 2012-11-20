@@ -54,7 +54,7 @@ public class ConnectorProviderSpec {
   
   @Test
   @Named("Creates connector with file specific configuration")
-  @Order(0)
+  @Order(1)
   public void _createsConnectorWithFileSpecificConfiguration() throws Exception {
     String _anyString = Matchers.anyString();
     ConnectorConfig _get = this.configFileProvider.get(_anyString);
@@ -73,7 +73,7 @@ public class ConnectorProviderSpec {
   
   @Test
   @Named("returns same connector for files with same configuration")
-  @Order(1)
+  @Order(2)
   public void _returnsSameConnectorForFilesWithSameConfiguration() throws Exception {
     String _anyString = Matchers.anyString();
     ConnectorConfig _get = this.configFileProvider.get(_anyString);
@@ -93,7 +93,7 @@ public class ConnectorProviderSpec {
   
   @Test
   @Named("returns different connector for files with different configuration")
-  @Order(2)
+  @Order(3)
   public void _returnsDifferentConnectorForFilesWithDifferentConfiguration() throws Exception {
     ConnectorConfig _get = this.configFileProvider.get(this.aModelPath);
     OngoingStubbing<ConnectorConfig> _when = Mockito.<ConnectorConfig>when(_get);
