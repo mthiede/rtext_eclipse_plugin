@@ -28,7 +28,7 @@ import org.rtext.lang.specs.unit.backend.ConnectorSpec;
 public class ConnectorExecuteCommandSpec extends ConnectorSpec {
   @Test
   @Named("Starts backend process")
-  @Order(1)
+  @Order(2)
   public void _startsBackendProcess() throws Exception {
     this.subject.<Response>execute(this.anyCommand, this.callback);
     BackendStarter _verify = Mockito.<BackendStarter>verify(this.processRunner);
@@ -37,7 +37,7 @@ public class ConnectorExecuteCommandSpec extends ConnectorSpec {
   
   @Test
   @Named("Backend process is started only once")
-  @Order(2)
+  @Order(3)
   public void _backendProcessIsStartedOnlyOnce() throws Exception {
     this.subject.<Response>execute(this.anyCommand, this.callback);
     boolean _isRunning = this.processRunner.isRunning();
@@ -51,7 +51,7 @@ public class ConnectorExecuteCommandSpec extends ConnectorSpec {
   
   @Test
   @Named("Connects to 127.0.0.1 on specified port")
-  @Order(3)
+  @Order(4)
   public void _connectsTo127001OnSpecifiedPort() throws Exception {
     this.subject.<Response>execute(this.anyCommand, this.callback);
     Connection _verify = Mockito.<Connection>verify(this.connection);
@@ -60,7 +60,7 @@ public class ConnectorExecuteCommandSpec extends ConnectorSpec {
   
   @Test
   @Named("Kills backend process if connection fails")
-  @Order(4)
+  @Order(5)
   public void _killsBackendProcessIfConnectionFails() throws Exception {
     RuntimeException _runtimeException = new RuntimeException();
     Stubber _doThrow = Mockito.doThrow(_runtimeException);
@@ -75,7 +75,7 @@ public class ConnectorExecuteCommandSpec extends ConnectorSpec {
   
   @Test
   @Named("Notifies callback")
-  @Order(5)
+  @Order(6)
   public void _notifiesCallback() throws Exception {
     RuntimeException _runtimeException = new RuntimeException();
     Stubber _doThrow = Mockito.doThrow(_runtimeException);
@@ -93,7 +93,7 @@ public class ConnectorExecuteCommandSpec extends ConnectorSpec {
   
   @Test
   @Named("Sends command\\\'s request via connection")
-  @Order(6)
+  @Order(7)
   public void _sendsCommandSRequestViaConnection() throws Exception {
     this.subject.<Response>execute(this.anyCommand, this.callback);
     Connection _verify = Mockito.<Connection>verify(this.connection);
@@ -104,7 +104,7 @@ public class ConnectorExecuteCommandSpec extends ConnectorSpec {
   
   @Test
   @Named("Loads model after connection")
-  @Order(7)
+  @Order(8)
   public void _loadsModelAfterConnection() throws Exception {
     this.subject.<Response>execute(this.anyCommand, this.callback);
     boolean _isRunning = this.processRunner.isRunning();
@@ -129,7 +129,7 @@ public class ConnectorExecuteCommandSpec extends ConnectorSpec {
   
   @Test
   @Named("Returns commands response")
-  @Order(8)
+  @Order(9)
   public void _returnsCommandsResponse() throws Exception {
     this.subject.<Response>execute(this.anyCommand, this.callback);
     Connection _verify = Mockito.<Connection>verify(this.connection);

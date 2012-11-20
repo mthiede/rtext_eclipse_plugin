@@ -27,12 +27,12 @@ class BackendHelper {
 	}
 	
 	def executeSynchronousCommand() {
-		response = connector.execute(new Command(1, "request", "load_model"))
+		response = connector.execute(new Command(1, "request", "load_model", typeof(Response)))
 	}
 
 	def executeAsynchronousCommand() {
 		waitUntil[
-			connector.execute(new Command(2, "request", "load_model"), callback)
+			connector.execute(new Command(2, "request", "load_model", typeof(Response)), callback)
 			callback.response != null
 		]
 		response = callback.response

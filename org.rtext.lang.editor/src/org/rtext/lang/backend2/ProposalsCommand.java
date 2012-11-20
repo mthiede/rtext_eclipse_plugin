@@ -8,14 +8,9 @@ public class ProposalsCommand extends Command<Proposals> {
 	private int column;
 
 	public ProposalsCommand(List<String> context, int lineOffset) {
-		super("content_complete");
+		super("content_complete", Proposals.class);
 		this.context = context;
 		this.column = lineOffset;
 	}
 	
-	@Override
-	protected void setReturnType(Proposals type) {
-		super.setReturnType(type);
-	}
-
 }

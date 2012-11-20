@@ -100,7 +100,7 @@ public class BackendHelper {
   public void executeSynchronousCommand() {
     try {
       Connector _connector = this.getConnector();
-      Command<Response> _command = new Command<Response>(1, "request", "load_model");
+      Command<Response> _command = new Command<Response>(1, "request", "load_model", Response.class);
       Response _execute = _connector.<Response>execute(_command);
       this.setResponse(_execute);
     } catch (Exception _e) {
@@ -115,7 +115,7 @@ public class BackendHelper {
             boolean _xblockexpression = false;
             {
               Connector _connector = BackendHelper.this.getConnector();
-              Command<Response> _command = new Command<Response>(2, "request", "load_model");
+              Command<Response> _command = new Command<Response>(2, "request", "load_model", Response.class);
               _connector.<Response>execute(_command, BackendHelper.this.callback);
               Response _response = BackendHelper.this.callback.getResponse();
               boolean _notEquals = (!Objects.equal(_response, null));

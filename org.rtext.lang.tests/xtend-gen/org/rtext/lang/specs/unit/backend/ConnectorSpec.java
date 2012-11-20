@@ -80,7 +80,7 @@ public class ConnectorSpec {
   
   @Test
   @Named("Disposes connection")
-  @Order(0)
+  @Order(1)
   public void _disposesConnection() throws Exception {
     this.subject.dispose();
     Connection _verify = Mockito.<Connection>verify(this.connection);

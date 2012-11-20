@@ -48,18 +48,19 @@ public class Connector {
 	}
 
 	protected boolean ensureBackendIsConnected(Callback<?> callback) throws TimeoutException {
-		if(!processRunner.isRunning()){
-			processRunner.startProcess(connectorConfig);
-			try{
-				connection.connect(ADDRESS, processRunner.getPort());
-				connection.sendRequest(new LoadModelCommand(), loadModelCallBack);
-			}catch(Exception e){
-				processRunner.stop();
-				callback.handleError("Could not connect to backend");
-				return false;
-			}
+		if(processRunner.isRunning()){
+			return true;
 		}
-		return true;
+		processRunner.startProcess(connectorConfig);
+		try{
+			connection.connect(ADDRESS, processRunner.getPort());
+			connection.sendRequest(new LoadModelCommand(), loadModelCallBack);
+			return true;
+		}catch(Exception e){
+			processRunner.stop();
+			callback.handleError("Could not connect to backend");
+			return false;
+		}
 	}
 
 	public <T extends Response> void execute(Command<T> command, Callback<T> callback) throws TimeoutException{

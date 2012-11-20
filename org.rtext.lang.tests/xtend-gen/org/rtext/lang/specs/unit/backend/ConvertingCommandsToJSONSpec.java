@@ -33,9 +33,9 @@ public class ConvertingCommandsToJSONSpec {
   
   @Test
   @Named("converts command to json")
-  @Order(0)
+  @Order(1)
   public void _convertsCommandToJson() throws Exception {
-    Command<Response> _command = new Command<Response>(this.invocationId, this.type, this.command);
+    Command<Response> _command = new Command<Response>(this.invocationId, this.type, this.command, Response.class);
     String _serialize = this.serializer.serialize(_command);
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("{");
