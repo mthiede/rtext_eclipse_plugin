@@ -60,10 +60,10 @@ class BackendHelper {
 	def teardown(){
 		connectorProvider.dispose
 	}	
+	
 	def offsetAfter(String substring){
 		document.get.indexOf(substring) + substring.length + 1
 	}
-	
 
 	def proposals(){
 		proposalAcceptor.proposals

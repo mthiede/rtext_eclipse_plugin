@@ -70,7 +70,8 @@ public final class CliBackendStarter implements BackendStarter {
 			startRTextProcess(connectorConfig);
 			handleOutputStream();
 			registerShutDownHook();
-		} catch (IOException e) {
+		} catch (Throwable e) {
+			e.printStackTrace();
 			Exceptions.rethrow(e);
 		}
 	}
@@ -88,9 +89,9 @@ public final class CliBackendStarter implements BackendStarter {
 		arraycopy(outputHandlers, 0, listeners, 1, outputHandlers.length);
 		return listeners;
 	}
+	
 
-	protected void startRTextProcess(ConnectorConfig connectorConfig)
-			throws IOException {
+	protected void startRTextProcess(ConnectorConfig connectorConfig) throws IOException {
 		String command = connectorConfig.getCommand();
 		String[] commands = splitCommand(command);
 		ProcessBuilder processBuilder = new ProcessBuilder(commands);

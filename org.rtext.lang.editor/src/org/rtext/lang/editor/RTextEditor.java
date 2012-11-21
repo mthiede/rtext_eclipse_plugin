@@ -98,10 +98,8 @@ public class RTextEditor extends TextEditor implements Connected{
 		return ((IPathEditorInput) input).getPath();
 	}
 
-	protected ISourceViewer createSourceViewer(Composite parent,
-			IVerticalRuler ruler, int styles) {
-		ISourceViewer viewer = new ProjectionViewer(parent, ruler,
-				getOverviewRuler(), isOverviewRulerVisible(), styles);
+	protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler ruler, int styles) {
+		ISourceViewer viewer = new ProjectionViewer(parent, ruler, getOverviewRuler(), isOverviewRulerVisible(), styles);
 		// ensure decoration support has been created and configured.
 		getSourceViewerDecorationSupport(viewer);
 		return viewer;

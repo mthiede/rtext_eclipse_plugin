@@ -22,12 +22,13 @@ import org.junit.runner.RunWith;
 import org.rtext.lang.backend2.Connector;
 import org.rtext.lang.editor.Connected;
 import org.rtext.lang.editor.ContentAssistProcessor;
+import org.rtext.lang.specs.integration.CodeCompletionFeature;
 import org.rtext.lang.specs.util.BackendHelper;
 
 @RunWith(FeatureRunner.class)
 @Named("Scenario: Proposal signals backend failure")
 @SuppressWarnings("all")
-public class CodeCompletionFeatureProposalSignalsBackendFailure {
+public class CodeCompletionFeatureProposalSignalsBackendFailure extends CodeCompletionFeature {
   @Test
   @Order(0)
   @Named("Given a backend for \\\"rtext/test/integration/model/test.crashing_backend\\\"")

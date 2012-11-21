@@ -22,12 +22,13 @@ import org.junit.runner.RunWith;
 import org.rtext.lang.backend2.Connector;
 import org.rtext.lang.editor.Connected;
 import org.rtext.lang.editor.ContentAssistProcessor;
+import org.rtext.lang.specs.integration.CodeCompletionFeature;
 import org.rtext.lang.specs.util.BackendHelper;
 
 @RunWith(FeatureRunner.class)
 @Named("Scenario: Sucessfully using code completion")
 @SuppressWarnings("all")
-public class CodeCompletionFeatureSucessfullyUsingCodeCompletion {
+public class CodeCompletionFeatureSucessfullyUsingCodeCompletion extends CodeCompletionFeature {
   @Test
   @Order(0)
   @Named("Given a backend for \\\"rtext/test/integration/model/test_metamodel.ect\\\"")

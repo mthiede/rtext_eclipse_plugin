@@ -7,10 +7,10 @@
  *******************************************************************************/
 package org.rtext.lang.editor;
 
+import static org.eclipse.ui.texteditor.MarkerUtilities.getMessage;
+
 import java.util.Iterator;
 
-import org.eclipse.core.resources.IMarker;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.IAnnotationHover;
@@ -23,25 +23,21 @@ public class ProblemMarkerHover implements IAnnotationHover {
 	public String getHoverInfo(ISourceViewer sourceViewer, int lineNumber) {
 		IAnnotationModel annotationModel = sourceViewer.getAnnotationModel();
 		Iterator<?> it = annotationModel.getAnnotationIterator();
-		String result = null;
+		StringBuilder result = new StringBuilder();
 		while (it.hasNext()) {
 			Annotation annotation = (Annotation)it.next();
 			if (annotation instanceof MarkerAnnotation) {
+				MarkerAnnotation markerAnnotation = (MarkerAnnotation)annotation;
 				try {
 					int annotationLineNumber = sourceViewer.getDocument().getLineOfOffset(annotationModel.getPosition(annotation).getOffset());
 					if (annotationLineNumber == lineNumber) {
-						if (result == null) {
-							result = "";
-						}
-						String message = (String)((MarkerAnnotation)annotation).getMarker().getAttribute(IMarker.MESSAGE);
-						result = result.concat(message);
+						result.append(getMessage(markerAnnotation.getMarker()) + "\n");
 					}
 				} catch (BadLocationException e) {
-				} catch (CoreException e) {
 				}
 			}
 		}
-		return result;
+		return result.toString();
 	}
 	
 }

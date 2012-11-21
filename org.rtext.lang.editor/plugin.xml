@@ -41,5 +41,35 @@
             parentId="org.eclipse.ui.contexts.window">
       </context>
    </extension>
-
+	<extension
+	    id="org.rtext.lang.editor.makers"
+	    name="RText Problem"
+	    point="org.eclipse.core.resources.markers">
+	  <super
+	    type="org.eclipse.core.resources.problemmarker">
+	  </super>
+	    <super
+	    type="org.eclipse.core.resources.textmarker">
+	  </super>
+	  <persistent
+	         value="true">
+	   </persistent>
+	</extension>
+   <extension
+         point="org.eclipse.ui.editors.markerAnnotationSpecification">
+      <specification
+            annotationType="org.rtext.lang.editor.error"
+            includeOnPreferencePage="true"
+            symbolicIcon="error">
+      </specification>
+   </extension>
+      <extension
+      point="org.eclipse.ui.editors.annotationTypes">
+      <type
+      	name="org.rtext.lang.editor.error"
+      	markerType="org.eclipse.core.resources.problemmarker"
+      	markerSeverity="2"
+        super="org.eclipse.ui.workbench.texteditor.error">
+      </type>
+       </extension>
 </plugin>

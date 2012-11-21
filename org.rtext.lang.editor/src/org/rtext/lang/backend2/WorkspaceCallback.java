@@ -39,8 +39,8 @@ public class WorkspaceCallback<T extends Response> implements Callback<T> {
 		}
 	}
 
-	private CommandCallbackJob callbackJob;
 	private final String message;
+	private CommandCallbackJob callbackJob;
 	
 	public WorkspaceCallback(String message) {
 		this.message = message;

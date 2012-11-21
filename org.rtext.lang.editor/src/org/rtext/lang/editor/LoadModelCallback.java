@@ -16,12 +16,18 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.MultiRule;
+import org.eclipse.ui.texteditor.MarkerUtilities;
+import org.rtext.lang.RTextPlugin;
 import org.rtext.lang.backend2.LoadedModel;
 import org.rtext.lang.backend2.LoadedModel.FileProblems;
 import org.rtext.lang.backend2.LoadedModel.Problem;
 import org.rtext.lang.backend2.WorkspaceCallback;
 
 public class LoadModelCallback extends WorkspaceCallback<LoadedModel> {
+
+	public static final String RTEXT_MARKERS = "org.rtext.lang.editor.makers";
+	public static final String RTEXT_JOB_FAMILY = "RText Jobs";
+	public static final String PROBLEM_MARKER_JOB = "Updating Problem markers";
 
 	public static class ProblemUpdateJobFactory{
 		public ProblemUpdateJob create(Map<IResource, List<Problem>> problems){
@@ -34,7 +40,7 @@ public class LoadModelCallback extends WorkspaceCallback<LoadedModel> {
 		private Map<IResource, List<Problem>> problems;
 
 		public ProblemUpdateJob(Map<IResource, List<Problem>> problems) {
-			super("Updating Problem markers");
+			super(PROBLEM_MARKER_JOB);
 			this.problems = problems;
 			setRule(lockAll(problems.keySet()));
 		}
@@ -48,32 +54,49 @@ public class LoadModelCallback extends WorkspaceCallback<LoadedModel> {
 			for (Entry<IResource, List<Problem>> entry : problems.entrySet()) {
 				IResource resource = entry.getKey();
 				try {
-					resource.deleteMarkers("rtext", true, IResource.DEPTH_INFINITE);
+					resource.deleteMarkers(RTEXT_MARKERS, true, IResource.DEPTH_INFINITE);
 				} catch (CoreException e) {
 				}
 				for (Problem problem : entry.getValue()) {
 					try {
-						IMarker marker = resource.createMarker("rtext");
-						marker.setAttribute(IMarker.MESSAGE, problem.getMessage());
-						marker.setAttribute(IMarker.LINE_NUMBER, problem.getLine());
-						marker.setAttribute(IMarker.SEVERITY, SEVERITY_MAP.get(problem.getSeverity()));
-						marker.setAttribute(IMarker.SOURCE_ID, "RText");
+						createMarker(resource, problem);
 					} catch (CoreException e) {
+						RTextPlugin.logError("Exception when setting marker on :" + resource.getFullPath(), e);
 					}
 				}
 			}
 			return Status.OK_STATUS;
+		}
+
+		public void createMarker(IResource resource, Problem problem)
+				throws CoreException {
+			Map<Object, Object> attributes = new HashMap<Object, Object>();
+			MarkerUtilities.setLineNumber(attributes, problem.getLine());
+			MarkerUtilities.setMessage(attributes, problem.getMessage());
+			attributes.put(IMarker.SEVERITY, SEVERITY_MAP.get(problem.getSeverity()));
+//			attributes.put(IMarker.CHAR_START, 0);
+//			attributes.put(IMarker.CHAR_END, 0);
+			attributes.put(IMarker.PRIORITY, IMarker.PRIORITY_HIGH);
+			MarkerUtilities.createMarker(resource, attributes , RTEXT_MARKERS);
+		}
+		
+		@Override
+		public boolean belongsTo(Object family) {
+			if(family == RTEXT_JOB_FAMILY){
+				return true;
+			}
+			return super.belongsTo(family);
 		}
 		
 	}
 	
 	@SuppressWarnings("serial")
 	private static final Map<String, Integer> SEVERITY_MAP = new HashMap<String, Integer>(){{
-		put("d", IMarker.SEVERITY_INFO);
-		put("i", IMarker.SEVERITY_INFO);
-		put("w", IMarker.SEVERITY_WARNING);
-		put("e", IMarker.SEVERITY_ERROR);
-		put("f", IMarker.SEVERITY_ERROR);	
+		put("debug", IMarker.SEVERITY_INFO);
+		put("info", IMarker.SEVERITY_INFO);
+		put("warn", IMarker.SEVERITY_WARNING);
+		put("error", IMarker.SEVERITY_ERROR);
+		put("fatal", IMarker.SEVERITY_ERROR);
 	}};
 	private ProblemUpdateJobFactory jobFactory;
 	private FileLocator fileLocator;
