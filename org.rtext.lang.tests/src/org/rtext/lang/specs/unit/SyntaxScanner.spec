@@ -105,6 +105,12 @@ describe SyntaxScanner {
 		"Type name, label: enum\r\n".scan.fifth => IDENTIFIER
 	}
 	
+	fact "parse whitespace after command"{
+		val input = "Type   "
+		input.scan
+		assert subject.tokenOffset + subject.tokenLength <= input.length
+	}
+	
 	fact "parse string until EOL"{
 		('Type name, label: "a string ' + EOL).scan.fifth => STRING
 	}
@@ -138,9 +144,11 @@ describe SyntaxScanner {
 		
 		val tokens = <IToken>list
 		var token= subject.nextToken()
+		println("Acutal: " + s.length)
 		while (!token.isEOF()) {
 			tokens += token
 			token= subject.nextToken()
+			println(subject.tokenOffset + subject.tokenLength)
 		}
 		tokens.map[
 			val attr = it.data as TextAttribute

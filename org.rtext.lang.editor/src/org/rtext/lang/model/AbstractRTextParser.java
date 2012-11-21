@@ -23,14 +23,9 @@ public abstract class AbstractRTextParser<T> {
 	private IDocument fDocument;
 	private int fOffset;
 	private int fTokenStart;
-	private int fEndOffset;
 	private boolean fNewLine;
 
 	public int getTokenLength() {
-		int x = fOffset;
-		if(x > 790){
-			System.out.println(x);
-		}
 		return fOffset - fTokenStart;
 	}
 
@@ -39,11 +34,11 @@ public abstract class AbstractRTextParser<T> {
 	}
 
 	public T nextToken() {
-		if (fOffset >= fEndOffset-1) {
-			return createEndOfFile();
-		}
 		T result;
 		consumeWhitespace();
+		if (fOffset >= fDocument.getLength()) {
+			return createEndOfFile();
+		}
 		tokenStart();
 		if (nextIsChar('#')) {
 			consumeUntilEOL();
@@ -208,9 +203,10 @@ public abstract class AbstractRTextParser<T> {
 	private char readChar() {
 		char result = EOL;
 		try {
-			result = fDocument.getChar(fOffset++);
+			result = fDocument.getChar(fOffset);
 		} catch (Exception e) {
 		}
+		fOffset++;
 		return result;
 	}
 	
@@ -230,7 +226,6 @@ public abstract class AbstractRTextParser<T> {
 		fNewLine = true;
 		fDocument = document;
 		fOffset = offset;
-		fEndOffset = fOffset + length;
 	}
 	
 	protected abstract T createComment();

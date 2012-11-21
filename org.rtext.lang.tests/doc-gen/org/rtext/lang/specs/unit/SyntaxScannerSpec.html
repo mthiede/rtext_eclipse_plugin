@@ -101,6 +101,11 @@ Type name, label: enum
 </li><li><p id="parse_whitespace" class="example notrun"><strong>parse whitespace</strong></p>
 <pre class="prettyprint lang-spec linenums">
 &quot;Type name, label: enum\r\n&quot;.scan.fifth =&gt; IDENTIFIER</pre>
+</li><li><p id="parse_whitespace_after_command" class="example notrun"><strong>parse whitespace after command</strong></p>
+<pre class="prettyprint lang-spec linenums">
+val input = &quot;Type   &quot;
+input.scan
+assert subject.tokenOffset + subject.tokenLength &lt;= input.length</pre>
 </li><li><p id="parse_string_until_EOL" class="example notrun"><strong>parse string until EOL</strong></p>
 <pre class="prettyprint lang-spec linenums">
 ('Type name, label: &quot;a string ' + EOL).scan.fifth =&gt; STRING</pre>
@@ -237,6 +242,12 @@ describe SyntaxScanner {
     &quot;Type name, label: enum\r\n&quot;.scan.fifth =&gt; IDENTIFIER
   }
   
+  fact &quot;parse whitespace after command&quot;{
+    val input = &quot;Type   &quot;
+    input.scan
+    assert subject.tokenOffset + subject.tokenLength &lt;= input.length
+  }
+  
   fact &quot;parse string until EOL&quot;{
     ('Type name, label: &quot;a string ' + EOL).scan.fifth =&gt; STRING
   }
@@ -270,9 +281,11 @@ describe SyntaxScanner {
     
     val tokens = &lt;IToken&gt;list
     var token= subject.nextToken()
+    println(&quot;Acutal: &quot; + s.length)
     while (!token.isEOF()) {
       tokens += token
       token= subject.nextToken()
+      println(subject.tokenOffset + subject.tokenLength)
     }
     tokens.map[
       val attr = it.data as TextAttribute

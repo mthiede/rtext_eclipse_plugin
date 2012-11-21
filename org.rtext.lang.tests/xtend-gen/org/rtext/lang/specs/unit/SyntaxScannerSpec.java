@@ -7,6 +7,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.xtend2.lib.StringConcatenation;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
+import org.eclipse.xtext.xbase.lib.InputOutput;
 import org.eclipse.xtext.xbase.lib.ListExtensions;
 import org.hamcrest.StringDescription;
 import org.jnario.lib.JnarioCollectionLiterals;
@@ -286,8 +287,29 @@ public class SyntaxScannerSpec {
   }
   
   @Test
-  @Named("parse string until EOL")
+  @Named("parse whitespace after command")
   @Order(15)
+  public void _parseWhitespaceAfterCommand() throws Exception {
+    final String input = "Type   ";
+    this.scan(input);
+    int _tokenOffset = this.subject.getTokenOffset();
+    int _tokenLength = this.subject.getTokenLength();
+    int _plus = (_tokenOffset + _tokenLength);
+    int _length = input.length();
+    boolean _lessEqualsThan = (_plus <= _length);
+    Assert.assertTrue("\nExpected subject.tokenOffset + subject.tokenLength <= input.length but"
+     + "\n     subject.tokenOffset + subject.tokenLength is " + new StringDescription().appendValue(_plus).toString()
+     + "\n     subject.tokenOffset is " + new StringDescription().appendValue(_tokenOffset).toString()
+     + "\n     subject is " + new StringDescription().appendValue(this.subject).toString()
+     + "\n     subject.tokenLength is " + new StringDescription().appendValue(_tokenLength).toString()
+     + "\n     input.length is " + new StringDescription().appendValue(_length).toString()
+     + "\n     input is " + new StringDescription().appendValue(input).toString() + "\n", _lessEqualsThan);
+    
+  }
+  
+  @Test
+  @Named("parse string until EOL")
+  @Order(16)
   public void _parseStringUntilEOL() throws Exception {
     String _plus = ("Type name, label: \"a string " + Character.valueOf(AbstractRTextParser.EOL));
     List<RGB> _scan = this.scan(_plus);
@@ -304,7 +326,7 @@ public class SyntaxScannerSpec {
   
   @Test
   @Named("parse nested elements")
-  @Order(16)
+  @Order(17)
   public void _parseNestedElements() throws Exception {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("AUTOSAR {");
@@ -363,6 +385,9 @@ public class SyntaxScannerSpec {
       this.subject.setRange(document, 0, _length);
       final List<IToken> tokens = JnarioCollectionLiterals.<IToken>list();
       IToken token = this.subject.nextToken();
+      int _length_1 = s.length();
+      String _plus = ("Acutal: " + Integer.valueOf(_length_1));
+      InputOutput.<String>println(_plus);
       boolean _isEOF = token.isEOF();
       boolean _not = (!_isEOF);
       boolean _while = _not;
@@ -371,6 +396,10 @@ public class SyntaxScannerSpec {
           tokens.add(token);
           IToken _nextToken = this.subject.nextToken();
           token = _nextToken;
+          int _tokenOffset = this.subject.getTokenOffset();
+          int _tokenLength = this.subject.getTokenLength();
+          int _plus_1 = (_tokenOffset + _tokenLength);
+          InputOutput.<Integer>println(Integer.valueOf(_plus_1));
         }
         boolean _isEOF_1 = token.isEOF();
         boolean _not_1 = (!_isEOF_1);
