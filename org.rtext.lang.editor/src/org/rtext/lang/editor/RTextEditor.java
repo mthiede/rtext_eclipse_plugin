@@ -7,10 +7,11 @@
  *******************************************************************************/
 package org.rtext.lang.editor;
 
+import java.net.MalformedURLException;
 import java.util.ResourceBundle;
-import java.util.concurrent.TimeoutException;
 
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.IVerticalRuler;
@@ -22,6 +23,7 @@ import org.eclipse.ui.IPathEditorInput;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.eclipse.ui.ide.FileStoreEditorInput;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 import org.eclipse.ui.texteditor.TextOperationAction;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
@@ -95,7 +97,19 @@ public class RTextEditor extends TextEditor implements Connected{
 
 	IPath getInputPath() {
 		IEditorInput input = getEditorInput();
-		return ((IPathEditorInput) input).getPath();
+		if (input instanceof FileStoreEditorInput) {
+			FileStoreEditorInput fileStoreEditorInput = (FileStoreEditorInput) input;
+			try {
+				return new Path(fileStoreEditorInput.getURI().toURL().getFile());
+			} catch (MalformedURLException e) {
+				throw new UnsupportedOperationException("Could not handle editor input: " + fileStoreEditorInput.getURI(), e);
+			}
+		}else if (input instanceof IPathEditorInput) {
+			IPathEditorInput pathEditorInput = (IPathEditorInput) input;
+			return pathEditorInput.getPath();
+		}else{
+			throw new UnsupportedOperationException("Unknown editor input type: " + input.getClass().getName());
+		}
 	}
 
 	protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler ruler, int styles) {
