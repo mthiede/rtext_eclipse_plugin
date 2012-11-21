@@ -67,7 +67,12 @@ describe Connector {
 			doThrow(new RuntimeException()).when(connection).connect(anyString, anyInt) 
 			subject.execute(anyCommand, callback)
 			verify(processRunner).stop
-			
+		}
+		
+		fact "Kills backend process if sending command fails"{
+			doThrow(new RuntimeException()).when(connection).sendRequest(anyCommand, callback) 
+			subject.execute(anyCommand, callback) throws RuntimeException
+			verify(processRunner).stop
 		}
 		
 		fact "Notifies callback"{

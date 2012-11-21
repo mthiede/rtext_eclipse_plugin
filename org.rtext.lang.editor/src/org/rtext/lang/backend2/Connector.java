@@ -37,7 +37,12 @@ public class Connector {
 		if(!ensureBackendIsConnected(callback)){
 			return;
 		}
-		connection.sendRequest(command, callback);
+		try{
+			connection.sendRequest(command, callback);
+		}catch(RuntimeException e){
+			processRunner.stop();
+			throw e;
+		}
 	}
 
 	protected boolean ensureBackendIsConnected(Callback<?> callback) throws TimeoutException {

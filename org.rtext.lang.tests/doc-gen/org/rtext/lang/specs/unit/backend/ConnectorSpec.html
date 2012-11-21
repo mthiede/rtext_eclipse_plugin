@@ -56,6 +56,11 @@ verify(connection).connect(&quot;127.0.0.1&quot;, PORT)</pre>
 doThrow(new RuntimeException()).when(connection).connect(anyString, anyInt) 
 subject.execute(anyCommand, callback)
 verify(processRunner).stop</pre>
+</li><li><p id="Kills_backend_process_if_sending_command_fails" class="example notrun"><strong>Kills backend process if sending command fails</strong></p>
+<pre class="prettyprint lang-spec linenums">
+doThrow(new RuntimeException()).when(connection).sendRequest(anyCommand, callback) 
+subject.execute(anyCommand, callback) throws RuntimeException
+verify(processRunner).stop</pre>
 </li><li><p id="Notifies_callback" class="example notrun"><strong>Notifies callback</strong></p>
 <pre class="prettyprint lang-spec linenums">
 doThrow(new RuntimeException()).when(connection).connect(anyString, anyInt) 
@@ -160,7 +165,12 @@ describe Connector {
       doThrow(new RuntimeException()).when(connection).connect(anyString, anyInt) 
       subject.execute(anyCommand, callback)
       verify(processRunner).stop
-      
+    }
+    
+    fact &quot;Kills backend process if sending command fails&quot;{
+      doThrow(new RuntimeException()).when(connection).sendRequest(anyCommand, callback) 
+      subject.execute(anyCommand, callback) throws RuntimeException
+      verify(processRunner).stop
     }
     
     fact &quot;Notifies callback&quot;{
