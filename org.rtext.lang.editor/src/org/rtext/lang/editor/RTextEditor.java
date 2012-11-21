@@ -88,8 +88,8 @@ public class RTextEditor extends TextEditor implements Connected{
 		super.editorSaved();
 		try {
 			getConnector().execute(new LoadModelCommand(), LoadModelCallback.create());
-		} catch (TimeoutException e) {
-			RTextPlugin.logError("Timeout loading models", e);
+		} catch (Exception e) {
+			RTextPlugin.logError("Exception loading models", e);
 		}
 	}
 
