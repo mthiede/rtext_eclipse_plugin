@@ -40,6 +40,20 @@
 <pre class="prettyprint lang-spec linenums">
 &quot;Type&quot;.parse.first       =&gt; element(&quot;Type&quot;)
 &quot;OtherType&quot;.parse.first    =&gt; element(&quot;OtherType&quot;)</pre>
+</li><li><p id="parse_multiple_root_elements" class="example notrun"><strong>parse multiple root elements</strong></p>
+<pre class="prettyprint lang-spec linenums">
+'''
+Root1
+Root2
+'''.parse.size =&gt; 2</pre>
+</li><li><p id="correctly_sets_offset_of_last_element" class="example notrun"><strong>correctly sets offset of last element</strong></p>
+<pre class="prettyprint lang-spec linenums">
+val input = '''
+Root1
+Root2
+
+'''
+input.parse.size =&gt; 2</pre>
 </li><li><p id="parse_name" class="example notrun"><strong>parse name</strong></p>
 <pre class="prettyprint lang-spec linenums">
 &quot;Type name1&quot;.parse.first     =&gt; element(&quot;Type&quot;, &quot;name1&quot;)
@@ -49,7 +63,6 @@
 &quot;Type name1, label: 10&quot;.parse.first =&gt;   element(&quot;Type&quot;, &quot;name1&quot;)
 'Type name1, label: &quot;a string&quot;'.parse.first =&gt;   element(&quot;Type&quot;, &quot;name1&quot;)
 'Type name1, label: /a/reference'.parse.first =&gt; element(&quot;Type&quot;, &quot;name1&quot;)</pre>
-</li><li><p id="TEXT" class="example pending"><strong>TEXT [PENDING]</strong></p>
 </li><li><p id="ignores_comments" class="example notrun"><strong>ignores comments</strong></p>
 <pre class="prettyprint lang-spec linenums">
 '''
@@ -155,6 +168,9 @@ val input = '''
 input.parse.first =&gt; element(&quot;Type&quot;, &quot;parent&quot;,
   element(&quot;Child&quot;)
 )</pre>
+</li><li><p id="creates_no_elements_for_empty_string" class="example notrun"><strong>creates no elements for empty string</strong></p>
+<pre class="prettyprint lang-spec linenums">
+&quot;&quot;.parse.size =&gt; 0</pre>
 </li></ul>
 							</div>
 						    <div class="tab-pane" id="source">
@@ -191,6 +207,22 @@ describe RTextModelParser {
       &quot;OtherType&quot;.parse.first    =&gt; element(&quot;OtherType&quot;)
     }
     
+    fact &quot;parse multiple root elements&quot;{
+      '''
+      Root1
+      Root2
+      '''.parse.size =&gt; 2
+    }
+    
+    fact &quot;correctly sets offset of last element&quot;{
+      val input = '''
+      Root1
+      Root2
+      
+      '''
+      input.parse.size =&gt; 2
+    }
+        
     fact &quot;parse name&quot;{
       &quot;Type name1&quot;.parse.first     =&gt; element(&quot;Type&quot;, &quot;name1&quot;)
       &quot;OtherType name2&quot;.parse.first =&gt; element(&quot;OtherType&quot;, &quot;name2&quot;)
@@ -201,10 +233,6 @@ describe RTextModelParser {
       'Type name1, label: &quot;a string&quot;'.parse.first =&gt;   element(&quot;Type&quot;, &quot;name1&quot;)
       'Type name1, label: /a/reference'.parse.first =&gt; element(&quot;Type&quot;, &quot;name1&quot;)
     }
-    
-    fact &quot;TEXT&quot;{
-      
-    }    
     fact &quot;ignores comments&quot;{
       '''
       # a comment
@@ -318,6 +346,10 @@ describe RTextModelParser {
       input.parse.first =&gt; element(&quot;Type&quot;, &quot;parent&quot;,
         element(&quot;Child&quot;)
       )
+    }
+    
+    fact &quot;creates no elements for empty string&quot;{
+      &quot;&quot;.parse.size =&gt; 0
     }
   }
   

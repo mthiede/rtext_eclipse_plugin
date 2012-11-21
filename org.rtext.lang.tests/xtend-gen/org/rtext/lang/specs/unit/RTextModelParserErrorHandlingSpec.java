@@ -20,7 +20,7 @@ import org.rtext.lang.specs.util.IsElement;
 public class RTextModelParserErrorHandlingSpec extends RTextModelParserSpec {
   @Test
   @Named("ignores too many closing curly braces")
-  @Order(12)
+  @Order(14)
   public void _ignoresTooManyClosingCurlyBraces() throws Exception {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("Type parent{");
@@ -45,6 +45,19 @@ public class RTextModelParserErrorHandlingSpec extends RTextModelParserSpec {
      + "\n     input is " + new StringDescription().appendValue(input).toString()
      + "\n     element(\"Type\", \"parent\",\n\t\t\t\telement(\"Child\")\n\t\t\t) is " + new StringDescription().appendValue(_element_1).toString()
      + "\n     element(\"Child\") is " + new StringDescription().appendValue(_element).toString() + "\n", _doubleArrow);
+    
+  }
+  
+  @Test
+  @Named("creates no elements for empty string")
+  @Order(15)
+  public void _createsNoElementsForEmptyString() throws Exception {
+    List<Element> _parse = this.parse("");
+    int _size = _parse.size();
+    boolean _doubleArrow = this.operator_doubleArrow(Integer.valueOf(_size), Integer.valueOf(0));
+    Assert.assertTrue("\nExpected \"\".parse.size => 0 but"
+     + "\n     \"\".parse.size is " + new StringDescription().appendValue(Integer.valueOf(_size)).toString()
+     + "\n     \"\".parse is " + new StringDescription().appendValue(_parse).toString() + "\n", _doubleArrow);
     
   }
 }

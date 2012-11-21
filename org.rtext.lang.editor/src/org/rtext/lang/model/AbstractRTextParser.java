@@ -20,7 +20,6 @@ public abstract class AbstractRTextParser<T> {
 
 	public static final char EOL = (char)0;
 
-	protected ColorManager fColorManager;
 	private IDocument fDocument;
 	private int fOffset;
 	private int fTokenStart;
@@ -28,6 +27,10 @@ public abstract class AbstractRTextParser<T> {
 	private boolean fNewLine;
 
 	public int getTokenLength() {
+		int x = fOffset;
+		if(x > 790){
+			System.out.println(x);
+		}
 		return fOffset - fTokenStart;
 	}
 

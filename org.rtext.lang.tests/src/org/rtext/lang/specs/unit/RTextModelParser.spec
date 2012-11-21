@@ -28,6 +28,22 @@ describe RTextModelParser {
 			"OtherType".parse.first		=> element("OtherType")
 		}
 		
+		fact "parse multiple root elements"{
+			'''
+			Root1
+			Root2
+			'''.parse.size => 2
+		}
+		
+		fact "correctly sets offset of last element"{
+			val input = '''
+			Root1
+			Root2
+			
+			'''
+			input.parse.size => 2
+		}
+				
 		fact "parse name"{
 			"Type name1".parse.first 		=> element("Type", "name1")
 			"OtherType name2".parse.first => element("OtherType", "name2")
@@ -38,10 +54,6 @@ describe RTextModelParser {
 			'Type name1, label: "a string"'.parse.first => 	element("Type", "name1")
 			'Type name1, label: /a/reference'.parse.first => element("Type", "name1")
 		}
-		
-		fact "TEXT"{
-			
-		}		
 		fact "ignores comments"{
 			'''
 			# a comment
@@ -155,6 +167,10 @@ describe RTextModelParser {
 			input.parse.first => element("Type", "parent",
 				element("Child")
 			)
+		}
+		
+		fact "creates no elements for empty string"{
+			"".parse.size => 0
 		}
 	}
 	

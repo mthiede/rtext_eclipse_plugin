@@ -10,6 +10,7 @@ package org.rtext.lang.model;
 import static java.util.Collections.singletonList;
 import static org.rtext.lang.model.ElementBuilder.element;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
@@ -18,21 +19,27 @@ public class RTextModelParser extends AbstractRTextParser<Element> {
 	private static Element EOF = element().build();
 	private Stack<ElementBuilder> parents;
 	private ElementBuilder current;
-	private ElementBuilder root;
-	
+	private List<ElementBuilder> roots = new ArrayList<ElementBuilder>();
+
 	public List<Element> parse(){
 		init();
 		Element token = nextToken();
 		while(token != EOF){
 			token = nextToken();
 		}
-		Element result = root.build();
-		return singletonList(result);
+		if(current == null){
+			current = element();
+		}
+		List<Element> result = new ArrayList<Element>(roots.size());
+		for (ElementBuilder builder : roots) {
+			result.add(builder.build());
+		}
+		return result;
 	}
 
 	private void init() {
 		parents = new Stack<ElementBuilder>();
-		root = null;
+		roots.clear();
 		current = null;
 	}
 
@@ -70,9 +77,8 @@ public class RTextModelParser extends AbstractRTextParser<Element> {
 	private void add(ElementBuilder newElement) {
 		if(!parents.isEmpty()){
 			parents.peek().addChild(newElement);
-		}
-		if(root == null){
-			root = newElement;
+		}else{
+			roots.add(newElement);
 		}
 		current = newElement;
 	}

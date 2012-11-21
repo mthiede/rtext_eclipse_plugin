@@ -19,6 +19,9 @@ import org.rtext.lang.model.AbstractRTextParser;
 
 public class SyntaxScanner extends AbstractRTextParser<IToken> implements ITokenScanner {
 
+	private static final RGB BACKGROUND_COLOR = new RGB(255, 255, 255);
+	private ColorManager fColorManager;
+
 	public SyntaxScanner(ColorManager manager) {
 		fColorManager = manager;
 	}
@@ -68,7 +71,7 @@ public class SyntaxScanner extends AbstractRTextParser<IToken> implements IToken
 		if(rgb == IColorConstants.COMMAND){
 			style = SWT.BOLD;
 		}
-		TextAttribute textAttribute = new TextAttribute(color(rgb), color(new RGB(255, 255, 255)), style);
+		TextAttribute textAttribute = new TextAttribute(color(rgb), color(BACKGROUND_COLOR), style);
 		return new Token(textAttribute);
 	}
 

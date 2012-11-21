@@ -8,7 +8,6 @@ import org.jnario.runner.ExampleGroupRunner;
 import org.jnario.runner.Named;
 import org.jnario.runner.Order;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.rtext.lang.model.Element;
@@ -21,7 +20,7 @@ import org.rtext.lang.specs.util.IsElement;
 public class RTextModelParserStructureSpec extends RTextModelParserSpec {
   @Test
   @Named("parse command")
-  @Order(0)
+  @Order(1)
   public void _parseCommand() throws Exception {
     List<Element> _parse = this.parse("Type");
     Element _first = JnarioIterableExtensions.<Element>first(_parse);
@@ -44,8 +43,48 @@ public class RTextModelParserStructureSpec extends RTextModelParserSpec {
   }
   
   @Test
+  @Named("parse multiple root elements")
+  @Order(2)
+  public void _parseMultipleRootElements() throws Exception {
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.append("Root1");
+    _builder.newLine();
+    _builder.append("Root2");
+    _builder.newLine();
+    List<Element> _parse = this.parse(_builder);
+    int _size = _parse.size();
+    boolean _doubleArrow = this.operator_doubleArrow(Integer.valueOf(_size), Integer.valueOf(2));
+    Assert.assertTrue("\nExpected \'\'\'\n\t\t\tRoot1\n\t\t\tRoot2\n\t\t\t\'\'\'.parse.size => 2 but"
+     + "\n     \'\'\'\n\t\t\tRoot1\n\t\t\tRoot2\n\t\t\t\'\'\'.parse.size is " + new StringDescription().appendValue(Integer.valueOf(_size)).toString()
+     + "\n     \'\'\'\n\t\t\tRoot1\n\t\t\tRoot2\n\t\t\t\'\'\'.parse is " + new StringDescription().appendValue(_parse).toString()
+     + "\n     \'\'\'\n\t\t\tRoot1\n\t\t\tRoot2\n\t\t\t\'\'\' is " + new StringDescription().appendValue(_builder).toString() + "\n", _doubleArrow);
+    
+  }
+  
+  @Test
+  @Named("correctly sets offset of last element")
+  @Order(3)
+  public void _correctlySetsOffsetOfLastElement() throws Exception {
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.append("Root1");
+    _builder.newLine();
+    _builder.append("Root2");
+    _builder.newLine();
+    _builder.newLine();
+    final CharSequence input = _builder;
+    List<Element> _parse = this.parse(input);
+    int _size = _parse.size();
+    boolean _doubleArrow = this.operator_doubleArrow(Integer.valueOf(_size), Integer.valueOf(2));
+    Assert.assertTrue("\nExpected input.parse.size => 2 but"
+     + "\n     input.parse.size is " + new StringDescription().appendValue(Integer.valueOf(_size)).toString()
+     + "\n     input.parse is " + new StringDescription().appendValue(_parse).toString()
+     + "\n     input is " + new StringDescription().appendValue(input).toString() + "\n", _doubleArrow);
+    
+  }
+  
+  @Test
   @Named("parse name")
-  @Order(1)
+  @Order(4)
   public void _parseName() throws Exception {
     List<Element> _parse = this.parse("Type name1");
     Element _first = JnarioIterableExtensions.<Element>first(_parse);
@@ -69,7 +108,7 @@ public class RTextModelParserStructureSpec extends RTextModelParserSpec {
   
   @Test
   @Named("parse attributes")
-  @Order(2)
+  @Order(5)
   public void _parseAttributes() throws Exception {
     List<Element> _parse = this.parse("Type name1, label: 10");
     Element _first = JnarioIterableExtensions.<Element>first(_parse);
@@ -101,15 +140,8 @@ public class RTextModelParserStructureSpec extends RTextModelParserSpec {
   }
   
   @Test
-  @Ignore
-  @Named("TEXT [PENDING]")
-  @Order(3)
-  public void _tEXT() throws Exception {
-  }
-  
-  @Test
   @Named("ignores comments")
-  @Order(4)
+  @Order(6)
   public void _ignoresComments() throws Exception {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("# a comment");
@@ -127,7 +159,7 @@ public class RTextModelParserStructureSpec extends RTextModelParserSpec {
   
   @Test
   @Named("nests list")
-  @Order(5)
+  @Order(7)
   public void _nestsList() throws Exception {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("Type parent{");
@@ -164,7 +196,7 @@ public class RTextModelParserStructureSpec extends RTextModelParserSpec {
   
   @Test
   @Named("nests list without curly braces")
-  @Order(6)
+  @Order(8)
   public void _nestsListWithoutCurlyBraces() throws Exception {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("Type parent{");
