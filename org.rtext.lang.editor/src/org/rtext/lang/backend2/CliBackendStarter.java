@@ -1,6 +1,7 @@
 package org.rtext.lang.backend2;
 
 import static java.lang.System.arraycopy;
+import static org.rtext.lang.util.Strings.splitCommand;
 import static org.rtext.lang.util.Wait.waitUntil;
 
 import java.io.BufferedInputStream;
@@ -14,6 +15,7 @@ import java.util.concurrent.TimeoutException;
 import org.rtext.lang.backend.ConnectorConfig;
 import org.rtext.lang.util.Condition;
 import org.rtext.lang.util.Exceptions;
+import org.rtext.lang.util.Strings;
 
 public final class CliBackendStarter implements BackendStarter {
 	
@@ -90,7 +92,7 @@ public final class CliBackendStarter implements BackendStarter {
 	protected void startRTextProcess(ConnectorConfig connectorConfig)
 			throws IOException {
 		String command = connectorConfig.getCommand();
-		String[] commands = command.split("\\s");
+		String[] commands = splitCommand(command);
 		ProcessBuilder processBuilder = new ProcessBuilder(commands);
 		process = processBuilder.redirectErrorStream(true)
 			.directory(connectorConfig.getWorkingDir())
