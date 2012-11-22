@@ -26,13 +26,6 @@
     <module>org.rtext.lang.update-site</module>
     <module>org.rtext.lang.tests</module>
   </modules>
-     <repositories>
-   <repository>
-     <id>helios</id>
-     <layout>p2</layout>
-     <url>http://download.eclipse.org/releases/juno</url>
-   </repository>
-  </repositories>
 
   <build>
     <plugins>
@@ -47,11 +40,10 @@
         <artifactId>target-platform-configuration</artifactId>
         <version>${tycho-version}</version>
         <configuration>
-          <resolver>p2</resolver>
           <target>
             <artifact>
-              <groupId>org.rtext</groupId>
-              <artifactId>org.rtext.target</artifactId>
+              <groupId>org.rtext.lang</groupId>
+              <artifactId>org.rtext.lang.target</artifactId>
               <version>${project.version}</version>
               <classifier>juno</classifier>
             </artifact>
