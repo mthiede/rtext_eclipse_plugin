@@ -14,62 +14,50 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.rtext.lang.RTextPlugin;
 
-public class WorkspaceCallback<T extends Response> implements Callback<T> {
-
-	public class CommandCallbackJob extends Job{
-
-		private IProgressMonitor monitor = new NullProgressMonitor();
-		int lastProgress = 0;
-
-		public CommandCallbackJob() {
-			super(message);
-		}
-		
-		@Override
-		protected IStatus run(IProgressMonitor monitor) {
-			this.monitor = monitor;
-			monitor.beginTask(message, 100);
-			return Job.ASYNC_FINISH;
-		}
-
-		public void handleProgress(Progress progress) {
-		}
-
-		public void handleError(String error) {
-			monitor.done();
-			done(new Status(IStatus.ERROR, RTextPlugin.PLUGIN_ID, error));
-		}
-
-		public void responseReceived() {
-			monitor.done();
-			done(Status.OK_STATUS);
-		}
-	}
-
-	private final String message;
-	private CommandCallbackJob callbackJob;
+public class WorkspaceCallback<T extends Response> extends Job implements Callback<T> {
 	
+	public static final String RTEXT_JOB_FAMILY = "RText Jobs";
+	private IProgressMonitor monitor = new NullProgressMonitor();
+	private String message;
+	int lastProgress = 0;
+
 	public WorkspaceCallback(String message) {
+		super(message);
 		this.message = message;
 	}
 	
+	@Override
+	protected IStatus run(IProgressMonitor monitor) {
+		this.monitor = monitor;
+		monitor.beginTask(message, 100);
+		return Job.ASYNC_FINISH;
+	}
+	
 	public void handleProgress(Progress progress) {
-		callbackJob.handleProgress(progress);
+		int percentage = progress.getPercentage();
+		monitor.worked(percentage - lastProgress);
+		lastProgress = percentage;
 	}
 
 	public void handleResponse(T response) {
-		callbackJob.responseReceived();
+		monitor.done();
+		done(Status.OK_STATUS);
 	}
 
 	public void handleError(String error) {
-		callbackJob.handleError(error);
+		monitor.done();
+		done(new Status(IStatus.ERROR, RTextPlugin.PLUGIN_ID, error));
 	}
-
+	
 	public void commandSent() {
-		if(callbackJob != null){
-			callbackJob.cancel();
+		schedule();
+	}
+	
+	@Override
+	public boolean belongsTo(Object family) {
+		if(family == RTEXT_JOB_FAMILY){
+			return true;
 		}
-		callbackJob = new CommandCallbackJob();
-		callbackJob.schedule();
+		return super.belongsTo(family);
 	}
 }

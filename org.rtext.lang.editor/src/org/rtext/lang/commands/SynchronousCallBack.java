@@ -13,7 +13,7 @@ import java.util.concurrent.TimeoutException;
 
 import org.rtext.lang.util.Condition;
 
-public  class SynchronousCallBack<T extends Response> implements Callback<T> {
+public class SynchronousCallBack<T extends Response> implements Callback<T> {
 
 	private T response;
 

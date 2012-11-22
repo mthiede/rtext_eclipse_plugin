@@ -15,10 +15,39 @@ import org.rtext.lang.commands.Command;
 import org.rtext.lang.commands.LoadModelCallback;
 import org.rtext.lang.commands.LoadModelCommand;
 import org.rtext.lang.commands.LoadedModel;
+import org.rtext.lang.commands.Progress;
 import org.rtext.lang.commands.Response;
 import org.rtext.lang.commands.SynchronousCallBack;
+import org.rtext.lang.util.Exceptions;
 
 public class Connector {
+	
+	private class OnErrorClosingCallback<T extends Response> implements Callback<T>{
+
+		private Callback<T> delegate;
+
+		public OnErrorClosingCallback(Callback<T> delegate) {
+			this.delegate = delegate;
+		}
+
+		public void commandSent() {
+			delegate.commandSent();
+		}
+
+		public void handleProgress(Progress progress) {
+			delegate.handleProgress(progress);
+		}
+
+		public void handleResponse(T response) {
+			delegate.handleResponse(response);
+		}
+
+		public void handleError(String error) {
+			dispose();
+			delegate.handleError(error);
+		}
+		
+	}
 	
 	private static final String ADDRESS = "127.0.0.1";
 	
@@ -29,7 +58,7 @@ public class Connector {
 	private Callback<LoadedModel> loadModelCallBack;
 	
 	public static Connector create(ConnectorConfig connectorConfig){
-		return new Connector(connectorConfig, CliBackendStarter.create(), TcpClient.create(), LoadModelCallback.create());
+		return new Connector(connectorConfig, CliBackendStarter.create(connectorConfig.getConfigFile().toString()), TcpClient.create(), LoadModelCallback.create());
 	}
 	
 	public Connector(ConnectorConfig connectorConfig, BackendStarter processRunner, Connection connection, Callback<LoadedModel> loadModelCallBack) {
@@ -51,34 +80,49 @@ public class Connector {
 			return;
 		}
 		try{
-			connection.sendRequest(command, callback);
-		}catch(RuntimeException e){
-			processRunner.stop();
-			throw e;
+			sendRequest(command, callback);
+		}catch(Throwable e){
+			dispose();
+			Exceptions.rethrow(e);
 		}
 	}
 
+	public <T extends Response> void sendRequest(Command<T> command,
+			Callback<T> callback) {
+		connection.sendRequest(command, wrap(callback));
+	}
+	
+	public <T extends Response> Callback<T> wrap(Callback<T> delegate){
+		return new OnErrorClosingCallback<T>(delegate);
+	}
+
 	protected boolean ensureBackendIsConnected(Callback<?> callback) throws TimeoutException {
+		System.out.println("Connector: Ensure backend is running");
 		if(processRunner.isRunning()){
+			System.out.println("Connector: Process is running");
 			return true;
 		}
+		System.out.println("Connector: Starting backend");
 		return startBackend(callback);
 	}
 
 	public boolean startBackend(Callback<?> callback) throws TimeoutException {
 		try{
+			System.out.println("Connector: Starting process");
 			processRunner.startProcess(connectorConfig);
 			connection.connect(ADDRESS, processRunner.getPort());
-			connection.sendRequest(new LoadModelCommand(), loadModelCallBack);
+			System.out.println("Connector: send model load request");
+//			sendRequest(new LoadModelCommand(), loadModelCallBack);
 			return true;
-		}catch(Exception e){
-			processRunner.stop();
+		}catch(Throwable e){
+			dispose();
 			callback.handleError("Could not connect to backend");
 			return false;
 		}
 	}
 
 	public void dispose(){
+		System.out.print("Connector: dispose");
 		processRunner.stop();
 		connection.close();
 	}

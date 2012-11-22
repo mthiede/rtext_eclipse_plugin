@@ -7,6 +7,8 @@
  *******************************************************************************/
 package org.rtext.lang.backend2;
 
+import static org.rtext.lang.util.Closables.closeQuietly;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -17,16 +19,18 @@ import java.net.UnknownHostException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import org.rtext.lang.RTextPlugin;
 import org.rtext.lang.commands.Callback;
 import org.rtext.lang.commands.Command;
 import org.rtext.lang.commands.CommandSerializer;
 import org.rtext.lang.commands.Response;
 import org.rtext.lang.commands.ResponseParser;
+import org.rtext.lang.util.Exceptions;
 import org.rtext.lang.util.Expectations;
 
 public class TcpClient implements Connection {
 
-	private static final int SOCKET_TIMEOUT = 200;
+	private static final int SOCKET_TIMEOUT = 10000;
 
 	private class Worker extends Thread {
 		private boolean running = true;
@@ -39,7 +43,8 @@ public class TcpClient implements Connection {
 					try {
 						executeCommand(task);
 						receiveResponse(task);
-					} catch (Exception e) {
+					} catch (Throwable e) {
+						RTextPlugin.logError("Exception while communicating with backend", e);
 						task.callback.handleError(e.getMessage());
 						TcpClient.this.close();
 						return;
@@ -99,7 +104,9 @@ public class TcpClient implements Connection {
 	public void connect(String address, int port) {
 		try {
 			Expectations.greaterThanZero(port);
+			System.out.println("TCP Client: connecting to backend on port " + port);
 			createSocket(address, port);
+			System.out.println("TCP Client: socket created");
 			startCommandExecution();
 		} catch (UnknownHostException e) {
 			throw new BackendException("Unknown host " + address + ":" + port,
@@ -118,25 +125,19 @@ public class TcpClient implements Connection {
 	protected void createSocket(String address, int port)
 			throws UnknownHostException, IOException {
 		socket = new Socket();
-		socket.setSoTimeout(SOCKET_TIMEOUT);
+		socket.setSoTimeout(5000);
+		socket.setReceiveBufferSize(64000);
 		socket.connect(new InetSocketAddress(address, port), SOCKET_TIMEOUT);
 		out = new PrintWriter(socket.getOutputStream(), true);
 		in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 	}
 
 	public void close() {
-		if (socket == null) {
-			return;
-		}
-		try {
-			socket.close();
-			out.close();
-			in.close();
-			worker.running = false;
-			socket = null;
-		} catch (IOException e) {
-			// ignore
-		}
+		worker.running = false;
+		closeQuietly(socket);
+		closeQuietly(out);
+		closeQuietly(in);
+		socket = null;
 	}
 
 	public <T extends Response> void sendRequest(Command<T> request,
@@ -152,7 +153,13 @@ public class TcpClient implements Connection {
 		int c = in.read();
 		for (int i = 0; i < messageLength - 2 && c != -1; i++) {
 			message.append((char) c);
-			c = in.read();
+			try{
+				c = in.read();
+			}catch(Throwable e){
+				System.out.println("Expected: " + messageLength + " but was " + i);
+				System.out.println(message);
+				Exceptions.rethrow(e);
+			}
 		}
 		message.append((char) c);
 		return message.toString();

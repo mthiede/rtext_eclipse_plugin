@@ -23,7 +23,6 @@ import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.stubbing.OngoingStubbing;
-import org.mockito.verification.VerificationMode;
 import org.rtext.lang.commands.LoadModelCallback;
 import org.rtext.lang.commands.LoadModelCallback.ProblemUpdateJob;
 import org.rtext.lang.commands.LoadModelCallback.ProblemUpdateJobFactory;
@@ -175,18 +174,5 @@ public class LoadModelCallbackSpec {
     this.subject.handleResponse(this.loadedModel);
     ProblemUpdateJob _verify = Mockito.<ProblemUpdateJob>verify(this.updateJob);
     _verify.schedule();
-  }
-  
-  @Test
-  @Named("does not create job if there are no problems")
-  @Order(3)
-  public void _doesNotCreateJobIfThereAreNoProblems() throws Exception {
-    this.subject.commandSent();
-    LoadedModel _loadedModel = new LoadedModel();
-    this.subject.handleResponse(_loadedModel);
-    VerificationMode _never = Mockito.never();
-    ProblemUpdateJobFactory _verify = Mockito.<ProblemUpdateJobFactory>verify(this.jobFactory, _never);
-    Map _anyMap = Matchers.anyMap();
-    _verify.create(_anyMap);
   }
 }

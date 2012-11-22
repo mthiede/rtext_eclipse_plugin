@@ -8,6 +8,7 @@
 package org.rtext.lang.backend2;
 
 import static java.lang.System.arraycopy;
+import static org.rtext.lang.util.Closables.closeQuietly;
 import static org.rtext.lang.util.Strings.splitCommand;
 import static org.rtext.lang.util.Wait.waitUntil;
 
@@ -20,6 +21,8 @@ import java.io.InputStreamReader;
 import java.util.concurrent.TimeoutException;
 
 import org.rtext.lang.backend.ConnectorConfig;
+import org.rtext.lang.editor.RTextConsole;
+import org.rtext.lang.util.Closables;
 import org.rtext.lang.util.Condition;
 import org.rtext.lang.util.Exceptions;
 
@@ -36,6 +39,8 @@ public final class CliBackendStarter implements BackendStarter {
 	private final class OutputMonitor extends Thread {
 		private InputStream inputStream;
 		private OutputHandler[] listeners;
+		private DataInputStream in;
+		private BufferedReader out;
 
 		public OutputMonitor(InputStream inputStream, OutputHandler... listeners) {
 			this.inputStream = inputStream;
@@ -44,18 +49,27 @@ public final class CliBackendStarter implements BackendStarter {
 
 		@Override
 		public void run() {
-			DataInputStream in = new DataInputStream(inputStream);
-			BufferedReader br = new BufferedReader(new InputStreamReader(in));
+			in = new DataInputStream(inputStream);
+			out = new BufferedReader(new InputStreamReader(in));
 			try {
 				String strLine;
-				while ((strLine = br.readLine()) != null) {
-					for (OutputHandler listener : listeners) {
-						listener.handle(strLine);
-					}
+				while ((strLine = out.readLine()) != null) {
+					notifyListeners(strLine);
 				}
 			} catch (IOException e) {
 				CliBackendStarter.this.stop();
 			}
+		}
+
+		public void notifyListeners(String strLine) {
+			for (OutputHandler listener : listeners) {
+				listener.handle(strLine);
+			}
+		}
+		
+		public void close(){
+			closeQuietly(in);
+			closeQuietly(out);
 		}
 	}
 	
@@ -98,12 +112,20 @@ public final class CliBackendStarter implements BackendStarter {
 	
 
 	protected void startRTextProcess(ConnectorConfig connectorConfig) throws IOException {
-		String command = connectorConfig.getCommand();
-		String[] commands = splitCommand(command);
-		ProcessBuilder processBuilder = new ProcessBuilder(commands);
-		process = processBuilder.redirectErrorStream(true)
+		if(isRunning()){
+			stop();
+		}
+		String[] commands = getCommands(connectorConfig);
+		process = new ProcessBuilder(commands)
+			.redirectErrorStream(true)
 			.directory(connectorConfig.getWorkingDir())
 			.start();
+	}
+
+	public String[] getCommands(ConnectorConfig connectorConfig) {
+		String command = connectorConfig.getCommand();
+		String[] commands = splitCommand(command);
+		return commands;
 	}
 
 	private void registerShutDownHook() {
@@ -127,7 +149,16 @@ public final class CliBackendStarter implements BackendStarter {
 		Runtime.getRuntime().removeShutdownHook(shutdownHook);
 		if (process != null) {
 			process.destroy();
+			closeQuietly(process.getErrorStream());
+			closeQuietly(process.getInputStream());
+			process = null;
 		}
+		try {
+			outputMonitor.join();
+		} catch (InterruptedException e) {
+		}
+		portParser.clear();
+		outputMonitor.close();
 	}
 
 	public int getPort() throws TimeoutException {
@@ -139,7 +170,7 @@ public final class CliBackendStarter implements BackendStarter {
 		return portParser.getPort();
 	}
 
-	public static BackendStarter create() {
-		return new CliBackendStarter(new PortParser(), new SystemOutDebug());
+	public static BackendStarter create(String modelFile) {
+		return new CliBackendStarter(new PortParser(), new RTextConsole(modelFile));
 	}
 }

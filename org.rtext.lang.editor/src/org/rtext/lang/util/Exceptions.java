@@ -7,8 +7,10 @@
  *******************************************************************************/
 package org.rtext.lang.util;
 
+import org.rtext.lang.backend2.BackendException;
+
 public class Exceptions {
 	public static void rethrow(Throwable e){
-		throw new RuntimeException(e);
+		throw new BackendException(e);
 	}
 }

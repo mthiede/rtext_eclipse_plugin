@@ -18,6 +18,7 @@ import static org.mockito.Mockito.*
 import static org.rtext.lang.specs.util.Commands.*
 import org.rtext.lang.commands.Response
 import org.rtext.lang.commands.LoadedModel
+import org.rtext.lang.commands.Command
 
 @CreateWith(typeof(MockInjector))
 describe Connector {
@@ -43,6 +44,43 @@ describe Connector {
 		when(processRunner.getPort).thenReturn(PORT)
 	}
 	
+	context "Error Handling"{
+		fact "Kills backend process if connection fails"{
+			doThrow(new RuntimeException()).when(connection).connect(anyString, anyInt) 
+			subject.execute(anyCommand, callback)
+			verify(processRunner).stop
+		}
+		
+		fact "Closes tcp client if connection fails"{
+			doThrow(new RuntimeException()).when(connection).connect(anyString, anyInt) 
+			subject.execute(anyCommand, callback)
+			verify(connection).close
+		}
+		
+		fact "Kills backend process if sending command fails"{
+			doThrow(new RuntimeException()).when(connection).sendRequest(<Command>any, <Callback>any) 
+			subject.execute(anyCommand, callback)
+			verify(processRunner).stop
+		}
+		
+		fact "Closes tcp client if sending command fails"{
+			doThrow(new RuntimeException()).when(connection).sendRequest(<Command>any, <Callback>any) 
+			subject.execute(anyCommand, callback) 
+			verify(connection).close
+		}
+		
+		fact "Kills backend process & tcp client if an error occurs"{
+			doAnswer[
+				val callback = getArguments().get(1) as Callback
+				callback.handleError("something happend")
+				return null
+      			].when(connection).sendRequest(<Command>any, <Callback>any)
+			subject.execute(anyCommand, callback)
+			verify(processRunner, times(2)).stop
+			verify(connection, times(2)).close
+		}
+	}
+	
 	context "Execute command"{
 		
 		fact "Starts backend process"{
@@ -63,23 +101,11 @@ describe Connector {
 			verify(connection).connect("127.0.0.1", PORT)
 		}
 		
-		fact "Kills backend process if connection fails"{
-			doThrow(new RuntimeException()).when(connection).connect(anyString, anyInt) 
-			subject.execute(anyCommand, callback)
-			verify(processRunner).stop
-		}
-		
-		fact "Kills backend process if sending command fails"{
-			doThrow(new RuntimeException()).when(connection).sendRequest(anyCommand, callback) 
-			subject.execute(anyCommand, callback) throws RuntimeException
-			verify(processRunner).stop
-		}
-		
 		fact "Notifies callback"{
 			doThrow(new RuntimeException()).when(connection).connect(anyString, anyInt) 
 			subject.execute(anyCommand, callback)
 			verify(callback).handleError("Could not connect to backend")
-			verify(connection, never).sendRequest(anyCommand, callback)
+			verify(connection, never).sendRequest(eq(anyCommand), any)
 		}
 		
 		fact "Sends command's request via connection"{
@@ -92,9 +118,9 @@ describe Connector {
 			when(processRunner.running).thenReturn(true)
 			subject.execute(otherCommand, callback)
 			inOrder(connection) => [
-				it.verify(connection).sendRequest(isA(typeof(LoadModelCommand)), eq(loadedModelCallback))
-				it.verify(connection).sendRequest(anyCommand, callback)
-				it.verify(connection).sendRequest(otherCommand, callback)
+				it.verify(connection).sendRequest(isA(typeof(LoadModelCommand)), any)
+				it.verify(connection).sendRequest(eq(anyCommand), any)
+				it.verify(connection).sendRequest(eq(otherCommand), any)
 			]
 		}
 		
@@ -104,8 +130,17 @@ describe Connector {
 		}
 	}
 	
-	fact "Disposes connection"{
-		subject.dispose
-		verify(connection).close
+	context "Dispose"{
+		
+		fact "Disposes connection"{
+			subject.dispose
+			verify(connection).close
+		}
+		
+		fact "Stops process runner"{
+			subject.dispose
+			verify(processRunner).stop
+		}
 	}
+	
 }

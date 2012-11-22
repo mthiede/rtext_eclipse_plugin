@@ -35,6 +35,38 @@
 					<div class="span12">
 						  <div class="tab-content">
 							  	<div class="tab-pane active" id="spec">
+<h3 class="exampleGroup notrun"  id="Error_Handling">Error Handling</h3>
+<ul><li><p id="Kills_backend_process_if_connection_fails" class="example notrun"><strong>Kills backend process if connection fails</strong></p>
+<pre class="prettyprint lang-spec linenums">
+doThrow(new RuntimeException()).when(connection).connect(anyString, anyInt) 
+subject.execute(anyCommand, callback)
+verify(processRunner).stop</pre>
+</li><li><p id="Closes_tcp_client_if_connection_fails" class="example notrun"><strong>Closes tcp client if connection fails</strong></p>
+<pre class="prettyprint lang-spec linenums">
+doThrow(new RuntimeException()).when(connection).connect(anyString, anyInt) 
+subject.execute(anyCommand, callback)
+verify(connection).close</pre>
+</li><li><p id="Kills_backend_process_if_sending_command_fails" class="example notrun"><strong>Kills backend process if sending command fails</strong></p>
+<pre class="prettyprint lang-spec linenums">
+doThrow(new RuntimeException()).when(connection).sendRequest(&lt;Command&gt;any, &lt;Callback&gt;any) 
+subject.execute(anyCommand, callback)
+verify(processRunner).stop</pre>
+</li><li><p id="Closes_tcp_client_if_sending_command_fails" class="example notrun"><strong>Closes tcp client if sending command fails</strong></p>
+<pre class="prettyprint lang-spec linenums">
+doThrow(new RuntimeException()).when(connection).sendRequest(&lt;Command&gt;any, &lt;Callback&gt;any) 
+subject.execute(anyCommand, callback) 
+verify(connection).close</pre>
+</li><li><p id="Kills_backend_process_tcp_client_if_an_error_occurs" class="example notrun"><strong>Kills backend process & tcp client if an error occurs</strong></p>
+<pre class="prettyprint lang-spec linenums">
+doAnswer[
+  val callback = getArguments().get(1) as Callback
+  callback.handleError(&quot;something happend&quot;)
+  return null
+            ].when(connection).sendRequest(&lt;Command&gt;any, &lt;Callback&gt;any)
+subject.execute(anyCommand, callback)
+verify(processRunner, times(2)).stop
+verify(connection, times(2)).close</pre>
+</li></ul>
 <h3 class="exampleGroup notrun"  id="Execute_command">Execute command</h3>
 <ul><li><p id="Starts_backend_process" class="example notrun"><strong>Starts backend process</strong></p>
 <pre class="prettyprint lang-spec linenums">
@@ -51,22 +83,12 @@ verify(processRunner, times(1)).startProcess(config)</pre>
 <pre class="prettyprint lang-spec linenums">
 subject.execute(anyCommand, callback)
 verify(connection).connect(&quot;127.0.0.1&quot;, PORT)</pre>
-</li><li><p id="Kills_backend_process_if_connection_fails" class="example notrun"><strong>Kills backend process if connection fails</strong></p>
-<pre class="prettyprint lang-spec linenums">
-doThrow(new RuntimeException()).when(connection).connect(anyString, anyInt) 
-subject.execute(anyCommand, callback)
-verify(processRunner).stop</pre>
-</li><li><p id="Kills_backend_process_if_sending_command_fails" class="example notrun"><strong>Kills backend process if sending command fails</strong></p>
-<pre class="prettyprint lang-spec linenums">
-doThrow(new RuntimeException()).when(connection).sendRequest(anyCommand, callback) 
-subject.execute(anyCommand, callback) throws RuntimeException
-verify(processRunner).stop</pre>
 </li><li><p id="Notifies_callback" class="example notrun"><strong>Notifies callback</strong></p>
 <pre class="prettyprint lang-spec linenums">
 doThrow(new RuntimeException()).when(connection).connect(anyString, anyInt) 
 subject.execute(anyCommand, callback)
 verify(callback).handleError(&quot;Could not connect to backend&quot;)
-verify(connection, never).sendRequest(anyCommand, callback)</pre>
+verify(connection, never).sendRequest(eq(anyCommand), any)</pre>
 </li><li><p id="Sends_command_s_request_via_connection" class="example notrun"><strong>Sends command's request via connection</strong></p>
 <pre class="prettyprint lang-spec linenums">
 subject.execute(anyCommand, callback)
@@ -77,19 +99,24 @@ subject.execute(anyCommand, callback)
 when(processRunner.running).thenReturn(true)
 subject.execute(otherCommand, callback)
 inOrder(connection) =&gt; [
-  it.verify(connection).sendRequest(isA(typeof(LoadModelCommand)), eq(loadedModelCallback))
-  it.verify(connection).sendRequest(anyCommand, callback)
-  it.verify(connection).sendRequest(otherCommand, callback)
+  it.verify(connection).sendRequest(isA(typeof(LoadModelCommand)), any)
+  it.verify(connection).sendRequest(eq(anyCommand), any)
+  it.verify(connection).sendRequest(eq(otherCommand), any)
 ]</pre>
 </li><li><p id="Returns_commands_response" class="example notrun"><strong>Returns commands response</strong></p>
 <pre class="prettyprint lang-spec linenums">
 subject.execute(anyCommand, callback)
 verify(connection).sendRequest(eq(anyCommand), any)</pre>
 </li></ul>
+<h3 class="exampleGroup notrun"  id="Dispose">Dispose</h3>
 <ul><li><p id="Disposes_connection" class="example notrun"><strong>Disposes connection</strong></p>
 <pre class="prettyprint lang-spec linenums">
 subject.dispose
 verify(connection).close</pre>
+</li><li><p id="Stops_process_runner" class="example notrun"><strong>Stops process runner</strong></p>
+<pre class="prettyprint lang-spec linenums">
+subject.dispose
+verify(processRunner).stop</pre>
 </li></ul>
 							</div>
 						    <div class="tab-pane" id="source">
@@ -116,6 +143,7 @@ import static org.mockito.Mockito.*
 import static org.rtext.lang.specs.util.Commands.*
 import org.rtext.lang.commands.Response
 import org.rtext.lang.commands.LoadedModel
+import org.rtext.lang.commands.Command
 
 @CreateWith(typeof(MockInjector))
 describe Connector {
@@ -141,6 +169,43 @@ describe Connector {
     when(processRunner.getPort).thenReturn(PORT)
   }
   
+  context &quot;Error Handling&quot;{
+    fact &quot;Kills backend process if connection fails&quot;{
+      doThrow(new RuntimeException()).when(connection).connect(anyString, anyInt) 
+      subject.execute(anyCommand, callback)
+      verify(processRunner).stop
+    }
+    
+    fact &quot;Closes tcp client if connection fails&quot;{
+      doThrow(new RuntimeException()).when(connection).connect(anyString, anyInt) 
+      subject.execute(anyCommand, callback)
+      verify(connection).close
+    }
+    
+    fact &quot;Kills backend process if sending command fails&quot;{
+      doThrow(new RuntimeException()).when(connection).sendRequest(&lt;Command&gt;any, &lt;Callback&gt;any) 
+      subject.execute(anyCommand, callback)
+      verify(processRunner).stop
+    }
+    
+    fact &quot;Closes tcp client if sending command fails&quot;{
+      doThrow(new RuntimeException()).when(connection).sendRequest(&lt;Command&gt;any, &lt;Callback&gt;any) 
+      subject.execute(anyCommand, callback) 
+      verify(connection).close
+    }
+    
+    fact &quot;Kills backend process &amp; tcp client if an error occurs&quot;{
+      doAnswer[
+        val callback = getArguments().get(1) as Callback
+        callback.handleError(&quot;something happend&quot;)
+        return null
+            ].when(connection).sendRequest(&lt;Command&gt;any, &lt;Callback&gt;any)
+      subject.execute(anyCommand, callback)
+      verify(processRunner, times(2)).stop
+      verify(connection, times(2)).close
+    }
+  }
+  
   context &quot;Execute command&quot;{
     
     fact &quot;Starts backend process&quot;{
@@ -161,23 +226,11 @@ describe Connector {
       verify(connection).connect(&quot;127.0.0.1&quot;, PORT)
     }
     
-    fact &quot;Kills backend process if connection fails&quot;{
-      doThrow(new RuntimeException()).when(connection).connect(anyString, anyInt) 
-      subject.execute(anyCommand, callback)
-      verify(processRunner).stop
-    }
-    
-    fact &quot;Kills backend process if sending command fails&quot;{
-      doThrow(new RuntimeException()).when(connection).sendRequest(anyCommand, callback) 
-      subject.execute(anyCommand, callback) throws RuntimeException
-      verify(processRunner).stop
-    }
-    
     fact &quot;Notifies callback&quot;{
       doThrow(new RuntimeException()).when(connection).connect(anyString, anyInt) 
       subject.execute(anyCommand, callback)
       verify(callback).handleError(&quot;Could not connect to backend&quot;)
-      verify(connection, never).sendRequest(anyCommand, callback)
+      verify(connection, never).sendRequest(eq(anyCommand), any)
     }
     
     fact &quot;Sends command's request via connection&quot;{
@@ -190,9 +243,9 @@ describe Connector {
       when(processRunner.running).thenReturn(true)
       subject.execute(otherCommand, callback)
       inOrder(connection) =&gt; [
-        it.verify(connection).sendRequest(isA(typeof(LoadModelCommand)), eq(loadedModelCallback))
-        it.verify(connection).sendRequest(anyCommand, callback)
-        it.verify(connection).sendRequest(otherCommand, callback)
+        it.verify(connection).sendRequest(isA(typeof(LoadModelCommand)), any)
+        it.verify(connection).sendRequest(eq(anyCommand), any)
+        it.verify(connection).sendRequest(eq(otherCommand), any)
       ]
     }
     
@@ -202,10 +255,19 @@ describe Connector {
     }
   }
   
-  fact &quot;Disposes connection&quot;{
-    subject.dispose
-    verify(connection).close
+  context &quot;Dispose&quot;{
+    
+    fact &quot;Disposes connection&quot;{
+      subject.dispose
+      verify(connection).close
+    }
+    
+    fact &quot;Stops process runner&quot;{
+      subject.dispose
+      verify(processRunner).stop
+    }
   }
+  
 }
 </pre>
 						    </p></div>

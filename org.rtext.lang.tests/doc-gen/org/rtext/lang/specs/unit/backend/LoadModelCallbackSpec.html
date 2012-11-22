@@ -53,12 +53,6 @@ subject.commandSent
 subject.handleResponse(loadedModel)
 
 verify(updateJob).schedule</pre>
-</li><li><p id="does_not_create_job_if_there_are_no_problems" class="example notrun"><strong>does not create job if there are no problems</strong></p>
-<pre class="prettyprint lang-spec linenums">
-subject.commandSent
-subject.handleResponse(new LoadedModel)
-
-verify(jobFactory, never).create(anyMap)</pre>
 </li></ul>
 							</div>
 						    <div class="tab-pane" id="source">
@@ -144,13 +138,6 @@ describe LoadModelCallback {
     verify(updateJob).schedule
   }
 
-  fact &quot;does not create job if there are no problems&quot;{
-    subject.commandSent
-    subject.handleResponse(new LoadedModel)
-    
-    verify(jobFactory, never).create(anyMap)
-  }
-  
 }
 </pre>
 						    </p></div>

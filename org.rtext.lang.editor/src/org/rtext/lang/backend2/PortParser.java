@@ -37,4 +37,8 @@ public class PortParser implements OutputHandler {
 		return port;
 	}
 
+	public void clear() {
+		port = UNSET;
+	}
+
 }

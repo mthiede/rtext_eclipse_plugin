@@ -77,11 +77,4 @@ describe LoadModelCallback {
 		verify(updateJob).schedule
 	}
 
-	fact "does not create job if there are no problems"{
-		subject.commandSent
-		subject.handleResponse(new LoadedModel)
-		
-		verify(jobFactory, never).create(anyMap)
-	}
-	
 }

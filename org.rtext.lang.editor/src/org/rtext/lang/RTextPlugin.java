@@ -72,7 +72,7 @@ public class RTextPlugin extends AbstractUIPlugin {
 		return connectorProvider;
 	}
 	
-	public static void logError(String message, Exception e){
+	public static void logError(String message, Throwable e){
 		getDefault().getLog().log(new Status(IStatus.ERROR, PLUGIN_ID, message, e));
 	}
 }

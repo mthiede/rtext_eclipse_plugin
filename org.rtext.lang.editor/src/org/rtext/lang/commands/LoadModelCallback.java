@@ -7,6 +7,10 @@
  *******************************************************************************/
 package org.rtext.lang.commands;
 
+import static org.eclipse.ui.texteditor.MarkerUtilities.setLineNumber;
+import static org.eclipse.ui.texteditor.MarkerUtilities.setMessage;
+import static org.rtext.lang.RTextPlugin.logError;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +20,8 @@ import java.util.Set;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -32,7 +38,6 @@ import org.rtext.lang.util.FileLocator;
 public class LoadModelCallback extends WorkspaceCallback<LoadedModel> {
 
 	public static final String RTEXT_MARKERS = "org.rtext.lang.editor.makers";
-	public static final String RTEXT_JOB_FAMILY = "RText Jobs";
 	public static final String PROBLEM_MARKER_JOB = "Updating Problem markers";
 
 	public static class ProblemUpdateJobFactory{
@@ -42,7 +47,6 @@ public class LoadModelCallback extends WorkspaceCallback<LoadedModel> {
 	}
 	
 	public static class ProblemUpdateJob extends Job{
-
 		private Map<IResource, List<Problem>> problems;
 
 		public ProblemUpdateJob(Map<IResource, List<Problem>> problems) {
@@ -57,43 +61,47 @@ public class LoadModelCallback extends WorkspaceCallback<LoadedModel> {
 		
 		@Override
 		protected IStatus run(IProgressMonitor monitor) {
+			try {
+				IWorkspaceRoot resource = ResourcesPlugin.getWorkspace().getRoot();
+				resource.deleteMarkers(RTEXT_MARKERS, true, IResource.DEPTH_INFINITE);
+			} catch (CoreException e) {
+				logError("Exception when deleting marker on :" + "workspace", e);
+			}
+			int problemCount = 0;
 			for (Entry<IResource, List<Problem>> entry : problems.entrySet()) {
-				IResource resource = entry.getKey();
-				try {
-					resource.deleteMarkers(RTEXT_MARKERS, true, IResource.DEPTH_INFINITE);
-				} catch (CoreException e) {
+				if(problemCount >= 100){
+					return Status.OK_STATUS;
 				}
+				IResource resource = entry.getKey();
 				for (Problem problem : entry.getValue()) {
-					try {
-						createMarker(resource, problem);
-					} catch (CoreException e) {
-						RTextPlugin.logError("Exception when setting marker on :" + resource.getFullPath(), e);
-					}
+					createMarker(resource, problem);
 				}
 			}
 			return Status.OK_STATUS;
 		}
 
-		public void createMarker(IResource resource, Problem problem)
-				throws CoreException {
+		public void createMarker(IResource resource, Problem problem){
 			Map<Object, Object> attributes = new HashMap<Object, Object>();
-			MarkerUtilities.setLineNumber(attributes, problem.getLine());
-			MarkerUtilities.setMessage(attributes, problem.getMessage());
+			setLineNumber(attributes, problem.getLine());
+			setMessage(attributes, problem.getMessage());
+//			MarkerUtilities.setCharStart(attributes, 0);
+//			MarkerUtilities.setCharEnd(attributes, 0);
 			attributes.put(IMarker.SEVERITY, SEVERITY_MAP.get(problem.getSeverity()));
-//			attributes.put(IMarker.CHAR_START, 0);
-//			attributes.put(IMarker.CHAR_END, 0);
 			attributes.put(IMarker.PRIORITY, IMarker.PRIORITY_HIGH);
-			MarkerUtilities.createMarker(resource, attributes , RTEXT_MARKERS);
+			try{
+				MarkerUtilities.createMarker(resource, attributes , RTEXT_MARKERS);
+			} catch (CoreException e) {
+				logError("Exception when setting marker on :" + resource.getFullPath(), e);
+			}
 		}
 		
 		@Override
 		public boolean belongsTo(Object family) {
-			if(family == RTEXT_JOB_FAMILY){
+			if(family == WorkspaceCallback.RTEXT_JOB_FAMILY){
 				return true;
 			}
 			return super.belongsTo(family);
 		}
-		
 	}
 	
 	@SuppressWarnings("serial")
@@ -118,12 +126,9 @@ public class LoadModelCallback extends WorkspaceCallback<LoadedModel> {
 	}
 	
 	public void handleResponse(LoadedModel response) {
-		super.handleResponse(response);
 		Map<IResource, List<Problem>> problems = gatherProblems(response);
-		if(problems.isEmpty()){
-			return;
-		}
 		runUpdateJob(problems);
+		super.handleResponse(response);
 	}
 
 	public void runUpdateJob(Map<IResource, List<Problem>> problems) {
