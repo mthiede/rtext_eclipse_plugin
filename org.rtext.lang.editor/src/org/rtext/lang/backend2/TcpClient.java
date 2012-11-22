@@ -25,12 +25,11 @@ import org.rtext.lang.commands.Command;
 import org.rtext.lang.commands.CommandSerializer;
 import org.rtext.lang.commands.Response;
 import org.rtext.lang.commands.ResponseParser;
-import org.rtext.lang.util.Exceptions;
 import org.rtext.lang.util.Expectations;
 
 public class TcpClient implements Connection {
 
-	private static final int SOCKET_TIMEOUT = 10000;
+	private static final int SOCKET_TIMEOUT = 5000;
 
 	private class Worker extends Thread {
 		private boolean running = true;
@@ -125,7 +124,7 @@ public class TcpClient implements Connection {
 	protected void createSocket(String address, int port)
 			throws UnknownHostException, IOException {
 		socket = new Socket();
-		socket.setSoTimeout(5000);
+		socket.setSoTimeout(SOCKET_TIMEOUT);
 		socket.setReceiveBufferSize(64000);
 		socket.connect(new InetSocketAddress(address, port), SOCKET_TIMEOUT);
 		out = new PrintWriter(socket.getOutputStream(), true);
@@ -151,15 +150,9 @@ public class TcpClient implements Connection {
 	protected String readMessage(int messageLength) throws IOException {
 		StringBuilder message = new StringBuilder("{");
 		int c = in.read();
-		for (int i = 0; i < messageLength - 2 && c != -1; i++) {
+		for (int i = 0; i < messageLength-2 && c != -1; i++) {
 			message.append((char) c);
-			try{
-				c = in.read();
-			}catch(Throwable e){
-				System.out.println("Expected: " + messageLength + " but was " + i);
-				System.out.println(message);
-				Exceptions.rethrow(e);
-			}
+			c = in.read();
 		}
 		message.append((char) c);
 		return message.toString();
@@ -172,7 +165,9 @@ public class TcpClient implements Connection {
 			result.append((char) c);
 			c = in.read();
 		}
-		int length = Integer.parseInt(result.toString().trim());
+		String[] lines = result.toString().split("\n");
+		String line = lines[lines.length-1];
+		int length = Integer.parseInt(line.trim());
 		return length;
 	}
 

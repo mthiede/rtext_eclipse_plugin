@@ -30,7 +30,6 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.MultiRule;
 import org.eclipse.ui.texteditor.MarkerUtilities;
-import org.rtext.lang.RTextPlugin;
 import org.rtext.lang.commands.LoadedModel.FileProblems;
 import org.rtext.lang.commands.LoadedModel.Problem;
 import org.rtext.lang.util.FileLocator;

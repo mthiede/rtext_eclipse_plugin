@@ -58,7 +58,10 @@ public class Connector {
 	private Callback<LoadedModel> loadModelCallBack;
 	
 	public static Connector create(ConnectorConfig connectorConfig){
-		return new Connector(connectorConfig, CliBackendStarter.create(connectorConfig.getConfigFile().toString()), TcpClient.create(), LoadModelCallback.create());
+		BackendStarter backendStarter = CliBackendStarter.create(connectorConfig);
+		LoadModelCallback modelCallBack = LoadModelCallback.create();
+		TcpClient tcpClient = TcpClient.create();
+		return new Connector(connectorConfig, backendStarter, tcpClient, modelCallBack);
 	}
 	
 	public Connector(ConnectorConfig connectorConfig, BackendStarter processRunner, Connection connection, Callback<LoadedModel> loadModelCallBack) {
@@ -97,22 +100,17 @@ public class Connector {
 	}
 
 	protected boolean ensureBackendIsConnected(Callback<?> callback) throws TimeoutException {
-		System.out.println("Connector: Ensure backend is running");
 		if(processRunner.isRunning()){
-			System.out.println("Connector: Process is running");
 			return true;
 		}
-		System.out.println("Connector: Starting backend");
 		return startBackend(callback);
 	}
 
 	public boolean startBackend(Callback<?> callback) throws TimeoutException {
 		try{
-			System.out.println("Connector: Starting process");
 			processRunner.startProcess(connectorConfig);
 			connection.connect(ADDRESS, processRunner.getPort());
-			System.out.println("Connector: send model load request");
-//			sendRequest(new LoadModelCommand(), loadModelCallBack);
+			sendRequest(new LoadModelCommand(), loadModelCallBack);
 			return true;
 		}catch(Throwable e){
 			dispose();
@@ -122,8 +120,8 @@ public class Connector {
 	}
 
 	public void dispose(){
-		System.out.print("Connector: dispose");
 		processRunner.stop();
 		connection.close();
 	}
+	
 }

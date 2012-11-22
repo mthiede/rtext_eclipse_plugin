@@ -22,7 +22,6 @@ import java.util.concurrent.TimeoutException;
 
 import org.rtext.lang.backend.ConnectorConfig;
 import org.rtext.lang.editor.RTextConsole;
-import org.rtext.lang.util.Closables;
 import org.rtext.lang.util.Condition;
 import org.rtext.lang.util.Exceptions;
 
@@ -170,7 +169,7 @@ public final class CliBackendStarter implements BackendStarter {
 		return portParser.getPort();
 	}
 
-	public static BackendStarter create(String modelFile) {
-		return new CliBackendStarter(new PortParser(), new RTextConsole(modelFile));
+	public static BackendStarter create(ConnectorConfig connectorConfig) {
+		return new CliBackendStarter(new PortParser(), new RTextConsole(connectorConfig));
 	}
 }

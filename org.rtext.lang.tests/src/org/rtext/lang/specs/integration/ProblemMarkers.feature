@@ -20,11 +20,11 @@ Scenario: Valid files have no problem marker
 	Given a project "test" linked to "rtext/test/integration/model/"
 		createProject(args.first, args.second.absolutPath)
 		
-	When I load the model for "test/test_metamodel.ect" 
+	When I load the model for "test/test_metamodel_ok.ect2" 
 		startBackendFor(file(args.first).location) 
 		executeSynchronousCommand(LoadModelCallback::create)
 		waitForRTextJobs
-	Then "test/test_metamodel.ect"  should have no error markers
+	Then "test/test_metamodel_ok.ect2"  should have no error markers
 		args.first.file.findProblems.empty should be true
-//	But "test/test_metamodel_with_problems.ect"  should have error markers 
-//		args.first.file.findProblems.empty should be false
+	But "test/test_metamodel_error.ect2"  should have error markers 
+		args.first.file.findProblems.empty should be false

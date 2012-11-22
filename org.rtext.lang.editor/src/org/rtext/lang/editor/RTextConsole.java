@@ -8,6 +8,7 @@ import org.eclipse.ui.console.IConsoleManager;
 import org.eclipse.ui.console.IOConsole;
 import org.eclipse.ui.console.IOConsoleOutputStream;
 import org.rtext.lang.RTextPlugin;
+import org.rtext.lang.backend.ConnectorConfig;
 import org.rtext.lang.backend2.OutputHandler;
 
 public class RTextConsole implements OutputHandler{
@@ -15,11 +16,21 @@ public class RTextConsole implements OutputHandler{
 	private IOConsole console;
 	private IOConsoleOutputStream consoleOutputStream;
 
-	public RTextConsole(String modelFile) {
-		console = new IOConsole("RText ["+modelFile+"]", null);
+	public RTextConsole(ConnectorConfig connectorConfig) {
+		console = new IOConsole("RText ["+fileName(connectorConfig)+"]", null);
 		consoleOutputStream = console.newOutputStream();
-		IConsoleManager manager = ConsolePlugin.getDefault().getConsoleManager();
-		manager.addConsoles(new IConsole[] { console });
+		consoleManager().addConsoles(new IConsole[] { console });
+	}
+
+	public String fileName(ConnectorConfig connectorConfig) {
+		if(connectorConfig.getConfigFile() != null){
+			return connectorConfig.getConfigFile().getPath();
+		}
+		return "----";
+	}
+
+	private IConsoleManager consoleManager() {
+		return ConsolePlugin.getDefault().getConsoleManager();
 	}
 	
 	public void handle(String string) {

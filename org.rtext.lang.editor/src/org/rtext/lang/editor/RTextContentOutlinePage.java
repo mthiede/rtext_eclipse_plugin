@@ -39,6 +39,9 @@ public class RTextContentOutlinePage extends ContentOutlinePage implements Model
 		protected IStatus run(IProgressMonitor monitor) {
 			getSite().getShell().getDisplay().asyncExec(new Runnable() {
 				public void run() {
+					if(getTreeViewer().getTree().isDisposed()){
+						return;
+					}
 					getTreeViewer().setInput(root);
 				}
 			});

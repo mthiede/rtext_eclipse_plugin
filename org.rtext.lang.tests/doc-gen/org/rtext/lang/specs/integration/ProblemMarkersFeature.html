@@ -40,9 +40,11 @@
 <ul>
 <li><span class="step notrun"><p>Given a project <code>"test"</code> linked to <code>"rtext/test/integration/model/"</code></p></span>
 </li>
-<li><span class="step notrun"><p>When I load the model for <code>"test/test_metamodel.ect"</code></p></span>
+<li><span class="step notrun"><p>When I load the model for <code>"test/test_metamodel_ok.ect2"</code></p></span>
 </li>
-<li><span class="step notrun"><p>Then <code>"test/test_metamodel.ect"</code> should have no error markers</p></span>
+<li><span class="step notrun"><p>Then <code>"test/test_metamodel_ok.ect2"</code> should have no error markers</p></span>
+</li>
+<li><span class="step notrun"><p>But <code>"test/test_metamodel_error.ect2"</code> should have error markers</p></span>
 </li>
 </ul>
 </div>
@@ -73,14 +75,14 @@ Scenario: Valid files have no problem marker
   Given a project &quot;test&quot; linked to &quot;rtext/test/integration/model/&quot;
     createProject(args.first, args.second.absolutPath)
     
-  When I load the model for &quot;test/test_metamodel.ect&quot; 
+  When I load the model for &quot;test/test_metamodel_ok.ect2&quot; 
     startBackendFor(file(args.first).location) 
     executeSynchronousCommand(LoadModelCallback::create)
     waitForRTextJobs
-  Then &quot;test/test_metamodel.ect&quot;  should have no error markers
+  Then &quot;test/test_metamodel_ok.ect2&quot;  should have no error markers
     args.first.file.findProblems.empty should be true
-//  But &quot;test/test_metamodel_with_problems.ect&quot;  should have error markers 
-//    args.first.file.findProblems.empty should be false
+  But &quot;test/test_metamodel_error.ect2&quot;  should have error markers 
+    args.first.file.findProblems.empty should be false
 </pre>
 						    </p></div>
 						  </div>
