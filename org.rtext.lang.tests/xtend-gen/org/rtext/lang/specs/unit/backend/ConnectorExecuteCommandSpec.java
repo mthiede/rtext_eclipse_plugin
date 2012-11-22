@@ -16,12 +16,12 @@ import org.mockito.stubbing.OngoingStubbing;
 import org.mockito.stubbing.Stubber;
 import org.mockito.verification.VerificationMode;
 import org.rtext.lang.backend2.BackendStarter;
-import org.rtext.lang.backend2.Callback;
-import org.rtext.lang.backend2.Command;
 import org.rtext.lang.backend2.Connection;
-import org.rtext.lang.backend2.LoadModelCommand;
-import org.rtext.lang.backend2.LoadedModel;
-import org.rtext.lang.backend2.Response;
+import org.rtext.lang.commands.Callback;
+import org.rtext.lang.commands.Command;
+import org.rtext.lang.commands.LoadModelCommand;
+import org.rtext.lang.commands.LoadedModel;
+import org.rtext.lang.commands.Response;
 import org.rtext.lang.specs.unit.backend.ConnectorSpec;
 
 @SuppressWarnings("all")

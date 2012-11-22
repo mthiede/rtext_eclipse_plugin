@@ -1,4 +1,11 @@
-package org.rtext.lang.editor;
+/*******************************************************************************
+ * Copyright (c) 2012 E.S.R. Labs and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the MIT License
+ * which accompanies this distribution, and is available at
+ * http://opensource.org/licenses/MIT
+ *******************************************************************************/
+package org.rtext.lang.commands;
 
 import java.util.HashMap;
 import java.util.List;
@@ -18,10 +25,9 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.MultiRule;
 import org.eclipse.ui.texteditor.MarkerUtilities;
 import org.rtext.lang.RTextPlugin;
-import org.rtext.lang.backend2.LoadedModel;
-import org.rtext.lang.backend2.LoadedModel.FileProblems;
-import org.rtext.lang.backend2.LoadedModel.Problem;
-import org.rtext.lang.backend2.WorkspaceCallback;
+import org.rtext.lang.commands.LoadedModel.FileProblems;
+import org.rtext.lang.commands.LoadedModel.Problem;
+import org.rtext.lang.util.FileLocator;
 
 public class LoadModelCallback extends WorkspaceCallback<LoadedModel> {
 

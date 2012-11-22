@@ -9,9 +9,9 @@ import org.jnario.runner.Order;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.rtext.lang.backend2.Command;
-import org.rtext.lang.backend2.CommandSerializer;
-import org.rtext.lang.backend2.Response;
+import org.rtext.lang.commands.Command;
+import org.rtext.lang.commands.CommandSerializer;
+import org.rtext.lang.commands.Response;
 
 @SuppressWarnings("all")
 @RunWith(ExampleGroupRunner.class)

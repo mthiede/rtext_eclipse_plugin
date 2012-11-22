@@ -19,8 +19,12 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
+import org.rtext.lang.document.RTextDocument;
 import org.rtext.lang.model.Element;
+import org.rtext.lang.model.ModelChangeListener;
+import org.rtext.lang.model.RTextContentProvider;
 import org.rtext.lang.model.RTextResource;
+import org.rtext.lang.util.IUnitOfWork;
 
 public class RTextContentOutlinePage extends ContentOutlinePage implements ModelChangeListener{
 

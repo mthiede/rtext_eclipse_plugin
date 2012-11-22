@@ -5,12 +5,11 @@
  * which accompanies this distribution, and is available at
  * http://opensource.org/licenses/MIT
  *******************************************************************************/
-package org.rtext.lang.editor;
+package org.rtext.lang.util;
 
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import org.rtext.lang.util.Exceptions;
 
 public abstract class ReadWriteAcces<P>{
 

@@ -5,13 +5,16 @@
  * which accompanies this distribution, and is available at
  * http://opensource.org/licenses/MIT
  *******************************************************************************/
-package org.rtext.lang.editor;
+package org.rtext.lang.document;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.text.Document;
+import org.rtext.lang.model.ModelChangeListener;
 import org.rtext.lang.model.RTextResource;
+import org.rtext.lang.util.IUnitOfWork;
+import org.rtext.lang.util.ReadWriteAcces;
 
 public class RTextDocument extends Document implements IRTextDocument {
 		

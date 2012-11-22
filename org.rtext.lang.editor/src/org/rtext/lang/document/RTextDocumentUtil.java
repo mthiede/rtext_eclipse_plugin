@@ -5,13 +5,14 @@
  * which accompanies this distribution, and is available at
  * http://opensource.org/licenses/MIT
  *******************************************************************************/
-package org.rtext.lang.editor;
+package org.rtext.lang.document;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.projection.ProjectionDocument;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
+import org.rtext.lang.editor.RTextEditor;
 
 public class RTextDocumentUtil {
 	

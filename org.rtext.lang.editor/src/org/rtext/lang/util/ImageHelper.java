@@ -5,12 +5,12 @@
  * which accompanies this distribution, and is available at
  * http://opensource.org/licenses/MIT
  *******************************************************************************/
-package org.rtext.lang.editor;
+package org.rtext.lang.util;
 
-import org.rtext.lang.model.RTextResource;
+import org.eclipse.swt.graphics.Image;
 
-public interface ModelChangeListener {
+public interface ImageHelper {
 
-	void handleModelChange(RTextResource root);
+	public abstract Image getImage(String imageName);
 
 }

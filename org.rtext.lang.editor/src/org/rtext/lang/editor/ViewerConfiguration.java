@@ -25,6 +25,8 @@ import org.eclipse.jface.text.source.IAnnotationHover;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.eclipse.swt.graphics.RGB;
+import org.rtext.lang.document.RTextReconcilingStrategy;
+import org.rtext.lang.proposals.ContentAssistProcessor;
 
 public class ViewerConfiguration extends SourceViewerConfiguration {
 	private SyntaxScanner scanner;

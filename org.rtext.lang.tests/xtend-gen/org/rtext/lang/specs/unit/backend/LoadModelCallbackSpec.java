@@ -24,15 +24,15 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.stubbing.OngoingStubbing;
 import org.mockito.verification.VerificationMode;
-import org.rtext.lang.backend2.LoadedModel;
-import org.rtext.lang.backend2.LoadedModel.FileProblems;
-import org.rtext.lang.backend2.LoadedModel.Problem;
-import org.rtext.lang.editor.FileLocator;
-import org.rtext.lang.editor.LoadModelCallback;
-import org.rtext.lang.editor.LoadModelCallback.ProblemUpdateJob;
-import org.rtext.lang.editor.LoadModelCallback.ProblemUpdateJobFactory;
+import org.rtext.lang.commands.LoadModelCallback;
+import org.rtext.lang.commands.LoadModelCallback.ProblemUpdateJob;
+import org.rtext.lang.commands.LoadModelCallback.ProblemUpdateJobFactory;
+import org.rtext.lang.commands.LoadedModel;
+import org.rtext.lang.commands.LoadedModel.FileProblems;
+import org.rtext.lang.commands.LoadedModel.Problem;
 import org.rtext.lang.specs.util.MockInjector;
 import org.rtext.lang.specs.util.WorkspaceHelper;
+import org.rtext.lang.util.FileLocator;
 
 @SuppressWarnings("all")
 @RunWith(ExampleGroupRunner.class)

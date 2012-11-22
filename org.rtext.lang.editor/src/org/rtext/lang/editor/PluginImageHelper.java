@@ -18,6 +18,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleEvent;
 import org.osgi.framework.BundleListener;
 import org.rtext.lang.RTextPlugin;
+import org.rtext.lang.util.ImageHelper;
 
 /**
  * @author Sebastian Zarnekow

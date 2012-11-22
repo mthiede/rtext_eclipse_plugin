@@ -1,8 +1,7 @@
 package org.rtext.lang.specs.util
 
 import org.eclipse.core.runtime.jobs.Job
-import org.eclipse.core.resources.ResourcesPlugin
-import org.rtext.lang.editor.LoadModelCallback
+import org.rtext.lang.commands.LoadModelCallback
 
 class Jobs {
 	

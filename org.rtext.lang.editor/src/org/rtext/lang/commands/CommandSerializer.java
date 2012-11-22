@@ -5,16 +5,17 @@
  * which accompanies this distribution, and is available at
  * http://opensource.org/licenses/MIT
  *******************************************************************************/
-package org.rtext.lang.backend2;
+package org.rtext.lang.commands;
 
-import java.util.concurrent.TimeoutException;
+import com.google.gson.Gson;
 
-import org.rtext.lang.backend.ConnectorConfig;
+public class CommandSerializer {
 
-public interface BackendStarter {
-	public void startProcess(ConnectorConfig connectorConfig) throws TimeoutException;
-	public boolean isRunning();
-	public void stop();
-	int getPort() throws TimeoutException;
+	private Gson gson = new Gson();
+
+	public String serialize(Command<?> command){
+		String jsonString = gson.toJson(command);
+		return jsonString.length() + jsonString;
+	}
+	
 }
-		

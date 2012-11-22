@@ -1,7 +1,7 @@
 package org.rtext.lang.specs.unit.backend
 
 import java.util.concurrent.CountDownLatch
-import org.rtext.lang.backend2.Response
+import org.rtext.lang.commands.Response
 import org.rtext.lang.backend2.TcpClient
 import org.rtext.lang.specs.util.TcpTestServer
 import org.rtext.lang.specs.util.TestCallBack

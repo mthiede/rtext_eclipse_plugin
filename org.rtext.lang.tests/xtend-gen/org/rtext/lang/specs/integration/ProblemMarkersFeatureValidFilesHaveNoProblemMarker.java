@@ -15,7 +15,7 @@ import org.jnario.runner.Order;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.rtext.lang.editor.LoadModelCallback;
+import org.rtext.lang.commands.LoadModelCallback;
 import org.rtext.lang.specs.integration.ProblemMarkersFeature;
 import org.rtext.lang.specs.util.BackendHelper;
 import org.rtext.lang.specs.util.Jobs;

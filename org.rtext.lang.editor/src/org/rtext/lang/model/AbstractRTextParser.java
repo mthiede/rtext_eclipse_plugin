@@ -12,7 +12,6 @@ import static java.lang.Character.isLetterOrDigit;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
-import org.rtext.lang.editor.ColorManager;
 
 public abstract class AbstractRTextParser<T> {
 

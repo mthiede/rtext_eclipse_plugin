@@ -4,9 +4,9 @@ import static com.google.common.collect.Lists.newArrayList;
 
 import java.util.List;
 
-import org.rtext.lang.backend2.Callback;
-import org.rtext.lang.backend2.Progress;
-import org.rtext.lang.backend2.Response;
+import org.rtext.lang.commands.Callback;
+import org.rtext.lang.commands.Progress;
+import org.rtext.lang.commands.Response;
 
 public class TestCallBack<T extends Response> implements Callback<T> {
 	

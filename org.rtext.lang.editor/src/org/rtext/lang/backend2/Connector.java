@@ -1,9 +1,22 @@
+/*******************************************************************************
+ * Copyright (c) 2012 E.S.R. Labs and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the MIT License
+ * which accompanies this distribution, and is available at
+ * http://opensource.org/licenses/MIT
+ *******************************************************************************/
 package org.rtext.lang.backend2;
 
 import java.util.concurrent.TimeoutException;
 
 import org.rtext.lang.backend.ConnectorConfig;
-import org.rtext.lang.editor.LoadModelCallback;
+import org.rtext.lang.commands.Callback;
+import org.rtext.lang.commands.Command;
+import org.rtext.lang.commands.LoadModelCallback;
+import org.rtext.lang.commands.LoadModelCommand;
+import org.rtext.lang.commands.LoadedModel;
+import org.rtext.lang.commands.Response;
+import org.rtext.lang.commands.SynchronousCallBack;
 
 public class Connector {
 	

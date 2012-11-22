@@ -31,7 +31,11 @@ import org.rtext.lang.RTextPlugin;
 import org.rtext.lang.backend.Connector;
 import org.rtext.lang.backend.ConnectorManager;
 import org.rtext.lang.backend2.ConnectorProvider;
-import org.rtext.lang.backend2.LoadModelCommand;
+import org.rtext.lang.commands.LoadModelCallback;
+import org.rtext.lang.commands.LoadModelCommand;
+import org.rtext.lang.document.IRTextDocument;
+import org.rtext.lang.document.RTextDocumentProvider;
+import org.rtext.lang.document.RTextDocumentUtil;
 
 public class RTextEditor extends TextEditor implements Connected{
 

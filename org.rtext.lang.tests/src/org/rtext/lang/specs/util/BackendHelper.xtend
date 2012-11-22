@@ -3,14 +3,14 @@ package org.rtext.lang.specs.util
 import org.junit.After
 import org.rtext.lang.backend2.CachingConnectorProvider
 import org.rtext.lang.backend2.Connector
-import org.rtext.lang.backend2.Response
+import org.rtext.lang.commands.Response
 import static org.rtext.lang.specs.util.Wait.*
-import org.rtext.lang.backend2.Command
+import org.rtext.lang.commands.Command
 import org.eclipse.jface.text.IDocument
 import org.eclipse.core.runtime.IPath
-import org.rtext.lang.backend2.LoadModelCommand
-import org.rtext.lang.backend2.LoadedModel
-import org.rtext.lang.backend2.Callback
+import org.rtext.lang.commands.LoadModelCommand
+import org.rtext.lang.commands.LoadedModel
+import org.rtext.lang.commands.Callback
 
 class BackendHelper {
 	extension TestFileLocator fileLocator = TestFileLocator::getDefault()

@@ -5,16 +5,18 @@
  * which accompanies this distribution, and is available at
  * http://opensource.org/licenses/MIT
  *******************************************************************************/
-package org.rtext.lang.backend2;
+package org.rtext.lang.util;
 
-import java.util.concurrent.TimeoutException;
+import java.util.Arrays;
+import java.util.List;
 
-import org.rtext.lang.backend.ConnectorConfig;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Path;
 
-public interface BackendStarter {
-	public void startProcess(ConnectorConfig connectorConfig) throws TimeoutException;
-	public boolean isRunning();
-	public void stop();
-	int getPort() throws TimeoutException;
+public class FileLocator {
+	public List<IFile> locate(String path){
+		return Arrays.asList(ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation(new Path(path)));
+	}
+	
 }
-		

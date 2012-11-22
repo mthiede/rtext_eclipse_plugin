@@ -1,9 +1,9 @@
 package org.rtext.lang.specs.unit.backend
 
-import org.rtext.lang.backend2.ResponseParser
-import org.rtext.lang.backend2.Progress
+import org.rtext.lang.commands.ResponseParser
+import org.rtext.lang.commands.Progress
 import org.rtext.lang.specs.util.TestCallBack
-import org.rtext.lang.backend2.Response
+import org.rtext.lang.commands.Response
 
 describe ResponseParser {
 	TestCallBack<? extends Response> callback 

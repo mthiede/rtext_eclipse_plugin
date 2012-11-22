@@ -5,7 +5,7 @@
  * which accompanies this distribution, and is available at
  * http://opensource.org/licenses/MIT
  *******************************************************************************/
-package org.rtext.lang.editor;
+package org.rtext.lang.proposals;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -27,9 +27,13 @@ import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 import org.eclipse.swt.graphics.Image;
 import org.rtext.lang.backend2.BackendException;
 import org.rtext.lang.backend2.Connector;
-import org.rtext.lang.backend2.Proposals;
-import org.rtext.lang.backend2.Proposals.Option;
-import org.rtext.lang.backend2.ProposalsCommand;
+import org.rtext.lang.backend2.ContextParser;
+import org.rtext.lang.commands.Proposals;
+import org.rtext.lang.commands.ProposalsCommand;
+import org.rtext.lang.commands.Proposals.Option;
+import org.rtext.lang.editor.Connected;
+import org.rtext.lang.editor.PluginImageHelper;
+import org.rtext.lang.util.ImageHelper;
 
 
 public class ContentAssistProcessor implements IContentAssistProcessor,	ICompletionListener {

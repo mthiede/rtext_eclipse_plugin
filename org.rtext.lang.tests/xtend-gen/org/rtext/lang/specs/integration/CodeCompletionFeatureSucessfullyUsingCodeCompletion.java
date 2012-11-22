@@ -23,7 +23,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.rtext.lang.backend2.Connector;
 import org.rtext.lang.editor.Connected;
-import org.rtext.lang.editor.ContentAssistProcessor;
+import org.rtext.lang.proposals.ContentAssistProcessor;
 import org.rtext.lang.specs.integration.CodeCompletionFeature;
 import org.rtext.lang.specs.util.BackendHelper;
 

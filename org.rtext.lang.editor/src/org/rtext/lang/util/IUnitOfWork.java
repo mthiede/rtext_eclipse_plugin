@@ -5,16 +5,21 @@
  * which accompanies this distribution, and is available at
  * http://opensource.org/licenses/MIT
  *******************************************************************************/
-package org.rtext.lang.backend2;
+package org.rtext.lang.util;
 
-import java.util.concurrent.TimeoutException;
 
-import org.rtext.lang.backend.ConnectorConfig;
+public interface IUnitOfWork<R,P> {
 
-public interface BackendStarter {
-	public void startProcess(ConnectorConfig connectorConfig) throws TimeoutException;
-	public boolean isRunning();
-	public void stop();
-	int getPort() throws TimeoutException;
+	R exec(P state) throws Exception;
+	
+	public static abstract class Void<T> implements IUnitOfWork<Object,T> {
+		public final Object exec(T state) throws Exception {
+			process(state);
+			return null;
+		}
+
+		public abstract void process(T state) throws Exception;
+	}
+	
 }
-		
+

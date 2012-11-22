@@ -1,6 +1,6 @@
 package org.rtext.lang.specs.integration
 
-import org.rtext.lang.editor.LoadModelCallback
+import org.rtext.lang.commands.LoadModelCallback
 import org.rtext.lang.specs.util.BackendHelper
 import org.rtext.lang.specs.util.TestFileLocator
 import org.rtext.lang.specs.util.WorkspaceHelper

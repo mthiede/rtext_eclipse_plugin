@@ -5,16 +5,27 @@
  * which accompanies this distribution, and is available at
  * http://opensource.org/licenses/MIT
  *******************************************************************************/
-package org.rtext.lang.backend2;
+package org.rtext.lang.commands;
 
-import java.util.concurrent.TimeoutException;
+import com.google.gson.annotations.SerializedName;
 
-import org.rtext.lang.backend.ConnectorConfig;
+public class Response {
+	
+	private final String type;
 
-public interface BackendStarter {
-	public void startProcess(ConnectorConfig connectorConfig) throws TimeoutException;
-	public boolean isRunning();
-	public void stop();
-	int getPort() throws TimeoutException;
+	@SerializedName("invocation_id") private int invocationId;
+	
+	public Response(int invocationId, String type) {
+		this.invocationId = invocationId;
+		this.type = type;
+	}
+	
+	public String getType() {
+		return type;
+	}
+	
+	public int getInvocationId() {
+		return invocationId;
+	}
+	
 }
-		

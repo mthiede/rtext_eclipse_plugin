@@ -23,6 +23,7 @@ import org.eclipse.jface.text.source.projection.IProjectionListener;
 import org.eclipse.jface.text.source.projection.ProjectionAnnotation;
 import org.eclipse.jface.text.source.projection.ProjectionAnnotationModel;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
+import org.rtext.lang.model.ModelChangeListener;
 import org.rtext.lang.model.RTextResource;
 
 public class FoldingStructureProvider implements ModelChangeListener {

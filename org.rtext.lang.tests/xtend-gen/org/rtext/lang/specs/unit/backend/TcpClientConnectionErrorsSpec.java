@@ -10,7 +10,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.rtext.lang.backend2.BackendException;
-import org.rtext.lang.backend2.Response;
+import org.rtext.lang.commands.Response;
 import org.rtext.lang.specs.unit.backend.TcpClientSpec;
 import org.rtext.lang.specs.util.Commands;
 import org.rtext.lang.specs.util.Wait;

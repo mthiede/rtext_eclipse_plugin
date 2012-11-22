@@ -1,7 +1,7 @@
 package org.rtext.lang.specs.integration
 
 import org.rtext.lang.specs.util.BackendHelper
-import org.rtext.lang.editor.ContentAssistProcessor
+import org.rtext.lang.proposals.ContentAssistProcessor
 import java.util.List
 import org.eclipse.swt.widgets.Display
 

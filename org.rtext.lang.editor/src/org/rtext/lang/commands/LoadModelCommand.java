@@ -5,16 +5,10 @@
  * which accompanies this distribution, and is available at
  * http://opensource.org/licenses/MIT
  *******************************************************************************/
-package org.rtext.lang.backend2;
+package org.rtext.lang.commands;
 
-import java.util.concurrent.TimeoutException;
-
-import org.rtext.lang.backend.ConnectorConfig;
-
-public interface BackendStarter {
-	public void startProcess(ConnectorConfig connectorConfig) throws TimeoutException;
-	public boolean isRunning();
-	public void stop();
-	int getPort() throws TimeoutException;
+public class LoadModelCommand extends Command<LoadedModel> {
+	public LoadModelCommand() {
+		super("load_model", LoadedModel.class);
+	}
 }
-		

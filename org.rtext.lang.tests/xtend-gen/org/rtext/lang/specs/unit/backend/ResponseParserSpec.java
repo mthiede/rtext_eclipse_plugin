@@ -13,9 +13,9 @@ import org.jnario.runner.Subject;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.rtext.lang.backend2.Progress;
-import org.rtext.lang.backend2.Response;
-import org.rtext.lang.backend2.ResponseParser;
+import org.rtext.lang.commands.Progress;
+import org.rtext.lang.commands.Response;
+import org.rtext.lang.commands.ResponseParser;
 import org.rtext.lang.specs.util.TestCallBack;
 
 @SuppressWarnings("all")

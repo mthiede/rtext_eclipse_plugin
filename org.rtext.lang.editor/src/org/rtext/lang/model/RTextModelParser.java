@@ -7,7 +7,6 @@
  *******************************************************************************/
 package org.rtext.lang.model;
 
-import static java.util.Collections.singletonList;
 import static org.rtext.lang.model.ElementBuilder.element;
 
 import java.util.ArrayList;

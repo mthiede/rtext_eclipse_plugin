@@ -5,16 +5,11 @@
  * which accompanies this distribution, and is available at
  * http://opensource.org/licenses/MIT
  *******************************************************************************/
-package org.rtext.lang.backend2;
+package org.rtext.lang.model;
 
-import java.util.concurrent.TimeoutException;
 
-import org.rtext.lang.backend.ConnectorConfig;
+public interface ModelChangeListener {
 
-public interface BackendStarter {
-	public void startProcess(ConnectorConfig connectorConfig) throws TimeoutException;
-	public boolean isRunning();
-	public void stop();
-	int getPort() throws TimeoutException;
+	void handleModelChange(RTextResource root);
+
 }
-		

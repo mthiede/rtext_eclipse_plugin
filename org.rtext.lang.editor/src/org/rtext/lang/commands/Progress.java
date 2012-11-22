@@ -5,21 +5,18 @@
  * which accompanies this distribution, and is available at
  * http://opensource.org/licenses/MIT
  *******************************************************************************/
-package org.rtext.lang.editor;
+package org.rtext.lang.commands;
 
-
-public interface IUnitOfWork<R,P> {
-
-	R exec(P state) throws Exception;
+public class Progress extends Response{
 	
-	public static abstract class Void<T> implements IUnitOfWork<Object,T> {
-		public final Object exec(T state) throws Exception {
-			process(state);
-			return null;
-		}
-
-		public abstract void process(T state) throws Exception;
+	private int percentage;
+	
+	public Progress(int invocationId, String type, int percentage) {
+		super(invocationId, type);
+		this.percentage = percentage;
 	}
 	
+	public int getPercentage() {
+		return percentage;
+	}
 }
-

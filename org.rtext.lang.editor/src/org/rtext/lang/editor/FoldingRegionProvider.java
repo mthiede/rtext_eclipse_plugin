@@ -12,8 +12,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.jface.text.Position;
+import org.rtext.lang.document.IRTextDocument;
 import org.rtext.lang.model.Element;
 import org.rtext.lang.model.RTextResource;
+import org.rtext.lang.util.IUnitOfWork;
 
 public class FoldingRegionProvider {
 

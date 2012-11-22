@@ -5,9 +5,11 @@
  * which accompanies this distribution, and is available at
  * http://opensource.org/licenses/MIT
  *******************************************************************************/
-package org.rtext.lang.editor;
+package org.rtext.lang.document;
 
+import org.rtext.lang.model.ModelChangeListener;
 import org.rtext.lang.model.RTextResource;
+import org.rtext.lang.util.IUnitOfWork;
 
 public interface IRTextDocument {
 

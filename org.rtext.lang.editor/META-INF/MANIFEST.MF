@@ -19,8 +19,11 @@ Export-Package: com.google.gson;x-friends:="org.rtext.lang.tests",
  org.rtext.lang,
  org.rtext.lang.backend,
  org.rtext.lang.backend2,
+ org.rtext.lang.commands,
+ org.rtext.lang.document,
  org.rtext.lang.editor,
  org.rtext.lang.model,
+ org.rtext.lang.proposals,
  org.rtext.lang.util
 Bundle-Vendor: E.S.R. Labs
 Bundle-ClassPath: lib/gson-2.2.2.jar,

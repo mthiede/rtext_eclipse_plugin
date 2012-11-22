@@ -1,3 +1,10 @@
+/*******************************************************************************
+ * Copyright (c) 2012 E.S.R. Labs and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the MIT License
+ * which accompanies this distribution, and is available at
+ * http://opensource.org/licenses/MIT
+ *******************************************************************************/
 package org.rtext.lang.backend2;
 
 import static java.lang.System.arraycopy;
@@ -15,7 +22,6 @@ import java.util.concurrent.TimeoutException;
 import org.rtext.lang.backend.ConnectorConfig;
 import org.rtext.lang.util.Condition;
 import org.rtext.lang.util.Exceptions;
-import org.rtext.lang.util.Strings;
 
 public final class CliBackendStarter implements BackendStarter {
 	

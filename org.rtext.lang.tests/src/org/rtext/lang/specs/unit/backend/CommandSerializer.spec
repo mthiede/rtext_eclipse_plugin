@@ -1,9 +1,9 @@
 package org.rtext.lang.specs.unit.backend
 
 import static org.junit.Assert.*
-import org.rtext.lang.backend2.CommandSerializer
-import org.rtext.lang.backend2.Command
-import org.rtext.lang.backend2.Response
+import org.rtext.lang.commands.CommandSerializer
+import org.rtext.lang.commands.Command
+import org.rtext.lang.commands.Response
 
 describe "Converting Commands to JSON"{
 

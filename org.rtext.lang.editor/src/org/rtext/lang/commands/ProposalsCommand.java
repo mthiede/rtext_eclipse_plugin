@@ -5,14 +5,27 @@
  * which accompanies this distribution, and is available at
  * http://opensource.org/licenses/MIT
  *******************************************************************************/
-package org.rtext.lang.backend2;
+package org.rtext.lang.commands;
 
-import org.rtext.lang.backend.ConnectorConfig;
+import java.util.List;
 
-public class ConnectorFactory {
-	
-	public Connector createConnector(ConnectorConfig connectorConfig){
-		return Connector.create(connectorConfig);
+public class ProposalsCommand extends Command<Proposals> {
+
+	private List<String> context;
+	private int column;
+
+	public ProposalsCommand(List<String> context, int lineOffset) {
+		super("content_complete", Proposals.class);
+		this.context = context;
+		this.column = lineOffset;
 	}
-
+	
+	public List<String> getContext() {
+		return context;
+	}
+	
+	public int getColumn() {
+		return column;
+	}
+	
 }

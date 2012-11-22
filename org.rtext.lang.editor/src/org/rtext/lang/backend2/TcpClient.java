@@ -1,3 +1,10 @@
+/*******************************************************************************
+ * Copyright (c) 2012 E.S.R. Labs and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the MIT License
+ * which accompanies this distribution, and is available at
+ * http://opensource.org/licenses/MIT
+ *******************************************************************************/
 package org.rtext.lang.backend2;
 
 import java.io.BufferedReader;
@@ -10,6 +17,11 @@ import java.net.UnknownHostException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import org.rtext.lang.commands.Callback;
+import org.rtext.lang.commands.Command;
+import org.rtext.lang.commands.CommandSerializer;
+import org.rtext.lang.commands.Response;
+import org.rtext.lang.commands.ResponseParser;
 import org.rtext.lang.util.Expectations;
 
 public class TcpClient implements Connection {

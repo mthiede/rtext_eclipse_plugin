@@ -10,6 +10,7 @@ package org.rtext.lang.editor;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.rtext.lang.model.Element;
+import org.rtext.lang.util.ImageHelper;
 
 public class RTextLabelProvider extends LabelProvider {
 	

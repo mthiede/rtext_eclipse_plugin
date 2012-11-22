@@ -6,7 +6,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
-import org.rtext.lang.editor.LoadModelCallback;
+import org.rtext.lang.commands.LoadModelCallback;
 
 @SuppressWarnings("all")
 public class Jobs {
