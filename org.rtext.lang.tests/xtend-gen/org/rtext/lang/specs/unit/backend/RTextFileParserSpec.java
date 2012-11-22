@@ -42,7 +42,7 @@ public class RTextFileParserSpec {
   
   @Test
   @Named("File specific commands are defined by: \\\'FILE_PATTERN: COMMAND\\\'")
-  @Order(0)
+  @Order(1)
   public void _fileSpecificCommandsAreDefinedByFILEPATTERNCOMMAND() throws Exception {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("*.ect:");
@@ -71,7 +71,7 @@ public class RTextFileParserSpec {
   
   @Test
   @Named("Multiple commands are separated by newlines")
-  @Order(1)
+  @Order(2)
   public void _multipleCommandsAreSeparatedByNewlines() throws Exception {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("*.ect:");

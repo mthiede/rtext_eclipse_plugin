@@ -10,7 +10,6 @@ import org.jnario.runner.ExampleGroupRunner;
 import org.jnario.runner.Named;
 import org.jnario.runner.Order;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.rtext.lang.specs.unit.FilesFileExtensionSpecExamples;
@@ -23,7 +22,7 @@ import org.rtext.lang.util.Files;
 public class FilesFileExtensionSpec extends FilesSpec {
   @Test
   @Named("^extension[null] throws IllegalArgumentException")
-  @Order(0)
+  @Order(1)
   public void _extensionNullThrowsIllegalArgumentException() throws Exception {
     try{
       Files.extension(null);
@@ -33,9 +32,8 @@ public class FilesFileExtensionSpec extends FilesSpec {
     }
   }
   
-  @Before
-  public void _initFilesFileExtensionSpecExamples() {
-    examples = ExampleTable.create("examples", 
+  public ExampleTable<FilesFileExtensionSpecExamples> _initFilesFileExtensionSpecExamples() {
+    return ExampleTable.create("examples", 
       java.util.Arrays.asList("filename", "ext"), 
       new FilesFileExtensionSpecExamples(  java.util.Arrays.asList("\"\"", "\"\""), "", ""),
       new FilesFileExtensionSpecExamples(  java.util.Arrays.asList("\"file.txt\"", "\"*.txt\""), "file.txt", "*.txt"),
@@ -50,11 +48,11 @@ public class FilesFileExtensionSpec extends FilesSpec {
     );
   }
   
-  protected ExampleTable<FilesFileExtensionSpecExamples> examples;
+  protected ExampleTable<FilesFileExtensionSpecExamples> examples = _initFilesFileExtensionSpecExamples();
   
   @Test
   @Named("examples.forEach[new File[filename].^extension => ext]")
-  @Order(1)
+  @Order(2)
   public void _examplesForEachNewFileFilenameExtensionExt() throws Exception {
     final Procedure1<FilesFileExtensionSpecExamples> _function = new Procedure1<FilesFileExtensionSpecExamples>() {
         public void apply(final FilesFileExtensionSpecExamples it) {

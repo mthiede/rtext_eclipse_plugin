@@ -74,27 +74,6 @@ public class ProblemMarkersFeatureValidFilesHaveNoProblemMarker extends ProblemM
     
   }
   
-  @Test
-  @Order(3)
-  @Named("But \\\"test/test_metamodel_with_problems.ect\\\"  should have error markers")
-  public void butTestTestMetamodelWithProblemsEctShouldHaveErrorMarkers() {
-    StepArguments _stepArguments = new StepArguments("test/test_metamodel_with_problems.ect");
-    final StepArguments args = _stepArguments;
-    String _first = JnarioIterableExtensions.<String>first(args);
-    IFile _file = this._workspaceHelper.file(_first);
-    List<String> _findProblems = this._workspaceHelper.findProblems(_file);
-    boolean _isEmpty = _findProblems.isEmpty();
-    boolean _should_be = Should.<Boolean>should_be(Boolean.valueOf(_isEmpty), false);
-    Assert.assertTrue("\nExpected args.first.file.findProblems.empty should be false but"
-     + "\n     args.first.file.findProblems.empty is " + new StringDescription().appendValue(Boolean.valueOf(_isEmpty)).toString()
-     + "\n     args.first.file.findProblems is " + new StringDescription().appendValue(_findProblems).toString()
-     + "\n      is " + new StringDescription().appendValue(this._workspaceHelper).toString()
-     + "\n     args.first.file is " + new StringDescription().appendValue(_file).toString()
-     + "\n     args.first is " + new StringDescription().appendValue(_first).toString()
-     + "\n     args is " + new StringDescription().appendValue(args).toString() + "\n", _should_be);
-    
-  }
-  
   @Extension
   public WorkspaceHelper _workspaceHelper = new Function0<WorkspaceHelper>() {
     public WorkspaceHelper apply() {

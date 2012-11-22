@@ -10,10 +10,8 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.ui.ide.undo.CreateProjectOperation;
 import org.eclipse.ui.texteditor.MarkerUtilities;
 import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Exceptions;
@@ -33,21 +31,17 @@ public class WorkspaceHelper {
     }
   }.apply();
   
-  public IStatus createProject(final String name, final String folder2Link) {
+  public void createProject(final String name, final String folder2Link) {
     try {
-      IStatus _xblockexpression = null;
-      {
-        final IProject project = this.project(name);
-        String _name = project.getName();
-        final IProjectDescription description = this.workspace.newProjectDescription(_name);
-        URI _create = URI.create(folder2Link);
-        description.setLocationURI(_create);
-        CreateProjectOperation _createProjectOperation = new CreateProjectOperation(description, "");
-        NullProgressMonitor _nullProgressMonitor = new NullProgressMonitor();
-        IStatus _execute = _createProjectOperation.execute(_nullProgressMonitor, null);
-        _xblockexpression = (_execute);
-      }
-      return _xblockexpression;
+      final IProjectDescription description = this.workspace.newProjectDescription(name);
+      URI _create = URI.create(folder2Link);
+      description.setLocationURI(_create);
+      IWorkspaceRoot _root = this.workspace.getRoot();
+      final IProject project = _root.getProject(name);
+      NullProgressMonitor _nullProgressMonitor = new NullProgressMonitor();
+      project.create(description, _nullProgressMonitor);
+      NullProgressMonitor _nullProgressMonitor_1 = new NullProgressMonitor();
+      project.open(_nullProgressMonitor_1);
     } catch (Exception _e) {
       throw Exceptions.sneakyThrow(_e);
     }

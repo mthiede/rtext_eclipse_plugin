@@ -7,7 +7,6 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.xtend2.lib.StringConcatenation;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
-import org.eclipse.xtext.xbase.lib.InputOutput;
 import org.eclipse.xtext.xbase.lib.ListExtensions;
 import org.hamcrest.StringDescription;
 import org.jnario.lib.JnarioCollectionLiterals;
@@ -385,9 +384,6 @@ public class SyntaxScannerSpec {
       this.subject.setRange(document, 0, _length);
       final List<IToken> tokens = JnarioCollectionLiterals.<IToken>list();
       IToken token = this.subject.nextToken();
-      int _length_1 = s.length();
-      String _plus = ("Acutal: " + Integer.valueOf(_length_1));
-      InputOutput.<String>println(_plus);
       boolean _isEOF = token.isEOF();
       boolean _not = (!_isEOF);
       boolean _while = _not;
@@ -396,10 +392,6 @@ public class SyntaxScannerSpec {
           tokens.add(token);
           IToken _nextToken = this.subject.nextToken();
           token = _nextToken;
-          int _tokenOffset = this.subject.getTokenOffset();
-          int _tokenLength = this.subject.getTokenLength();
-          int _plus_1 = (_tokenOffset + _tokenLength);
-          InputOutput.<Integer>println(Integer.valueOf(_plus_1));
         }
         boolean _isEOF_1 = token.isEOF();
         boolean _not_1 = (!_isEOF_1);

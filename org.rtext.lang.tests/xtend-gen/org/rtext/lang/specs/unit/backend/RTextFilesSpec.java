@@ -110,7 +110,7 @@ public class RTextFilesSpec {
   
   @Test
   @Named("Ignores null")
-  @Order(0)
+  @Order(1)
   public void _ignoresNull() throws Exception {
     RTextFiles _rtextFiles = this.rtextFiles(null);
     int _size = IterableExtensions.size(_rtextFiles);
@@ -123,7 +123,7 @@ public class RTextFilesSpec {
   
   @Test
   @Named("Ignores not existing files")
-  @Order(1)
+  @Order(2)
   public void _ignoresNotExistingFiles() throws Exception {
     File _file = new File("not existing");
     RTextFiles _rtextFiles = this.rtextFiles(_file);

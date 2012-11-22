@@ -4,10 +4,12 @@ import java.util.List;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.contentassist.ContentAssistEvent;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Functions.Function0;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.ListExtensions;
+import org.eclipse.xtext.xbase.lib.Procedures.Procedure0;
 import org.hamcrest.StringDescription;
 import org.jnario.lib.JnarioIterableExtensions;
 import org.jnario.lib.Should;
@@ -60,19 +62,29 @@ public class CodeCompletionFeatureSucessfullyUsingCodeCompletion extends CodeCom
     this.proposalProvider = _create;
     ContentAssistEvent __ = Should.<ContentAssistEvent>_();
     this.proposalProvider.assistSessionStarted(__);
-    IDocument _document = this.b.getDocument();
-    String _first = JnarioIterableExtensions.<String>first(args);
-    int _offsetAfter = this.b.offsetAfter(_first);
-    ICompletionProposal[] _computeCompletionProposals = this.proposalProvider.computeCompletionProposals(_document, _offsetAfter, 0);
-    final Function1<ICompletionProposal,String> _function_1 = new Function1<ICompletionProposal,String>() {
-        public String apply(final ICompletionProposal it) {
-          String _displayString = it.getDisplayString();
-          String _trim = _displayString.trim();
-          return _trim;
+    Display _default = Display.getDefault();
+    final Procedure0 _function_1 = new Procedure0() {
+        public void apply() {
+          IDocument _document = CodeCompletionFeatureSucessfullyUsingCodeCompletion.this.b.getDocument();
+          String _first = JnarioIterableExtensions.<String>first(args);
+          int _offsetAfter = CodeCompletionFeatureSucessfullyUsingCodeCompletion.this.b.offsetAfter(_first);
+          ICompletionProposal[] _computeCompletionProposals = CodeCompletionFeatureSucessfullyUsingCodeCompletion.this.proposalProvider.computeCompletionProposals(_document, _offsetAfter, 0);
+          final Function1<ICompletionProposal,String> _function = new Function1<ICompletionProposal,String>() {
+              public String apply(final ICompletionProposal it) {
+                String _displayString = it.getDisplayString();
+                String _trim = _displayString.trim();
+                return _trim;
+              }
+            };
+          List<String> _map = ListExtensions.<ICompletionProposal, String>map(((List<ICompletionProposal>)Conversions.doWrapArray(_computeCompletionProposals)), _function);
+          CodeCompletionFeatureSucessfullyUsingCodeCompletion.this.proposals = _map;
         }
       };
-    List<String> _map = ListExtensions.<ICompletionProposal, String>map(((List<ICompletionProposal>)Conversions.doWrapArray(_computeCompletionProposals)), _function_1);
-    this.proposals = _map;
+    _default.syncExec(new Runnable() {
+        public void run() {
+          _function_1.apply();
+        }
+    });
     ContentAssistEvent ___1 = Should.<ContentAssistEvent>_();
     this.proposalProvider.assistSessionEnded(___1);
   }

@@ -1,14 +1,14 @@
 package org.rtext.lang.specs.integration
 
-import org.jnario.lib.StepArguments
 import org.rtext.lang.editor.LoadModelCallback
 import org.rtext.lang.specs.util.BackendHelper
 import org.rtext.lang.specs.util.TestFileLocator
 import org.rtext.lang.specs.util.WorkspaceHelper
 
+import static org.rtext.lang.specs.util.Jobs.*
+
 import static extension org.jnario.lib.JnarioIterableExtensions.*
 import static extension org.jnario.lib.Should.*
-import static extension org.rtext.lang.specs.util.Jobs.*
 
 Feature: Problem Markers
 
@@ -26,6 +26,5 @@ Scenario: Valid files have no problem marker
 		waitForRTextJobs
 	Then "test/test_metamodel.ect"  should have no error markers
 		args.first.file.findProblems.empty should be true
-	But "test/test_metamodel_with_problems.ect"  should have error markers 
-		args.first.file.findProblems.empty should be false
-		
+//	But "test/test_metamodel_with_problems.ect"  should have error markers 
+//		args.first.file.findProblems.empty should be false

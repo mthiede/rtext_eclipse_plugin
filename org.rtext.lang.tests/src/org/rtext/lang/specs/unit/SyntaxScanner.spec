@@ -144,11 +144,9 @@ describe SyntaxScanner {
 		
 		val tokens = <IToken>list
 		var token= subject.nextToken()
-		println("Acutal: " + s.length)
 		while (!token.isEOF()) {
 			tokens += token
 			token= subject.nextToken()
-			println(subject.tokenOffset + subject.tokenLength)
 		}
 		tokens.map[
 			val attr = it.data as TextAttribute

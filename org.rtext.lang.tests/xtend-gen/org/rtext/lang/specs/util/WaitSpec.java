@@ -54,7 +54,7 @@ public class WaitSpec {
   
   @Test
   @Named("waits until condition is true")
-  @Order(0)
+  @Order(1)
   public void _waitsUntilConditionIsTrue() throws Exception {
     Boolean _apply = this.condition.apply();
     OngoingStubbing<Boolean> _when = Mockito.<Boolean>when(_apply);
@@ -67,7 +67,7 @@ public class WaitSpec {
   
   @Test
   @Named("tries every specified polling frequency")
-  @Order(1)
+  @Order(2)
   public void _triesEverySpecifiedPollingFrequency() throws Exception {
     this.c.setPollEvery(10l);
     Boolean _apply = this.condition.apply();
@@ -82,7 +82,7 @@ public class WaitSpec {
   
   @Test
   @Named("throws TimeoutError after specified time out")
-  @Order(2)
+  @Order(3)
   public void _throwsTimeoutErrorAfterSpecifiedTimeOut() throws Exception {
     this.c.setDuration(100l);
     Boolean _apply = this.condition.apply();

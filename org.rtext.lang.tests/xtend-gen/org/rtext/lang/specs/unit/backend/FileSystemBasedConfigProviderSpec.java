@@ -26,7 +26,7 @@ public class FileSystemBasedConfigProviderSpec {
   @Test
   @Ignore
   @Named("finds matching  [PENDING]")
-  @Order(0)
+  @Order(1)
   public void _findsMatching() throws Exception {
     throw new UnsupportedOperationException("_findsMatchingis not implemented");
   }

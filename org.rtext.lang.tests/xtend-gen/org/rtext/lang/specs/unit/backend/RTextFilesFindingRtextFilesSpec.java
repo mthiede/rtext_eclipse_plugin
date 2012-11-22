@@ -19,7 +19,7 @@ import org.rtext.lang.specs.unit.backend.RTextFilesSpec;
 public class RTextFilesFindingRtextFilesSpec extends RTextFilesSpec {
   @Test
   @Named("in the same folder")
-  @Order(2)
+  @Order(3)
   public void _inTheSameFolder() throws Exception {
     RTextFile _first = JnarioIterableExtensions.<RTextFile>first(this.fileFinder);
     boolean _doubleArrow = Should.operator_doubleArrow(_first, this.currentRTextFile);
@@ -32,7 +32,7 @@ public class RTextFilesFindingRtextFilesSpec extends RTextFilesSpec {
   
   @Test
   @Named("in parent folder")
-  @Order(3)
+  @Order(4)
   public void _inParentFolder() throws Exception {
     RTextFile _second = JnarioIterableExtensions.<RTextFile>second(this.fileFinder);
     boolean _doubleArrow = Should.operator_doubleArrow(_second, this.parentRTextFile);
@@ -45,7 +45,7 @@ public class RTextFilesFindingRtextFilesSpec extends RTextFilesSpec {
   
   @Test
   @Named("in root folder")
-  @Order(4)
+  @Order(5)
   public void _inRootFolder() throws Exception {
     RTextFile _third = JnarioIterableExtensions.<RTextFile>third(this.fileFinder);
     boolean _doubleArrow = Should.operator_doubleArrow(_third, this.rootRTextFile);

@@ -1,26 +1,26 @@
 package org.rtext.lang.specs.util
 
-import org.eclipse.core.resources.ResourcesPlugin
-import org.eclipse.core.runtime.Path
 import java.net.URI
-import org.eclipse.core.runtime.NullProgressMonitor
-import org.eclipse.ui.ide.undo.CreateProjectOperation
-import org.junit.Before
 import org.eclipse.core.resources.IFile
-import org.eclipse.core.resources.IResource
-import org.eclipse.core.runtime.CoreException
 import org.eclipse.core.resources.IMarker
+import org.eclipse.core.resources.IProject
+import org.eclipse.core.resources.IResource
+import org.eclipse.core.resources.ResourcesPlugin
+import org.eclipse.core.runtime.NullProgressMonitor
+import org.eclipse.core.runtime.Path
 import org.eclipse.ui.texteditor.MarkerUtilities
+import org.junit.Before
 
 class WorkspaceHelper {
 	
 	val workspace = ResourcesPlugin::workspace
 	
 	def createProject(String name, String folder2Link){
-		val project = project(name)
-		val description = workspace.newProjectDescription(project.getName())
+		val description = workspace.newProjectDescription(name)
 		description.setLocationURI(URI::create(folder2Link))
-		new CreateProjectOperation(description, "").execute(new NullProgressMonitor, null)
+		val IProject project = workspace.root.getProject(name)
+		project.create(description, new NullProgressMonitor)
+		project.open(new NullProgressMonitor)
 	}
 	
 	def project(String name){
