@@ -1,4 +1,4 @@
-package org.rtext.lang.specs.unit;
+package org.rtext.lang.specs.unit.util;
 
 import java.util.List;
 import org.jnario.lib.ExampleTableRow;

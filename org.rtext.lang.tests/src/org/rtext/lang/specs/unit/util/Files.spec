@@ -1,4 +1,4 @@
-package org.rtext.lang.specs.unit
+package org.rtext.lang.specs.unit.util
 
 import org.rtext.lang.util.Files
 import static extension org.rtext.lang.util.Files.*

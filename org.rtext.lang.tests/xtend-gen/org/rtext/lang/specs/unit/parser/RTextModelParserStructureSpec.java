@@ -1,4 +1,4 @@
-package org.rtext.lang.specs.unit;
+package org.rtext.lang.specs.unit.parser;
 
 import java.util.List;
 import org.eclipse.xtend2.lib.StringConcatenation;
@@ -11,7 +11,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.rtext.lang.model.Element;
-import org.rtext.lang.specs.unit.RTextModelParserSpec;
+import org.rtext.lang.specs.unit.parser.RTextModelParserSpec;
 import org.rtext.lang.specs.util.IsElement;
 
 @SuppressWarnings("all")

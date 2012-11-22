@@ -1,4 +1,4 @@
-package org.rtext.lang.specs.unit;
+package org.rtext.lang.specs.unit.parser;
 
 import com.google.common.base.Objects;
 import java.util.List;
@@ -14,9 +14,9 @@ import org.junit.Assert;
 import org.junit.runner.RunWith;
 import org.rtext.lang.model.Element;
 import org.rtext.lang.model.RTextModelParser;
-import org.rtext.lang.specs.unit.RTextModelParserErrorHandlingSpec;
-import org.rtext.lang.specs.unit.RTextModelParserFullTextRegionSpec;
-import org.rtext.lang.specs.unit.RTextModelParserStructureSpec;
+import org.rtext.lang.specs.unit.parser.RTextModelParserErrorHandlingSpec;
+import org.rtext.lang.specs.unit.parser.RTextModelParserFullTextRegionSpec;
+import org.rtext.lang.specs.unit.parser.RTextModelParserStructureSpec;
 import org.rtext.lang.specs.util.SimpleDocument;
 
 @Contains({ RTextModelParserStructureSpec.class, RTextModelParserFullTextRegionSpec.class, RTextModelParserErrorHandlingSpec.class })

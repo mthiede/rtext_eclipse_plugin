@@ -1,4 +1,4 @@
-package org.rtext.lang.specs.unit;
+package org.rtext.lang.specs.unit.util;
 
 import java.io.File;
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
@@ -12,8 +12,8 @@ import org.jnario.runner.Order;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.rtext.lang.specs.unit.FilesFileExtensionSpecExamples;
-import org.rtext.lang.specs.unit.FilesSpec;
+import org.rtext.lang.specs.unit.util.FilesFileExtensionSpecExamples;
+import org.rtext.lang.specs.unit.util.FilesSpec;
 import org.rtext.lang.util.Files;
 
 @SuppressWarnings("all")

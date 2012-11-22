@@ -10,21 +10,21 @@
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 
-<link rel="stylesheet" href="../../../../../css/bootstrap.min.css">
-<link rel="stylesheet" href="../../../../../css/bootstrap-responsive.min.css">
-<link rel="stylesheet" href="../../../../../css/custom.css">
-<link rel="stylesheet" href="../../../../../css/prettify.css">
-<script type="text/javascript" src="../../../../../js/prettify.js"></script>
-<script type="text/javascript" src="../../../../../js/lang-jnario.js"></script>
-<script type="text/javascript" src="../../../../../js/jquery.js"></script>
-<script type="text/javascript" src="../../../../../js/bootstrap-tab.js"></script>
+<link rel="stylesheet" href="../../../../../../css/bootstrap.min.css">
+<link rel="stylesheet" href="../../../../../../css/bootstrap-responsive.min.css">
+<link rel="stylesheet" href="../../../../../../css/custom.css">
+<link rel="stylesheet" href="../../../../../../css/prettify.css">
+<script type="text/javascript" src="../../../../../../js/prettify.js"></script>
+<script type="text/javascript" src="../../../../../../js/lang-jnario.js"></script>
+<script type="text/javascript" src="../../../../../../js/jquery.js"></script>
+<script type="text/javascript" src="../../../../../../js/bootstrap-tab.js"></script>
 </head>
 
 <body onload="prettyPrint()">
 	<div class="container">
 		<div class="tabbable">
 			<div class="content">
-				<div class="page-header pending">
+				<div class="page-header notrun">
 					<h1>RTextModelParser</h1>
 					  <ul class="nav nav-tabs pull-right">
 					    <li class="active"><a href="#spec" data-toggle="tab">Spec</a></li>
@@ -35,7 +35,7 @@
 					<div class="span12">
 						  <div class="tab-content">
 							  	<div class="tab-pane active" id="spec">
-<h3 class="exampleGroup pending"  id="structure">Structure</h3>
+<h3 class="exampleGroup notrun"  id="structure">Structure</h3>
 <ul><li><p id="parse_command" class="example notrun"><strong>parse command</strong></p>
 <pre class="prettyprint lang-spec linenums">
 &quot;Type&quot;.parse.first       =&gt; element(&quot;Type&quot;)
@@ -184,7 +184,7 @@ input.parse.first =&gt; element(&quot;Type&quot;, &quot;parent&quot;,
  * which accompanies this distribution, and is available at
  * http://opensource.org/licenses/MIT
  *******************************************************************************/
-package org.rtext.lang.specs.unit
+package org.rtext.lang.specs.unit.parser
 
 import org.jnario.lib.Should
 import org.junit.Assert

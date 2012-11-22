@@ -5,7 +5,7 @@
  * which accompanies this distribution, and is available at
  * http://opensource.org/licenses/MIT
  *******************************************************************************/
-package org.rtext.lang.specs.unit
+package org.rtext.lang.specs.unit.parser
 
 import org.eclipse.jface.text.TextAttribute
 import org.eclipse.jface.text.rules.IToken

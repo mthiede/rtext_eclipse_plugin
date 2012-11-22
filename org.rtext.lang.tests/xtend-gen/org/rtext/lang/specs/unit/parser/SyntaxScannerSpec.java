@@ -1,4 +1,4 @@
-package org.rtext.lang.specs.unit;
+package org.rtext.lang.specs.unit.parser;
 
 import java.util.List;
 import org.eclipse.jface.text.TextAttribute;
