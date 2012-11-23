@@ -57,8 +57,26 @@ public class SyntaxScannerSpec {
   }
   
   @Test
-  @Named("parse comments until EOL")
+  @Named("parse annotations")
   @Order(2)
+  public void _parseAnnotations() throws Exception {
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.append("@a comment");
+    _builder.newLine();
+    List<RGB> _scan = this.scan(_builder);
+    RGB _first = JnarioIterableExtensions.<RGB>first(_scan);
+    boolean _doubleArrow = Should.operator_doubleArrow(_first, IColorConstants.ANNOTATION);
+    Assert.assertTrue("\nExpected \'\'\'\n\t\t@a comment\n\t\t\'\'\'.scan.first => ANNOTATION but"
+     + "\n     \'\'\'\n\t\t@a comment\n\t\t\'\'\'.scan.first is " + new StringDescription().appendValue(_first).toString()
+     + "\n     \'\'\'\n\t\t@a comment\n\t\t\'\'\'.scan is " + new StringDescription().appendValue(_scan).toString()
+     + "\n     \'\'\'\n\t\t@a comment\n\t\t\'\'\' is " + new StringDescription().appendValue(_builder).toString()
+     + "\n     ANNOTATION is " + new StringDescription().appendValue(IColorConstants.ANNOTATION).toString() + "\n", _doubleArrow);
+    
+  }
+  
+  @Test
+  @Named("parse comments until EOL")
+  @Order(3)
   public void _parseCommentsUntilEOL() throws Exception {
     String _plus = ("#a comment" + Character.valueOf(AbstractRTextParser.EOL));
     List<RGB> _scan = this.scan(_plus);
@@ -75,7 +93,7 @@ public class SyntaxScannerSpec {
   
   @Test
   @Named("parse command")
-  @Order(3)
+  @Order(4)
   public void _parseCommand() throws Exception {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("Type name, label: /a/Reference");
@@ -93,7 +111,7 @@ public class SyntaxScannerSpec {
   
   @Test
   @Named("parse command starting with \\\'_\\\'")
-  @Order(4)
+  @Order(5)
   public void _parseCommandStartingWith() throws Exception {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("Type _name, label: /a/Reference");
@@ -111,7 +129,7 @@ public class SyntaxScannerSpec {
   
   @Test
   @Named("parse identifier")
-  @Order(5)
+  @Order(6)
   public void _parseIdentifier() throws Exception {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("Type name, label: /a/Reference");
@@ -129,7 +147,7 @@ public class SyntaxScannerSpec {
   
   @Test
   @Named("parse identifier with \\\'_\\\'")
-  @Order(6)
+  @Order(7)
   public void _parseIdentifierWith() throws Exception {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("Type name_with, label: /a/Reference");
@@ -147,7 +165,7 @@ public class SyntaxScannerSpec {
   
   @Test
   @Named("parse separator")
-  @Order(7)
+  @Order(8)
   public void _parseSeparator() throws Exception {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("Type name, label: /a/Reference");
@@ -165,7 +183,7 @@ public class SyntaxScannerSpec {
   
   @Test
   @Named("parse label")
-  @Order(8)
+  @Order(9)
   public void _parseLabel() throws Exception {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("Type name, label: /a/Reference");
@@ -183,7 +201,7 @@ public class SyntaxScannerSpec {
   
   @Test
   @Named("parse reference")
-  @Order(9)
+  @Order(10)
   public void _parseReference() throws Exception {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("Type name, label: /long/a/Reference");
@@ -200,8 +218,26 @@ public class SyntaxScannerSpec {
   }
   
   @Test
+  @Named("parse generics")
+  @Order(11)
+  public void _parseGenerics() throws Exception {
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.append("Type name, label: <generic>");
+    _builder.newLine();
+    List<RGB> _scan = this.scan(_builder);
+    RGB _fifth = JnarioIterableExtensions.<RGB>fifth(_scan);
+    boolean _doubleArrow = Should.operator_doubleArrow(_fifth, IColorConstants.GENERICS);
+    Assert.assertTrue("\nExpected \'\'\'\n\t\tType name, label: <generic>\n\t\t\'\'\'.scan.fifth => GENERICS but"
+     + "\n     \'\'\'\n\t\tType name, label: <generic>\n\t\t\'\'\'.scan.fifth is " + new StringDescription().appendValue(_fifth).toString()
+     + "\n     \'\'\'\n\t\tType name, label: <generic>\n\t\t\'\'\'.scan is " + new StringDescription().appendValue(_scan).toString()
+     + "\n     \'\'\'\n\t\tType name, label: <generic>\n\t\t\'\'\' is " + new StringDescription().appendValue(_builder).toString()
+     + "\n     GENERICS is " + new StringDescription().appendValue(IColorConstants.GENERICS).toString() + "\n", _doubleArrow);
+    
+  }
+  
+  @Test
   @Named("parse reference without leading \\\'/\\\'")
-  @Order(10)
+  @Order(12)
   public void _parseReferenceWithoutLeading() throws Exception {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("Type name, label: a/long/Reference");
@@ -219,7 +255,7 @@ public class SyntaxScannerSpec {
   
   @Test
   @Named("parse number")
-  @Order(11)
+  @Order(13)
   public void _parseNumber() throws Exception {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("Type name, label: 8");
@@ -237,7 +273,7 @@ public class SyntaxScannerSpec {
   
   @Test
   @Named("parse string")
-  @Order(12)
+  @Order(14)
   public void _parseString() throws Exception {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("Type name, label: \"a string\"");
@@ -255,7 +291,7 @@ public class SyntaxScannerSpec {
   
   @Test
   @Named("parse enum")
-  @Order(13)
+  @Order(15)
   public void _parseEnum() throws Exception {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("Type name, label: enum");
@@ -273,7 +309,7 @@ public class SyntaxScannerSpec {
   
   @Test
   @Named("parse whitespace")
-  @Order(14)
+  @Order(16)
   public void _parseWhitespace() throws Exception {
     List<RGB> _scan = this.scan("Type name, label: enum\r\n");
     RGB _fifth = JnarioIterableExtensions.<RGB>fifth(_scan);
@@ -287,7 +323,7 @@ public class SyntaxScannerSpec {
   
   @Test
   @Named("parse whitespace after command")
-  @Order(15)
+  @Order(17)
   public void _parseWhitespaceAfterCommand() throws Exception {
     final String input = "Type   ";
     this.scan(input);
@@ -308,7 +344,7 @@ public class SyntaxScannerSpec {
   
   @Test
   @Named("parse string until EOL")
-  @Order(16)
+  @Order(18)
   public void _parseStringUntilEOL() throws Exception {
     String _plus = ("Type name, label: \"a string " + Character.valueOf(AbstractRTextParser.EOL));
     List<RGB> _scan = this.scan(_plus);
@@ -325,7 +361,7 @@ public class SyntaxScannerSpec {
   
   @Test
   @Named("parse nested elements")
-  @Order(17)
+  @Order(19)
   public void _parseNestedElements() throws Exception {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("AUTOSAR {");

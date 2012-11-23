@@ -96,6 +96,12 @@ public class RTextModelParser extends AbstractRTextParser<Element> {
 		increaseLength();
 		return null;
 	}
+	
+	@Override
+	protected Element createAnnotation() {
+		increaseLength();
+		return null;
+	}
 
 	@Override
 	protected Element createNumber() {
@@ -105,6 +111,12 @@ public class RTextModelParser extends AbstractRTextParser<Element> {
 
 	@Override
 	protected Element createString() {
+		increaseLength();
+		return null;
+	}
+	
+	@Override
+	protected Element createGenerics() {
 		increaseLength();
 		return null;
 	}

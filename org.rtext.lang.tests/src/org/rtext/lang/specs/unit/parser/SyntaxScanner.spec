@@ -30,6 +30,12 @@ describe SyntaxScanner {
 		'''.scan.first => COMMENT
 	}
 	
+	fact "parse annotations"{
+		'''
+		@a comment
+		'''.scan.first => ANNOTATION
+	}
+	
 	fact "parse comments until EOL"{
 		("#a comment" + EOL).scan.first => COMMENT
 	}
@@ -75,6 +81,12 @@ describe SyntaxScanner {
 		'''
 		Type name, label: /long/a/Reference
 		'''.scan.fifth => REFERENCE
+	}
+	
+	fact "parse generics"{
+		'''
+		Type name, label: <generic>
+		'''.scan.fifth => GENERICS
 	}
 	
 	fact "parse reference without leading '/'"{

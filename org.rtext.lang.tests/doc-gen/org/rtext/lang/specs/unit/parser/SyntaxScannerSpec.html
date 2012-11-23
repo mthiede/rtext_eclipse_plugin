@@ -40,6 +40,11 @@
 '''
 #a comment
 '''.scan.first =&gt; COMMENT</pre>
+</li><li><p id="parse_annotations" class="example notrun"><strong>parse annotations</strong></p>
+<pre class="prettyprint lang-spec linenums">
+'''
+@a comment
+'''.scan.first =&gt; ANNOTATION</pre>
 </li><li><p id="parse_comments_until_EOL" class="example notrun"><strong>parse comments until EOL</strong></p>
 <pre class="prettyprint lang-spec linenums">
 (&quot;#a comment&quot; + EOL).scan.first =&gt; COMMENT</pre>
@@ -78,6 +83,11 @@ Type name, label: /a/Reference
 '''
 Type name, label: /long/a/Reference
 '''.scan.fifth =&gt; REFERENCE</pre>
+</li><li><p id="parse_generics" class="example notrun"><strong>parse generics</strong></p>
+<pre class="prettyprint lang-spec linenums">
+'''
+Type name, label: &lt;generic&gt;
+'''.scan.fifth =&gt; GENERICS</pre>
 </li><li><p id="parse_reference_without_leading" class="example notrun"><strong>parse reference without leading '/'</strong></p>
 <pre class="prettyprint lang-spec linenums">
 '''
@@ -167,6 +177,12 @@ describe SyntaxScanner {
     '''.scan.first =&gt; COMMENT
   }
   
+  fact &quot;parse annotations&quot;{
+    '''
+    @a comment
+    '''.scan.first =&gt; ANNOTATION
+  }
+  
   fact &quot;parse comments until EOL&quot;{
     (&quot;#a comment&quot; + EOL).scan.first =&gt; COMMENT
   }
@@ -212,6 +228,12 @@ describe SyntaxScanner {
     '''
     Type name, label: /long/a/Reference
     '''.scan.fifth =&gt; REFERENCE
+  }
+  
+  fact &quot;parse generics&quot;{
+    '''
+    Type name, label: &lt;generic&gt;
+    '''.scan.fifth =&gt; GENERICS
   }
   
   fact &quot;parse reference without leading '/'&quot;{

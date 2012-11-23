@@ -17,5 +17,7 @@ public interface IColorConstants {
 	RGB NUMBER = new RGB(125, 125, 125);
 	RGB COMMAND = new RGB(127, 0, 85);
 	RGB COMMENT = new RGB(63, 127, 95);
+	RGB ANNOTATION = new RGB(100,100,100);
+	RGB GENERICS = new RGB(171, 48, 0);
 	RGB REFERENCE = new RGB(200, 0, 0);
 }

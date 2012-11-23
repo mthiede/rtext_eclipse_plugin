@@ -66,6 +66,16 @@ public class SyntaxScanner extends AbstractRTextParser<IToken> implements IToken
 		return createToken(IColorConstants.COMMENT);
 	}
 	
+	@Override
+	protected IToken createAnnotation() {
+		return createToken(IColorConstants.ANNOTATION);
+	}
+	
+	@Override
+	protected IToken createGenerics() {
+		return createToken(IColorConstants.GENERICS);
+	}
+	
 	protected IToken createToken(RGB rgb) {
 		int style = SWT.NORMAL;
 		if(rgb == IColorConstants.COMMAND){
@@ -83,5 +93,5 @@ public class SyntaxScanner extends AbstractRTextParser<IToken> implements IToken
 	protected IToken createEndOfFile() {
 		return Token.EOF;
 	}
-	
+
 }

@@ -42,8 +42,10 @@ public abstract class AbstractRTextParser<T> {
 		if (nextIsChar('#')) {
 			consumeUntilEOL();
 			result = createComment();
-		}
-		else if (nextIsWordStartCharacter()) {
+		}else if (nextIsChar('@')) {
+			consumeUntilEOL();
+			result = createAnnotation();
+		}else if (nextIsWordStartCharacter()) {
 			consumeWord();
 			if (consumeChar(':') && !fNewLine) {
 				result = createLabel();
@@ -70,6 +72,10 @@ public abstract class AbstractRTextParser<T> {
 		else if (nextIsChar('"')) {
 			consumeString();
 			result = createString();
+		}
+		else if (nextIsChar('<')) {
+			consumeGenerics();
+			result = createGenerics();
 		}
 		else {
 			if (nextIsChar('{')) {
@@ -145,13 +151,21 @@ public abstract class AbstractRTextParser<T> {
 	}
 
 	private void consumeString() {
-		consumeChar('"');
+		consumeInside('"', '"');
+	}
+	
+	private void consumeGenerics() {
+		consumeInside('<', '>');
+	}
+
+	public void consumeInside(char prefix, char postfix) {
+		consumeChar(prefix);
 		char c = readChar();
-		while (c != '"' && c != EOL) {
+		while (c != postfix && c != EOL) {
 			c = readChar();
 		}
 		unreadChar();
-		consumeChar('"');
+		consumeChar(postfix);
 	}
 
 	private boolean consumeWhitespace() {
@@ -242,6 +256,10 @@ public abstract class AbstractRTextParser<T> {
 	protected abstract T createString();
 
 	protected abstract T createDefault();
+	
+	protected abstract T createAnnotation();
+	
+	protected abstract T createGenerics();
 	
 	protected int currentOffset() {
 		return fOffset;
