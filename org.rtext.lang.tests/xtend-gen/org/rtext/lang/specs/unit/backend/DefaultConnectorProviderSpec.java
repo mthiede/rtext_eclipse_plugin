@@ -1,5 +1,7 @@
 package org.rtext.lang.specs.unit.backend;
 
+import java.io.File;
+import org.eclipse.xtext.xbase.lib.Functions.Function0;
 import org.hamcrest.StringDescription;
 import org.jnario.lib.Should;
 import org.jnario.runner.CreateWith;
@@ -31,8 +33,13 @@ public class DefaultConnectorProviderSpec {
   @Mock
   ConnectorConfigProvider configFileProvider;
   
-  @Mock
-  ConnectorConfig config;
+  ConnectorConfig config = new Function0<ConnectorConfig>() {
+    public ConnectorConfig apply() {
+      File _file = new File("path");
+      ConnectorConfig _connectorConfig = new ConnectorConfig(_file, "");
+      return _connectorConfig;
+    }
+  }.apply();
   
   @Mock
   Connector connector;

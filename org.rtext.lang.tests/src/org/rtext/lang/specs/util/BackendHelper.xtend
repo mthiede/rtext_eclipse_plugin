@@ -1,18 +1,19 @@
 package org.rtext.lang.specs.util
 
+import org.eclipse.core.runtime.IPath
+import org.eclipse.jface.text.IDocument
+import org.eclipse.jface.text.Region
+import org.eclipse.xtend.lib.Property
 import org.junit.After
 import org.rtext.lang.backend.CachingConnectorProvider
 import org.rtext.lang.backend.Connector
-import org.rtext.lang.commands.Response
-import static org.rtext.lang.specs.util.Wait.*
+import org.rtext.lang.commands.Callback
 import org.rtext.lang.commands.Command
-import org.eclipse.jface.text.IDocument
-import org.eclipse.core.runtime.IPath
 import org.rtext.lang.commands.LoadModelCommand
 import org.rtext.lang.commands.LoadedModel
-import org.rtext.lang.commands.Callback
-import java.io.File
-import org.eclipse.jface.text.Region
+import org.rtext.lang.commands.Response
+
+import static org.rtext.lang.specs.util.Wait.*
 
 class BackendHelper {
 	extension TestFileLocator fileLocator = TestFileLocator::getDefault()
@@ -52,7 +53,7 @@ class BackendHelper {
 
 	def executeAsynchronousCommand() {
 		waitUntil[
-			connector.execute(new Command(2, "request", "load_model", typeof(Response)), callback)
+			connector.execute(new Command("load_model", typeof(Response)), callback)
 			callback.response != null
 		]
 		response = callback.response
@@ -70,12 +71,9 @@ class BackendHelper {
 	def proposals(){
 		proposalAcceptor.proposals
 	}
-	
 
 	def regionOf(String string){
 		val offset = document.get.indexOf(string)
 		new Region(offset+1, string.length)
 	}
-	
-
 }

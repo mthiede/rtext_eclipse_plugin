@@ -10,8 +10,7 @@ package org.rtext.lang.backend;
 import java.io.File;
 import java.util.Iterator;
 
-
-public class RTextFiles implements Iterable<RTextFile>{
+public class RTextFiles implements Iterable<RTextFile> {
 
 	private final class RTextFileIterator implements Iterator<RTextFile> {
 		private File currentFile;
@@ -37,13 +36,22 @@ public class RTextFiles implements Iterable<RTextFile>{
 		public void remove() {
 			throw new UnsupportedOperationException();
 		}
-		
+
 		private File rtextFileInSameFolder(File file) {
-			if(file == null){
+			if (file == null) {
 				return null;
 			}
-			String parent = file.getParent();
-			return new File(parent + File.separator + ".rtext");
+			String parentFolder = file.getParent();
+			File rtextFile = rtextFileIn(parentFolder);
+			while (!rtextFile.exists() && parentFolder != null) {
+				rtextFile = rtextFileIn(parentFolder);
+				parentFolder = new File(parentFolder).getParent();
+			}
+			return rtextFile;
+		}
+
+		public File rtextFileIn(String folder) {
+			return new File(folder + File.separator + RTextFile.RTEXT_FILE_NAME);
 		}
 	}
 

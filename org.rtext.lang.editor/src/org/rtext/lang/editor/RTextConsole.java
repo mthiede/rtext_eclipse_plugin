@@ -23,7 +23,7 @@ public class RTextConsole implements OutputHandler{
 	}
 
 	public String fileName(ConnectorConfig connectorConfig) {
-		if(connectorConfig.getConfigFile() != null){
+		if(connectorConfig != null && connectorConfig.getConfigFile() != null){
 			return connectorConfig.getConfigFile().getPath();
 		}
 		return "----";

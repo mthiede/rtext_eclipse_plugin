@@ -39,20 +39,9 @@ describe RTextFiles {
 	
 	before "create filesystem"{
 		rootFolder = newFolder("root")
-		rootConfig = newRTextFile(rootFolder)
-		
 		parentFolder = newFolder("root/parent")
-		parentConfig = newRTextFile(parentFolder)
-		
 		currentFolder = newFolder("root/parent/current")
-		currentConfig = newRTextFile(currentFolder)
 		modelFile = newFile(currentFolder, "input.txt")
-		
-		parser => [
-			when(doParse(currentConfig)).thenReturn(currentRTextFile)
-			when(doParse(parentConfig)).thenReturn(parentRTextFile)
-			when(doParse(rootConfig)).thenReturn(rootRTextFile)		
-		]
 		
 		fileFinder = new RTextFiles(parser, modelFile) 
 	}
@@ -60,16 +49,21 @@ describe RTextFiles {
 	context "Finding .rtext files"{
 		
 		fact "in the same folder"{
+			currentConfig = newRTextFile(currentFolder)
+			when(parser.doParse(currentConfig)).thenReturn(currentRTextFile)
 			fileFinder.first => currentRTextFile
 		}
 		
 		fact "in parent folder"{
-			fileFinder.second => parentRTextFile
+			parentConfig = newRTextFile(parentFolder)
+			when(parser.doParse(parentConfig)).thenReturn(parentRTextFile)
+			fileFinder.first => parentRTextFile
 		}
 		
 		fact "in root folder"{
-			fileFinder.third => rootRTextFile
-			fileFinder.size => 3
+			rootConfig = newRTextFile(rootFolder)
+			when(parser.doParse(rootConfig)).thenReturn(rootRTextFile)		
+			fileFinder.first => rootRTextFile
 		}
 	}
 	

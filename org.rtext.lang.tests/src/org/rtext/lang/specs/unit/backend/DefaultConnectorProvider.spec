@@ -9,13 +9,14 @@ import org.rtext.lang.backend.Connector
 import org.rtext.lang.backend.ConnectorFactory
 import org.jnario.runner.CreateWith
 import org.rtext.lang.specs.util.MockInjector
+import java.io.File
 
 @CreateWith(typeof(MockInjector))
 describe DefaultConnectorProvider {
 	
 	@Mock ConnectorConfigProvider configFileProvider
 	
-	@Mock ConnectorConfig config
+	ConnectorConfig config = new ConnectorConfig(new File("path"), "")
 	@Mock Connector connector
 	
 	@Mock ConnectorFactory connectorFactory

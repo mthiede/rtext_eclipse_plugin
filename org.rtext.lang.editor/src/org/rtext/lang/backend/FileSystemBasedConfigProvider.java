@@ -26,7 +26,6 @@ public class FileSystemBasedConfigProvider implements ConnectorConfigProvider {
 		this.rTextFileFinder = rTextFileFinder;
 	}
 
-	
 	public ConnectorConfig get(String modelFilePath) {
 		File modelFile = getFile(modelFilePath);
 		RTextFiles rTextFiles = findRTextFiles(modelFile);

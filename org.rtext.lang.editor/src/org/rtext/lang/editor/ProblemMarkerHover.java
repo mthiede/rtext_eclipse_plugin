@@ -37,7 +37,7 @@ public class ProblemMarkerHover implements IAnnotationHover {
 				}
 			}
 		}
-		return result.toString();
+		return result.toString().trim();
 	}
 	
 }

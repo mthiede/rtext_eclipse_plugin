@@ -53,6 +53,16 @@ when(configFileProvider.get(aModelPath)).thenReturn(config)
 when(configFileProvider.get(anotherModelPath)).thenReturn(anotherConfig)
 
 subject.get(aModelPath) should not be subject.get(anotherModelPath)</pre>
+</li><li><p id="returns_null_if_config_file_cannot_be_resolved" class="example notrun"><strong>returns null if config file cannot be resolved</strong></p>
+<pre class="prettyprint lang-spec linenums">
+when(configFileProvider.get(anyString)).thenReturn(null)
+subject.get(aModelPath) should be null</pre>
+</li><li><p id="disposes_all_connectors_for_given_config_file" class="example notrun"><strong>disposes all connectors for given config file</strong></p>
+<pre class="prettyprint lang-spec linenums">
+when(configFileProvider.get(aModelPath)).thenReturn(config)
+subject.get(aModelPath)
+subject.dispose(config.configFile.path)
+verify(connector).dispose</pre>
 </li></ul>
 							</div>
 						    <div class="tab-pane" id="source">
@@ -72,20 +82,25 @@ import org.rtext.lang.backend.ConnectorProvider
 
 import static org.mockito.Mockito.*
 import org.rtext.lang.backend.ConnectorFactory
+import java.io.File
 
 @CreateWith(typeof(MockInjector))
 describe ConnectorProvider {
   
   @Mock ConnectorConfigProvider configFileProvider
-  @Mock ConnectorConfig config
-  @Mock ConnectorConfig anotherConfig
+  ConnectorConfig config = new ConnectorConfig(new File(&quot;test1/.rtext&quot;), &quot;&quot;)
+  ConnectorConfig anotherConfig = new ConnectorConfig(new File(&quot;test2/.rtext&quot;), &quot;&quot;)
+  @Mock ConnectorFactory connectorFactory
   @Mock Connector connector
-  
+  @Mock Connector anotherConnector
+    
   String aModelPath = &quot;a path&quot;
   String anotherModelPath = &quot;another path&quot;
   
   before {
-    subject = new CachingConnectorProvider(configFileProvider, new ConnectorFactory)
+    subject = new CachingConnectorProvider(configFileProvider, connectorFactory)
+    when(connectorFactory.createConnector(config)).thenReturn(connector)
+    when(connectorFactory.createConnector(anotherConfig)).thenReturn(anotherConnector)
   }
   
   fact &quot;Creates connector with file specific configuration&quot;{
@@ -109,6 +124,17 @@ describe ConnectorProvider {
     subject.get(aModelPath) should not be subject.get(anotherModelPath)
   }
   
+  fact &quot;returns null if config file cannot be resolved&quot;{
+    when(configFileProvider.get(anyString)).thenReturn(null)
+    subject.get(aModelPath) should be null
+  }
+  
+  fact &quot;disposes all connectors for given config file&quot;{
+    when(configFileProvider.get(aModelPath)).thenReturn(config)
+    subject.get(aModelPath)
+    subject.dispose(config.configFile.path)
+    verify(connector).dispose
+  }
 }
 </pre>
 						    </p></div>

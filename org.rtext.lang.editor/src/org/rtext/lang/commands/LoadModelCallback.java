@@ -27,12 +27,12 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.MultiRule;
 import org.eclipse.ui.texteditor.MarkerUtilities;
 import org.rtext.lang.commands.LoadedModel.FileProblems;
 import org.rtext.lang.commands.LoadedModel.Problem;
 import org.rtext.lang.util.FileLocator;
+import org.rtext.lang.util.RTextJob;
 
 public class LoadModelCallback extends WorkspaceCallback<LoadedModel> {
 
@@ -45,7 +45,7 @@ public class LoadModelCallback extends WorkspaceCallback<LoadedModel> {
 		}
 	}
 	
-	public static class ProblemUpdateJob extends Job{
+	public static class ProblemUpdateJob extends RTextJob{
 		private Map<IResource, List<Problem>> problems;
 
 		public ProblemUpdateJob(Map<IResource, List<Problem>> problems) {
@@ -92,14 +92,6 @@ public class LoadModelCallback extends WorkspaceCallback<LoadedModel> {
 			} catch (CoreException e) {
 				logError("Exception when setting marker on :" + resource.getFullPath(), e);
 			}
-		}
-		
-		@Override
-		public boolean belongsTo(Object family) {
-			if(family == WorkspaceCallback.RTEXT_JOB_FAMILY){
-				return true;
-			}
-			return super.belongsTo(family);
 		}
 	}
 	

@@ -13,10 +13,10 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.rtext.lang.RTextPlugin;
+import org.rtext.lang.util.RTextJob;
 
-public class WorkspaceCallback<T extends Response> extends Job implements Callback<T> {
+public class WorkspaceCallback<T extends Response> extends RTextJob implements Callback<T> {
 	
-	public static final String RTEXT_JOB_FAMILY = "RText Jobs";
 	private IProgressMonitor monitor = new NullProgressMonitor();
 	private String message;
 	int lastProgress = 0;
@@ -53,11 +53,4 @@ public class WorkspaceCallback<T extends Response> extends Job implements Callba
 		schedule();
 	}
 	
-	@Override
-	public boolean belongsTo(Object family) {
-		if(family == RTEXT_JOB_FAMILY){
-			return true;
-		}
-		return super.belongsTo(family);
-	}
 }

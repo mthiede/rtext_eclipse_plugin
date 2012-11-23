@@ -139,7 +139,7 @@ public class BackendHelper {
           boolean _xblockexpression = false;
           {
             Connector _connector = BackendHelper.this.getConnector();
-            Command<Response> _command = new Command<Response>(2, "request", "load_model", Response.class);
+            Command<Response> _command = new Command<Response>("load_model", Response.class);
             _connector.<Response>execute(_command, BackendHelper.this.callback);
             Response _response = BackendHelper.this.callback.getResponse();
             boolean _notEquals = (!Objects.equal(_response, null));

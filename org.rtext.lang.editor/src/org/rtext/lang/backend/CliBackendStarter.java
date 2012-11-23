@@ -7,6 +7,7 @@
  *******************************************************************************/
 package org.rtext.lang.backend;
 
+import static java.lang.Runtime.getRuntime;
 import static java.lang.System.arraycopy;
 import static org.rtext.lang.util.Closables.closeQuietly;
 import static org.rtext.lang.util.Strings.splitCommand;
@@ -144,19 +145,20 @@ public final class CliBackendStarter implements BackendStarter {
 	}
 
 	public void stop() {
-		Runtime.getRuntime().removeShutdownHook(shutdownHook);
+		if(shutdownHook != null){
+			getRuntime().removeShutdownHook(shutdownHook);
+		}
 		if (process != null) {
 			process.destroy();
 			closeQuietly(process.getErrorStream());
 			closeQuietly(process.getInputStream());
 			process = null;
 		}
-		try {
-			outputMonitor.join();
-		} catch (InterruptedException e) {
+		if(outputMonitor != null){
+			outputMonitor.close();
+			outputMonitor.interrupt();
 		}
 		portParser.clear();
-		outputMonitor.close();
 	}
 
 	public int getPort() throws TimeoutException {

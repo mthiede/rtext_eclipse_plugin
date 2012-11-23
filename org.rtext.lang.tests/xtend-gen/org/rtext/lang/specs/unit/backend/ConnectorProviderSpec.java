@@ -1,5 +1,9 @@
 package org.rtext.lang.specs.unit.backend;
 
+import java.io.File;
+import org.eclipse.xtext.xbase.lib.Functions.Function0;
+import org.hamcrest.CoreMatchers;
+import org.hamcrest.Matcher;
 import org.hamcrest.StringDescription;
 import org.jnario.lib.Should;
 import org.jnario.runner.CreateWith;
@@ -32,14 +36,30 @@ public class ConnectorProviderSpec {
   @Mock
   ConnectorConfigProvider configFileProvider;
   
-  @Mock
-  ConnectorConfig config;
+  ConnectorConfig config = new Function0<ConnectorConfig>() {
+    public ConnectorConfig apply() {
+      File _file = new File("test1/.rtext");
+      ConnectorConfig _connectorConfig = new ConnectorConfig(_file, "");
+      return _connectorConfig;
+    }
+  }.apply();
+  
+  ConnectorConfig anotherConfig = new Function0<ConnectorConfig>() {
+    public ConnectorConfig apply() {
+      File _file = new File("test2/.rtext");
+      ConnectorConfig _connectorConfig = new ConnectorConfig(_file, "");
+      return _connectorConfig;
+    }
+  }.apply();
   
   @Mock
-  ConnectorConfig anotherConfig;
+  ConnectorFactory connectorFactory;
   
   @Mock
   Connector connector;
+  
+  @Mock
+  Connector anotherConnector;
   
   String aModelPath = "a path";
   
@@ -47,9 +67,14 @@ public class ConnectorProviderSpec {
   
   @Before
   public void before() throws Exception {
-    ConnectorFactory _connectorFactory = new ConnectorFactory();
-    CachingConnectorProvider _cachingConnectorProvider = new CachingConnectorProvider(this.configFileProvider, _connectorFactory);
+    CachingConnectorProvider _cachingConnectorProvider = new CachingConnectorProvider(this.configFileProvider, this.connectorFactory);
     this.subject = _cachingConnectorProvider;
+    Connector _createConnector = this.connectorFactory.createConnector(this.config);
+    OngoingStubbing<Connector> _when = Mockito.<Connector>when(_createConnector);
+    _when.thenReturn(this.connector);
+    Connector _createConnector_1 = this.connectorFactory.createConnector(this.anotherConfig);
+    OngoingStubbing<Connector> _when_1 = Mockito.<Connector>when(_createConnector_1);
+    _when_1.thenReturn(this.anotherConnector);
   }
   
   @Test
@@ -111,5 +136,38 @@ public class ConnectorProviderSpec {
      + "\n     subject.get(anotherModelPath) is " + new StringDescription().appendValue(_get_3).toString()
      + "\n     anotherModelPath is " + new StringDescription().appendValue(this.anotherModelPath).toString() + "\n", _should_be);
     
+  }
+  
+  @Test
+  @Named("returns null if config file cannot be resolved")
+  @Order(4)
+  public void _returnsNullIfConfigFileCannotBeResolved() throws Exception {
+    String _anyString = Matchers.anyString();
+    ConnectorConfig _get = this.configFileProvider.get(_anyString);
+    OngoingStubbing<ConnectorConfig> _when = Mockito.<ConnectorConfig>when(_get);
+    _when.thenReturn(null);
+    Connector _get_1 = this.subject.get(this.aModelPath);
+    Matcher<Connector> _nullValue = CoreMatchers.<Connector>nullValue();
+    boolean _should_be = Should.<Connector>should_be(_get_1, _nullValue);
+    Assert.assertTrue("\nExpected subject.get(aModelPath) should be null but"
+     + "\n     subject.get(aModelPath) is " + new StringDescription().appendValue(_get_1).toString()
+     + "\n     subject is " + new StringDescription().appendValue(this.subject).toString()
+     + "\n     aModelPath is " + new StringDescription().appendValue(this.aModelPath).toString() + "\n", _should_be);
+    
+  }
+  
+  @Test
+  @Named("disposes all connectors for given config file")
+  @Order(5)
+  public void _disposesAllConnectorsForGivenConfigFile() throws Exception {
+    ConnectorConfig _get = this.configFileProvider.get(this.aModelPath);
+    OngoingStubbing<ConnectorConfig> _when = Mockito.<ConnectorConfig>when(_get);
+    _when.thenReturn(this.config);
+    this.subject.get(this.aModelPath);
+    File _configFile = this.config.getConfigFile();
+    String _path = _configFile.getPath();
+    this.subject.dispose(_path);
+    Connector _verify = Mockito.<Connector>verify(this.connector);
+    _verify.dispose();
   }
 }

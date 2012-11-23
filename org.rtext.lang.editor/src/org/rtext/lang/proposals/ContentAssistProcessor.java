@@ -154,7 +154,6 @@ public class ContentAssistProcessor implements IContentAssistProcessor,	IComplet
 			proposals = errorProposal("Could not locate .rtext file");
 		}else{
 			try {
-				
 				proposals = connector.execute(new ProposalsCommand(createContext(document, offset)));
 			}catch (BackendException e) {
 				proposals = errorProposal("Cannot load backend");

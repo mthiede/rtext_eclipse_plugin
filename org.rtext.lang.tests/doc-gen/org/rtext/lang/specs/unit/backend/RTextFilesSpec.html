@@ -38,14 +38,19 @@
 <h3 class="exampleGroup notrun"  id="Finding_rtext_files">Finding .rtext files</h3>
 <ul><li><p id="in_the_same_folder" class="example notrun"><strong>in the same folder</strong></p>
 <pre class="prettyprint lang-spec linenums">
+currentConfig = newRTextFile(currentFolder)
+when(parser.doParse(currentConfig)).thenReturn(currentRTextFile)
 fileFinder.first =&gt; currentRTextFile</pre>
 </li><li><p id="in_parent_folder" class="example notrun"><strong>in parent folder</strong></p>
 <pre class="prettyprint lang-spec linenums">
-fileFinder.second =&gt; parentRTextFile</pre>
+parentConfig = newRTextFile(parentFolder)
+when(parser.doParse(parentConfig)).thenReturn(parentRTextFile)
+fileFinder.first =&gt; parentRTextFile</pre>
 </li><li><p id="in_root_folder" class="example notrun"><strong>in root folder</strong></p>
 <pre class="prettyprint lang-spec linenums">
-fileFinder.third =&gt; rootRTextFile
-fileFinder.size =&gt; 3</pre>
+rootConfig = newRTextFile(rootFolder)
+when(parser.doParse(rootConfig)).thenReturn(rootRTextFile)    
+fileFinder.first =&gt; rootRTextFile</pre>
 </li></ul>
 <ul><li><p id="Ignores_null" class="example notrun"><strong>Ignores null</strong></p>
 <pre class="prettyprint lang-spec linenums">
@@ -100,20 +105,9 @@ describe RTextFiles {
   
   before &quot;create filesystem&quot;{
     rootFolder = newFolder(&quot;root&quot;)
-    rootConfig = newRTextFile(rootFolder)
-    
     parentFolder = newFolder(&quot;root/parent&quot;)
-    parentConfig = newRTextFile(parentFolder)
-    
     currentFolder = newFolder(&quot;root/parent/current&quot;)
-    currentConfig = newRTextFile(currentFolder)
     modelFile = newFile(currentFolder, &quot;input.txt&quot;)
-    
-    parser =&gt; [
-      when(doParse(currentConfig)).thenReturn(currentRTextFile)
-      when(doParse(parentConfig)).thenReturn(parentRTextFile)
-      when(doParse(rootConfig)).thenReturn(rootRTextFile)    
-    ]
     
     fileFinder = new RTextFiles(parser, modelFile) 
   }
@@ -121,16 +115,21 @@ describe RTextFiles {
   context &quot;Finding .rtext files&quot;{
     
     fact &quot;in the same folder&quot;{
+      currentConfig = newRTextFile(currentFolder)
+      when(parser.doParse(currentConfig)).thenReturn(currentRTextFile)
       fileFinder.first =&gt; currentRTextFile
     }
     
     fact &quot;in parent folder&quot;{
-      fileFinder.second =&gt; parentRTextFile
+      parentConfig = newRTextFile(parentFolder)
+      when(parser.doParse(parentConfig)).thenReturn(parentRTextFile)
+      fileFinder.first =&gt; parentRTextFile
     }
     
     fact &quot;in root folder&quot;{
-      fileFinder.third =&gt; rootRTextFile
-      fileFinder.size =&gt; 3
+      rootConfig = newRTextFile(rootFolder)
+      when(parser.doParse(rootConfig)).thenReturn(rootRTextFile)    
+      fileFinder.first =&gt; rootRTextFile
     }
   }
   

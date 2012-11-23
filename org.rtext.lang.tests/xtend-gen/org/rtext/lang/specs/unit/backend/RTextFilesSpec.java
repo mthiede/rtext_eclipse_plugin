@@ -3,8 +3,6 @@ package org.rtext.lang.specs.unit.backend;
 import java.io.File;
 import org.eclipse.xtext.xbase.lib.Functions.Function0;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
-import org.eclipse.xtext.xbase.lib.ObjectExtensions;
-import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
 import org.hamcrest.StringDescription;
 import org.jnario.lib.Should;
 import org.jnario.runner.Contains;
@@ -20,8 +18,6 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.stubbing.OngoingStubbing;
 import org.rtext.lang.backend.RTextFile;
 import org.rtext.lang.backend.RTextFileFinder;
 import org.rtext.lang.backend.RTextFileParser;
@@ -77,33 +73,12 @@ public class RTextFilesSpec {
   public void _createFilesystem() throws Exception {
     File _newFolder = this.tempFolder.newFolder("root");
     this.rootFolder = _newFolder;
-    File _newRTextFile = this.newRTextFile(this.rootFolder);
-    this.rootConfig = _newRTextFile;
     File _newFolder_1 = this.tempFolder.newFolder("root/parent");
     this.parentFolder = _newFolder_1;
-    File _newRTextFile_1 = this.newRTextFile(this.parentFolder);
-    this.parentConfig = _newRTextFile_1;
     File _newFolder_2 = this.tempFolder.newFolder("root/parent/current");
     this.currentFolder = _newFolder_2;
-    File _newRTextFile_2 = this.newRTextFile(this.currentFolder);
-    this.currentConfig = _newRTextFile_2;
     File _newFile = Files.newFile(this.currentFolder, "input.txt");
     this.modelFile = _newFile;
-    final Procedure1<RTextFileParser> _function = new Procedure1<RTextFileParser>() {
-        public void apply(final RTextFileParser it) {
-          RTextFile _doParse = it.doParse(RTextFilesSpec.this.currentConfig);
-          OngoingStubbing<RTextFile> _when = Mockito.<RTextFile>when(_doParse);
-          _when.thenReturn(RTextFilesSpec.this.currentRTextFile);
-          RTextFile _doParse_1 = it.doParse(RTextFilesSpec.this.parentConfig);
-          OngoingStubbing<RTextFile> _when_1 = Mockito.<RTextFile>when(_doParse_1);
-          _when_1.thenReturn(RTextFilesSpec.this.parentRTextFile);
-          RTextFile _doParse_2 = it.doParse(RTextFilesSpec.this.rootConfig);
-          OngoingStubbing<RTextFile> _when_2 = Mockito.<RTextFile>when(_doParse_2);
-          _when_2.thenReturn(RTextFilesSpec.this.rootRTextFile);
-        }
-      };
-    ObjectExtensions.<RTextFileParser>operator_doubleArrow(
-      this.parser, _function);
     RTextFiles _rTextFiles = new RTextFiles(this.parser, this.modelFile);
     this.fileFinder = _rTextFiles;
   }

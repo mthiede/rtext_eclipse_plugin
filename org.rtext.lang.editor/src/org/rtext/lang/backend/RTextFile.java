@@ -7,6 +7,7 @@
  *******************************************************************************/
 package org.rtext.lang.backend;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,7 @@ import java.util.Map;
 
 public class RTextFile {
 	
+	public static final String RTEXT_FILE_NAME = ".rtext";
 	final Map<String, ConnectorConfig> fileExtensions2Configuration;
 
 	public RTextFile(List<ConnectorConfig> configurations) {
@@ -27,5 +29,9 @@ public class RTextFile {
 	
 	public ConnectorConfig getConfiguration(String fileExtension){
 		return fileExtensions2Configuration.get(fileExtension);
+	}
+
+	public Collection<ConnectorConfig> getConfigurations() {
+		return fileExtensions2Configuration.values();
 	}
 }
