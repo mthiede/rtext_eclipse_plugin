@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Communication with Backend</title>
+<title>Sending & Receiving Messages</title>
 <meta name="description" content="">
 <meta name="author" content="Jnario">
 
@@ -24,8 +24,8 @@
 	<div class="container">
 		<div class="tabbable">
 			<div class="content">
-				<div class="page-header notrun">
-					<h1>Communication with Backend</h1>
+				<div class="page-header pending">
+					<h1>Sending & Receiving Messages</h1>
 					  <ul class="nav nav-tabs pull-right">
 					    <li class="active"><a href="#spec" data-toggle="tab">Spec</a></li>
 						<li><a href="#source" data-toggle="tab">Source</a></li>
@@ -35,53 +35,54 @@
 					<div class="span12">
 						  <div class="tab-content">
 							  	<div class="tab-pane active" id="spec">
-<ul><li><p id="Executing_commands_synchronously" class="example notrun"><strong>Executing commands synchronously</strong></p>
-<pre class="prettyprint lang-spec linenums">
-startBackendFor(modelFile.absolutPath)
-
-executeSynchronousCommand() 
-
-response.type =&gt; &quot;response&quot;</pre>
-</li><li><p id="Executing_commands_asynchronously" class="example notrun"><strong>Executing commands asynchronously</strong></p>
-<pre class="prettyprint lang-spec linenums">
-startBackendFor(modelFile.absolutPath)
-
-executeAsynchronousCommand() 
-
-response.type =&gt; &quot;response&quot;</pre>
-</li></ul>
+<div><h3 class="scenario notrun"  id="Scenario_Synchronous_communication">Scenario: Synchronous communication
+</h3>
+<ul>
+<li><span class="step notrun"><p>Given a backend for <code>"rtext/test/integration/model/test_metamodel.ect"</code></p></span>
+</li>
+<li><span class="step notrun"><p>When I send an synchronous message</p></span>
+</li>
+<li><span class="step notrun"><p>Then I get a response</p></span>
+</li>
+</ul>
+</div>
+<div><h3 class="scenario notrun"  id="Scenario_Ansynchronous_communication">Scenario: Ansynchronous communication
+</h3>
+<ul>
+<li><span class="step notrun"><p>Given a backend for <code>"rtext/test/integration/model/test_metamodel.ect"</code></p></span>
+</li>
+<li><span class="step notrun"><p>When I send an asynchronous message</p></span>
+</li>
+<li><span class="step notrun"><p>Then I get a response</p></span>
+</li>
+</ul>
+</div>
 							</div>
 						    <div class="tab-pane" id="source">
-						    	<h3>BackendCommunication.spec</h3>
+						    	<h3>BackendCommunication.feature</h3>
 						    	<p>
-<pre class="prettyprint lang-spec linenums">
+<pre class="prettyprint lang-feature linenums">
 package org.rtext.lang.specs.integration
 
-import org.rtext.lang.specs.util.BackendHelper
-
+import static extension org.jnario.lib.JnarioIterableExtensions.*
 import static extension org.jnario.lib.Should.*
 
-describe &quot;Communication with Backend&quot;{
-  
-  extension BackendHelper = new BackendHelper
-  val modelFile = &quot;rtext/test/integration/model/test_metamodel.ect&quot;
+Feature: Sending &amp; Receiving Messages
+
+  Scenario: Synchronous communication
     
-  fact &quot;Executing commands synchronously&quot;{
-    startBackendFor(modelFile.absolutPath)
+    Given a backend for &quot;rtext/test/integration/model/test_metamodel.ect&quot;
+    When I send an synchronous message
+      executeSynchronousCommand() 
+    Then I get a response
+      response.type =&gt; &quot;response&quot;
+      
+  Scenario: Ansynchronous communication
     
-    executeSynchronousCommand() 
-    
-    response.type =&gt; &quot;response&quot;
-  }
-  
-  fact &quot;Executing commands asynchronously&quot;{
-    startBackendFor(modelFile.absolutPath)
-    
-    executeAsynchronousCommand() 
-    
-    response.type =&gt; &quot;response&quot;
-  }
-}
+    Given a backend for &quot;rtext/test/integration/model/test_metamodel.ect&quot;
+    When I send an asynchronous message
+      executeAsynchronousCommand
+    Then I get a response
 </pre>
 						    </p></div>
 						  </div>

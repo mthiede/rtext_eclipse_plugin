@@ -9,7 +9,7 @@ import static org.rtext.lang.specs.util.Sleeper.*
 
 class WaitConfig {
 	@Property var message = "Timeout occurred"
-	@Property var duration = 500l
+	@Property var duration = 5000l
 	@Property var pollEvery = 50l
 }
 

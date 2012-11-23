@@ -12,7 +12,7 @@ public class WaitConfig {
     this._message = message;
   }
   
-  private long _duration = 500l;
+  private long _duration = 5000l;
   
   public long getDuration() {
     return this._duration;

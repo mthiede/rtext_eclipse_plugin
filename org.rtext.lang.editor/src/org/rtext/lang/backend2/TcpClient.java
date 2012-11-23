@@ -7,6 +7,7 @@
  *******************************************************************************/
 package org.rtext.lang.backend2;
 
+import static java.lang.Integer.parseInt;
 import static org.rtext.lang.util.Closables.closeQuietly;
 
 import java.io.BufferedReader;
@@ -176,7 +177,7 @@ public class TcpClient implements Connection {
 			result.append((char) c);
 			c = in.read();
 		}
-		int length = Integer.parseInt(result.toString().trim());
+		int length = parseInt(result.toString().trim());
 		return length;
 	}
 
