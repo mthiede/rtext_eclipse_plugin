@@ -30,7 +30,7 @@ import org.rtext.lang.util.Expectations;
 
 public class TcpClient implements Connection {
 
-	private static final int SOCKET_TIMEOUT = 5000;
+	private static final int SOCKET_TIMEOUT = 10000;
 
 	private class Worker extends Thread {
 		private volatile boolean running = true;
