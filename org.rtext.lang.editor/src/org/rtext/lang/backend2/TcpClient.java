@@ -32,7 +32,7 @@ public class TcpClient implements Connection {
 	private static final int SOCKET_TIMEOUT = 5000;
 
 	private class Worker extends Thread {
-		private boolean running = true;
+		private volatile boolean running = true;
 
 		@Override
 		public void run() {
@@ -69,6 +69,10 @@ public class TcpClient implements Connection {
 			out.print(serializer.serialize(task.command));
 			out.flush();
 			task.callback.commandSent();
+		}
+
+		public void stopWorking() {
+			running = false;
 		}
 	}
 
@@ -132,11 +136,18 @@ public class TcpClient implements Connection {
 	}
 
 	public void close() {
-		worker.running = false;
+		stopWorker();
 		closeQuietly(socket);
 		closeQuietly(out);
 		closeQuietly(in);
 		socket = null;
+	}
+
+	public void stopWorker() {
+		if(worker != null){
+			worker.stopWorking();
+			worker = null;
+		}
 	}
 
 	public <T extends Response> void sendRequest(Command<T> request,
@@ -165,9 +176,7 @@ public class TcpClient implements Connection {
 			result.append((char) c);
 			c = in.read();
 		}
-		String[] lines = result.toString().split("\n");
-		String line = lines[lines.length-1];
-		int length = Integer.parseInt(line.trim());
+		int length = Integer.parseInt(result.toString().trim());
 		return length;
 	}
 

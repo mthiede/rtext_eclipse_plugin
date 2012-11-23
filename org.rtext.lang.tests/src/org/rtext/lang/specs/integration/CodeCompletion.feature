@@ -35,11 +35,11 @@ Scenario: Sucessfully using code completion
 	val expectedProposals = args.first.trim.split("\r?\n").map[trim]
 	proposals => expectedProposals
 	
-//Scenario: Proposal signals backend failure
-//	
-//	Given a backend for "rtext/test/integration/model/test.crashing_backend"
-//	When I invoke the code completion after "EPackage StatemachineMM {\n"
-//	Then the proposals should be
-//	'''
-//		Cannot load backend
-//	'''
+Scenario: Proposal signals backend failure
+	
+	Given a backend for "rtext/test/integration/model/test.crashing_backend"
+	When I invoke the code completion after "EPackage StatemachineMM {\n"
+	Then the proposals should be
+	'''
+		Cannot load backend
+	'''
