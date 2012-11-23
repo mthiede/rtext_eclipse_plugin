@@ -10,6 +10,7 @@ package org.rtext.lang.editor;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 
 import org.eclipse.jface.dialogs.DialogSettings;
 import org.eclipse.jface.dialogs.IDialogSettings;
@@ -28,45 +29,48 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.SelectionStatusDialog;
-import org.rtext.lang.backend.Command;
-import org.rtext.lang.backend.Connector;
-import org.rtext.lang.backend.IResponseListener;
+import org.rtext.lang.backend2.Connector;
+import org.rtext.lang.commands.Callback;
+import org.rtext.lang.commands.Elements;
+import org.rtext.lang.commands.Elements.Element;
+import org.rtext.lang.commands.FindElementsCommand;
+import org.rtext.lang.commands.Progress;
 
 
-public class OpenElementDialog extends SelectionStatusDialog implements IResponseListener {
+public class OpenElementDialog extends SelectionStatusDialog  {
+	public class DialogUpdater implements Callback<Elements> {
+
+		public void commandSent() {
+		}
+
+		public void handleProgress(Progress progress) {
+			
+		}
+
+		public void handleResponse(final Elements elements) {
+			Display.getDefault().asyncExec(new Runnable() {
+				public void run() {
+					responseReceived(elements);
+				}
+			});
+		}
+
+		public void handleError(String error) {
+		}
+
+	}
+
 	private Text pattern;
 	private TableViewer list;
 	private Label statusLabel;
 	private RTextEditor editor;
 	private Date requestSentDate;
 	private String lastRequestedPattern;
-
-	class ElementDescriptor {
-		private String display;
-		private String filename;
-		private int line;
-		
-		ElementDescriptor(String display, String filename, int line) {
-			this.display = display;
-			this.filename = filename;
-			this.line = line;
-		}
-		public String getDisplay() {
-			return display;
-		}
-		public String getFilename() {
-			return filename;
-		}
-		public int getLine() {
-			return line;
-		}
-		public String toString() {
-			return display;
-		}
-	}
+	private Callback<Elements> callback = new DialogUpdater();
 	
 	public OpenElementDialog(RTextEditor editor) {
 		super(editor.getSite().getShell());
@@ -110,7 +114,7 @@ public class OpenElementDialog extends SelectionStatusDialog implements IRespons
 
 		IContentProvider contentProvider = new ArrayContentProvider();
 		list.setContentProvider(contentProvider);
-		list.setInput(new ElementDescriptor[0]);
+		list.setInput(new Element[0]);
 		list.getTable().setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		pattern.addModifyListener(new ModifyListener() {
@@ -163,9 +167,9 @@ public class OpenElementDialog extends SelectionStatusDialog implements IRespons
 		// while a request is ongoing, no new request will be made
 		// however after a timeout, the request is considered to be lost a new request will be made anyway
 		if (requestSentDate == null || (new Date().getTime() - requestSentDate.getTime()) > 10000) {
-			Connector bc = editor.getBackendConnector();
+			Connector bc = editor.getConnector();
 			if (bc != null) {
-				bc.executeCommand(new Command("get_elements", pattern.getText()), this, 10000);
+				bc.execute(new FindElementsCommand(lastRequestedPattern), callback);
 				requestSentDate = new Date();
 				lastRequestedPattern = pattern.getText();
 				indicateStartSearch();
@@ -176,22 +180,11 @@ public class OpenElementDialog extends SelectionStatusDialog implements IRespons
 		setResult(((StructuredSelection) list.getSelection()).toList());	
 	}
 
-	public void responseUpdate(List<String> responseLines) {
-		// do nothing
-	}
-	
-	public void responseReceived(List<String> responseLines) {
+	public void responseReceived(Elements elements) {
 		if (getContents() != null && !getContents().isDisposed()) {
 			indicateStopSearch();
 			requestSentDate = null;
-			List<ElementDescriptor>descs = new ArrayList<ElementDescriptor>();
-			for (String line : responseLines) {
-				String[] parts = line.split(";");
-				if (parts.length == 3) {
-					descs.add(new ElementDescriptor(parts[0], parts[1], Integer.parseInt(parts[2])));
-				}				
-			}
-			list.setInput(descs);
+			list.setInput(elements.getElements());
 			if (!(lastRequestedPattern != null && lastRequestedPattern.equals(pattern.getText()))) {
 				requestElements();
 			}

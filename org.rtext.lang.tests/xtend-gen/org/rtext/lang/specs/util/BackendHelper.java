@@ -125,35 +125,27 @@ public class BackendHelper {
   }
   
   public void executeSynchronousCommand(final Callback<LoadedModel> callback) {
-    try {
-      WrappingCallback<LoadedModel> _wrappingCallback = new WrappingCallback<LoadedModel>(callback);
-      final WrappingCallback<LoadedModel> waitingCallback = _wrappingCallback;
-      Connector _connector = this.getConnector();
-      LoadModelCommand _loadModelCommand = new LoadModelCommand();
-      _connector.<LoadedModel>execute(_loadModelCommand, waitingCallback);
-      waitingCallback.waitForResponse();
-    } catch (Exception _e) {
-      throw Exceptions.sneakyThrow(_e);
-    }
+    WrappingCallback<LoadedModel> _wrappingCallback = new WrappingCallback<LoadedModel>(callback);
+    final WrappingCallback<LoadedModel> waitingCallback = _wrappingCallback;
+    Connector _connector = this.getConnector();
+    LoadModelCommand _loadModelCommand = new LoadModelCommand();
+    _connector.<LoadedModel>execute(_loadModelCommand, waitingCallback);
+    waitingCallback.waitForResponse();
   }
   
   public void executeAsynchronousCommand() {
     final Function1<WaitConfig,Boolean> _function = new Function1<WaitConfig,Boolean>() {
         public Boolean apply(final WaitConfig it) {
-          try {
-            boolean _xblockexpression = false;
-            {
-              Connector _connector = BackendHelper.this.getConnector();
-              Command<Response> _command = new Command<Response>(2, "request", "load_model", Response.class);
-              _connector.<Response>execute(_command, BackendHelper.this.callback);
-              Response _response = BackendHelper.this.callback.getResponse();
-              boolean _notEquals = (!Objects.equal(_response, null));
-              _xblockexpression = (_notEquals);
-            }
-            return Boolean.valueOf(_xblockexpression);
-          } catch (Exception _e) {
-            throw Exceptions.sneakyThrow(_e);
+          boolean _xblockexpression = false;
+          {
+            Connector _connector = BackendHelper.this.getConnector();
+            Command<Response> _command = new Command<Response>(2, "request", "load_model", Response.class);
+            _connector.<Response>execute(_command, BackendHelper.this.callback);
+            Response _response = BackendHelper.this.callback.getResponse();
+            boolean _notEquals = (!Objects.equal(_response, null));
+            _xblockexpression = (_notEquals);
           }
+          return Boolean.valueOf(_xblockexpression);
         }
       };
     Wait.waitUntil(_function);

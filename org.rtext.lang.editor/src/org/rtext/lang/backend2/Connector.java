@@ -78,7 +78,7 @@ public class Connector {
 		return callback.response();
 	}
 	
-	public <T extends Response> void execute(Command<T> command, Callback<T> callback) throws TimeoutException{
+	public <T extends Response> void execute(Command<T> command, Callback<T> callback){
 		if(!ensureBackendIsConnected(callback)){
 			return;
 		}
@@ -99,14 +99,14 @@ public class Connector {
 		return new OnErrorClosingCallback<T>(delegate);
 	}
 
-	protected boolean ensureBackendIsConnected(Callback<?> callback) throws TimeoutException {
+	protected boolean ensureBackendIsConnected(Callback<?> callback) {
 		if(processRunner.isRunning()){
 			return true;
 		}
 		return startBackend(callback);
 	}
 
-	public boolean startBackend(Callback<?> callback) throws TimeoutException {
+	public boolean startBackend(Callback<?> callback)  {
 		try{
 			processRunner.startProcess(connectorConfig);
 			connection.connect(ADDRESS, processRunner.getPort());

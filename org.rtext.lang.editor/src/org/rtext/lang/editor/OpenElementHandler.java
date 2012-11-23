@@ -10,7 +10,7 @@ package org.rtext.lang.editor;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.rtext.lang.editor.OpenElementDialog.ElementDescriptor;
+import org.rtext.lang.commands.Elements.Element;
 
 
 public class OpenElementHandler extends AbstractHandler {
@@ -25,8 +25,8 @@ public class OpenElementHandler extends AbstractHandler {
 		dialog.open();
 		Object[] result = dialog.getResult();
 		if (result != null && result.length > 0) {
-			ElementDescriptor pos = (ElementDescriptor)result[0];
-			OpenEditorHelper.openInRTextEditor(editor.getSite().getPage(), pos.getFilename(), pos.getLine());
+			Element pos = (Element)result[0];
+			OpenEditorHelper.openInRTextEditor(editor.getSite().getPage(), pos.getFile(), pos.getLine());
 		}
 		return null;
 	}

@@ -44,7 +44,6 @@ public class LoadedModel extends Response {
 		List<Problem> problems = new ArrayList<Problem>();
 		
 		public FileProblems(String file, List<Problem> problems) {
-			super();
 			this.file = file;
 			this.problems = problems;
 		}
