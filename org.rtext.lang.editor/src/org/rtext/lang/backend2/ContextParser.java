@@ -21,23 +21,23 @@ public class ContextParser {
 		this.doc = doc;
 	}
 	
-	public List<String> getContext(int offset) {
+	public DocumentContext getContext(int offset) {
 		List<String> result = new ArrayList<String>();
-//		String result = String.valueOf(offsetInLine(offset))+"\n";
 		for (String line : parseContext(offset)) {
 			result.add(line);
 		}
-		return result;		
+		 
+		return new DocumentContext(parseContext(offset), getOffsetInLine(offset));		
 	}
-	
-	private int offsetInLine(int offset) {
-		int line;
-		try {
-			line = doc.getLineOfOffset(offset);
-			return offset - doc.getLineOffset(line);
-		} catch (BadLocationException e) {
+
+	public int getOffsetInLine(int offset) {
+		try{
+			int line = doc.getLineOfOffset(offset);
+			int lineOffset = doc.getLineOffset(line);
+			return offset - lineOffset;
+		}catch(BadLocationException e){
+			return 0;
 		}
-		return 0;
 	}
 	
 	private List<String> parseContext(int offset) {

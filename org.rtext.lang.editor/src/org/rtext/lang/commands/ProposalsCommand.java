@@ -7,25 +7,12 @@
  *******************************************************************************/
 package org.rtext.lang.commands;
 
-import java.util.List;
+import org.rtext.lang.backend2.DocumentContext;
 
-public class ProposalsCommand extends Command<Proposals> {
+public class ProposalsCommand extends CommandWithContext<Proposals> {
 
-	private List<String> context;
-	private int column;
-
-	public ProposalsCommand(List<String> context, int lineOffset) {
-		super("content_complete", Proposals.class);
-		this.context = context;
-		this.column = lineOffset;
-	}
-	
-	public List<String> getContext() {
-		return context;
-	}
-	
-	public int getColumn() {
-		return column;
+	public ProposalsCommand(DocumentContext documentContext) {
+		super("content_complete", Proposals.class, documentContext);
 	}
 	
 }

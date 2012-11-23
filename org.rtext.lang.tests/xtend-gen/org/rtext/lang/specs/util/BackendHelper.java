@@ -4,6 +4,7 @@ import com.google.common.base.Objects;
 import java.util.ArrayList;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.Region;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.Functions.Function0;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
@@ -179,5 +180,19 @@ public class BackendHelper {
     TestProposalAcceptor _proposalAcceptor = this.getProposalAcceptor();
     ArrayList<String> _proposals = _proposalAcceptor.getProposals();
     return _proposals;
+  }
+  
+  public Region regionOf(final String string) {
+    Region _xblockexpression = null;
+    {
+      IDocument _document = this.getDocument();
+      String _get = _document.get();
+      final int offset = _get.indexOf(string);
+      int _plus = (offset + 1);
+      int _length = string.length();
+      Region _region = new Region(_plus, _length);
+      _xblockexpression = (_region);
+    }
+    return _xblockexpression;
   }
 }

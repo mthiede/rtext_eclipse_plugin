@@ -7,8 +7,11 @@
  *******************************************************************************/
 package org.rtext.lang.editor;
 
+import static org.rtext.lang.util.Workbenches.getActivePage;
+
 import java.util.List;
 import java.util.Vector;
+import java.util.concurrent.TimeoutException;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
@@ -17,70 +20,75 @@ import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
-import org.rtext.lang.backend.Command;
-import org.rtext.lang.backend.Connector;
+import org.rtext.lang.backend2.Connector;
 import org.rtext.lang.backend2.ContextParser;
-
+import org.rtext.lang.backend2.DocumentContext;
+import org.rtext.lang.commands.ReferenceTargets;
+import org.rtext.lang.commands.ReferenceTargets.Target;
+import org.rtext.lang.commands.ReferenceTargetsCommand;
 
 public class HyperlinkDetector implements IHyperlinkDetector {
-	private RTextEditor editor;
-	
-	public HyperlinkDetector(RTextEditor editor) {
+	private Connected editor;
+
+	public HyperlinkDetector(Connected editor) {
 		this.editor = editor;
 	}
-	
-	private Region getLinkRegion(ITextViewer viewer, int currentOffset, String regionDesc) {
-		String[] regionParts = regionDesc.split(";");
-		int regionStart = Integer.parseInt(regionParts[0]);
-		int regionEnd = Integer.parseInt(regionParts[1]);
-		if (regionStart >= 0 && regionEnd >= regionStart) {
-			IDocument doc = viewer.getDocument();
-			try {
-				int lineOffset = doc.getLineOffset(doc.getLineOfOffset(currentOffset));
-				return new Region(lineOffset+regionStart, regionEnd-regionStart+1); 
-			} catch (BadLocationException e) {
-			}
+
+	private IHyperlink[] createHyperlinks(Region linkRegion, ReferenceTargets referenceTargets) {
+		if (referenceTargets.getTargets().isEmpty()) {
+			return null;
 		}
-		return null;
-	}
-	
-	private IHyperlink[] createHyperlinks(Region linkRegion, List<String> responseLines) {
 		List<IHyperlink> links = new Vector<IHyperlink>();
 
-		for (String responseLine : responseLines) {
-			String[] parts = responseLine.split(";");
-			if (parts.length == 3) {
-				String filename = parts[0];
-				int line = Integer.parseInt(parts[1]);
-				String displayName = parts[2];
-				links.add(new Hyperlink(editor.getSite().getPage(), linkRegion, filename, line, displayName));
-			}
+		for (Target target : referenceTargets.getTargets()) {
+			String filename = target.getFile();
+			int line = target.getLine();
+			String displayName = target.getDisplay();
+			links.add(new Hyperlink(getActivePage(), linkRegion, filename, 	line, displayName));
 		}
-		if (links.size() > 0) {
-			return links.toArray(new IHyperlink[0]);
+		return links.toArray(new IHyperlink[0]);
+	}
+
+	public IHyperlink[] detectHyperlinks(ITextViewer textViewer,
+			IRegion region, boolean canShowMultipleHyperlinks) {
+		return detectHyperLinks(textViewer.getDocument(), region);
+	}
+
+	public IHyperlink[] detectHyperLinks(IDocument document, IRegion region) {
+		Connector connector = editor.getConnector();
+		if (connector == null) {
+			return null;
 		}
-		else {
+		try {
+			DocumentContext context = createContext(document, region);
+			ReferenceTargets referenceTargets = requestReferenceTargets(connector, context);
+			Region linkRegion = createHyperLinkRegion(document, region,	referenceTargets);
+			return createHyperlinks(linkRegion, referenceTargets);
+		} catch (TimeoutException e) {
 			return null;
 		}
 	}
-	
-	public IHyperlink[] detectHyperlinks(ITextViewer textViewer,
-			IRegion region, boolean canShowMultipleHyperlinks) {
-		List<String> context = new ContextParser(textViewer.getDocument()).getContext(region.getOffset());
-		if (context != null) {
-			Connector bc = editor.getBackendConnector();
-			if (bc != null) {
-//				List<String> responseLines = bc.executeCommand(new Command("get_reference_targets", context), 1000);
-//				if (responseLines != null && responseLines.size() > 0) {
-//					String regionDesc = responseLines.remove(0);
-//					Region linkRegion = getLinkRegion(textViewer, region.getOffset(), regionDesc);
-//					if (linkRegion != null) {
-//						return createHyperlinks(linkRegion, responseLines);						
-//					}				
-//				}
-			}
+
+	public ReferenceTargets requestReferenceTargets(Connector connector, DocumentContext context) throws TimeoutException {
+		return connector.execute(new ReferenceTargetsCommand(context));
+	}
+	public DocumentContext createContext(IDocument document, IRegion region) {
+		return new ContextParser(document).getContext(region.getOffset());
+	}
+
+	private Region createHyperLinkRegion(IDocument document, IRegion region,
+			ReferenceTargets referenceTargets) {
+		int endColumn  = referenceTargets.getBeginColumn();
+		int beginColumn = referenceTargets.getEndColumn();
+		try {
+			int line = document.getLineOfOffset(region.getOffset());
+			int lineOffset = document.getLineOffset(line);
+			int offset = lineOffset + beginColumn;
+			int length = endColumn - beginColumn;
+			return new Region(offset, length);
+		} catch (BadLocationException e) {
+			return new Region(0, 0);
 		}
-		return null;
 	}
 
 }

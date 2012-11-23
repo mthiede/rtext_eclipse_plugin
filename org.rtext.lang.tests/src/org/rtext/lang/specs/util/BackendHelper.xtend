@@ -11,6 +11,8 @@ import org.eclipse.core.runtime.IPath
 import org.rtext.lang.commands.LoadModelCommand
 import org.rtext.lang.commands.LoadedModel
 import org.rtext.lang.commands.Callback
+import java.io.File
+import org.eclipse.jface.text.Region
 
 class BackendHelper {
 	extension TestFileLocator fileLocator = TestFileLocator::getDefault()
@@ -67,6 +69,12 @@ class BackendHelper {
 
 	def proposals(){
 		proposalAcceptor.proposals
+	}
+	
+
+	def regionOf(String string){
+		val offset = document.get.indexOf(string)
+		new Region(offset+1, string.length)
 	}
 	
 

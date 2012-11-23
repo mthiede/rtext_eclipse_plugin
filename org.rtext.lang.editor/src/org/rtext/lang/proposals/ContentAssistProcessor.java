@@ -28,6 +28,7 @@ import org.eclipse.swt.graphics.Image;
 import org.rtext.lang.backend2.BackendException;
 import org.rtext.lang.backend2.Connector;
 import org.rtext.lang.backend2.ContextParser;
+import org.rtext.lang.backend2.DocumentContext;
 import org.rtext.lang.commands.Proposals;
 import org.rtext.lang.commands.ProposalsCommand;
 import org.rtext.lang.commands.Proposals.Option;
@@ -151,19 +152,15 @@ public class ContentAssistProcessor implements IContentAssistProcessor,	IComplet
 		Connector connector = getConnector();
 		if (connector  == null) {
 			proposals = errorProposal("Could not locate .rtext file");
-			return proposals.getOptions();
-		}
-		try {
-			int line = document.getLineOfOffset(offset);
-			int lineOffset = document.getLineOffset(line);
-			int offsetInLine = offset - lineOffset; 
-			proposals = connector.execute(new ProposalsCommand(createContext(document, offset), offsetInLine));
-		}catch (BackendException e) {
-			proposals = errorProposal("Cannot load backend");
-		}catch (TimeoutException e) {
-			proposals = errorProposal("Cannot load backend");
-		}catch (BadLocationException e) {
-			return emptyList();
+		}else{
+			try {
+				
+				proposals = connector.execute(new ProposalsCommand(createContext(document, offset)));
+			}catch (BackendException e) {
+				proposals = errorProposal("Cannot load backend");
+			}catch (TimeoutException e) {
+				proposals = errorProposal("Cannot load backend");
+			}
 		}
 		return proposals.getOptions();
 	}
@@ -174,10 +171,9 @@ public class ContentAssistProcessor implements IContentAssistProcessor,	IComplet
 		return errorProposal;
 	}
 
-	public List<String> createContext(IDocument document, int offset) {
+	public DocumentContext createContext(IDocument document, int offset) {
 		ContextParser contextParser = new ContextParser(document);
-		List<String> context = contextParser.getContext(offset);
-		return context;
+		return contextParser.getContext(offset);
 	}
 	
 	private Connector getConnector(){

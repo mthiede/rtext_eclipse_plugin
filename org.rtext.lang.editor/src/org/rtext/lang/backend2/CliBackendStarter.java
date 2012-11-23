@@ -170,6 +170,6 @@ public final class CliBackendStarter implements BackendStarter {
 	}
 
 	public static BackendStarter create(ConnectorConfig connectorConfig) {
-		return new CliBackendStarter(new PortParser(), new RTextConsole(connectorConfig));
+		return new CliBackendStarter(new PortParser(), new RTextConsole(connectorConfig), new SystemOutDebug());
 	}
 }
