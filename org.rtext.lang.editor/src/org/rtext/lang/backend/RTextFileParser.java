@@ -17,7 +17,6 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.rtext.lang.backend2.RTextFile;
 
 public class RTextFileParser {
 	

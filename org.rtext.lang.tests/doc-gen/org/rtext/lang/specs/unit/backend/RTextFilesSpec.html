@@ -63,7 +63,7 @@ package org.rtext.lang.specs.unit.backend
 
 import static org.rtext.lang.specs.util.Files.*
 
-import org.rtext.lang.backend2.RTextFiles
+import org.rtext.lang.backend.RTextFiles
 import org.rtext.lang.specs.util.MockInjector
 import org.jnario.runner.CreateWith
 import org.rtext.lang.backend.RTextFileParser
@@ -71,10 +71,10 @@ import org.mockito.Mock
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder
 import java.io.File
-import org.rtext.lang.backend2.RTextFile
+import org.rtext.lang.backend.RTextFile
 
 import static org.mockito.Mockito.*
-import org.rtext.lang.backend2.RTextFileFinder
+import org.rtext.lang.backend.RTextFileFinder
 
 @CreateWith(typeof(MockInjector))
 describe RTextFiles {

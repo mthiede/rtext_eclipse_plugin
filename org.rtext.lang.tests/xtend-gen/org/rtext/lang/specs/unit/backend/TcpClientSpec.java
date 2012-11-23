@@ -13,7 +13,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.rtext.lang.backend2.TcpClient;
+import org.rtext.lang.backend.TcpClient;
 import org.rtext.lang.commands.Response;
 import org.rtext.lang.specs.unit.backend.TcpClientConnectionErrorsSpec;
 import org.rtext.lang.specs.unit.backend.TcpClientConnectionStateSpec;

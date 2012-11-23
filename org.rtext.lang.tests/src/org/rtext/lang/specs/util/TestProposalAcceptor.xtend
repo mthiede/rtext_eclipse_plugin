@@ -1,6 +1,6 @@
 package org.rtext.lang.specs.util
 
-import org.rtext.lang.backend2.ProposalAcceptor
+import org.rtext.lang.backend.ProposalAcceptor
 
 class TestProposalAcceptor implements ProposalAcceptor {
 	

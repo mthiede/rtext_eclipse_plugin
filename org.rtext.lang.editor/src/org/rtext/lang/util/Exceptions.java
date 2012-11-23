@@ -7,7 +7,7 @@
  *******************************************************************************/
 package org.rtext.lang.util;
 
-import org.rtext.lang.backend2.BackendException;
+import org.rtext.lang.backend.BackendException;
 
 public class Exceptions {
 	public static void rethrow(Throwable e){

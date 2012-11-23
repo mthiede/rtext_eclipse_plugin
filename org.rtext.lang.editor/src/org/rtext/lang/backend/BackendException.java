@@ -5,14 +5,20 @@
  * which accompanies this distribution, and is available at
  * http://opensource.org/licenses/MIT
  *******************************************************************************/
-package org.rtext.lang.backend2;
+package org.rtext.lang.backend;
 
-import org.rtext.lang.backend.ConnectorConfig;
 
-public class ConnectorFactory {
-	
-	public Connector createConnector(ConnectorConfig connectorConfig){
-		return Connector.create(connectorConfig);
+@SuppressWarnings("serial")
+public class BackendException extends RuntimeException {
+	public BackendException(String message) {
+		super(message);
 	}
 
+	public BackendException(String string, Exception cause) {
+		super(string, cause);
+	}
+
+	public BackendException(Throwable cause) {
+		super(cause);
+	}
 }

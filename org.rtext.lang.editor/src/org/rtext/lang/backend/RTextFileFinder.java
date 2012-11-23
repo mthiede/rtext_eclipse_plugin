@@ -5,16 +5,13 @@
  * which accompanies this distribution, and is available at
  * http://opensource.org/licenses/MIT
  *******************************************************************************/
-package org.rtext.lang.backend2;
+package org.rtext.lang.backend;
 
-import java.util.concurrent.TimeoutException;
+import java.io.File;
 
-import org.rtext.lang.backend.ConnectorConfig;
 
-public interface BackendStarter {
-	public void startProcess(ConnectorConfig connectorConfig) throws TimeoutException;
-	public boolean isRunning();
-	public void stop();
-	int getPort() throws TimeoutException;
+public class RTextFileFinder {
+	public RTextFiles find(File modelFile){
+		return new RTextFiles(new RTextFileParser(), modelFile);
+	}
 }
-		

@@ -1,4 +1,4 @@
-package org.rtext.lang.backend2;
+package org.rtext.lang.backend;
 
 import java.util.List;
 

@@ -20,8 +20,8 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.rtext.lang.backend.ConnectorConfig;
+import org.rtext.lang.backend.RTextFile;
 import org.rtext.lang.backend.RTextFileParser;
-import org.rtext.lang.backend2.RTextFile;
 import org.rtext.lang.specs.util.Files;
 
 @SuppressWarnings("all")

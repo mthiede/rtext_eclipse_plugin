@@ -5,7 +5,7 @@
  * which accompanies this distribution, and is available at
  * http://opensource.org/licenses/MIT
  *******************************************************************************/
-package org.rtext.lang.backend2;
+package org.rtext.lang.backend;
 
 import static java.lang.System.arraycopy;
 import static org.rtext.lang.util.Closables.closeQuietly;
@@ -20,7 +20,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.concurrent.TimeoutException;
 
-import org.rtext.lang.backend.ConnectorConfig;
 import org.rtext.lang.editor.RTextConsole;
 import org.rtext.lang.util.Condition;
 import org.rtext.lang.util.Exceptions;

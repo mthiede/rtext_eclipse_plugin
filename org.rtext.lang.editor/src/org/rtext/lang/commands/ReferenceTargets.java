@@ -2,8 +2,6 @@ package org.rtext.lang.commands;
 
 import static java.util.Collections.emptyList;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import com.google.gson.annotations.SerializedName;

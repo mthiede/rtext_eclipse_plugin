@@ -18,7 +18,6 @@ Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: com.google.gson;x-friends:="org.rtext.lang.tests",
  org.rtext.lang,
  org.rtext.lang.backend,
- org.rtext.lang.backend2,
  org.rtext.lang.commands,
  org.rtext.lang.document,
  org.rtext.lang.editor,

@@ -14,11 +14,11 @@ import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.stubbing.OngoingStubbing;
+import org.rtext.lang.backend.Connector;
 import org.rtext.lang.backend.ConnectorConfig;
-import org.rtext.lang.backend2.Connector;
-import org.rtext.lang.backend2.ConnectorConfigProvider;
-import org.rtext.lang.backend2.ConnectorFactory;
-import org.rtext.lang.backend2.DefaultConnectorProvider;
+import org.rtext.lang.backend.ConnectorConfigProvider;
+import org.rtext.lang.backend.ConnectorFactory;
+import org.rtext.lang.backend.DefaultConnectorProvider;
 import org.rtext.lang.specs.util.MockInjector;
 
 @SuppressWarnings("all")

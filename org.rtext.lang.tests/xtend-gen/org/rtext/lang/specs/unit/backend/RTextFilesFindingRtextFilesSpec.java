@@ -10,7 +10,7 @@ import org.jnario.runner.Order;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.rtext.lang.backend2.RTextFile;
+import org.rtext.lang.backend.RTextFile;
 import org.rtext.lang.specs.unit.backend.RTextFilesSpec;
 
 @SuppressWarnings("all")

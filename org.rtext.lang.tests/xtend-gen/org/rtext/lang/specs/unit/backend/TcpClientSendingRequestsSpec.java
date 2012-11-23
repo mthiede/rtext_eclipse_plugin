@@ -14,7 +14,7 @@ import org.jnario.runner.Order;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.rtext.lang.backend2.BackendException;
+import org.rtext.lang.backend.BackendException;
 import org.rtext.lang.commands.Progress;
 import org.rtext.lang.commands.Response;
 import org.rtext.lang.specs.unit.backend.TcpClientSpec;

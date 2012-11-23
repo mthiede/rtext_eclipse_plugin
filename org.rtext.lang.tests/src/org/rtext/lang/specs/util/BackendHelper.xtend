@@ -1,8 +1,8 @@
 package org.rtext.lang.specs.util
 
 import org.junit.After
-import org.rtext.lang.backend2.CachingConnectorProvider
-import org.rtext.lang.backend2.Connector
+import org.rtext.lang.backend.CachingConnectorProvider
+import org.rtext.lang.backend.Connector
 import org.rtext.lang.commands.Response
 import static org.rtext.lang.specs.util.Wait.*
 import org.rtext.lang.commands.Command

@@ -2,7 +2,7 @@ package org.rtext.lang.commands;
 
 import java.util.List;
 
-import org.rtext.lang.backend2.DocumentContext;
+import org.rtext.lang.backend.DocumentContext;
 
 public class CommandWithContext<T extends Response> extends Command<T> {
 

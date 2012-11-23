@@ -7,7 +7,7 @@
  *******************************************************************************/
 package org.rtext.lang.editor;
 
-import org.rtext.lang.backend2.Connector;
+import org.rtext.lang.backend.Connector;
 
 public interface Connected {
 	Connector getConnector();

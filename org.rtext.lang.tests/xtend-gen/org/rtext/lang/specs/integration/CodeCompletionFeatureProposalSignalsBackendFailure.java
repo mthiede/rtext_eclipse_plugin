@@ -21,7 +21,7 @@ import org.jnario.runner.Order;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.rtext.lang.backend2.Connector;
+import org.rtext.lang.backend.Connector;
 import org.rtext.lang.editor.Connected;
 import org.rtext.lang.proposals.ContentAssistProcessor;
 import org.rtext.lang.specs.integration.CodeCompletionFeature;

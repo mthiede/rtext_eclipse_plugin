@@ -9,7 +9,7 @@ import org.eclipse.ui.console.IOConsole;
 import org.eclipse.ui.console.IOConsoleOutputStream;
 import org.rtext.lang.RTextPlugin;
 import org.rtext.lang.backend.ConnectorConfig;
-import org.rtext.lang.backend2.OutputHandler;
+import org.rtext.lang.backend.OutputHandler;
 
 public class RTextConsole implements OutputHandler{
 	

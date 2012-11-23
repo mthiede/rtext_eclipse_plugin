@@ -5,8 +5,13 @@
  * which accompanies this distribution, and is available at
  * http://opensource.org/licenses/MIT
  *******************************************************************************/
-package org.rtext.lang.backend2;
+package org.rtext.lang.backend;
 
-public interface OutputHandler {
-	public void handle(String string);
+
+public class ConnectorFactory {
+	
+	public Connector createConnector(ConnectorConfig connectorConfig){
+		return Connector.create(connectorConfig);
+	}
+
 }

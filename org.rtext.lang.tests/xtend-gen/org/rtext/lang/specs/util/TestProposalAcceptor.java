@@ -3,7 +3,7 @@ package org.rtext.lang.specs.util;
 import java.util.ArrayList;
 import org.eclipse.xtext.xbase.lib.CollectionLiterals;
 import org.eclipse.xtext.xbase.lib.Functions.Function0;
-import org.rtext.lang.backend2.ProposalAcceptor;
+import org.rtext.lang.backend.ProposalAcceptor;
 
 @SuppressWarnings("all")
 public class TestProposalAcceptor implements ProposalAcceptor {

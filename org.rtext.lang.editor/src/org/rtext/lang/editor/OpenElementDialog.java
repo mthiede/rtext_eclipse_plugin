@@ -7,10 +7,7 @@
  *******************************************************************************/
 package org.rtext.lang.editor;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-import java.util.concurrent.TimeoutException;
 
 import org.eclipse.jface.dialogs.DialogSettings;
 import org.eclipse.jface.dialogs.IDialogSettings;
@@ -33,7 +30,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.SelectionStatusDialog;
-import org.rtext.lang.backend2.Connector;
+import org.rtext.lang.backend.Connector;
 import org.rtext.lang.commands.Callback;
 import org.rtext.lang.commands.Elements;
 import org.rtext.lang.commands.Elements.Element;

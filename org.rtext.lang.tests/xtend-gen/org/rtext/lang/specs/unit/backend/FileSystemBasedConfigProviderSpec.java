@@ -8,8 +8,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.rtext.lang.backend2.RTextFile;
-import org.rtext.lang.backend2.RTextFiles;
+import org.rtext.lang.backend.RTextFile;
+import org.rtext.lang.backend.RTextFiles;
 import org.rtext.lang.specs.util.MockInjector;
 
 @SuppressWarnings("all")

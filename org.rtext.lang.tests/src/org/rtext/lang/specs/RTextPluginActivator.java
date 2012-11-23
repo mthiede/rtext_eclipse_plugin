@@ -2,9 +2,9 @@ package org.rtext.lang.specs;
 
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
-import org.rtext.lang.backend2.CachingConnectorProvider;
-import org.rtext.lang.backend2.Connector;
-import org.rtext.lang.backend2.ConnectorProvider;
+import org.rtext.lang.backend.CachingConnectorProvider;
+import org.rtext.lang.backend.Connector;
+import org.rtext.lang.backend.ConnectorProvider;
 
 public class RTextPluginActivator extends Plugin {
 

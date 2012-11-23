@@ -7,297 +7,120 @@
  *******************************************************************************/
 package org.rtext.lang.backend;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetSocketAddress;
-import java.net.SocketAddress;
-import java.net.SocketException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.StringTokenizer;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.concurrent.TimeoutException;
 
-import org.eclipse.ui.console.ConsolePlugin;
-import org.eclipse.ui.console.IConsole;
-import org.eclipse.ui.console.IConsoleManager;
-import org.eclipse.ui.console.IOConsole;
-import org.eclipse.ui.console.IOConsoleOutputStream;
-
+import org.rtext.lang.commands.Callback;
+import org.rtext.lang.commands.Command;
+import org.rtext.lang.commands.LoadModelCallback;
+import org.rtext.lang.commands.LoadModelCommand;
+import org.rtext.lang.commands.LoadedModel;
+import org.rtext.lang.commands.Progress;
+import org.rtext.lang.commands.Response;
+import org.rtext.lang.commands.SynchronousCallBack;
+import org.rtext.lang.util.Exceptions;
 
 public class Connector {
-	private DatagramSocket socket;
-	private Process process;
-	private ConnectorConfig config;
-	private int state;
-	private IOConsole console;
-	private IOConsoleOutputStream consoleOutputStream;
-	private long invocationId;
-	private int protocolVersion = -1;
-
-	private BufferedInputStream inputStream;
-	private BufferedInputStream errorStream;
-	private String port;
-
-	private Map<String, Invocation> invocations = new HashMap<String, Invocation>();
 	
-	private Pattern portPattern = Pattern.compile("listening on port (\\d+)");
+	private class OnErrorClosingCallback<T extends Response> implements Callback<T>{
+
+		private Callback<T> delegate;
+
+		public OnErrorClosingCallback(Callback<T> delegate) {
+			this.delegate = delegate;
+		}
+
+		public void commandSent() {
+			delegate.commandSent();
+		}
+
+		public void handleProgress(Progress progress) {
+			delegate.handleProgress(progress);
+		}
+
+		public void handleResponse(T response) {
+			delegate.handleResponse(response);
+		}
+
+		public void handleError(String error) {
+			dispose();
+			delegate.handleError(error);
+		}
 		
-	private static int OFF = 0;
-	private static int STARTUP = 1;
-	private static int CONNECTED = 2;
-	
-	public static int ERROR_OK = 0;
-	public static int ERROR_NOT_CONNECTED = 1;
-	
-	private class Invocation {
-		String id;
-		IResponseListener listener;
-		long expireTime;
-		ArrayList<String> responseLines;
-		Invocation (String id, IResponseListener listener, int timeout) {
-			this.id = id;
-			this.listener = listener;
-			this.expireTime = new Date().getTime() + timeout;
-			this.responseLines = new ArrayList<String>();
-		}
 	}
 	
-	Connector(ConnectorConfig config) {
-		this.config = config;
-		console = new IOConsole("RText ["+config.getConfigFile()+"]", null);
-		consoleOutputStream = console.newOutputStream();
-		IConsoleManager manager = ConsolePlugin.getDefault().getConsoleManager();
-		manager.addConsoles(new IConsole[] { console });
-		state = OFF;
-		invocationId = 0;
+	private static final String ADDRESS = "127.0.0.1";
+	
+	private final ConnectorConfig connectorConfig;
+	private BackendStarter processRunner;
+	private Connection connection;
+
+	private Callback<LoadedModel> loadModelCallBack;
+	
+	public static Connector create(ConnectorConfig connectorConfig){
+		BackendStarter backendStarter = CliBackendStarter.create(connectorConfig);
+		LoadModelCallback modelCallBack = LoadModelCallback.create();
+		TcpClient tcpClient = TcpClient.create();
+		return new Connector(connectorConfig, backendStarter, tcpClient, modelCallBack);
 	}
 	
-	public List<String> executeCommand(Command command, int timeout) {
-		if (state == CONNECTED) {
-			String invId = String.valueOf(invocationId++);
-			sendRequest(command.getName()+"\n"+invId+"\n"+command.getData());
-			String key = String.valueOf(invId);
-			invocations.put(key, new Invocation(key, null, timeout));
-			String response = receiveResponse(timeout);
-			while (response != null) {
-				List<String> responseLines = handleResponse(response);
-				if (responseLines != null) {
-					return responseLines;
-				}
-				response = receiveResponse(100);
-			}
-		}
-		return null;
+	public Connector(ConnectorConfig connectorConfig, BackendStarter processRunner, Connection connection, Callback<LoadedModel> loadModelCallBack) {
+		this.connectorConfig = connectorConfig;
+		this.processRunner = processRunner;
+		this.connection = connection;
+		this.loadModelCallBack = loadModelCallBack;
+	}
+
+	public<T extends Response> T execute(Command<T> command) throws TimeoutException{
+		SynchronousCallBack<T> callback = new SynchronousCallBack<T>();
+		execute(command, callback);
+		callback.waitForResponse();
+		return callback.response();
 	}
 	
-	public int executeCommand(Command command, IResponseListener listener, int timeout) {
-		if (state == CONNECTED) {
-			String invId = String.valueOf(invocationId++);
-			sendRequest(command.getName()+"\n"+invId+"\n"+command.getData());
-			String key = String.valueOf(invId);
-			invocations.put(key, new Invocation(key, listener, timeout));
-			return ERROR_OK;
+	public <T extends Response> void execute(Command<T> command, Callback<T> callback){
+		if(!ensureBackendIsConnected(callback)){
+			return;
 		}
-		else {
-			return ERROR_NOT_CONNECTED;
+		try{
+			sendRequest(command, callback);
+		}catch(Throwable e){
+			dispose();
+			Exceptions.rethrow(e);
 		}
 	}
 
-	public int getProtocolVersion() {
-		if (protocolVersion < 0) {
-			List<String> result = executeCommand(new Command("protocol_version", ""), 10000);
-			if (result != null && result.size() > 0) {
-				protocolVersion = Integer.parseInt(result.get(0));
-			}
-			else {
-				protocolVersion = 0;
-			}
-		}
-		return protocolVersion;
+	public <T extends Response> void sendRequest(Command<T> command,
+			Callback<T> callback) {
+		connection.sendRequest(command, wrap(callback));
 	}
 	
-	public ConnectorConfig getConfig() {
-		return config;
-	}
-	
-	void updateConnector() {
-		if (isProcessRunning()) {
-			if (state == STARTUP) {
-				if (port != null) {
-					if (connectSocket(Integer.parseInt(port))) {
-						state = CONNECTED;
-					}
-				}
-			}
-			else {
-				String response = receiveResponse(1);
-				while (response != null) {
-					handleResponse(response);
-					response = receiveResponse(1);
-				}
-			}
-		}
-		else {
-			port = null;
-			startProcess();
-			state = STARTUP;
-		}
-		handleInvocationTimeouts();
+	public <T extends Response> Callback<T> wrap(Callback<T> delegate){
+		return new OnErrorClosingCallback<T>(delegate);
 	}
 
-	private List<String> handleResponse(String response) {
-		StringTokenizer st = new StringTokenizer(response, "\n");
-		if (st.hasMoreTokens()) {
-			String key = st.nextToken();
-			Invocation inv = invocations.get(key);
-			if (inv != null) {
-				if (st.hasMoreTokens()) {
-					String packetType = st.nextToken();
-					while (st.hasMoreTokens()) {
-						inv.responseLines.add(st.nextToken());
-						if (inv.listener != null) {
-							inv.listener.responseUpdate(inv.responseLines);
-						}
-					}
-					if (packetType.equals("last")) {
-						invocations.remove(key);
-						if (inv.listener != null) {
-							inv.listener.responseReceived(inv.responseLines);
-							return null;
-						}
-						else {
-							return inv.responseLines;
-						}
-					}
-				}
-			}
-		}
-		return null;
-	}
-	
-	void handleProcessOutput() {
-		if (console != null && consoleOutputStream != null) {
-			if (inputStream != null && errorStream != null) {
-				String output = handleStreamOutput(inputStream);
-				if (output != null) {
-					String port = parsePort(output);
-					if (port != null) {
-						this.port = port;
-					}
-				}
-				handleStreamOutput(errorStream);
-			}
-		}
-	}
-	
-	private void sendRequest(String request) {
-		if (state == CONNECTED) {
-			DatagramPacket datagramPacket = new DatagramPacket(request.getBytes(), request.getBytes().length);
-			try {
-				socket.send(datagramPacket);
-			} catch (IOException e) {
-			}
-		}
-	}
-	
-	private String receiveResponse(int timeout) {
-		if (state == CONNECTED) {
-			byte[] data = new byte[65536];
-			DatagramPacket packet = new DatagramPacket(data, 65536);
-			try {
-				socket.setSoTimeout(timeout);
-				socket.receive(packet);
-				return new String(packet.getData(), 0, packet.getLength());
-			} catch (IOException e) {
-			}
-		}
-		return null;
-	}
-	
-	private void handleInvocationTimeouts() {
-		long now = new Date().getTime();
-		Object[] currentValues = invocations.values().toArray();
-		for (int i = 0; i < currentValues.length; i++) {
-			Invocation inv = (Invocation)currentValues[i];
-			if (now > inv.expireTime) {
-				if (inv.listener != null) {
-					inv.listener.requestTimedOut();
-				}
-				invocations.remove(inv.id);
-			}
-		}
-	}
-	
-	private boolean isProcessRunning() {
-		if (process != null) {
-			try {
-				process.exitValue();
-				return false;
-			}
-			catch (IllegalThreadStateException e) {
-				return true;
-			}
-		}
-		else {
-			return false;
-		}
-	}
-	
-	private void startProcess() {
-		protocolVersion = -1;
-		try {
-			process = new ProcessBuilder("/bin/bash", "-c", config.getCommand())
-				.redirectErrorStream(true)
-				.directory(config.getWorkingDir())
-				.start();
-			inputStream = new BufferedInputStream(process.getInputStream());
-			errorStream = new BufferedInputStream(process.getErrorStream());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}		
-	}
-	
-	private String parsePort(String text) {
-		Matcher matcher = portPattern.matcher(text);
-		if (matcher.find()) {
-			return matcher.toMatchResult().group(1).toString();
-		}
-		return null;
-	}
-	
-	private String handleStreamOutput(InputStream is) {
-		if (is != null) {
-			try {
-				int len = is.available();
-				if (len > 0) {
-					byte[] data = new byte[len];
-					is.read(data, 0, len);
-					consoleOutputStream.write(data);
-					return new String(data);
-				}
-			} catch (IOException e) {
-			}
-		}
-		return null;
-	}
-	
-	private boolean connectSocket(int port) {
-		try {
-			SocketAddress sa = new InetSocketAddress("localhost", port);
-			socket = new DatagramSocket();
-			socket.connect(sa);
-			socket.setReceiveBufferSize(6553600);
+	protected boolean ensureBackendIsConnected(Callback<?> callback) {
+		if(processRunner.isRunning()){
 			return true;
-		} catch (SocketException e) {
-			return false;
-		}		
+		}
+		return startBackend(callback);
 	}
 
+	public boolean startBackend(Callback<?> callback)  {
+		try{
+			processRunner.startProcess(connectorConfig);
+			connection.connect(ADDRESS, processRunner.getPort());
+			sendRequest(new LoadModelCommand(), loadModelCallBack);
+			return true;
+		}catch(Throwable e){
+			dispose();
+			callback.handleError("Could not connect to backend");
+			return false;
+		}
+	}
+
+	public void dispose(){
+		processRunner.stop();
+		connection.close();
+	}
+	
 }

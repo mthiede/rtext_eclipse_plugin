@@ -5,14 +5,9 @@
  * which accompanies this distribution, and is available at
  * http://opensource.org/licenses/MIT
  *******************************************************************************/
-package org.rtext.lang.backend2;
+package org.rtext.lang.backend;
 
-import java.io.File;
-
-import org.rtext.lang.backend.RTextFileParser;
-
-public class RTextFileFinder {
-	public RTextFiles find(File modelFile){
-		return new RTextFiles(new RTextFileParser(), modelFile);
-	}
+public interface ConnectorProvider {
+	Connector get(String modelFilePath);
+	void dispose();
 }

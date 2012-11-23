@@ -5,7 +5,7 @@
  * which accompanies this distribution, and is available at
  * http://opensource.org/licenses/MIT
  *******************************************************************************/
-package org.rtext.lang.backend2;
+package org.rtext.lang.backend;
 
 import static org.rtext.lang.util.Expectations.expectExists;
 import static org.rtext.lang.util.Expectations.expectNotEmpty;
@@ -13,7 +13,6 @@ import static org.rtext.lang.util.Files.extension;
 
 import java.io.File;
 
-import org.rtext.lang.backend.ConnectorConfig;
 
 public class FileSystemBasedConfigProvider implements ConnectorConfigProvider {
 

@@ -5,20 +5,17 @@
  * which accompanies this distribution, and is available at
  * http://opensource.org/licenses/MIT
  *******************************************************************************/
-package org.rtext.lang.backend2;
+package org.rtext.lang.backend;
 
+import org.rtext.lang.commands.Callback;
+import org.rtext.lang.commands.Command;
+import org.rtext.lang.commands.Response;
 
-@SuppressWarnings("serial")
-public class BackendException extends RuntimeException {
-	public BackendException(String message) {
-		super(message);
-	}
+public interface Connection {
+	
+	public void connect(String address, int port);
+	public <T extends Response> void sendRequest(Command<T> request, Callback<T> callback);
+	public void close();
+	public boolean isConnected();
 
-	public BackendException(String string, Exception cause) {
-		super(string, cause);
-	}
-
-	public BackendException(Throwable cause) {
-		super(cause);
-	}
 }

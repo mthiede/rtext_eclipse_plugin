@@ -112,7 +112,7 @@ package org.rtext.lang.specs.unit.backend
 
 import java.util.concurrent.CountDownLatch
 import org.rtext.lang.commands.Response
-import org.rtext.lang.backend2.TcpClient
+import org.rtext.lang.backend.TcpClient
 import org.rtext.lang.specs.util.TcpTestServer
 import org.rtext.lang.specs.util.TestCallBack
 
@@ -121,7 +121,7 @@ import static org.rtext.lang.specs.util.Commands.*
 import static org.rtext.lang.specs.util.Wait.*
 
 import static extension org.jnario.lib.Should.*
-import org.rtext.lang.backend2.BackendException
+import org.rtext.lang.backend.BackendException
 
 describe TcpClient{
   int INVALID_PORT = -1

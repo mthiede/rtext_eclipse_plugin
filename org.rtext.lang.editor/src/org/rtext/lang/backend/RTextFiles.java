@@ -5,12 +5,11 @@
  * which accompanies this distribution, and is available at
  * http://opensource.org/licenses/MIT
  *******************************************************************************/
-package org.rtext.lang.backend2;
+package org.rtext.lang.backend;
 
 import java.io.File;
 import java.util.Iterator;
 
-import org.rtext.lang.backend.RTextFileParser;
 
 public class RTextFiles implements Iterable<RTextFile>{
 

@@ -7,12 +7,10 @@
  *******************************************************************************/
 package org.rtext.lang.backend;
 
-import java.util.List;
+public class SystemOutDebug implements OutputHandler{
 
-public interface IResponseListener {
+	public void handle(String string) {
+		System.out.println(string);
+	}
 
-	void responseReceived(List<String> responseLines);
-	void responseUpdate(List<String> responseLines);
-	void requestTimedOut();
-	
 }
