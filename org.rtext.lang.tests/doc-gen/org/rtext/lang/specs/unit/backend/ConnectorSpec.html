@@ -108,6 +108,19 @@ inOrder(connection) =&gt; [
 subject.execute(anyCommand, callback)
 verify(connection).sendRequest(eq(anyCommand), any)</pre>
 </li></ul>
+<h3 class="exampleGroup pending"  id="Connected">Connected</h3>
+<ul><li><p id="initially_disconnected" class="example notrun"><strong>initially disconnected</strong></p>
+<pre class="prettyprint lang-spec linenums">
+subject.connected =&gt; false</pre>
+</li><li><p id="connected_if_process_is_running" class="example notrun"><strong>connected if process is running</strong></p>
+<pre class="prettyprint lang-spec linenums">
+when(processRunner.running).thenReturn(true)
+subject.connected =&gt; true</pre>
+</li><li><p id="disconnected_if_process_is_not_running" class="example notrun"><strong>disconnected if process is not running</strong></p>
+<pre class="prettyprint lang-spec linenums">
+when(processRunner.running).thenReturn(false)
+subject.connected =&gt; false</pre>
+</li></ul>
 <h3 class="exampleGroup notrun"  id="Dispose">Dispose</h3>
 <ul><li><p id="Disposes_connection" class="example notrun"><strong>Disposes connection</strong></p>
 <pre class="prettyprint lang-spec linenums">
@@ -252,6 +265,22 @@ describe Connector {
     fact &quot;Returns commands response&quot;{
       subject.execute(anyCommand, callback)
       verify(connection).sendRequest(eq(anyCommand), any)
+    }
+  }
+  
+  context &quot;Connected&quot;{
+    fact &quot;initially disconnected&quot;{
+      subject.connected =&gt; false
+    }
+    
+    fact &quot;connected if process is running&quot;{
+      when(processRunner.running).thenReturn(true)
+      subject.connected =&gt; true
+    }
+    
+    fact &quot;disconnected if process is not running&quot;{
+      when(processRunner.running).thenReturn(false)
+      subject.connected =&gt; false
     }
   }
   

@@ -99,7 +99,7 @@ public class Connector {
 	}
 
 	protected boolean ensureBackendIsConnected(Callback<?> callback) {
-		if(processRunner.isRunning()){
+		if(isConnected()){
 			return true;
 		}
 		return startBackend(callback);
@@ -121,6 +121,10 @@ public class Connector {
 	public void dispose(){
 		processRunner.stop();
 		connection.close();
+	}
+
+	public boolean isConnected(){
+		return processRunner.isRunning();
 	}
 	
 }

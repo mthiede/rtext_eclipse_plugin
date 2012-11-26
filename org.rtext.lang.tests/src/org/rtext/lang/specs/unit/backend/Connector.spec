@@ -130,6 +130,22 @@ describe Connector {
 		}
 	}
 	
+	context "Connected"{
+		fact "initially disconnected"{
+			subject.connected => false
+		}
+		
+		fact "connected if process is running"{
+			when(processRunner.running).thenReturn(true)
+			subject.connected => true
+		}
+		
+		fact "disconnected if process is not running"{
+			when(processRunner.running).thenReturn(false)
+			subject.connected => false
+		}
+	}
+	
 	context "Dispose"{
 		
 		fact "Disposes connection"{
