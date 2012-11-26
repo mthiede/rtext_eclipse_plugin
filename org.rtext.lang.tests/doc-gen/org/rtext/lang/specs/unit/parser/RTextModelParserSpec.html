@@ -56,8 +56,9 @@ Root2
 input.parse.size =&gt; 2</pre>
 </li><li><p id="parse_name" class="example notrun"><strong>parse name</strong></p>
 <pre class="prettyprint lang-spec linenums">
-&quot;Type name1&quot;.parse.first     =&gt; element(&quot;Type&quot;, &quot;name1&quot;)
-&quot;OtherType name2&quot;.parse.first =&gt; element(&quot;OtherType&quot;, &quot;name2&quot;)</pre>
+&quot;Type name1&quot;.parse.first           =&gt; element(&quot;Type&quot;, &quot;name1&quot;)
+&quot;OtherType name2&quot;.parse.first         =&gt; element(&quot;OtherType&quot;, &quot;name2&quot;)
+&quot;Type name3 label: something&quot;.parse.first   =&gt; element(&quot;Type&quot;, &quot;name3&quot;)</pre>
 </li><li><p id="parse_attributes" class="example notrun"><strong>parse attributes</strong></p>
 <pre class="prettyprint lang-spec linenums">
 &quot;Type name1, label: 10&quot;.parse.first =&gt;   element(&quot;Type&quot;, &quot;name1&quot;)
@@ -224,8 +225,9 @@ describe RTextModelParser {
     }
         
     fact &quot;parse name&quot;{
-      &quot;Type name1&quot;.parse.first     =&gt; element(&quot;Type&quot;, &quot;name1&quot;)
-      &quot;OtherType name2&quot;.parse.first =&gt; element(&quot;OtherType&quot;, &quot;name2&quot;)
+      &quot;Type name1&quot;.parse.first           =&gt; element(&quot;Type&quot;, &quot;name1&quot;)
+      &quot;OtherType name2&quot;.parse.first         =&gt; element(&quot;OtherType&quot;, &quot;name2&quot;)
+      &quot;Type name3 label: something&quot;.parse.first   =&gt; element(&quot;Type&quot;, &quot;name3&quot;)
     }
     
     fact &quot;parse attributes&quot;{

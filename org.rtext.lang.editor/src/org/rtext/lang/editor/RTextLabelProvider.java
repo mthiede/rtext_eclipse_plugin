@@ -30,11 +30,12 @@ public class RTextLabelProvider extends LabelProvider {
 			return super.getText(obj);
 		}
 		Element element = (Element) obj;
+		String label = element.getType();
 		String name = element.getName();
 		if(name != null && name.length() > 0){
-			return name;
+			label += " " + name;
 		}
-		return element.getType();
+		return label;
 	}
 
 	@Override

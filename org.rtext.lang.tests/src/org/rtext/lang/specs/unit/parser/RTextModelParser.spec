@@ -45,8 +45,9 @@ describe RTextModelParser {
 		}
 				
 		fact "parse name"{
-			"Type name1".parse.first 		=> element("Type", "name1")
-			"OtherType name2".parse.first => element("OtherType", "name2")
+			"Type name1".parse.first 					=> element("Type", "name1")
+			"OtherType name2".parse.first 				=> element("OtherType", "name2")
+			"Type name3 label: something".parse.first 	=> element("Type", "name3")
 		}
 		
 		fact "parse attributes"{

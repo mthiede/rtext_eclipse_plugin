@@ -101,4 +101,8 @@ public class ElementBuilder {
 	public int getOffset() {
 		return offset;
 	}
+
+	public boolean hasName() {
+		return name != null && name.length() > 0;
+	}
 }

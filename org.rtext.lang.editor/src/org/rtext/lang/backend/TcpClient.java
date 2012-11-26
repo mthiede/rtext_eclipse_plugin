@@ -44,15 +44,19 @@ public class TcpClient implements Connection {
 						executeCommand(task);
 						receiveResponse(task);
 					} catch (Throwable e) {
-						RTextPlugin.logError("Exception while communicating with backend", e);
-						task.callback.handleError(e.getMessage());
-						TcpClient.this.close();
+						handleException(task, e);
 						return;
 					}
 				} catch (InterruptedException e) {
 					return;
 				}
 			}
+		}
+
+		public void handleException(Task<?> task, Throwable e) {
+			RTextPlugin.logError("Exception while communicating with backend", e);
+			task.callback.handleError(e.getMessage());
+			TcpClient.this.close();
 		}
 
 		protected <T extends Response> void receiveResponse(Task<T> task)

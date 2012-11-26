@@ -90,7 +90,7 @@ public class RTextModelParserStructureSpec extends RTextModelParserSpec {
     Element _first = JnarioIterableExtensions.<Element>first(_parse);
     IsElement _element = IsElement.element("Type", "name1");
     boolean _doubleArrow = this.operator_doubleArrow(_first, _element);
-    Assert.assertTrue("\nExpected \"Type name1\".parse.first \t\t=> element(\"Type\", \"name1\") but"
+    Assert.assertTrue("\nExpected \"Type name1\".parse.first \t\t\t\t\t=> element(\"Type\", \"name1\") but"
      + "\n     \"Type name1\".parse.first is " + new StringDescription().appendValue(_first).toString()
      + "\n     \"Type name1\".parse is " + new StringDescription().appendValue(_parse).toString()
      + "\n     element(\"Type\", \"name1\") is " + new StringDescription().appendValue(_element).toString() + "\n", _doubleArrow);
@@ -99,10 +99,19 @@ public class RTextModelParserStructureSpec extends RTextModelParserSpec {
     Element _first_1 = JnarioIterableExtensions.<Element>first(_parse_1);
     IsElement _element_1 = IsElement.element("OtherType", "name2");
     boolean _doubleArrow_1 = this.operator_doubleArrow(_first_1, _element_1);
-    Assert.assertTrue("\nExpected \"OtherType name2\".parse.first => element(\"OtherType\", \"name2\") but"
+    Assert.assertTrue("\nExpected \"OtherType name2\".parse.first \t\t\t\t=> element(\"OtherType\", \"name2\") but"
      + "\n     \"OtherType name2\".parse.first is " + new StringDescription().appendValue(_first_1).toString()
      + "\n     \"OtherType name2\".parse is " + new StringDescription().appendValue(_parse_1).toString()
      + "\n     element(\"OtherType\", \"name2\") is " + new StringDescription().appendValue(_element_1).toString() + "\n", _doubleArrow_1);
+    
+    List<Element> _parse_2 = this.parse("Type name3 label: something");
+    Element _first_2 = JnarioIterableExtensions.<Element>first(_parse_2);
+    IsElement _element_2 = IsElement.element("Type", "name3");
+    boolean _doubleArrow_2 = this.operator_doubleArrow(_first_2, _element_2);
+    Assert.assertTrue("\nExpected \"Type name3 label: something\".parse.first \t=> element(\"Type\", \"name3\") but"
+     + "\n     \"Type name3 label: something\".parse.first is " + new StringDescription().appendValue(_first_2).toString()
+     + "\n     \"Type name3 label: something\".parse is " + new StringDescription().appendValue(_parse_2).toString()
+     + "\n     element(\"Type\", \"name3\") is " + new StringDescription().appendValue(_element_2).toString() + "\n", _doubleArrow_2);
     
   }
   

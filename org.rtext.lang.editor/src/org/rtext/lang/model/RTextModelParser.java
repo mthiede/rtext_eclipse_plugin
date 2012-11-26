@@ -92,7 +92,9 @@ public class RTextModelParser extends AbstractRTextParser<Element> {
 
 	@Override
 	protected Element createIdentifier() {
-		current.name(currentText());
+		if(!current.hasName()){
+			current.name(currentText());
+		}
 		increaseLength();
 		return null;
 	}
