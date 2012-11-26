@@ -35,6 +35,7 @@
 					<div class="span12">
 						  <div class="tab-content">
 							  	<div class="tab-pane active" id="spec">
+<h3 class="exampleGroup notrun"  id="splitCommand">SplitCommand</h3>
 <ul><li><p id="examples"><strong>Examples</strong></p>
 <table class="table table-striped table-bordered table-condensed">
 	<thead>
@@ -63,6 +64,8 @@
 	</tbody>
 </table>
 </li><li><p id="examples_forEach_Strings_splitCommand_input_toList_result" class="example notrun"><strong>examples.forEach[Strings::splitCommand[input].toList => result]</strong></p>
+<pre class="prettyprint lang-spec linenums">
+examples.forEach[Strings::splitCommand(input).toList =&gt; result]</pre>
 </li></ul>
 							</div>
 						    <div class="tab-pane" id="source">
@@ -74,15 +77,18 @@ package org.rtext.lang.specs.unit.util
 import org.rtext.lang.util.Strings
 
 describe Strings{
-  def {
-    | input         | result             |
-    | &quot;ruby&quot;        | list(&quot;ruby&quot;)          |
-    | &quot;ruby -l&quot;        | list(&quot;ruby&quot;, &quot;-l&quot;)      |
-    | &quot;ruby  -l&quot;      | list(&quot;ruby&quot;, &quot;-l&quot;)      |
-    | 'ruby -l &quot;arg&quot;'    | list(&quot;ruby&quot;, &quot;-l&quot;, &quot;arg&quot;)    |
-  }
   
-  fact examples.forEach[Strings::splitCommand(input).toList =&gt; result]
+  context &quot;splitCommand&quot;{
+    def {
+      | input         | result             |
+      | &quot;ruby&quot;        | list(&quot;ruby&quot;)          |
+      | &quot;ruby -l&quot;        | list(&quot;ruby&quot;, &quot;-l&quot;)      |
+      | &quot;ruby  -l&quot;      | list(&quot;ruby&quot;, &quot;-l&quot;)      |
+      | 'ruby -l &quot;arg&quot;'    | list(&quot;ruby&quot;, &quot;-l&quot;, &quot;arg&quot;)    |
+    }
+    
+    fact examples.forEach[Strings::splitCommand(input).toList =&gt; result]
+  }
 }
 </pre>
 						    </p></div>

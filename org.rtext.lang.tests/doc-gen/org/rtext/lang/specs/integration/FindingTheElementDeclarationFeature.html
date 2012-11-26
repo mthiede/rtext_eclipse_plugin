@@ -46,7 +46,7 @@
 </li>
 </ul>
 </div>
-<div><h3 class="scenario notrun"  id="Scenario_Find_declaration_within_same_file">Scenario: Find declaration within same file
+<div><h3 class="scenario notrun"  id="Scenario_Open_an_hyperlink">Scenario: Open an hyperlink
 </h3>
 <ul>
 <li><span class="step notrun"><p>When I get the hyperlinks for <code>"/StatemachineMM/State"</code></p></span>
@@ -87,7 +87,7 @@ Feature: Finding the element declaration
     And a hyperlink detector
      hyperLinkDetector = new HyperlinkDetector([|return b.connector])
 
-  Scenario: Find declaration within same file
+  Scenario: Open an hyperlink
   When I get the hyperlinks for &quot;/StatemachineMM/State&quot;
       hyperlinks = hyperLinkDetector.detectHyperLinks(b.document, b.regionOf(args.first))
   Then it opens an editor for &quot;test_metamodel.ect&quot; 

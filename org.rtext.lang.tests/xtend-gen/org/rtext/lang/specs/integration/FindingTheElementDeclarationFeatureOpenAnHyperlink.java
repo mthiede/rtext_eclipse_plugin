@@ -22,9 +22,9 @@ import org.rtext.lang.specs.integration.FindingTheElementDeclarationFeatureBackg
 import org.rtext.lang.util.Workbenches;
 
 @RunWith(FeatureRunner.class)
-@Named("Scenario: Find declaration within same file")
+@Named("Scenario: Open an hyperlink")
 @SuppressWarnings("all")
-public class FindingTheElementDeclarationFeatureFindDeclarationWithinSameFile extends FindingTheElementDeclarationFeatureBackground {
+public class FindingTheElementDeclarationFeatureOpenAnHyperlink extends FindingTheElementDeclarationFeatureBackground {
   @Test
   @Order(0)
   @Named("Given a project \\\"test\\\" linked to \\\"rtext/test/integration/model/\\\"")

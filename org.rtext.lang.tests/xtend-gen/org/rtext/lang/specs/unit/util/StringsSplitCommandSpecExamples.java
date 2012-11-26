@@ -3,8 +3,8 @@ package org.rtext.lang.specs.unit.util;
 import java.util.List;
 import org.jnario.lib.ExampleTableRow;
 
-public class StringsSpecExamples extends ExampleTableRow {
-  public StringsSpecExamples(final List<String> cellNames, final String input, final List<String> result) {
+public class StringsSplitCommandSpecExamples extends ExampleTableRow {
+  public StringsSplitCommandSpecExamples(final List<String> cellNames, final String input, final List<String> result) {
     super(cellNames);
     this.input = input;
     this.result = result;

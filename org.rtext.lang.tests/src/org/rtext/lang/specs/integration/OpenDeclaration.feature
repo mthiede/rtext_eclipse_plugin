@@ -16,7 +16,7 @@ Feature: Finding the element declaration
     And a hyperlink detector
    	hyperLinkDetector = new HyperlinkDetector([|return b.connector])
 
-  Scenario: Find declaration within same file
+  Scenario: Open an hyperlink
   When I get the hyperlinks for "/StatemachineMM/State"
     	hyperlinks = hyperLinkDetector.detectHyperLinks(b.document, b.regionOf(args.first))
   Then it opens an editor for "test_metamodel.ect" 
