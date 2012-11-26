@@ -4,11 +4,12 @@ import org.jnario.runner.Contains;
 import org.jnario.runner.FeatureRunner;
 import org.jnario.runner.Named;
 import org.junit.runner.RunWith;
+import org.rtext.lang.specs.integration.CodeCompletionFeatureCodeCompletionForNestedElements;
 import org.rtext.lang.specs.integration.CodeCompletionFeatureProposalSignalsBackendFailure;
 import org.rtext.lang.specs.integration.CodeCompletionFeatureSucessfullyUsingCodeCompletion;
 
 @RunWith(FeatureRunner.class)
-@Contains({ CodeCompletionFeatureSucessfullyUsingCodeCompletion.class, CodeCompletionFeatureProposalSignalsBackendFailure.class })
+@Contains({ CodeCompletionFeatureSucessfullyUsingCodeCompletion.class, CodeCompletionFeatureCodeCompletionForNestedElements.class, CodeCompletionFeatureProposalSignalsBackendFailure.class })
 @Named("Code completion")
 @SuppressWarnings("all")
 public class CodeCompletionFeature {

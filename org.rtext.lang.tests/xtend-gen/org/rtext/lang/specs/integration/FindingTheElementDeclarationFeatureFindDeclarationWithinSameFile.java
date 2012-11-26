@@ -34,6 +34,48 @@ import org.rtext.lang.util.Workbenches;
 @Named("Scenario: Find declaration within same file")
 @SuppressWarnings("all")
 public class FindingTheElementDeclarationFeatureFindDeclarationWithinSameFile extends FindingTheElementDeclarationFeature {
+  HyperlinkDetector hyperLinkDetector;
+  
+  List<IHyperlink> hyperlinks;
+  
+  @Extension
+  public WorkspaceHelper _workspaceHelper = new Function0<WorkspaceHelper>() {
+    public WorkspaceHelper apply() {
+      WorkspaceHelper _workspaceHelper = new WorkspaceHelper();
+      return _workspaceHelper;
+    }
+  }.apply();
+  
+  @Extension
+  public TestFileLocator _testFileLocator = new Function0<TestFileLocator>() {
+    public TestFileLocator apply() {
+      TestFileLocator _default = TestFileLocator.getDefault();
+      return _default;
+    }
+  }.apply();
+  
+  @Extension
+  public BackendHelper _backendHelper = new Function0<BackendHelper>() {
+    public BackendHelper apply() {
+      BackendHelper _backendHelper = new BackendHelper();
+      return _backendHelper;
+    }
+  }.apply();
+  
+  @Extension
+  public BackendHelper b = new Function0<BackendHelper>() {
+    public BackendHelper apply() {
+      BackendHelper _backendHelper = new BackendHelper();
+      return _backendHelper;
+    }
+  }.apply();
+  
+  String modelFile;
+  
+  List<String> proposals;
+  
+  ContentAssistProcessor proposalProvider;
+  
   @Test
   @Order(0)
   @Named("Given a project \\\"test\\\" linked to \\\"rtext/test/integration/model/\\\"")
@@ -108,46 +150,4 @@ public class FindingTheElementDeclarationFeatureFindDeclarationWithinSameFile ex
      + "\n     args is " + new StringDescription().appendValue(args).toString() + "\n", _should_contain);
     
   }
-  
-  HyperlinkDetector hyperLinkDetector;
-  
-  List<IHyperlink> hyperlinks;
-  
-  @Extension
-  public WorkspaceHelper _workspaceHelper = new Function0<WorkspaceHelper>() {
-    public WorkspaceHelper apply() {
-      WorkspaceHelper _workspaceHelper = new WorkspaceHelper();
-      return _workspaceHelper;
-    }
-  }.apply();
-  
-  @Extension
-  public TestFileLocator _testFileLocator = new Function0<TestFileLocator>() {
-    public TestFileLocator apply() {
-      TestFileLocator _default = TestFileLocator.getDefault();
-      return _default;
-    }
-  }.apply();
-  
-  @Extension
-  public BackendHelper _backendHelper = new Function0<BackendHelper>() {
-    public BackendHelper apply() {
-      BackendHelper _backendHelper = new BackendHelper();
-      return _backendHelper;
-    }
-  }.apply();
-  
-  @Extension
-  public BackendHelper b = new Function0<BackendHelper>() {
-    public BackendHelper apply() {
-      BackendHelper _backendHelper = new BackendHelper();
-      return _backendHelper;
-    }
-  }.apply();
-  
-  String modelFile;
-  
-  List<String> proposals;
-  
-  ContentAssistProcessor proposalProvider;
 }

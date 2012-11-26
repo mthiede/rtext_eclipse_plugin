@@ -34,7 +34,7 @@ public class ContextParser {
 		try{
 			int line = doc.getLineOfOffset(offset);
 			int lineOffset = doc.getLineOffset(line);
-			return offset - lineOffset;
+			return offset - lineOffset + 1;
 		}catch(BadLocationException e){
 			return 0;
 		}

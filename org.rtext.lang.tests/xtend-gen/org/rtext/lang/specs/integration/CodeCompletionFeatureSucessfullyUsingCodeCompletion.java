@@ -8,6 +8,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Functions.Function0;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
+import org.eclipse.xtext.xbase.lib.InputOutput;
 import org.eclipse.xtext.xbase.lib.ListExtensions;
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure0;
 import org.hamcrest.StringDescription;
@@ -31,6 +32,20 @@ import org.rtext.lang.specs.util.BackendHelper;
 @Named("Scenario: Sucessfully using code completion")
 @SuppressWarnings("all")
 public class CodeCompletionFeatureSucessfullyUsingCodeCompletion extends CodeCompletionFeature {
+  @Extension
+  public BackendHelper b = new Function0<BackendHelper>() {
+    public BackendHelper apply() {
+      BackendHelper _backendHelper = new BackendHelper();
+      return _backendHelper;
+    }
+  }.apply();
+  
+  String modelFile;
+  
+  List<String> proposals;
+  
+  ContentAssistProcessor proposalProvider;
+  
   @Test
   @Order(0)
   @Named("Given a backend for \\\"rtext/test/integration/model/test_metamodel.ect\\\"")
@@ -105,25 +120,12 @@ public class CodeCompletionFeatureSucessfullyUsingCodeCompletion extends CodeCom
         }
       };
     final List<String> expectedProposals = ListExtensions.<String, String>map(((List<String>)Conversions.doWrapArray(_split)), _function);
-    boolean _doubleArrow = Should.operator_doubleArrow(
-      this.proposals, expectedProposals);
-    Assert.assertTrue("\nExpected proposals => expectedProposals but"
+    List<String> _println = InputOutput.<List<String>>println(this.proposals);
+    boolean _doubleArrow = Should.operator_doubleArrow(_println, expectedProposals);
+    Assert.assertTrue("\nExpected println(proposals) => expectedProposals but"
+     + "\n     println(proposals) is " + new StringDescription().appendValue(_println).toString()
      + "\n     proposals is " + new StringDescription().appendValue(this.proposals).toString()
      + "\n     expectedProposals is " + new StringDescription().appendValue(expectedProposals).toString() + "\n", _doubleArrow);
     
   }
-  
-  @Extension
-  public BackendHelper b = new Function0<BackendHelper>() {
-    public BackendHelper apply() {
-      BackendHelper _backendHelper = new BackendHelper();
-      return _backendHelper;
-    }
-  }.apply();
-  
-  String modelFile;
-  
-  List<String> proposals;
-  
-  ContentAssistProcessor proposalProvider;
 }

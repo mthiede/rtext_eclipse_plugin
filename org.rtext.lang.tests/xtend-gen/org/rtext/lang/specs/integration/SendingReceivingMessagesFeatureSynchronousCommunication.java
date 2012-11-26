@@ -22,6 +22,20 @@ import org.rtext.lang.specs.util.BackendHelper;
 @Named("Scenario: Synchronous communication")
 @SuppressWarnings("all")
 public class SendingReceivingMessagesFeatureSynchronousCommunication extends SendingReceivingMessagesFeature {
+  @Extension
+  public BackendHelper b = new Function0<BackendHelper>() {
+    public BackendHelper apply() {
+      BackendHelper _backendHelper = new BackendHelper();
+      return _backendHelper;
+    }
+  }.apply();
+  
+  String modelFile;
+  
+  List<String> proposals;
+  
+  ContentAssistProcessor proposalProvider;
+  
   @Test
   @Order(0)
   @Named("Given a backend for \\\"rtext/test/integration/model/test_metamodel.ect\\\"")
@@ -53,18 +67,4 @@ public class SendingReceivingMessagesFeatureSynchronousCommunication extends Sen
      + "\n      is " + new StringDescription().appendValue(this.b).toString() + "\n", _doubleArrow);
     
   }
-  
-  @Extension
-  public BackendHelper b = new Function0<BackendHelper>() {
-    public BackendHelper apply() {
-      BackendHelper _backendHelper = new BackendHelper();
-      return _backendHelper;
-    }
-  }.apply();
-  
-  String modelFile;
-  
-  List<String> proposals;
-  
-  ContentAssistProcessor proposalProvider;
 }

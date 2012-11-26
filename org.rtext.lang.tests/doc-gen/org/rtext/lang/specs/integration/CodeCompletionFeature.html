@@ -52,6 +52,21 @@ EPackage &lt;name&gt;</pre></span>
 </li>
 </ul>
 </div>
+<div><h3 class="scenario notrun"  id="Scenario_Code_completion_for_nested_elements">Scenario: Code completion for nested elements
+</h3>
+<ul>
+<li><span class="step notrun"><p>Given a backend for <code>"rtext/test/integration/model/test_metamodel.ect"</code></p></span>
+</li>
+<li><span class="step notrun"><p>When I invoke the code completion after <code>"EClass "</code></p></span>
+</li>
+<li><span class="step notrun"><p>Then the proposals should be</p><pre>name [name] &lt;EString&gt;
+abstract: &lt;EBoolean&gt;
+interface: &lt;EBoolean&gt;
+eSuperTypes: &lt;EClass&gt;
+instanceClassName: &lt;EString&gt;</pre></span>
+</li>
+</ul>
+</div>
 <div><h3 class="scenario notrun"  id="Scenario_Proposal_signals_backend_failure">Scenario: Proposal signals backend failure
 </h3>
 <ul>
@@ -76,7 +91,7 @@ import java.util.List
 import org.eclipse.swt.widgets.Display
 
 Feature: Code completion
-  
+
 Scenario: Sucessfully using code completion
   extension BackendHelper b = new BackendHelper
   String modelFile
@@ -103,8 +118,21 @@ Scenario: Sucessfully using code completion
     EPackage &lt;name&gt;
   '''
   val expectedProposals = args.first.trim.split(&quot;\r?\n&quot;).map[trim]
-  proposals =&gt; expectedProposals
+  println(proposals) =&gt; expectedProposals
+
+Scenario: Code completion for nested elements
   
+  Given a backend for &quot;rtext/test/integration/model/test_metamodel.ect&quot;
+  When I invoke the code completion after &quot;EClass &quot;
+  Then the proposals should be
+  '''
+    name [name] &lt;EString&gt;
+    abstract: &lt;EBoolean&gt;
+    interface: &lt;EBoolean&gt;
+    eSuperTypes: &lt;EClass&gt;
+    instanceClassName: &lt;EString&gt;
+  '''
+
 Scenario: Proposal signals backend failure
   
   Given a backend for &quot;rtext/test/integration/model/test.crashing_backend&quot;

@@ -6,7 +6,7 @@ import java.util.List
 import org.eclipse.swt.widgets.Display
 
 Feature: Code completion
-	
+
 Scenario: Sucessfully using code completion
 	extension BackendHelper b = new BackendHelper
 	String modelFile
@@ -33,8 +33,21 @@ Scenario: Sucessfully using code completion
 		EPackage <name>
 	'''
 	val expectedProposals = args.first.trim.split("\r?\n").map[trim]
-	proposals => expectedProposals
+	println(proposals) => expectedProposals
+
+Scenario: Code completion for nested elements
 	
+	Given a backend for "rtext/test/integration/model/test_metamodel.ect"
+	When I invoke the code completion after "EClass "
+	Then the proposals should be
+	'''
+		name [name] <EString>
+		abstract: <EBoolean>
+		interface: <EBoolean>
+		eSuperTypes: <EClass>
+		instanceClassName: <EString>
+	'''
+
 Scenario: Proposal signals backend failure
 	
 	Given a backend for "rtext/test/integration/model/test.crashing_backend"

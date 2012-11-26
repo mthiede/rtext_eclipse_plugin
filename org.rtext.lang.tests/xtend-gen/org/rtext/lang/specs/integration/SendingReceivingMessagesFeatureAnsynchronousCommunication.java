@@ -22,6 +22,20 @@ import org.rtext.lang.specs.util.BackendHelper;
 @Named("Scenario: Ansynchronous communication")
 @SuppressWarnings("all")
 public class SendingReceivingMessagesFeatureAnsynchronousCommunication extends SendingReceivingMessagesFeature {
+  @Extension
+  public BackendHelper b = new Function0<BackendHelper>() {
+    public BackendHelper apply() {
+      BackendHelper _backendHelper = new BackendHelper();
+      return _backendHelper;
+    }
+  }.apply();
+  
+  String modelFile;
+  
+  List<String> proposals;
+  
+  ContentAssistProcessor proposalProvider;
+  
   @Test
   @Order(0)
   @Named("Given a backend for \\\"rtext/test/integration/model/test_metamodel.ect\\\"")
@@ -51,18 +65,4 @@ public class SendingReceivingMessagesFeatureAnsynchronousCommunication extends S
      + "\n     response.type is " + new StringDescription().appendValue(_type).toString() + "\n", _doubleArrow);
     
   }
-  
-  @Extension
-  public BackendHelper b = new Function0<BackendHelper>() {
-    public BackendHelper apply() {
-      BackendHelper _backendHelper = new BackendHelper();
-      return _backendHelper;
-    }
-  }.apply();
-  
-  String modelFile;
-  
-  List<String> proposals;
-  
-  ContentAssistProcessor proposalProvider;
 }

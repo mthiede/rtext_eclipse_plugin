@@ -65,7 +65,7 @@ class BackendHelper {
 	}	
 	
 	def offsetAfter(String substring){
-		document.get.indexOf(substring) + substring.length + 1
+		document.get.indexOf(substring) + substring.length
 	}
 
 	def proposals(){

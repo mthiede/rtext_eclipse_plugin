@@ -164,8 +164,7 @@ public class BackendHelper {
     int _indexOf = _get.indexOf(substring);
     int _length = substring.length();
     int _plus = (_indexOf + _length);
-    int _plus_1 = (_plus + 1);
-    return _plus_1;
+    return _plus;
   }
   
   public ArrayList<String> proposals() {
