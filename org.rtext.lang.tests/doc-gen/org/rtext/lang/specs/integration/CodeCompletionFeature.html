@@ -40,7 +40,7 @@
 <ul>
 <li><span class="step notrun"><p>Given a backend for <code>"rtext/test/integration/model/test_metamodel.ect"</code></p></span>
 </li>
-<li><span class="step notrun"><p>When I invoke the code completion after <code>"EPackage StatemachineMM {n"</code></p></span>
+<li><span class="step notrun"><p>When I invoke the code completion after <code>" E"</code></p></span>
 </li>
 <li><span class="step notrun"><p>Then the proposals should be</p><pre>EAnnotation
 EClass &lt;name&gt;
@@ -100,7 +100,7 @@ Scenario: Sucessfully using code completion
   
   Given a backend for &quot;rtext/test/integration/model/test_metamodel.ect&quot;
     b.startBackendFor(args.first.absolutPath)
-  When I invoke the code completion after &quot;EPackage StatemachineMM {\n&quot;
+  When I invoke the code completion after &quot;  E&quot;
     proposalProvider = ContentAssistProcessor::create([|b.connector]) 
     proposalProvider.assistSessionStarted(_)
     Display::getDefault.syncExec[|
@@ -118,7 +118,7 @@ Scenario: Sucessfully using code completion
     EPackage &lt;name&gt;
   '''
   val expectedProposals = args.first.trim.split(&quot;\r?\n&quot;).map[trim]
-  println(proposals) =&gt; expectedProposals
+  proposals =&gt; expectedProposals
 
 Scenario: Code completion for nested elements
   

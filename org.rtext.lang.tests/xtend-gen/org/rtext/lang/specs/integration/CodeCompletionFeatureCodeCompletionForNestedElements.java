@@ -8,7 +8,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Functions.Function0;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
-import org.eclipse.xtext.xbase.lib.InputOutput;
 import org.eclipse.xtext.xbase.lib.ListExtensions;
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure0;
 import org.hamcrest.StringDescription;
@@ -120,10 +119,9 @@ public class CodeCompletionFeatureCodeCompletionForNestedElements extends CodeCo
         }
       };
     final List<String> expectedProposals = ListExtensions.<String, String>map(((List<String>)Conversions.doWrapArray(_split)), _function);
-    List<String> _println = InputOutput.<List<String>>println(this.proposals);
-    boolean _doubleArrow = Should.operator_doubleArrow(_println, expectedProposals);
-    Assert.assertTrue("\nExpected println(proposals) => expectedProposals but"
-     + "\n     println(proposals) is " + new StringDescription().appendValue(_println).toString() + "\n", _doubleArrow);
+    boolean _doubleArrow = Should.operator_doubleArrow(this.proposals, expectedProposals);
+    Assert.assertTrue("\nExpected proposals => expectedProposals but"
+     + "\n     proposals => expectedProposals is " + new StringDescription().appendValue(_doubleArrow).toString() + "\n", _doubleArrow);
     
   }
 }

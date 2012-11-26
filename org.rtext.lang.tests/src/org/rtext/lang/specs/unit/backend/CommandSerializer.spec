@@ -15,9 +15,9 @@ describe "Converting Commands to JSON"{
 	fact "converts command to json"{
 		new Command<Response>(invocationId, type, command, typeof(Response)).serialize.is('''
 		{
-		    "type": "ÇtypeÈ",
-		    "command": "ÇcommandÈ",
-		    "invocation_id": ÇinvocationIdÈ
+		    "type": "Â«typeÂ»",
+		    "command": "Â«commandÂ»",
+		    "invocation_id": Â«invocationIdÂ»
 		}
 		''')
 	}

@@ -8,7 +8,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Functions.Function0;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
-import org.eclipse.xtext.xbase.lib.InputOutput;
 import org.eclipse.xtext.xbase.lib.ListExtensions;
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure0;
 import org.hamcrest.StringDescription;
@@ -59,9 +58,9 @@ public class CodeCompletionFeatureSucessfullyUsingCodeCompletion extends CodeCom
   
   @Test
   @Order(1)
-  @Named("When I invoke the code completion after \\\"EPackage StatemachineMM {\\\\n\\\"")
-  public void whenIInvokeTheCodeCompletionAfterEPackageStatemachineMMN() {
-    StepArguments _stepArguments = new StepArguments("EPackage StatemachineMM {\\n");
+  @Named("When I invoke the code completion after \\\"  E\\\"")
+  public void whenIInvokeTheCodeCompletionAfterE() {
+    StepArguments _stepArguments = new StepArguments("  E");
     final StepArguments args = _stepArguments;
     final Function0<Connector> _function = new Function0<Connector>() {
         public Connector apply() {
@@ -120,10 +119,9 @@ public class CodeCompletionFeatureSucessfullyUsingCodeCompletion extends CodeCom
         }
       };
     final List<String> expectedProposals = ListExtensions.<String, String>map(((List<String>)Conversions.doWrapArray(_split)), _function);
-    List<String> _println = InputOutput.<List<String>>println(this.proposals);
-    boolean _doubleArrow = Should.operator_doubleArrow(_println, expectedProposals);
-    Assert.assertTrue("\nExpected println(proposals) => expectedProposals but"
-     + "\n     println(proposals) is " + new StringDescription().appendValue(_println).toString()
+    boolean _doubleArrow = Should.operator_doubleArrow(
+      this.proposals, expectedProposals);
+    Assert.assertTrue("\nExpected proposals => expectedProposals but"
      + "\n     proposals is " + new StringDescription().appendValue(this.proposals).toString()
      + "\n     expectedProposals is " + new StringDescription().appendValue(expectedProposals).toString() + "\n", _doubleArrow);
     

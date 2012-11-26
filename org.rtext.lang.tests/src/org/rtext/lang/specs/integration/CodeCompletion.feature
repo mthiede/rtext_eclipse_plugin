@@ -15,7 +15,7 @@ Scenario: Sucessfully using code completion
 	
 	Given a backend for "rtext/test/integration/model/test_metamodel.ect"
 		b.startBackendFor(args.first.absolutPath)
-	When I invoke the code completion after "EPackage StatemachineMM {\n"
+	When I invoke the code completion after "  E"
 		proposalProvider = ContentAssistProcessor::create([|b.connector]) 
 		proposalProvider.assistSessionStarted(_)
 		Display::getDefault.syncExec[|
@@ -33,7 +33,7 @@ Scenario: Sucessfully using code completion
 		EPackage <name>
 	'''
 	val expectedProposals = args.first.trim.split("\r?\n").map[trim]
-	println(proposals) => expectedProposals
+	proposals => expectedProposals
 
 Scenario: Code completion for nested elements
 	

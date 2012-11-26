@@ -1,5 +1,6 @@
 package org.rtext.lang.specs.util;
 
+import java.io.File;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -87,8 +88,9 @@ public class WorkspaceHelper {
     {
       IWorkspace _workspace = this.getWorkspace();
       final IProjectDescription description = _workspace.newProjectDescription(name);
-      URI _create = URI.create(folder2Link);
-      description.setLocationURI(_create);
+      File _file = new File(folder2Link);
+      URI _uRI = _file.toURI();
+      description.setLocationURI(_uRI);
       IProject _doCreateProject = this.doCreateProject(name, description);
       boolean _add = this.linkedProjects.add(_doCreateProject);
       _xblockexpression = (_add);

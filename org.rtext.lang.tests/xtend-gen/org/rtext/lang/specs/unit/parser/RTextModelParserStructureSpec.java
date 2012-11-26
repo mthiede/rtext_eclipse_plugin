@@ -54,10 +54,10 @@ public class RTextModelParserStructureSpec extends RTextModelParserSpec {
     List<Element> _parse = this.parse(_builder);
     int _size = _parse.size();
     boolean _doubleArrow = this.operator_doubleArrow(Integer.valueOf(_size), Integer.valueOf(2));
-    Assert.assertTrue("\nExpected \'\'\'\n\t\t\tRoot1\n\t\t\tRoot2\n\t\t\t\'\'\'.parse.size => 2 but"
-     + "\n     \'\'\'\n\t\t\tRoot1\n\t\t\tRoot2\n\t\t\t\'\'\'.parse.size is " + new StringDescription().appendValue(Integer.valueOf(_size)).toString()
-     + "\n     \'\'\'\n\t\t\tRoot1\n\t\t\tRoot2\n\t\t\t\'\'\'.parse is " + new StringDescription().appendValue(_parse).toString()
-     + "\n     \'\'\'\n\t\t\tRoot1\n\t\t\tRoot2\n\t\t\t\'\'\' is " + new StringDescription().appendValue(_builder).toString() + "\n", _doubleArrow);
+    Assert.assertTrue("\nExpected \'\'\'\r\n\t\t\tRoot1\r\n\t\t\tRoot2\r\n\t\t\t\'\'\'.parse.size => 2 but"
+     + "\n     \'\'\'\r\n\t\t\tRoot1\r\n\t\t\tRoot2\r\n\t\t\t\'\'\'.parse.size is " + new StringDescription().appendValue(Integer.valueOf(_size)).toString()
+     + "\n     \'\'\'\r\n\t\t\tRoot1\r\n\t\t\tRoot2\r\n\t\t\t\'\'\'.parse is " + new StringDescription().appendValue(_parse).toString()
+     + "\n     \'\'\'\r\n\t\t\tRoot1\r\n\t\t\tRoot2\r\n\t\t\t\'\'\' is " + new StringDescription().appendValue(_builder).toString() + "\n", _doubleArrow);
     
   }
   
@@ -159,10 +159,10 @@ public class RTextModelParserStructureSpec extends RTextModelParserSpec {
     List<Element> _parse = this.parse(_builder);
     int _size = _parse.size();
     boolean _doubleArrow = this.operator_doubleArrow(Integer.valueOf(_size), Integer.valueOf(1));
-    Assert.assertTrue("\nExpected \'\'\'\n\t\t\t# a comment\n\t\t\tType\'\'\'.parse.size => 1 but"
-     + "\n     \'\'\'\n\t\t\t# a comment\n\t\t\tType\'\'\'.parse.size is " + new StringDescription().appendValue(Integer.valueOf(_size)).toString()
-     + "\n     \'\'\'\n\t\t\t# a comment\n\t\t\tType\'\'\'.parse is " + new StringDescription().appendValue(_parse).toString()
-     + "\n     \'\'\'\n\t\t\t# a comment\n\t\t\tType\'\'\' is " + new StringDescription().appendValue(_builder).toString() + "\n", _doubleArrow);
+    Assert.assertTrue("\nExpected \'\'\'\r\n\t\t\t# a comment\r\n\t\t\tType\'\'\'.parse.size => 1 but"
+     + "\n     \'\'\'\r\n\t\t\t# a comment\r\n\t\t\tType\'\'\'.parse.size is " + new StringDescription().appendValue(Integer.valueOf(_size)).toString()
+     + "\n     \'\'\'\r\n\t\t\t# a comment\r\n\t\t\tType\'\'\'.parse is " + new StringDescription().appendValue(_parse).toString()
+     + "\n     \'\'\'\r\n\t\t\t# a comment\r\n\t\t\tType\'\'\' is " + new StringDescription().appendValue(_builder).toString() + "\n", _doubleArrow);
     
   }
   
@@ -193,11 +193,11 @@ public class RTextModelParserStructureSpec extends RTextModelParserSpec {
     IsElement _element_1 = IsElement.element("Child", "child2");
     IsElement _element_2 = IsElement.element("Type", "parent", _element, _element_1);
     boolean _doubleArrow = this.operator_doubleArrow(_first, _element_2);
-    Assert.assertTrue("\nExpected \'\'\'\n\t\t\tType parent{\n\t\t\t\tChild child1{\n\t\t\t\t}\n\t\t\t\tChild child2{\n\t\t\t\t}\n\t\t\t}\n\t\t\t\'\'\'.parse.first => \n\t\t\t\telement(\"Type\", \"parent\", \n\t\t\t\t\telement(\"Child\", \"child1\"),\n\t\t\t\t\telement(\"Child\", \"child2\")\n\t\t\t\t) but"
-     + "\n     \'\'\'\n\t\t\tType parent{\n\t\t\t\tChild child1{\n\t\t\t\t}\n\t\t\t\tChild child2{\n\t\t\t\t}\n\t\t\t}\n\t\t\t\'\'\'.parse.first is " + new StringDescription().appendValue(_first).toString()
-     + "\n     \'\'\'\n\t\t\tType parent{\n\t\t\t\tChild child1{\n\t\t\t\t}\n\t\t\t\tChild child2{\n\t\t\t\t}\n\t\t\t}\n\t\t\t\'\'\'.parse is " + new StringDescription().appendValue(_parse).toString()
-     + "\n     \'\'\'\n\t\t\tType parent{\n\t\t\t\tChild child1{\n\t\t\t\t}\n\t\t\t\tChild child2{\n\t\t\t\t}\n\t\t\t}\n\t\t\t\'\'\' is " + new StringDescription().appendValue(_builder).toString()
-     + "\n     element(\"Type\", \"parent\", \n\t\t\t\t\telement(\"Child\", \"child1\"),\n\t\t\t\t\telement(\"Child\", \"child2\")\n\t\t\t\t) is " + new StringDescription().appendValue(_element_2).toString()
+    Assert.assertTrue("\nExpected \'\'\'\r\n\t\t\tType parent{\r\n\t\t\t\tChild child1{\r\n\t\t\t\t}\r\n\t\t\t\tChild child2{\r\n\t\t\t\t}\r\n\t\t\t}\r\n\t\t\t\'\'\'.parse.first => \r\n\t\t\t\telement(\"Type\", \"parent\", \r\n\t\t\t\t\telement(\"Child\", \"child1\"),\r\n\t\t\t\t\telement(\"Child\", \"child2\")\r\n\t\t\t\t) but"
+     + "\n     \'\'\'\r\n\t\t\tType parent{\r\n\t\t\t\tChild child1{\r\n\t\t\t\t}\r\n\t\t\t\tChild child2{\r\n\t\t\t\t}\r\n\t\t\t}\r\n\t\t\t\'\'\'.parse.first is " + new StringDescription().appendValue(_first).toString()
+     + "\n     \'\'\'\r\n\t\t\tType parent{\r\n\t\t\t\tChild child1{\r\n\t\t\t\t}\r\n\t\t\t\tChild child2{\r\n\t\t\t\t}\r\n\t\t\t}\r\n\t\t\t\'\'\'.parse is " + new StringDescription().appendValue(_parse).toString()
+     + "\n     \'\'\'\r\n\t\t\tType parent{\r\n\t\t\t\tChild child1{\r\n\t\t\t\t}\r\n\t\t\t\tChild child2{\r\n\t\t\t\t}\r\n\t\t\t}\r\n\t\t\t\'\'\' is " + new StringDescription().appendValue(_builder).toString()
+     + "\n     element(\"Type\", \"parent\", \r\n\t\t\t\t\telement(\"Child\", \"child1\"),\r\n\t\t\t\t\telement(\"Child\", \"child2\")\r\n\t\t\t\t) is " + new StringDescription().appendValue(_element_2).toString()
      + "\n     element(\"Child\", \"child1\") is " + new StringDescription().appendValue(_element).toString()
      + "\n     element(\"Child\", \"child2\") is " + new StringDescription().appendValue(_element_1).toString() + "\n", _doubleArrow);
     
@@ -224,11 +224,11 @@ public class RTextModelParserStructureSpec extends RTextModelParserSpec {
     IsElement _element_1 = IsElement.element("Child", "child2");
     IsElement _element_2 = IsElement.element("Type", "parent", _element, _element_1);
     boolean _doubleArrow = this.operator_doubleArrow(_first, _element_2);
-    Assert.assertTrue("\nExpected \'\'\'\n\t\t\tType parent{\n\t\t\t\tChild child1\n\t\t\t\tChild child2\n\t\t\t}\n\t\t\t\'\'\'.parse.first => \n\t\t\t\telement(\"Type\", \"parent\", \n\t\t\t\t\telement(\"Child\", \"child1\"),\n\t\t\t\t\telement(\"Child\", \"child2\")\n\t\t\t\t) but"
-     + "\n     \'\'\'\n\t\t\tType parent{\n\t\t\t\tChild child1\n\t\t\t\tChild child2\n\t\t\t}\n\t\t\t\'\'\'.parse.first is " + new StringDescription().appendValue(_first).toString()
-     + "\n     \'\'\'\n\t\t\tType parent{\n\t\t\t\tChild child1\n\t\t\t\tChild child2\n\t\t\t}\n\t\t\t\'\'\'.parse is " + new StringDescription().appendValue(_parse).toString()
-     + "\n     \'\'\'\n\t\t\tType parent{\n\t\t\t\tChild child1\n\t\t\t\tChild child2\n\t\t\t}\n\t\t\t\'\'\' is " + new StringDescription().appendValue(_builder).toString()
-     + "\n     element(\"Type\", \"parent\", \n\t\t\t\t\telement(\"Child\", \"child1\"),\n\t\t\t\t\telement(\"Child\", \"child2\")\n\t\t\t\t) is " + new StringDescription().appendValue(_element_2).toString()
+    Assert.assertTrue("\nExpected \'\'\'\r\n\t\t\tType parent{\r\n\t\t\t\tChild child1\r\n\t\t\t\tChild child2\r\n\t\t\t}\r\n\t\t\t\'\'\'.parse.first => \r\n\t\t\t\telement(\"Type\", \"parent\", \r\n\t\t\t\t\telement(\"Child\", \"child1\"),\r\n\t\t\t\t\telement(\"Child\", \"child2\")\r\n\t\t\t\t) but"
+     + "\n     \'\'\'\r\n\t\t\tType parent{\r\n\t\t\t\tChild child1\r\n\t\t\t\tChild child2\r\n\t\t\t}\r\n\t\t\t\'\'\'.parse.first is " + new StringDescription().appendValue(_first).toString()
+     + "\n     \'\'\'\r\n\t\t\tType parent{\r\n\t\t\t\tChild child1\r\n\t\t\t\tChild child2\r\n\t\t\t}\r\n\t\t\t\'\'\'.parse is " + new StringDescription().appendValue(_parse).toString()
+     + "\n     \'\'\'\r\n\t\t\tType parent{\r\n\t\t\t\tChild child1\r\n\t\t\t\tChild child2\r\n\t\t\t}\r\n\t\t\t\'\'\' is " + new StringDescription().appendValue(_builder).toString()
+     + "\n     element(\"Type\", \"parent\", \r\n\t\t\t\t\telement(\"Child\", \"child1\"),\r\n\t\t\t\t\telement(\"Child\", \"child2\")\r\n\t\t\t\t) is " + new StringDescription().appendValue(_element_2).toString()
      + "\n     element(\"Child\", \"child1\") is " + new StringDescription().appendValue(_element).toString()
      + "\n     element(\"Child\", \"child2\") is " + new StringDescription().appendValue(_element_1).toString() + "\n", _doubleArrow);
     

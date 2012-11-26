@@ -1,6 +1,6 @@
 package org.rtext.lang.specs.util
 
-import java.net.URI
+import java.io.File
 import org.eclipse.core.resources.IFile
 import org.eclipse.core.resources.IMarker
 import org.eclipse.core.resources.IProject
@@ -11,37 +11,8 @@ import org.eclipse.core.runtime.NullProgressMonitor
 import org.eclipse.core.runtime.Path
 import org.eclipse.ui.texteditor.MarkerUtilities
 import org.eclipse.xtend.lib.Property
-import org.eclipse.xtext.xbase.lib.Pair
 import org.eclipse.xtext.xbase.lib.Procedures$Procedure1
 import org.junit.After
-import org.eclipse.core.resources.IContainer
-
-class ProjectInitializer implements Procedure1<IContainer> {
-	
-	WorkspaceHelper helper = new WorkspaceHelper
-	
-	val files = <Pair<String, CharSequence>>newArrayList
-	val folders = <String>newArrayList
-	
-	override apply(IContainer p) {
-		folders.forEach[
-			helper.createFolder(p.name + "/" + it)
-		]
-		files.forEach[
-			val fileName = p.name + "/" + key
-			helper.writeToFile(value, fileName)
-		]
-	}
-	
-	def file(String name, CharSequence contents){
-		files += name -> contents
-	}
-	
-	def folder(String name){
-		folders += name
-	}
-	
-}
 
 class WorkspaceHelper {
 	
@@ -68,7 +39,7 @@ class WorkspaceHelper {
 	
 	def createProject(String name, String folder2Link){
 		val description = workspace.newProjectDescription(name)
-		description.setLocationURI(URI::create(folder2Link))
+		description.setLocationURI(new File(folder2Link).toURI)
 		linkedProjects += name.doCreateProject(description)
 	}
 	

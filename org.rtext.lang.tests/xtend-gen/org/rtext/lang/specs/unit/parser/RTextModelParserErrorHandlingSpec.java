@@ -39,11 +39,11 @@ public class RTextModelParserErrorHandlingSpec extends RTextModelParserSpec {
     IsElement _element = IsElement.element("Child");
     IsElement _element_1 = IsElement.element("Type", "parent", _element);
     boolean _doubleArrow = this.operator_doubleArrow(_first, _element_1);
-    Assert.assertTrue("\nExpected input.parse.first => element(\"Type\", \"parent\",\n\t\t\t\telement(\"Child\")\n\t\t\t) but"
+    Assert.assertTrue("\nExpected input.parse.first => element(\"Type\", \"parent\",\r\n\t\t\t\telement(\"Child\")\r\n\t\t\t) but"
      + "\n     input.parse.first is " + new StringDescription().appendValue(_first).toString()
      + "\n     input.parse is " + new StringDescription().appendValue(_parse).toString()
      + "\n     input is " + new StringDescription().appendValue(input).toString()
-     + "\n     element(\"Type\", \"parent\",\n\t\t\t\telement(\"Child\")\n\t\t\t) is " + new StringDescription().appendValue(_element_1).toString()
+     + "\n     element(\"Type\", \"parent\",\r\n\t\t\t\telement(\"Child\")\r\n\t\t\t) is " + new StringDescription().appendValue(_element_1).toString()
      + "\n     element(\"Child\") is " + new StringDescription().appendValue(_element).toString() + "\n", _doubleArrow);
     
   }
