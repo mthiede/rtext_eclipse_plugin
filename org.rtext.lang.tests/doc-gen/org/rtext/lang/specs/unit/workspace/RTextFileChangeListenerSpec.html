@@ -42,13 +42,13 @@ addListener
 rtextFile.append('\n')
 waitForRTextJobs
 verify(connectorProvider).dispose(rtextFile.location.toString)</pre>
-</li><li><p id="triggers_model_load_for_each_config" class="example notrun"><strong>triggers model load for each config</strong></p>
+</li><li><p id="reconnects_each_config" class="example notrun"><strong>reconnects each config</strong></p>
 <pre class="prettyprint lang-spec linenums">
 createRTextFile
 addListener
 rtextFile.append('\n')
 waitForRTextJobs
-verify(connector, times(2)).execute(any(typeof(LoadModelCommand)), any)</pre>
+verify(connector, times(2)).connect</pre>
 </li><li><p id="does_nothing_if_file_is_created" class="example notrun"><strong>does nothing if file is created</strong></p>
 <pre class="prettyprint lang-spec linenums">
 addListener
@@ -110,12 +110,12 @@ describe RTextFileChangeListener {
     verify(connectorProvider).dispose(rtextFile.location.toString)
   }
   
-  facts &quot;triggers model load for each config&quot;{
+  facts &quot;reconnects each config&quot;{
     createRTextFile
     addListener
     rtextFile.append('\n')
     waitForRTextJobs
-    verify(connector, times(2)).execute(any(typeof(LoadModelCommand)), any)
+    verify(connector, times(2)).connect
   }
   
   facts &quot;does nothing if file is created&quot;{

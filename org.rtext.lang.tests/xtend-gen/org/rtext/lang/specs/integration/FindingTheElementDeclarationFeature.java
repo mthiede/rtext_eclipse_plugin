@@ -4,11 +4,12 @@ import org.jnario.runner.Contains;
 import org.jnario.runner.FeatureRunner;
 import org.jnario.runner.Named;
 import org.junit.runner.RunWith;
+import org.rtext.lang.specs.integration.FindingTheElementDeclarationFeatureDisconnectedBackend;
 import org.rtext.lang.specs.integration.FindingTheElementDeclarationFeatureHyperlinkHighlighting;
 import org.rtext.lang.specs.integration.FindingTheElementDeclarationFeatureOpenAnHyperlink;
 
 @RunWith(FeatureRunner.class)
-@Contains({ FindingTheElementDeclarationFeatureOpenAnHyperlink.class, FindingTheElementDeclarationFeatureHyperlinkHighlighting.class })
+@Contains({ FindingTheElementDeclarationFeatureOpenAnHyperlink.class, FindingTheElementDeclarationFeatureHyperlinkHighlighting.class, FindingTheElementDeclarationFeatureDisconnectedBackend.class })
 @Named("Finding the element declaration")
 @SuppressWarnings("all")
 public class FindingTheElementDeclarationFeature {

@@ -59,6 +59,10 @@ public class HyperlinkDetector implements IHyperlinkDetector {
 		if (connector == null) {
 			return null;
 		}
+		if(!connector.isConnected()){
+			connector.connect();
+			return createErrorLink("backend not yet available", region);
+		}
 		try {
 			DocumentContext context = createContext(document, region);
 			ReferenceTargets referenceTargets = requestReferenceTargets(connector, context);
@@ -67,6 +71,10 @@ public class HyperlinkDetector implements IHyperlinkDetector {
 		} catch (TimeoutException e) {
 			return null;
 		}
+	}
+
+	private IHyperlink[] createErrorLink(String message, IRegion region) {
+		return new IHyperlink[]{new Hyperlink(getActivePage(), region, "", 0, message), new Hyperlink(getActivePage(), region, "", 0, "")};
 	}
 
 	public ReferenceTargets requestReferenceTargets(Connector connector, DocumentContext context) throws TimeoutException {

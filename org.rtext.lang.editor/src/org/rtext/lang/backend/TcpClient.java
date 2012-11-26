@@ -151,6 +151,7 @@ public class TcpClient implements Connection {
 	public void stopWorker() {
 		if(worker != null){
 			worker.stopWorking();
+			tasks.clear();
 			worker = null;
 		}
 	}

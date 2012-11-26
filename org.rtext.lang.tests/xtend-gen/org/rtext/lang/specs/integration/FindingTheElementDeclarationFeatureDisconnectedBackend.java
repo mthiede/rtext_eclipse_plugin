@@ -2,11 +2,9 @@ package org.rtext.lang.specs.integration;
 
 import java.util.List;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.xtext.xbase.lib.Conversions;
-import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.hamcrest.StringDescription;
 import org.jnario.lib.JnarioIterableExtensions;
@@ -18,12 +16,13 @@ import org.jnario.runner.Order;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.rtext.lang.backend.Connector;
 import org.rtext.lang.specs.integration.FindingTheElementDeclarationFeatureBackground;
 
 @RunWith(FeatureRunner.class)
-@Named("Scenario: Hyperlink highlighting")
+@Named("Scenario: Disconnected backend")
 @SuppressWarnings("all")
-public class FindingTheElementDeclarationFeatureHyperlinkHighlighting extends FindingTheElementDeclarationFeatureBackground {
+public class FindingTheElementDeclarationFeatureDisconnectedBackend extends FindingTheElementDeclarationFeatureBackground {
   @Test
   @Order(0)
   @Named("Given a project \\\"test\\\" linked to \\\"rtext/test/integration/model/\\\"")
@@ -47,9 +46,10 @@ public class FindingTheElementDeclarationFeatureHyperlinkHighlighting extends Fi
   
   @Test
   @Order(3)
-  @Named("Given the backend is connected")
-  public void givenTheBackendIsConnected() {
-    this.b.executeSynchronousCommand();
+  @Named("Given the backend is disconnected")
+  public void givenTheBackendIsDisconnected() {
+    Connector _connector = this.b.getConnector();
+    _connector.dispose();
   }
   
   @Test
@@ -67,31 +67,20 @@ public class FindingTheElementDeclarationFeatureHyperlinkHighlighting extends Fi
   
   @Test
   @Order(5)
-  @Named("Then the hyperlink text is \\\"/StatemachineMM/State\\\"")
-  public void thenTheHyperlinkTextIsStatemachineMMState() {
-    try {
-      StepArguments _stepArguments = new StepArguments("/StatemachineMM/State");
-      final StepArguments args = _stepArguments;
-      IHyperlink _head = IterableExtensions.<IHyperlink>head(this.hyperlinks);
-      final IRegion region = _head.getHyperlinkRegion();
-      IDocument _document = this.b.getDocument();
-      int _offset = region.getOffset();
-      int _length = region.getLength();
-      String _get = _document.get(_offset, _length);
-      String _first = JnarioIterableExtensions.<String>first(args);
-      boolean _doubleArrow = Should.operator_doubleArrow(_get, _first);
-      Assert.assertTrue("\nExpected b.document.get(region.offset, region.length) => args.first but"
-       + "\n     b.document.get(region.offset, region.length) is " + new StringDescription().appendValue(_get).toString()
-       + "\n     b.document is " + new StringDescription().appendValue(_document).toString()
-       + "\n     b is " + new StringDescription().appendValue(this.b).toString()
-       + "\n     region.offset is " + new StringDescription().appendValue(_offset).toString()
-       + "\n     region is " + new StringDescription().appendValue(region).toString()
-       + "\n     region.length is " + new StringDescription().appendValue(_length).toString()
-       + "\n     args.first is " + new StringDescription().appendValue(_first).toString()
-       + "\n     args is " + new StringDescription().appendValue(args).toString() + "\n", _doubleArrow);
-      
-    } catch (Exception _e) {
-      throw Exceptions.sneakyThrow(_e);
-    }
+  @Named("Then the hyperlink message is \\\"backend not yet available\\\"")
+  public void thenTheHyperlinkMessageIsBackendNotYetAvailable() {
+    StepArguments _stepArguments = new StepArguments("backend not yet available");
+    final StepArguments args = _stepArguments;
+    IHyperlink _head = IterableExtensions.<IHyperlink>head(this.hyperlinks);
+    String _hyperlinkText = _head.getHyperlinkText();
+    String _first = JnarioIterableExtensions.<String>first(args);
+    boolean _doubleArrow = Should.operator_doubleArrow(_hyperlinkText, _first);
+    Assert.assertTrue("\nExpected hyperlinks.head.hyperlinkText => args.first but"
+     + "\n     hyperlinks.head.hyperlinkText is " + new StringDescription().appendValue(_hyperlinkText).toString()
+     + "\n     hyperlinks.head is " + new StringDescription().appendValue(_head).toString()
+     + "\n     hyperlinks is " + new StringDescription().appendValue(this.hyperlinks).toString()
+     + "\n     args.first is " + new StringDescription().appendValue(_first).toString()
+     + "\n     args is " + new StringDescription().appendValue(args).toString() + "\n", _doubleArrow);
+    
   }
 }

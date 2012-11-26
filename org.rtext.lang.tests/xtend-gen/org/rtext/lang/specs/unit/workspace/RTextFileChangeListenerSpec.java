@@ -23,9 +23,6 @@ import org.rtext.lang.RTextPlugin;
 import org.rtext.lang.backend.Connector;
 import org.rtext.lang.backend.ConnectorConfig;
 import org.rtext.lang.backend.ConnectorProvider;
-import org.rtext.lang.commands.Callback;
-import org.rtext.lang.commands.LoadModelCommand;
-import org.rtext.lang.commands.LoadedModel;
 import org.rtext.lang.specs.util.Jobs;
 import org.rtext.lang.specs.util.MockInjector;
 import org.rtext.lang.specs.util.WorkspaceHelper;
@@ -82,9 +79,9 @@ public class RTextFileChangeListenerSpec {
   }
   
   @Test
-  @Named("triggers model load for each config")
+  @Named("reconnects each config")
   @Order(2)
-  public void _triggersModelLoadForEachConfig() throws Exception {
+  public void _reconnectsEachConfig() throws Exception {
     this.createRTextFile();
     this.addListener();
     IFile _rtextFile = this.rtextFile();
@@ -92,9 +89,7 @@ public class RTextFileChangeListenerSpec {
     Jobs.waitForRTextJobs();
     VerificationMode _times = Mockito.times(2);
     Connector _verify = Mockito.<Connector>verify(this.connector, _times);
-    LoadModelCommand _any = Matchers.<LoadModelCommand>any(LoadModelCommand.class);
-    Callback<LoadedModel> _any_1 = Matchers.<Callback<LoadedModel>>any();
-    _verify.<LoadedModel>execute(_any, _any_1);
+    _verify.connect();
   }
   
   @Test

@@ -48,6 +48,13 @@ public class FindingTheElementDeclarationFeatureOpenAnHyperlink extends FindingT
   
   @Test
   @Order(3)
+  @Named("Given the backend is connected")
+  public void givenTheBackendIsConnected() {
+    this.b.executeSynchronousCommand();
+  }
+  
+  @Test
+  @Order(4)
   @Named("When I get the hyperlinks for \\\"/StatemachineMM/State\\\"")
   public void whenIGetTheHyperlinksForStatemachineMMState() {
     StepArguments _stepArguments = new StepArguments("/StatemachineMM/State");
@@ -60,7 +67,7 @@ public class FindingTheElementDeclarationFeatureOpenAnHyperlink extends FindingT
   }
   
   @Test
-  @Order(4)
+  @Order(5)
   @Named("Then it opens an editor for \\\"test_metamodel.ect\\\"")
   public void thenItOpensAnEditorForTestMetamodelEct() {
     StepArguments _stepArguments = new StepArguments("test_metamodel.ect");

@@ -78,7 +78,8 @@ public class Connector {
 	}
 	
 	public <T extends Response> void execute(Command<T> command, Callback<T> callback){
-		if(!ensureBackendIsConnected(callback)){
+		if(!connect()){
+			callback.handleError("Could not connect to backend");
 			return;
 		}
 		try{
@@ -98,14 +99,7 @@ public class Connector {
 		return new OnErrorClosingCallback<T>(delegate);
 	}
 
-	protected boolean ensureBackendIsConnected(Callback<?> callback) {
-		if(isConnected()){
-			return true;
-		}
-		return startBackend(callback);
-	}
-
-	public boolean startBackend(Callback<?> callback)  {
+	private boolean startBackend()  {
 		try{
 			processRunner.startProcess(connectorConfig);
 			connection.connect(ADDRESS, processRunner.getPort());
@@ -113,9 +107,15 @@ public class Connector {
 			return true;
 		}catch(Throwable e){
 			dispose();
-			callback.handleError("Could not connect to backend");
 			return false;
 		}
+	}
+
+	public boolean connect() {
+		if(isConnected()){
+			return true;
+		}
+		return startBackend();
 	}
 
 	public void dispose(){
@@ -126,5 +126,6 @@ public class Connector {
 	public boolean isConnected(){
 		return processRunner.isRunning();
 	}
+
 	
 }

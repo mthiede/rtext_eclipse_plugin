@@ -87,6 +87,7 @@ describe TcpClient{
 			subject.sendRequest(ANY_COMMAND, callback) 
 			waitUntil[callback.error != null]
 		}
+		
 	}
 	
 	context "connection state"{

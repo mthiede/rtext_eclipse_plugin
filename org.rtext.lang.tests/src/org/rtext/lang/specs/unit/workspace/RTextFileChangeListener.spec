@@ -40,12 +40,12 @@ describe RTextFileChangeListener {
 		verify(connectorProvider).dispose(rtextFile.location.toString)
 	}
 	
-	facts "triggers model load for each config"{
+	facts "reconnects each config"{
 		createRTextFile
 		addListener
 		rtextFile.append('\n')
 		waitForRTextJobs
-		verify(connector, times(2)).execute(any(typeof(LoadModelCommand)), any)
+		verify(connector, times(2)).connect
 	}
 	
 	facts "does nothing if file is created"{

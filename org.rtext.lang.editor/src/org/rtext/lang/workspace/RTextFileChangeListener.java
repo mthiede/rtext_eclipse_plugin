@@ -19,8 +19,6 @@ import org.rtext.lang.backend.ConnectorConfig;
 import org.rtext.lang.backend.ConnectorProvider;
 import org.rtext.lang.backend.RTextFile;
 import org.rtext.lang.backend.RTextFileParser;
-import org.rtext.lang.commands.LoadModelCallback;
-import org.rtext.lang.commands.LoadModelCommand;
 import org.rtext.lang.util.RTextJob;
 
 public class RTextFileChangeListener implements IResourceChangeListener {
@@ -91,7 +89,7 @@ public class RTextFileChangeListener implements IResourceChangeListener {
 		RTextFile rTextFile = new RTextFileParser().doParse(configFile);
 		for (ConnectorConfig config : rTextFile.getConfigurations()) {
 			Connector connector = connectorProvider.get(config);
-			connector.execute(new LoadModelCommand(), LoadModelCallback.create(config));
+			connector.connect();
 		}
 	}
 

@@ -33,8 +33,6 @@ import org.rtext.lang.backend.ConnectorConfig;
 import org.rtext.lang.backend.ConnectorConfigProvider;
 import org.rtext.lang.backend.ConnectorProvider;
 import org.rtext.lang.backend.FileSystemBasedConfigProvider;
-import org.rtext.lang.commands.LoadModelCallback;
-import org.rtext.lang.commands.LoadModelCommand;
 import org.rtext.lang.document.IRTextDocument;
 import org.rtext.lang.document.RTextDocumentProvider;
 import org.rtext.lang.document.RTextDocumentUtil;
@@ -97,12 +95,12 @@ public class RTextEditor extends TextEditor implements Connected{
 	protected void editorSaved() {
 		super.editorSaved();
 		try {
-			getConnector().execute(new LoadModelCommand(), LoadModelCallback.create(currentConfig()));
+			getConnector().connect();
 		} catch (Exception e) {
 			RTextPlugin.logError("Exception loading models", e);
 		}
 	}
-
+	
 	private IPath getInputPath() {
 		IEditorInput input = getEditorInput();
 		if (input instanceof FileStoreEditorInput) {

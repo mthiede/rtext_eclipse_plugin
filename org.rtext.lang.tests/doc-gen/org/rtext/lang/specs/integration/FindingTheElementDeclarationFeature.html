@@ -49,6 +49,8 @@
 <div><h3 class="scenario notrun"  id="Scenario_Open_an_hyperlink">Scenario: Open an hyperlink
 </h3>
 <ul>
+<li><span class="step notrun"><p>Given the backend is connected</p></span>
+</li>
 <li><span class="step notrun"><p>When I get the hyperlinks for <code>"/StatemachineMM/State"</code></p></span>
 </li>
 <li><span class="step notrun"><p>Then it opens an editor for <code>"test_metamodel.ect"</code></p></span>
@@ -58,9 +60,22 @@
 <div><h3 class="scenario notrun"  id="Scenario_Hyperlink_highlighting">Scenario: Hyperlink highlighting
 </h3>
 <ul>
+<li><span class="step notrun"><p>Given the backend is connected</p></span>
+</li>
 <li><span class="step notrun"><p>When I get the hyperlinks for <code>"/StatemachineMM/State"</code></p></span>
 </li>
 <li><span class="step notrun"><p>Then the hyperlink text is <code>"/StatemachineMM/State"</code></p></span>
+</li>
+</ul>
+</div>
+<div><h3 class="scenario pending"  id="Scenario_Disconnected_backend">Scenario: Disconnected backend
+</h3>
+<ul>
+<li><span class="step notrun"><p>Given the backend is disconnected</p></span>
+</li>
+<li><span class="step notrun"><p>When I get the hyperlinks for <code>"/StatemachineMM/State"</code></p></span>
+</li>
+<li><span class="step notrun"><p>Then the hyperlink message is <code>"backend not yet available"</code></p></span>
 </li>
 </ul>
 </div>
@@ -88,17 +103,29 @@ Feature: Finding the element declaration
      hyperLinkDetector = new HyperlinkDetector([|return b.connector])
 
   Scenario: Open an hyperlink
-  When I get the hyperlinks for &quot;/StatemachineMM/State&quot;
+  Given the backend is connected
+    b.executeSynchronousCommand 
+   When I get the hyperlinks for &quot;/StatemachineMM/State&quot;
       hyperlinks = hyperLinkDetector.detectHyperLinks(b.document, b.regionOf(args.first))
   Then it opens an editor for &quot;test_metamodel.ect&quot; 
       hyperlinks.head.open
     Workbenches::activePage.activeEditor?.title should contain args.first
 
   Scenario: Hyperlink highlighting
+  Given the backend is connected
   When I get the hyperlinks for &quot;/StatemachineMM/State&quot;
    Then the hyperlink text is &quot;/StatemachineMM/State&quot;
       val region = hyperlinks.head.getHyperlinkRegion
     b.document.get(region.offset, region.length) =&gt; args.first
+    
+    
+  Scenario: Disconnected backend
+    
+    Given the backend is disconnected
+      b.connector.dispose
+    When I get the hyperlinks for &quot;/StatemachineMM/State&quot;
+     Then the hyperlink message is &quot;backend not yet available&quot;
+       hyperlinks.head.hyperlinkText =&gt; args.first
 </pre>
 						    </p></div>
 						  </div>
