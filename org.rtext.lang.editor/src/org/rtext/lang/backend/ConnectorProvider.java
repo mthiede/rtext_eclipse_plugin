@@ -7,12 +7,10 @@
  *******************************************************************************/
 package org.rtext.lang.backend;
 
-import java.util.List;
 
 
 public interface ConnectorProvider {
-	Connector get(String modelFilePath);
+	Connector get(ConnectorConfig config);
 	void dispose(String rtextFilePath);
 	void dispose();
-	List<Connector> get(RTextFile rTextFile);
 }

@@ -1,12 +1,10 @@
 package org.rtext.lang.specs.unit.workspace;
 
-import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.xtend2.lib.StringConcatenation;
 import org.eclipse.xtext.xbase.lib.Functions.Function0;
-import org.jnario.lib.JnarioCollectionLiterals;
 import org.jnario.runner.CreateWith;
 import org.jnario.runner.ExampleGroupRunner;
 import org.jnario.runner.Extension;
@@ -23,8 +21,8 @@ import org.mockito.stubbing.OngoingStubbing;
 import org.mockito.verification.VerificationMode;
 import org.rtext.lang.RTextPlugin;
 import org.rtext.lang.backend.Connector;
+import org.rtext.lang.backend.ConnectorConfig;
 import org.rtext.lang.backend.ConnectorProvider;
-import org.rtext.lang.backend.RTextFile;
 import org.rtext.lang.commands.Callback;
 import org.rtext.lang.commands.LoadModelCommand;
 import org.rtext.lang.commands.LoadedModel;
@@ -61,11 +59,10 @@ public class RTextFileChangeListenerSpec {
     RTextFileChangeListenerSpec._workspaceHelper.createProject("test");
     RTextFileChangeListener _rTextFileChangeListener = new RTextFileChangeListener(this.connectorProvider);
     this.subject = _rTextFileChangeListener;
-    RTextFile _any = Matchers.<RTextFile>any(RTextFile.class);
-    List<Connector> _get = this.connectorProvider.get(_any);
-    OngoingStubbing<List<Connector>> _when = Mockito.<List<Connector>>when(_get);
-    List<Connector> _list = JnarioCollectionLiterals.<Connector>list(this.connector);
-    _when.thenReturn(_list);
+    ConnectorConfig _any = Matchers.<ConnectorConfig>any(ConnectorConfig.class);
+    Connector _get = this.connectorProvider.get(_any);
+    OngoingStubbing<Connector> _when = Mockito.<Connector>when(_get);
+    _when.thenReturn(this.connector);
   }
   
   @Test
@@ -93,7 +90,8 @@ public class RTextFileChangeListenerSpec {
     IFile _rtextFile = this.rtextFile();
     RTextFileChangeListenerSpec._workspaceHelper.append(_rtextFile, "\n");
     Jobs.waitForRTextJobs();
-    Connector _verify = Mockito.<Connector>verify(this.connector);
+    VerificationMode _times = Mockito.times(2);
+    Connector _verify = Mockito.<Connector>verify(this.connector, _times);
     LoadModelCommand _any = Matchers.<LoadModelCommand>any(LoadModelCommand.class);
     Callback<LoadedModel> _any_1 = Matchers.<Callback<LoadedModel>>any();
     _verify.<LoadedModel>execute(_any, _any_1);

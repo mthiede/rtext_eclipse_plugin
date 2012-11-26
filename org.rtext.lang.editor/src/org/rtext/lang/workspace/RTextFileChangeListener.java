@@ -3,7 +3,6 @@ package org.rtext.lang.workspace;
 import static org.rtext.lang.backend.RTextFile.RTEXT_FILE_NAME;
 
 import java.io.File;
-import java.util.List;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
@@ -16,6 +15,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.rtext.lang.RTextPlugin;
 import org.rtext.lang.backend.Connector;
+import org.rtext.lang.backend.ConnectorConfig;
 import org.rtext.lang.backend.ConnectorProvider;
 import org.rtext.lang.backend.RTextFile;
 import org.rtext.lang.backend.RTextFileParser;
@@ -89,9 +89,9 @@ public class RTextFileChangeListener implements IResourceChangeListener {
 	private void triggerReload(IResource resource) {
 		File configFile = new File(resource.getLocation().toString());
 		RTextFile rTextFile = new RTextFileParser().doParse(configFile);
-		List<Connector> connectors = connectorProvider.get(rTextFile);
-		for (Connector connector : connectors) {
-			connector.execute(new LoadModelCommand(), LoadModelCallback.create());
+		for (ConnectorConfig config : rTextFile.getConfigurations()) {
+			Connector connector = connectorProvider.get(config);
+			connector.execute(new LoadModelCommand(), LoadModelCallback.create(config));
 		}
 	}
 

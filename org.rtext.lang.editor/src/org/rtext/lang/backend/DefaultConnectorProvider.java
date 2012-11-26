@@ -9,9 +9,7 @@ package org.rtext.lang.backend;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.rtext.lang.util.Exceptions;
@@ -19,13 +17,10 @@ import org.rtext.lang.util.Exceptions;
 
 public class DefaultConnectorProvider implements ConnectorProvider{
 
-	private final ConnectorConfigProvider configFileProvider;
 	private final ConnectorFactory connectorProvider;
 	private final Map<String, Connector> connectors = new HashMap<String, Connector>();
 	
-	public DefaultConnectorProvider(ConnectorConfigProvider configFileProvider,
-			ConnectorFactory connectorProvider) {
-		this.configFileProvider = configFileProvider;
+	public DefaultConnectorProvider(ConnectorFactory connectorProvider) {
 		this.connectorProvider = connectorProvider;
 	}
 	
@@ -50,14 +45,6 @@ public class DefaultConnectorProvider implements ConnectorProvider{
 		}
 	}
 
-	public Connector get(String modelFilePath) {
-		ConnectorConfig connectorConfig = configFileProvider.get(modelFilePath);
-		if(connectorConfig == null){
-			return null;
-		}
-		return createConnector(connectorConfig);
-	}
-
 	public void dispose(String rtextFilePath) {
 		Connector connector = connectors.get(getKey(new File(rtextFilePath)));
 		if(connector == null){
@@ -66,11 +53,7 @@ public class DefaultConnectorProvider implements ConnectorProvider{
 		connector.dispose();
 	}
 
-	public List<Connector> get(RTextFile rTextFile) {
-		List<Connector> result = new ArrayList<Connector>();
-		for (ConnectorConfig config : rTextFile.getConfigurations()) {
-			result.add(createConnector(config));
-		}
-		return result;
+	public Connector get(ConnectorConfig connectorConfig) {
+		return createConnector(connectorConfig);
 	}
 }

@@ -58,7 +58,7 @@ public class Connector {
 	
 	public static Connector create(ConnectorConfig connectorConfig){
 		BackendStarter backendStarter = CliBackendStarter.create(connectorConfig);
-		LoadModelCallback modelCallBack = LoadModelCallback.create();
+		LoadModelCallback modelCallBack = LoadModelCallback.create(connectorConfig);
 		TcpClient tcpClient = TcpClient.create();
 		return new Connector(connectorConfig, backendStarter, tcpClient, modelCallBack);
 	}

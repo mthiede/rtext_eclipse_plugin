@@ -12,6 +12,8 @@ import static org.rtext.lang.util.Expectations.expectNotNull;
 
 import java.io.File;
 
+import org.eclipse.core.runtime.Path;
+
 public class Files {
 	public static String extension(File file){
 		expectNotNull(file);
@@ -19,7 +21,8 @@ public class Files {
 		return extension(name);
 	}
 
-	private static String extension(String name) {
+	public static String extension(String name) {
+		expectNotNull(name);
 		int dotIndex = name.lastIndexOf('.');
 		if(dotIndex >= 0){
 			return "*" + name.substring(dotIndex);
@@ -33,5 +36,11 @@ public class Files {
 
 	private static int indexOfLastSeparator(String name) {
 		return max(name.lastIndexOf('\\'), name.lastIndexOf('/'));
+	}
+
+	public static boolean isSubdir(String parent, String candidate) {
+		Path parentPath = new Path(parent);
+		Path candidatePath  = new Path(candidate);
+		return parentPath.isPrefixOf(candidatePath);
 	}
 }

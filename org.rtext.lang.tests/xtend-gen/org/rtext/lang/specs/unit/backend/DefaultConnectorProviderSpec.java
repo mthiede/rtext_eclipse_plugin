@@ -53,7 +53,7 @@ public class DefaultConnectorProviderSpec {
   
   @Before
   public void before() throws Exception {
-    DefaultConnectorProvider _defaultConnectorProvider = new DefaultConnectorProvider(this.configFileProvider, this.connectorFactory);
+    DefaultConnectorProvider _defaultConnectorProvider = new DefaultConnectorProvider(this.connectorFactory);
     this.subject = _defaultConnectorProvider;
     Connector _createConnector = this.connectorFactory.createConnector(this.config);
     OngoingStubbing<Connector> _when = Mockito.<Connector>when(_createConnector);
@@ -65,25 +65,25 @@ public class DefaultConnectorProviderSpec {
   }
   
   @Test
-  @Named("Creates connector with file specific configuration")
+  @Named("Creates connector for configuration")
   @Order(1)
-  public void _createsConnectorWithFileSpecificConfiguration() throws Exception {
-    Connector _get = this.subject.get(this.aModelPath);
+  public void _createsConnectorForConfiguration() throws Exception {
+    Connector _get = this.subject.get(this.config);
     boolean _doubleArrow = Should.operator_doubleArrow(_get, Connector.class);
-    Assert.assertTrue("\nExpected subject.get(aModelPath) => typeof(Connector) but"
-     + "\n     subject.get(aModelPath) is " + new StringDescription().appendValue(_get).toString()
+    Assert.assertTrue("\nExpected subject.get(config) => typeof(Connector) but"
+     + "\n     subject.get(config) is " + new StringDescription().appendValue(_get).toString()
      + "\n     subject is " + new StringDescription().appendValue(this.subject).toString()
-     + "\n     aModelPath is " + new StringDescription().appendValue(this.aModelPath).toString() + "\n", _doubleArrow);
+     + "\n     config is " + new StringDescription().appendValue(this.config).toString() + "\n", _doubleArrow);
     
-    ConnectorConfigProvider _verify = Mockito.<ConnectorConfigProvider>verify(this.configFileProvider);
-    _verify.get(this.aModelPath);
+    ConnectorFactory _verify = Mockito.<ConnectorFactory>verify(this.connectorFactory);
+    _verify.createConnector(this.config);
   }
   
   @Test
   @Named("disposes all connectors")
   @Order(2)
   public void _disposesAllConnectors() throws Exception {
-    this.subject.get(this.aModelPath);
+    this.subject.get(this.config);
     this.subject.dispose();
     Connector _verify = Mockito.<Connector>verify(this.connector);
     _verify.dispose();

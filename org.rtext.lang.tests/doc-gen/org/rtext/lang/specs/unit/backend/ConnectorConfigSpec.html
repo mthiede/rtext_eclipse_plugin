@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>DefaultConnectorProvider</title>
+<title>ConnectorConfig</title>
 <meta name="description" content="">
 <meta name="author" content="Jnario">
 
@@ -24,8 +24,8 @@
 	<div class="container">
 		<div class="tabbable">
 			<div class="content">
-				<div class="page-header notrun">
-					<h1>DefaultConnectorProvider</h1>
+				<div class="page-header pending">
+					<h1>ConnectorConfig</h1>
 					  <ul class="nav nav-tabs pull-right">
 					    <li class="active"><a href="#spec" data-toggle="tab">Spec</a></li>
 						<li><a href="#source" data-toggle="tab">Source</a></li>
@@ -35,65 +35,75 @@
 					<div class="span12">
 						  <div class="tab-content">
 							  	<div class="tab-pane active" id="spec">
-<ul><li><p id="Creates_connector_for_configuration" class="example notrun"><strong>Creates connector for configuration</strong></p>
+<h3 class="exampleGroup pending"  id="matches">Matches</h3>
+<ul><li><p id="examples"><strong>Examples</strong></p>
+<table class="table table-striped table-bordered table-condensed">
+	<thead>
+		<tr>
+		<th>fileName</th>
+		<th>patterns</th>
+		<th>doesMatch</th>
+		</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td>&quot;a.txt&quot;</td>
+		<td>list(&quot;*.txt&quot;)</td>
+		<td>true</td>
+	</tr>
+	<tr>
+		<td>&quot;a.txt1&quot;</td>
+		<td>list(&quot;*.txt&quot;)</td>
+		<td>false</td>
+	</tr>
+	<tr>
+		<td>&quot;a.txt&quot;</td>
+		<td>list(&quot;*.txt&quot;)</td>
+		<td>true</td>
+	</tr>
+	</tbody>
+</table>
+</li><li><p id="examples_forEach_val_config_new_ConnectorConfig___anyCommand_patterns_toArray_typeof_String_config_matches_fileName_doesMatch" class="example notrun"><strong>examples.forEach[ val config = new ConnectorConfig[ _, "anyCommand", patterns.toArray[typeof[String]] ] config.matches[fileName] => doesMatch ]</strong></p>
 <pre class="prettyprint lang-spec linenums">
-subject.get(config) =&gt; typeof(Connector)
-
-verify(connectorFactory).createConnector(config)</pre>
-</li><li><p id="disposes_all_connectors" class="example notrun"><strong>disposes all connectors</strong></p>
-<pre class="prettyprint lang-spec linenums">
-subject.get(config)
-subject.dispose
-verify(connector).dispose</pre>
+examples.forEach[
+      val config = new ConnectorConfig(
+        _,
+        &quot;anyCommand&quot;,
+        patterns.toArray(typeof(String))
+      )
+      config.matches(fileName) =&gt; doesMatch
+    ]</pre>
 </li></ul>
 							</div>
 						    <div class="tab-pane" id="source">
-						    	<h3>DefaultConnectorProvider.spec</h3>
+						    	<h3>ConnectorConfig.spec</h3>
 						    	<p>
 <pre class="prettyprint lang-spec linenums">
 package org.rtext.lang.specs.unit.backend
 
-import org.rtext.lang.backend.DefaultConnectorProvider
-import org.rtext.lang.backend.ConnectorConfigProvider
-import org.mockito.Mock
-import static org.mockito.Mockito.*
 import org.rtext.lang.backend.ConnectorConfig
-import org.rtext.lang.backend.Connector
-import org.rtext.lang.backend.ConnectorFactory
-import org.jnario.runner.CreateWith
-import org.rtext.lang.specs.util.MockInjector
 import java.io.File
+import static extension com.google.common.collect.Iterables.*
 
-@CreateWith(typeof(MockInjector))
-describe DefaultConnectorProvider {
+describe ConnectorConfig {
   
-  @Mock ConnectorConfigProvider configFileProvider
-  
-  ConnectorConfig config = new ConnectorConfig(new File(&quot;path&quot;), &quot;&quot;)
-  @Mock Connector connector
-  
-  @Mock ConnectorFactory connectorFactory
-  
-  String aModelPath = &quot;a path&quot;
-  String anotherModelPath = &quot;another path&quot;
-  
-  before {
-    subject = new DefaultConnectorProvider(connectorFactory)
-    when(connectorFactory.createConnector(config)).thenReturn(connector)
-    when(configFileProvider.get(anyString)).thenReturn(config)
+  context &quot;matches&quot;{
+    def {
+      | fileName     | patterns     | doesMatch |
+      | &quot;a.txt&quot;     | list(&quot;*.txt&quot;) | true    |
+      | &quot;a.txt1&quot;     | list(&quot;*.txt&quot;) | false    |
+      | &quot;a.txt&quot;     | list(&quot;*.txt&quot;) | true    |
+    }
+    fact examples.forEach[
+      val config = new ConnectorConfig(
+        _,
+        &quot;anyCommand&quot;,
+        patterns.toArray(typeof(String))
+      )
+      config.matches(fileName) =&gt; doesMatch
+    ]
   }
-  
-  fact &quot;Creates connector for configuration&quot;{
-    subject.get(config) =&gt; typeof(Connector)
-    
-    verify(connectorFactory).createConnector(config)
-  }
-  
-  fact &quot;disposes all connectors&quot;{
-    subject.get(config)
-    subject.dispose
-    verify(connector).dispose
-  }
+
 }
 </pre>
 						    </p></div>

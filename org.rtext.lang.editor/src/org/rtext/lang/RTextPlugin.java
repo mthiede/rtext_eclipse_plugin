@@ -18,7 +18,6 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 import org.rtext.lang.backend.CachingConnectorProvider;
-import org.rtext.lang.backend.Connector;
 import org.rtext.lang.backend.ConnectorProvider;
 import org.rtext.lang.workspace.RTextFileChangeListener;
 
@@ -64,10 +63,6 @@ public class RTextPlugin extends AbstractUIPlugin {
 
 	public ResourceBundle getResourceBundle() {
 		return resourceBundle;
-	}
-
-	public Connector getConnector(String modelFilePath) {
-		return getConnectorProvider().get(modelFilePath);
 	}
 
 	public ConnectorProvider getConnectorProvider() {

@@ -23,6 +23,7 @@ import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.stubbing.OngoingStubbing;
+import org.rtext.lang.backend.ConnectorScope;
 import org.rtext.lang.commands.LoadModelCallback;
 import org.rtext.lang.commands.LoadModelCallback.ProblemUpdateJob;
 import org.rtext.lang.commands.LoadModelCallback.ProblemUpdateJobFactory;
@@ -50,6 +51,9 @@ public class LoadModelCallbackSpec {
   
   @Mock
   ProblemUpdateJobFactory jobFactory;
+  
+  @Mock
+  ConnectorScope connectorScope;
   
   @Mock
   FileLocator fileLocator;
@@ -101,10 +105,11 @@ public class LoadModelCallbackSpec {
   
   @Before
   public void before() throws Exception {
-    LoadModelCallback _loadModelCallback = new LoadModelCallback(this.jobFactory, this.fileLocator);
+    LoadModelCallback _loadModelCallback = new LoadModelCallback(this.jobFactory, this.fileLocator, this.connectorScope);
     this.subject = _loadModelCallback;
     Map _anyMap = Matchers.anyMap();
-    ProblemUpdateJob _create = this.jobFactory.create(_anyMap);
+    ConnectorScope _any = Matchers.<ConnectorScope>any();
+    ProblemUpdateJob _create = this.jobFactory.create(_anyMap, _any);
     OngoingStubbing<ProblemUpdateJob> _when = Mockito.<ProblemUpdateJob>when(_create);
     _when.thenReturn(this.updateJob);
     List<IFile> _locate = this.fileLocator.locate("myfile1.txt");
@@ -138,32 +143,35 @@ public class LoadModelCallbackSpec {
     ProblemUpdateJobFactory _verify = Mockito.<ProblemUpdateJobFactory>verify(this.jobFactory);
     final Function1<Map<IResource,List<Problem>>,Boolean> _function = new Function1<Map<IResource,List<Problem>>,Boolean>() {
         public Boolean apply(final Map<IResource,List<Problem>> it) {
+          boolean _and = false;
+          boolean _and_1 = false;
+          boolean _and_2 = false;
           boolean _containsKey = it.containsKey(LoadModelCallbackSpec.this.resolvedFile1);
-          boolean _not = (!_containsKey);
-          if (_not) {
-            return Boolean.valueOf(false);
+          if (!_containsKey) {
+            _and_2 = false;
+          } else {
+            boolean _containsKey_1 = it.containsKey(LoadModelCallbackSpec.this.resolvedFile2);
+            _and_2 = (_containsKey && _containsKey_1);
           }
-          boolean _containsKey_1 = it.containsKey(LoadModelCallbackSpec.this.resolvedFile2);
-          boolean _not_1 = (!_containsKey_1);
-          if (_not_1) {
-            return Boolean.valueOf(false);
+          if (!_and_2) {
+            _and_1 = false;
+          } else {
+            boolean _containsValue = it.containsValue(LoadModelCallbackSpec.this.problems1);
+            _and_1 = (_and_2 && _containsValue);
           }
-          boolean _containsValue = it.containsValue(LoadModelCallbackSpec.this.problems1);
-          boolean _not_2 = (!_containsValue);
-          if (_not_2) {
-            return Boolean.valueOf(false);
+          if (!_and_1) {
+            _and = false;
+          } else {
+            boolean _containsValue_1 = it.containsValue(LoadModelCallbackSpec.this.problems2);
+            _and = (_and_1 && _containsValue_1);
           }
-          boolean _containsValue_1 = it.containsValue(LoadModelCallbackSpec.this.problems2);
-          boolean _not_3 = (!_containsValue_1);
-          if (_not_3) {
-            return Boolean.valueOf(false);
-          }
-          return Boolean.valueOf(true);
+          return Boolean.valueOf(_and);
         }
       };
     Matcher<Map<IResource,List<Problem>>> _matches = Should.<Map<IResource,List<Problem>>>matches("problems", _function);
     Map<IResource,List<Problem>> _argThat = Matchers.<Map<IResource,List<Problem>>>argThat(_matches);
-    _verify.create(_argThat);
+    ConnectorScope _eq = Matchers.<ConnectorScope>eq(this.connectorScope);
+    _verify.create(_argThat, _eq);
   }
   
   @Test

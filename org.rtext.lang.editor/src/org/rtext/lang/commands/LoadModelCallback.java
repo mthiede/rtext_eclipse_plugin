@@ -20,8 +20,6 @@ import java.util.Set;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -29,9 +27,12 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.MultiRule;
 import org.eclipse.ui.texteditor.MarkerUtilities;
+import org.rtext.lang.backend.ConnectorConfig;
+import org.rtext.lang.backend.ConnectorScope;
 import org.rtext.lang.commands.LoadedModel.FileProblems;
 import org.rtext.lang.commands.LoadedModel.Problem;
 import org.rtext.lang.util.FileLocator;
+import org.rtext.lang.util.Procedure;
 import org.rtext.lang.util.RTextJob;
 
 public class LoadModelCallback extends WorkspaceCallback<LoadedModel> {
@@ -40,17 +41,19 @@ public class LoadModelCallback extends WorkspaceCallback<LoadedModel> {
 	public static final String PROBLEM_MARKER_JOB = "Updating Problem markers";
 
 	public static class ProblemUpdateJobFactory{
-		public ProblemUpdateJob create(Map<IResource, List<Problem>> problems){
-			return new ProblemUpdateJob(problems);
+		public ProblemUpdateJob create(Map<IResource, List<Problem>> problems, ConnectorScope scope){
+			return new ProblemUpdateJob(problems, scope);
 		}
 	}
 	
 	public static class ProblemUpdateJob extends RTextJob{
 		private Map<IResource, List<Problem>> problems;
+		private ConnectorScope scope;
 
-		public ProblemUpdateJob(Map<IResource, List<Problem>> problems) {
+		public ProblemUpdateJob(Map<IResource, List<Problem>> problems, ConnectorScope scope) {
 			super(PROBLEM_MARKER_JOB);
 			this.problems = problems;
+			this.scope = scope;
 			setRule(lockAll(problems.keySet()));
 		}
 		
@@ -60,23 +63,34 @@ public class LoadModelCallback extends WorkspaceCallback<LoadedModel> {
 		
 		@Override
 		protected IStatus run(IProgressMonitor monitor) {
-			try {
-				IWorkspaceRoot resource = ResourcesPlugin.getWorkspace().getRoot();
-				resource.deleteMarkers(RTEXT_MARKERS, true, IResource.DEPTH_INFINITE);
-			} catch (CoreException e) {
-				logError("Exception when deleting marker on :" + "workspace", e);
-			}
+			clearExistingMarkers();
+			addNewMarkers();
+			return Status.OK_STATUS;
+		}
+
+		public void addNewMarkers() {
 			int problemCount = 0;
 			for (Entry<IResource, List<Problem>> entry : problems.entrySet()) {
 				if(problemCount >= 100){
-					return Status.OK_STATUS;
+					return;
 				}
 				IResource resource = entry.getKey();
 				for (Problem problem : entry.getValue()) {
 					createMarker(resource, problem);
 				}
 			}
-			return Status.OK_STATUS;
+		}
+
+		public void clearExistingMarkers() {
+			scope.forEach(new Procedure<IResource>() {
+				public void apply(IResource resource) {
+					try{
+						resource.deleteMarkers(RTEXT_MARKERS, true, IResource.DEPTH_INFINITE);
+					} catch (CoreException e) {
+						logError("Exception when deleting marker on :" + "workspace", e);
+					}
+				}
+			});
 		}
 
 		public void createMarker(IResource resource, Problem problem){
@@ -103,17 +117,21 @@ public class LoadModelCallback extends WorkspaceCallback<LoadedModel> {
 		put("error", IMarker.SEVERITY_ERROR);
 		put("fatal", IMarker.SEVERITY_ERROR);
 	}};
+	
 	private ProblemUpdateJobFactory jobFactory;
 	private FileLocator fileLocator;
+	private ConnectorScope scope;
 
-	public static LoadModelCallback create(){
-		return new LoadModelCallback(new ProblemUpdateJobFactory(), new FileLocator());
+	public static LoadModelCallback create(ConnectorConfig connectorConfig){
+		ConnectorScope scope = ConnectorScope.create(connectorConfig);
+		return new LoadModelCallback(new ProblemUpdateJobFactory(), new FileLocator(), scope);
 	}
 	
-	public LoadModelCallback(ProblemUpdateJobFactory jobFactory, FileLocator fileLocator) {
+	public LoadModelCallback(ProblemUpdateJobFactory jobFactory, FileLocator fileLocator, ConnectorScope scope) {
 		super("Loading model");
 		this.jobFactory = jobFactory;
 		this.fileLocator = fileLocator;
+		this.scope = scope;
 	}
 	
 	public void handleResponse(LoadedModel response) {
@@ -123,7 +141,7 @@ public class LoadModelCallback extends WorkspaceCallback<LoadedModel> {
 	}
 
 	public void runUpdateJob(Map<IResource, List<Problem>> problems) {
-		ProblemUpdateJob updateJob = jobFactory.create(problems);
+		ProblemUpdateJob updateJob = jobFactory.create(problems, scope);
 		updateJob.schedule();
 	}
 

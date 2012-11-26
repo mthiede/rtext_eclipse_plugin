@@ -3,15 +3,16 @@ package org.rtext.lang.specs.unit.backend
 import org.eclipse.core.resources.IFile
 import org.jnario.runner.CreateWith
 import org.mockito.Mock
-import org.rtext.lang.commands.LoadedModel
-import org.rtext.lang.commands.LoadedModel$FileProblems
-import org.rtext.lang.commands.LoadedModel$Problem
-import org.rtext.lang.util.FileLocator
+import org.rtext.lang.backend.ConnectorScope
 import org.rtext.lang.commands.LoadModelCallback
 import org.rtext.lang.commands.LoadModelCallback$ProblemUpdateJob
 import org.rtext.lang.commands.LoadModelCallback$ProblemUpdateJobFactory
+import org.rtext.lang.commands.LoadedModel
+import org.rtext.lang.commands.LoadedModel$FileProblems
+import org.rtext.lang.commands.LoadedModel$Problem
 import org.rtext.lang.specs.util.MockInjector
 import org.rtext.lang.specs.util.WorkspaceHelper
+import org.rtext.lang.util.FileLocator
 
 import static org.jnario.lib.JnarioCollectionLiterals.*
 import static org.jnario.lib.Should.*
@@ -24,6 +25,7 @@ describe LoadModelCallback {
 	extension WorkspaceHelper = new WorkspaceHelper
 	
 	@Mock ProblemUpdateJobFactory jobFactory
+	@Mock ConnectorScope connectorScope
 	@Mock FileLocator fileLocator
 	@Mock ProblemUpdateJob updateJob
 	@Mock IFile resolvedFile1
@@ -45,8 +47,8 @@ describe LoadModelCallback {
 	]
 	
 	before {
-		subject = new LoadModelCallback(jobFactory, fileLocator)
-		when(jobFactory.create(anyMap)).thenReturn(updateJob)
+		subject = new LoadModelCallback(jobFactory, fileLocator, connectorScope)
+		when(jobFactory.create(anyMap, any)).thenReturn(updateJob)
 		when(fileLocator.locate("myfile1.txt")).thenReturn(list(resolvedFile1))
 		when(fileLocator.locate("myfile2.txt")).thenReturn(list(resolvedFile2))
 		
@@ -61,13 +63,12 @@ describe LoadModelCallback {
 		subject.commandSent
 		subject.handleResponse(loadedModel)
 		
-		verify(jobFactory).create( argThat(matches("problems")[
-			if(!containsKey(resolvedFile1)) return false
-			if(!containsKey(resolvedFile2)) return false
-			if(!containsValue(problems1))   return false
-			if(!containsValue(problems2))   return false
-			return true
-		]))
+		verify(jobFactory).create(argThat(matches("problems")[
+			containsKey(resolvedFile1) &&
+			containsKey(resolvedFile2) &&
+			containsValue(problems1)  &&
+			containsValue(problems2)
+		]), eq(connectorScope))
 	}
 	
 	fact "schedules update job"{

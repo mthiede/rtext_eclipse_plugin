@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
@@ -23,6 +24,7 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.ListExtensions;
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
 import org.junit.After;
+import org.rtext.lang.specs.util.ProjectInitializer;
 import org.rtext.lang.specs.util.StringInputStream;
 
 @SuppressWarnings("all")
@@ -60,6 +62,22 @@ public class WorkspaceHelper {
       IProject _doCreateProject = this.doCreateProject(name, description);
       boolean _add = this.createdProjects.add(_doCreateProject);
       _xblockexpression = (_add);
+    }
+    return _xblockexpression;
+  }
+  
+  public IProject createProject(final String name, final Procedure1<ProjectInitializer> init) {
+    IProject _xblockexpression = null;
+    {
+      IWorkspace _workspace = this.getWorkspace();
+      final IProjectDescription description = _workspace.newProjectDescription(name);
+      final IProject project = this.doCreateProject(name, description);
+      this.createdProjects.add(project);
+      ProjectInitializer _projectInitializer = new ProjectInitializer();
+      final ProjectInitializer initializer = _projectInitializer;
+      init.apply(initializer);
+      initializer.apply(project);
+      _xblockexpression = (project);
     }
     return _xblockexpression;
   }
@@ -106,6 +124,19 @@ public class WorkspaceHelper {
     Path _path = new Path(path);
     IFile _file = _root.getFile(_path);
     return _file;
+  }
+  
+  public void createFolder(final String path) {
+    try {
+      IWorkspace _workspace = this.getWorkspace();
+      IWorkspaceRoot _root = _workspace.getRoot();
+      Path _path = new Path(path);
+      IFolder _folder = _root.getFolder(_path);
+      NullProgressMonitor _monitor = this.monitor();
+      _folder.create(true, true, _monitor);
+    } catch (Exception _e) {
+      throw Exceptions.sneakyThrow(_e);
+    }
   }
   
   public void append(final IFile file, final CharSequence content) {

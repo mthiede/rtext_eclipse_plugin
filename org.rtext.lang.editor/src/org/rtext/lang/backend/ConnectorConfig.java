@@ -7,6 +7,8 @@
  *******************************************************************************/
 package org.rtext.lang.backend;
 
+import static org.rtext.lang.util.Files.extension;
+
 import java.io.File;
 import java.util.Arrays;
 
@@ -72,5 +74,15 @@ public class ConnectorConfig {
 		if (!Arrays.equals(patterns, other.patterns))
 			return false;
 		return true;
+	}
+
+	public boolean matches(String fileName){
+		String extension = extension(fileName);
+		for (String pattern : patterns) {
+			if(pattern.equals(extension)){
+				return true;
+			}
+		}
+		return false;
 	}
 }

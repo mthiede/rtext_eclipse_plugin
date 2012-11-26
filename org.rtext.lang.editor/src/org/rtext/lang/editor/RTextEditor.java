@@ -29,7 +29,10 @@ import org.eclipse.ui.texteditor.TextOperationAction;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.rtext.lang.RTextPlugin;
 import org.rtext.lang.backend.Connector;
+import org.rtext.lang.backend.ConnectorConfig;
+import org.rtext.lang.backend.ConnectorConfigProvider;
 import org.rtext.lang.backend.ConnectorProvider;
+import org.rtext.lang.backend.FileSystemBasedConfigProvider;
 import org.rtext.lang.commands.LoadModelCallback;
 import org.rtext.lang.commands.LoadModelCommand;
 import org.rtext.lang.document.IRTextDocument;
@@ -43,13 +46,15 @@ public class RTextEditor extends TextEditor implements Connected{
 	private ProjectionSupport projectionSupport;
 	private FoldingStructureProvider foldingStructureProvider = new FoldingStructureProvider();
 	private final ConnectorProvider connectorProvider;
+	private ConnectorConfigProvider configProvider;
 	
 	public RTextEditor() {
-		this(RTextPlugin.getDefault().getConnectorProvider());
+		this(RTextPlugin.getDefault().getConnectorProvider(), FileSystemBasedConfigProvider.create());
 	}
 	
-	public RTextEditor(ConnectorProvider connectorProvider) {
+	public RTextEditor(ConnectorProvider connectorProvider, ConnectorConfigProvider configProvider) {
 		this.connectorProvider = connectorProvider;
+		this.configProvider = configProvider;
 		colorManager = new ColorManager();
 		setSourceViewerConfiguration(new ViewerConfiguration(this, colorManager));
 		setDocumentProvider(new RTextDocumentProvider());
@@ -92,13 +97,13 @@ public class RTextEditor extends TextEditor implements Connected{
 	protected void editorSaved() {
 		super.editorSaved();
 		try {
-			getConnector().execute(new LoadModelCommand(), LoadModelCallback.create());
+			getConnector().execute(new LoadModelCommand(), LoadModelCallback.create(currentConfig()));
 		} catch (Exception e) {
 			RTextPlugin.logError("Exception loading models", e);
 		}
 	}
 
-	IPath getInputPath() {
+	private IPath getInputPath() {
 		IEditorInput input = getEditorInput();
 		if (input instanceof FileStoreEditorInput) {
 			FileStoreEditorInput fileStoreEditorInput = (FileStoreEditorInput) input;
@@ -123,7 +128,15 @@ public class RTextEditor extends TextEditor implements Connected{
 	}
 
 	public Connector getConnector() {
-		return connectorProvider.get(getInputPath().toOSString());
+		return connectorProvider.get(currentConfig());
+	}
+
+	private ConnectorConfig currentConfig() {
+		return configProvider.get(path());
+	}
+
+	private String path() {
+		return getInputPath().toOSString();
 	}
 	
 	protected void installFoldingSupport(ProjectionViewer projectionViewer) {

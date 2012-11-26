@@ -2,20 +2,20 @@ package org.rtext.lang.specs.unit.workspace
 
 import org.jnario.runner.CreateWith
 import org.mockito.Mock
+import org.rtext.lang.RTextPlugin
+import org.rtext.lang.backend.Connector
+import org.rtext.lang.backend.ConnectorConfig
 import org.rtext.lang.backend.ConnectorProvider
+import org.rtext.lang.commands.LoadModelCommand
 import org.rtext.lang.specs.util.MockInjector
 import org.rtext.lang.specs.util.WorkspaceHelper
 import org.rtext.lang.workspace.RTextFileChangeListener
 
 import static org.mockito.Matchers.*
 import static org.mockito.Mockito.*
+import static org.rtext.lang.specs.util.Jobs.*
 
 import static extension org.rtext.lang.specs.unit.workspace.RTextFileChangeListenerSpec.*
-import org.rtext.lang.backend.Connector
-import org.rtext.lang.commands.LoadModelCommand
-import org.rtext.lang.backend.RTextFile
-import org.rtext.lang.RTextPlugin
-import static org.rtext.lang.specs.util.Jobs.*
 
 @CreateWith(typeof(MockInjector))
 describe RTextFileChangeListener {
@@ -29,7 +29,7 @@ describe RTextFileChangeListener {
 		RTextPlugin::getDefault.stopListeningForRTextFileChanges
 		createProject("test")
 		subject = new RTextFileChangeListener(connectorProvider)
-		when(connectorProvider.get(any(typeof(RTextFile)))).thenReturn(list(connector))
+		when(connectorProvider.get(any(typeof(ConnectorConfig)))).thenReturn(connector)
 	}
 	
 	facts "stops connectors when file is changed"{
@@ -45,7 +45,7 @@ describe RTextFileChangeListener {
 		addListener
 		rtextFile.append('\n')
 		waitForRTextJobs
-		verify(connector).execute(any(typeof(LoadModelCommand)), any)
+		verify(connector, times(2)).execute(any(typeof(LoadModelCommand)), any)
 	}
 	
 	facts "does nothing if file is created"{

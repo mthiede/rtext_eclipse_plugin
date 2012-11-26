@@ -7,7 +7,8 @@ import java.io.File
 describe Files {
 	
 	context "fileExtension"{
-		fact ^extension(null) throws IllegalArgumentException
+		String nameIsNull = null
+		fact ^extension(nameIsNull) throws IllegalArgumentException
 		def {
 			| filename				| ext 		|
 			| ""					| ""		|

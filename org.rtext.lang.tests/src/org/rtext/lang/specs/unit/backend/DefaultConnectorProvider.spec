@@ -25,19 +25,19 @@ describe DefaultConnectorProvider {
 	String anotherModelPath = "another path"
 	
 	before {
-		subject = new DefaultConnectorProvider(configFileProvider, connectorFactory)
+		subject = new DefaultConnectorProvider(connectorFactory)
 		when(connectorFactory.createConnector(config)).thenReturn(connector)
 		when(configFileProvider.get(anyString)).thenReturn(config)
 	}
 	
-	fact "Creates connector with file specific configuration"{
-		subject.get(aModelPath) => typeof(Connector)
+	fact "Creates connector for configuration"{
+		subject.get(config) => typeof(Connector)
 		
-		verify(configFileProvider).get(aModelPath)
+		verify(connectorFactory).createConnector(config)
 	}
 	
 	fact "disposes all connectors"{
-		subject.get(aModelPath)
+		subject.get(config)
 		subject.dispose
 		verify(connector).dispose
 	}

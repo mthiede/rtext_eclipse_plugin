@@ -2,14 +2,10 @@ package org.rtext.lang.specs;
 
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
-import org.rtext.lang.backend.CachingConnectorProvider;
-import org.rtext.lang.backend.Connector;
-import org.rtext.lang.backend.ConnectorProvider;
 
 public class RTextPluginActivator extends Plugin {
 
 	private static RTextPluginActivator INSTANCE = null;
-	private ConnectorProvider connectorProvider;
 	
 	@Override
 	public void start(BundleContext context) throws Exception {
@@ -19,12 +15,5 @@ public class RTextPluginActivator extends Plugin {
 	
 	public static RTextPluginActivator getDefault() {
 		return INSTANCE;
-	}
-	
-	public Connector getConnector(String modelFilePath){
-		if(connectorProvider == null){
-			connectorProvider = CachingConnectorProvider.create();
-		}
-		return connectorProvider.get(modelFilePath);
 	}
 }

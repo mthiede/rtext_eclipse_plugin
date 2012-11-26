@@ -15,6 +15,7 @@ import org.jnario.runner.Order;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.rtext.lang.backend.ConnectorConfig;
 import org.rtext.lang.commands.LoadModelCallback;
 import org.rtext.lang.specs.integration.ProblemMarkersFeature;
 import org.rtext.lang.specs.util.BackendHelper;
@@ -26,6 +27,30 @@ import org.rtext.lang.specs.util.WorkspaceHelper;
 @Named("Scenario: Valid files have no problem marker")
 @SuppressWarnings("all")
 public class ProblemMarkersFeatureValidFilesHaveNoProblemMarker extends ProblemMarkersFeature {
+  @Extension
+  public WorkspaceHelper _workspaceHelper = new Function0<WorkspaceHelper>() {
+    public WorkspaceHelper apply() {
+      WorkspaceHelper _workspaceHelper = new WorkspaceHelper();
+      return _workspaceHelper;
+    }
+  }.apply();
+  
+  @Extension
+  public TestFileLocator _testFileLocator = new Function0<TestFileLocator>() {
+    public TestFileLocator apply() {
+      TestFileLocator _default = TestFileLocator.getDefault();
+      return _default;
+    }
+  }.apply();
+  
+  @Extension
+  public BackendHelper _backendHelper = new Function0<BackendHelper>() {
+    public BackendHelper apply() {
+      BackendHelper _backendHelper = new BackendHelper();
+      return _backendHelper;
+    }
+  }.apply();
+  
   @Test
   @Order(0)
   @Named("Given a project \\\"test\\\" linked to \\\"rtext/test/integration/model/\\\"")
@@ -47,8 +72,8 @@ public class ProblemMarkersFeatureValidFilesHaveNoProblemMarker extends ProblemM
     String _first = JnarioIterableExtensions.<String>first(args);
     IFile _file = this._workspaceHelper.file(_first);
     IPath _location = _file.getLocation();
-    this._backendHelper.startBackendFor(_location);
-    LoadModelCallback _create = LoadModelCallback.create();
+    final ConnectorConfig config = this._backendHelper.startBackendFor(_location);
+    LoadModelCallback _create = LoadModelCallback.create(config);
     this._backendHelper.executeSynchronousCommand(_create);
     Jobs.waitForRTextJobs();
   }
@@ -94,28 +119,4 @@ public class ProblemMarkersFeatureValidFilesHaveNoProblemMarker extends ProblemM
      + "\n     args is " + new StringDescription().appendValue(args).toString() + "\n", _should_be);
     
   }
-  
-  @Extension
-  public WorkspaceHelper _workspaceHelper = new Function0<WorkspaceHelper>() {
-    public WorkspaceHelper apply() {
-      WorkspaceHelper _workspaceHelper = new WorkspaceHelper();
-      return _workspaceHelper;
-    }
-  }.apply();
-  
-  @Extension
-  public TestFileLocator _testFileLocator = new Function0<TestFileLocator>() {
-    public TestFileLocator apply() {
-      TestFileLocator _default = TestFileLocator.getDefault();
-      return _default;
-    }
-  }.apply();
-  
-  @Extension
-  public BackendHelper _backendHelper = new Function0<BackendHelper>() {
-    public BackendHelper apply() {
-      BackendHelper _backendHelper = new BackendHelper();
-      return _backendHelper;
-    }
-  }.apply();
 }

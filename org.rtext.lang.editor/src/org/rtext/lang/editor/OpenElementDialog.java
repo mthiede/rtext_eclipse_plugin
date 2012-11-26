@@ -45,7 +45,6 @@ public class OpenElementDialog extends SelectionStatusDialog  {
 		}
 
 		public void handleProgress(Progress progress) {
-			
 		}
 
 		public void handleResponse(final Elements elements) {

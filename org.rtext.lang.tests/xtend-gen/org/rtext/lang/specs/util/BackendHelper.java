@@ -11,7 +11,9 @@ import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.junit.After;
 import org.rtext.lang.backend.CachingConnectorProvider;
 import org.rtext.lang.backend.Connector;
+import org.rtext.lang.backend.ConnectorConfig;
 import org.rtext.lang.backend.ConnectorProvider;
+import org.rtext.lang.backend.FileSystemBasedConfigProvider;
 import org.rtext.lang.commands.Callback;
 import org.rtext.lang.commands.Command;
 import org.rtext.lang.commands.LoadModelCommand;
@@ -94,9 +96,10 @@ public class BackendHelper {
     this._response = response;
   }
   
-  public void startBackendFor(final IPath filePath) {
+  public ConnectorConfig startBackendFor(final IPath filePath) {
     String _oSString = filePath.toOSString();
-    this.startBackendFor(_oSString);
+    ConnectorConfig _startBackendFor = this.startBackendFor(_oSString);
+    return _startBackendFor;
   }
   
   public String absolutPath(final String relativePath) {
@@ -104,13 +107,20 @@ public class BackendHelper {
     return _absolutPath;
   }
   
-  public void startBackendFor(final String filePath) {
-    final String absolutePath = filePath;
-    Connector _get = this.connectorProvider.get(absolutePath);
-    this.setConnector(_get);
-    String _read = Files.read(absolutePath);
-    SimpleDocument _simpleDocument = new SimpleDocument(_read);
-    this.setDocument(_simpleDocument);
+  public ConnectorConfig startBackendFor(final String filePath) {
+    ConnectorConfig _xblockexpression = null;
+    {
+      final String absolutePath = filePath;
+      final FileSystemBasedConfigProvider configProvider = FileSystemBasedConfigProvider.create();
+      final ConnectorConfig config = configProvider.get(absolutePath);
+      Connector _get = this.connectorProvider.get(config);
+      this.setConnector(_get);
+      String _read = Files.read(absolutePath);
+      SimpleDocument _simpleDocument = new SimpleDocument(_read);
+      this.setDocument(_simpleDocument);
+      _xblockexpression = (config);
+    }
+    return _xblockexpression;
   }
   
   public void executeSynchronousCommand() {

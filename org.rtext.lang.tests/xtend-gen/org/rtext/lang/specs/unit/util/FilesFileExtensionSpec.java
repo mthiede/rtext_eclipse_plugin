@@ -20,14 +20,16 @@ import org.rtext.lang.util.Files;
 @RunWith(ExampleGroupRunner.class)
 @Named("fileExtension")
 public class FilesFileExtensionSpec extends FilesSpec {
+  String nameIsNull = null;
+  
   @Test
-  @Named("^extension[null] throws IllegalArgumentException")
+  @Named("^extension[nameIsNull] throws IllegalArgumentException")
   @Order(1)
-  public void _extensionNullThrowsIllegalArgumentException() throws Exception {
+  public void _extensionNameIsNullThrowsIllegalArgumentException() throws Exception {
     try{
-      Files.extension(null);
-      Assert.fail("Expected " + IllegalArgumentException.class.getName() + " in \n     ^extension(null)\n with:"
-       + "\n     ^extension(null) is " + new StringDescription().appendValue(Files.extension(null)).toString());
+      Files.extension(this.nameIsNull);
+      Assert.fail("Expected " + IllegalArgumentException.class.getName() + " in \n     ^extension(nameIsNull)\n with:"
+       + "\n     nameIsNull is " + new StringDescription().appendValue(this.nameIsNull).toString());
     }catch(IllegalArgumentException e){
     }
   }

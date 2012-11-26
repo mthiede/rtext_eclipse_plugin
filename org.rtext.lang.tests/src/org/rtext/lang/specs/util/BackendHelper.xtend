@@ -14,6 +14,7 @@ import org.rtext.lang.commands.LoadedModel
 import org.rtext.lang.commands.Response
 
 import static org.rtext.lang.specs.util.Wait.*
+import org.rtext.lang.backend.FileSystemBasedConfigProvider
 
 class BackendHelper {
 	extension TestFileLocator fileLocator = TestFileLocator::getDefault()
@@ -37,8 +38,11 @@ class BackendHelper {
 	
 	def startBackendFor(String filePath) {
 		val absolutePath = filePath
-		connector = connectorProvider.get(absolutePath)
+		val configProvider = FileSystemBasedConfigProvider::create()
+		val config = configProvider.get(absolutePath)
+		connector = connectorProvider.get(config)
 		document = new SimpleDocument(Files::read(absolutePath))
+		config
 	}
 	
 	def executeSynchronousCommand() {
