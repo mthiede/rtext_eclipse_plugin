@@ -35,7 +35,7 @@
 					<div class="span12">
 						  <div class="tab-content">
 							  	<div class="tab-pane active" id="spec">
-<div><h3 class="scenario notrun"  id="Scenario_Find_declaration_within_same_file">Scenario: Find declaration within same file
+<div><h3 class="scenario notrun"  id="Background">Background:
 </h3>
 <ul>
 <li><span class="step notrun"><p>Given a project <code>"test"</code> linked to <code>"rtext/test/integration/model/"</code></p></span>
@@ -44,9 +44,23 @@
 </li>
 <li><span class="step notrun"><p>And a hyperlink detector</p></span>
 </li>
-<li><span class="step notrun"><p>When I open the definition of <code>"/StatemachineMM/State"</code></p></span>
+</ul>
+</div>
+<div><h3 class="scenario notrun"  id="Scenario_Find_declaration_within_same_file">Scenario: Find declaration within same file
+</h3>
+<ul>
+<li><span class="step notrun"><p>When I get the hyperlinks for <code>"/StatemachineMM/State"</code></p></span>
 </li>
 <li><span class="step notrun"><p>Then it opens an editor for <code>"test_metamodel.ect"</code></p></span>
+</li>
+</ul>
+</div>
+<div><h3 class="scenario notrun"  id="Scenario_Hyperlink_highlighting">Scenario: Hyperlink highlighting
+</h3>
+<ul>
+<li><span class="step notrun"><p>When I get the hyperlinks for <code>"/StatemachineMM/State"</code></p></span>
+</li>
+<li><span class="step notrun"><p>Then the hyperlink text is <code>"/StatemachineMM/State"</code></p></span>
 </li>
 </ul>
 </div>
@@ -64,7 +78,7 @@ import org.rtext.lang.util.Workbenches
 
 Feature: Finding the element declaration
 
-  Scenario: Find declaration within same file
+  Background:
    HyperlinkDetector hyperLinkDetector
    List&lt;IHyperlink&gt; hyperlinks
  
@@ -72,12 +86,19 @@ Feature: Finding the element declaration
     And a backend for &quot;rtext/test/integration/model/test_metamodel.ect&quot;
     And a hyperlink detector
      hyperLinkDetector = new HyperlinkDetector([|return b.connector])
-     
-  When I open the definition of &quot;/StatemachineMM/State&quot;
+
+  Scenario: Find declaration within same file
+  When I get the hyperlinks for &quot;/StatemachineMM/State&quot;
       hyperlinks = hyperLinkDetector.detectHyperLinks(b.document, b.regionOf(args.first))
   Then it opens an editor for &quot;test_metamodel.ect&quot; 
       hyperlinks.head.open
     Workbenches::activePage.activeEditor?.title should contain args.first
+
+  Scenario: Hyperlink highlighting
+  When I get the hyperlinks for &quot;/StatemachineMM/State&quot;
+   Then the hyperlink text is &quot;/StatemachineMM/State&quot;
+      val region = hyperlinks.head.getHyperlinkRegion
+    b.document.get(region.offset, region.length) =&gt; args.first
 </pre>
 						    </p></div>
 						  </div>

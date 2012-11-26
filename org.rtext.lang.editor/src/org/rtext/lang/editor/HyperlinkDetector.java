@@ -83,8 +83,8 @@ public class HyperlinkDetector implements IHyperlinkDetector {
 		try {
 			int line = document.getLineOfOffset(region.getOffset());
 			int lineOffset = document.getLineOffset(line);
-			int offset = lineOffset + beginColumn;
-			int length = endColumn - beginColumn;
+			int offset = lineOffset + beginColumn - 1;
+			int length = endColumn - beginColumn + 1;
 			return new Region(offset, length);
 		} catch (BadLocationException e) {
 			return new Region(0, 0);
