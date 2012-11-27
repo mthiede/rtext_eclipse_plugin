@@ -18,7 +18,6 @@ Feature: Finding the element declaration
 
   Scenario: Open an hyperlink
   Given the backend is connected
-  	b.executeSynchronousCommand 
    When I get the hyperlinks for "/StatemachineMM/State"
     	hyperlinks = hyperLinkDetector.detectHyperLinks(b.document, b.regionOf(args.first))
   Then it opens an editor for "test_metamodel.ect" 

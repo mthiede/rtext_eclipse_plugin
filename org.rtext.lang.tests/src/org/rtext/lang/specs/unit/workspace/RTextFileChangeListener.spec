@@ -16,6 +16,7 @@ import static org.mockito.Mockito.*
 import static org.rtext.lang.specs.util.Jobs.*
 
 import static extension org.rtext.lang.specs.unit.workspace.RTextFileChangeListenerSpec.*
+import org.rtext.lang.workspace.ModelLoadJob
 
 @CreateWith(typeof(MockInjector))
 describe RTextFileChangeListener {
@@ -45,7 +46,7 @@ describe RTextFileChangeListener {
 		addListener
 		rtextFile.append('\n')
 		waitForRTextJobs
-		verify(connector, times(2)).connect
+		verify(connector, times(2)).execute(isA(typeof(LoadModelCommand)), any)
 	}
 	
 	facts "does nothing if file is created"{

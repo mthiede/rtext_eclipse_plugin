@@ -40,6 +40,8 @@
 <ul>
 <li><span class="step notrun"><p>Given a backend for <code>"rtext/test/integration/model/test_metamodel.ect"</code></p></span>
 </li>
+<li><span class="step notrun"><p>And the backend is connected</p></span>
+</li>
 <li><span class="step notrun"><p>When I invoke the code completion after <code>" E"</code></p></span>
 </li>
 <li><span class="step notrun"><p>Then the proposals should be</p><pre>EAnnotation
@@ -56,6 +58,8 @@ EPackage &lt;name&gt;</pre></span>
 </h3>
 <ul>
 <li><span class="step notrun"><p>Given a backend for <code>"rtext/test/integration/model/test_metamodel.ect"</code></p></span>
+</li>
+<li><span class="step notrun"><p>And the backend is connected</p></span>
 </li>
 <li><span class="step notrun"><p>When I invoke the code completion after <code>"EClass "</code></p></span>
 </li>
@@ -74,7 +78,7 @@ instanceClassName: &lt;EString&gt;</pre></span>
 </li>
 <li><span class="step notrun"><p>When I invoke the code completion after <code>"EPackage StatemachineMM {n"</code></p></span>
 </li>
-<li><span class="step notrun"><p>Then the proposals should be</p><pre>Cannot load backend</pre></span>
+<li><span class="step notrun"><p>Then the proposals should be</p><pre>Backend not yet available</pre></span>
 </li>
 </ul>
 </div>
@@ -100,6 +104,8 @@ Scenario: Sucessfully using code completion
   
   Given a backend for &quot;rtext/test/integration/model/test_metamodel.ect&quot;
     b.startBackendFor(args.first.absolutPath)
+  And the backend is connected    
+    b.connector.connect 
   When I invoke the code completion after &quot;  E&quot;
     proposalProvider = ContentAssistProcessor::create([|b.connector]) 
     proposalProvider.assistSessionStarted(_)
@@ -123,6 +129,7 @@ Scenario: Sucessfully using code completion
 Scenario: Code completion for nested elements
   
   Given a backend for &quot;rtext/test/integration/model/test_metamodel.ect&quot;
+  And the backend is connected    
   When I invoke the code completion after &quot;EClass &quot;
   Then the proposals should be
   '''
@@ -139,7 +146,7 @@ Scenario: Proposal signals backend failure
   When I invoke the code completion after &quot;EPackage StatemachineMM {\n&quot;
   Then the proposals should be
   '''
-    Cannot load backend
+    Backend not yet available
   '''
 </pre>
 						    </p></div>

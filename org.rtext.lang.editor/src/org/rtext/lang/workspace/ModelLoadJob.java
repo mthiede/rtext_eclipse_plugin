@@ -17,6 +17,7 @@ public class ModelLoadJob extends Job {
 	public ModelLoadJob(Connector connector, ConnectorConfig config) {
 		super("Connecting backend");
 		this.connector = connector;
+		this.config = config;
 	}
 
 	@Override

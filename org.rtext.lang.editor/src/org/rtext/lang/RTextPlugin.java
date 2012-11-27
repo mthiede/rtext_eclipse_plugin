@@ -79,7 +79,7 @@ public class RTextPlugin extends AbstractUIPlugin {
 
 	public void startListeningForRTextFileChanges() {
 		rtextFileChangeListener = RTextFileChangeListener.create(getConnectorProvider());
-		workspace().addResourceChangeListener(rtextFileChangeListener, IResourceChangeEvent.POST_CHANGE);
+		workspace().addResourceChangeListener(rtextFileChangeListener);
 	}
 	
 	public void stopListeningForRTextFileChanges() {

@@ -23,6 +23,9 @@ import org.rtext.lang.RTextPlugin;
 import org.rtext.lang.backend.Connector;
 import org.rtext.lang.backend.ConnectorConfig;
 import org.rtext.lang.backend.ConnectorProvider;
+import org.rtext.lang.commands.Callback;
+import org.rtext.lang.commands.LoadModelCommand;
+import org.rtext.lang.commands.LoadedModel;
 import org.rtext.lang.specs.util.Jobs;
 import org.rtext.lang.specs.util.MockInjector;
 import org.rtext.lang.specs.util.WorkspaceHelper;
@@ -89,7 +92,9 @@ public class RTextFileChangeListenerSpec {
     Jobs.waitForRTextJobs();
     VerificationMode _times = Mockito.times(2);
     Connector _verify = Mockito.<Connector>verify(this.connector, _times);
-    _verify.connect();
+    LoadModelCommand _isA = Matchers.<LoadModelCommand>isA(LoadModelCommand.class);
+    Callback<LoadedModel> _any = Matchers.<Callback<LoadedModel>>any();
+    _verify.<LoadedModel>execute(_isA, _any);
   }
   
   @Test

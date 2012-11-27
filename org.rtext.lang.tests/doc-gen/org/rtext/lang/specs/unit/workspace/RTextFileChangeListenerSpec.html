@@ -48,7 +48,7 @@ createRTextFile
 addListener
 rtextFile.append('\n')
 waitForRTextJobs
-verify(connector, times(2)).connect</pre>
+verify(connector, times(2)).execute(isA(typeof(LoadModelCommand)), any)</pre>
 </li><li><p id="does_nothing_if_file_is_created" class="example notrun"><strong>does nothing if file is created</strong></p>
 <pre class="prettyprint lang-spec linenums">
 addListener
@@ -86,6 +86,7 @@ import static org.mockito.Mockito.*
 import static org.rtext.lang.specs.util.Jobs.*
 
 import static extension org.rtext.lang.specs.unit.workspace.RTextFileChangeListenerSpec.*
+import org.rtext.lang.workspace.ModelLoadJob
 
 @CreateWith(typeof(MockInjector))
 describe RTextFileChangeListener {
@@ -115,7 +116,7 @@ describe RTextFileChangeListener {
     addListener
     rtextFile.append('\n')
     waitForRTextJobs
-    verify(connector, times(2)).connect
+    verify(connector, times(2)).execute(isA(typeof(LoadModelCommand)), any)
   }
   
   facts &quot;does nothing if file is created&quot;{

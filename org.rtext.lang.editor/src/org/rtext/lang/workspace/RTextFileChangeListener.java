@@ -2,46 +2,16 @@ package org.rtext.lang.workspace;
 
 import static org.rtext.lang.backend.RTextFile.RTEXT_FILE_NAME;
 
-import java.io.File;
-
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.rtext.lang.RTextPlugin;
-import org.rtext.lang.backend.Connector;
-import org.rtext.lang.backend.ConnectorConfig;
 import org.rtext.lang.backend.ConnectorProvider;
-import org.rtext.lang.backend.RTextFile;
-import org.rtext.lang.backend.RTextFileParser;
-import org.rtext.lang.util.RTextJob;
 
 public class RTextFileChangeListener implements IResourceChangeListener {
-
-	public class CleanUpJob extends RTextJob{
-
-		private IResource resource;
-
-		public CleanUpJob(IResource resource) {
-			super("Reloading RText backends");
-			this.resource = resource;
-		}
-
-		@Override
-		protected IStatus run(IProgressMonitor monitor) {
-			connectorProvider.dispose(resource.getLocation().toString());
-			if(resource.exists()){
-				triggerReload(resource);
-			}
-			return Status.OK_STATUS;
-		}
-
-	}
 
 	public static RTextFileChangeListener create(ConnectorProvider connectorProvider) {
 		return new RTextFileChangeListener(connectorProvider);
@@ -81,16 +51,11 @@ public class RTextFileChangeListener implements IResourceChangeListener {
 		if(resource.getLocation() == null){
 			return;
 		}
-		new CleanUpJob(resource).schedule();
+		runCleanupJob(resource);
 	}
 
-	private void triggerReload(IResource resource) {
-		File configFile = new File(resource.getLocation().toString());
-		RTextFile rTextFile = new RTextFileParser().doParse(configFile);
-		for (ConnectorConfig config : rTextFile.getConfigurations()) {
-			Connector connector = connectorProvider.get(config);
-			connector.connect();
-		}
+	private void runCleanupJob(IResource resource) {
+		ReloadJob.create(connectorProvider, resource).schedule();
 	}
 
 	public boolean hasNotChanged(IResourceDelta delta) {

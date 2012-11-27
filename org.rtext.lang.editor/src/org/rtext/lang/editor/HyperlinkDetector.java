@@ -69,8 +69,8 @@ public class HyperlinkDetector implements IHyperlinkDetector {
 			ReferenceTargets referenceTargets = requestReferenceTargets(connector, context);
 			Region linkRegion = createHyperLinkRegion(document, region,	referenceTargets);
 			return createHyperlinks(linkRegion, referenceTargets);
-		} catch (TimeoutException e) {
-			return null;
+		} catch (Exception e) {
+			return createErrorLink("backend not yet available", region);
 		}
 	}
 

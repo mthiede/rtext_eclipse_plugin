@@ -15,6 +15,8 @@ Scenario: Sucessfully using code completion
 	
 	Given a backend for "rtext/test/integration/model/test_metamodel.ect"
 		b.startBackendFor(args.first.absolutPath)
+	And the backend is connected		
+		b.connector.connect 
 	When I invoke the code completion after "  E"
 		proposalProvider = ContentAssistProcessor::create([|b.connector]) 
 		proposalProvider.assistSessionStarted(_)
@@ -38,6 +40,7 @@ Scenario: Sucessfully using code completion
 Scenario: Code completion for nested elements
 	
 	Given a backend for "rtext/test/integration/model/test_metamodel.ect"
+	And the backend is connected		
 	When I invoke the code completion after "EClass "
 	Then the proposals should be
 	'''
@@ -54,5 +57,5 @@ Scenario: Proposal signals backend failure
 	When I invoke the code completion after "EPackage StatemachineMM {\n"
 	Then the proposals should be
 	'''
-		Cannot load backend
+		Backend not yet available
 	'''

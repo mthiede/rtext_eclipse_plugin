@@ -14,12 +14,14 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.rtext.lang.RTextPlugin;
+import org.rtext.lang.util.Expectations;
 import org.rtext.lang.util.FileLocator;
 import org.rtext.lang.util.Procedure;
 
 public class ConnectorScope {
 	
 	public static ConnectorScope create(ConnectorConfig connectorConfig){
+		Expectations.expectNotNull(connectorConfig);
 		return new ConnectorScope(ResourcesPlugin.getWorkspace().getRoot(), connectorConfig, new FileLocator());
 	}
 
@@ -49,7 +51,7 @@ public class ConnectorScope {
 		List<IContainer> result = new ArrayList<IContainer>();
 		for (IProject project : workspace.getProjects()) {
 			String projectLocation = project.getLocation().toString();
-			if(isSubdir(connectorConfig.configFile.getParent(), projectLocation)){
+			if(isSubdir(connectorConfig.getConfigFile().getParent(), projectLocation)){
 				handle(handler, project);
 			}
 		}

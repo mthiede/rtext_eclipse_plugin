@@ -14,9 +14,9 @@ import java.util.Arrays;
 
 public class ConnectorConfig {
 	
-	File configFile;
-	String[] patterns;
-	String command;
+	private File configFile;
+	private String[] patterns;
+	private String command;
 	
 	public ConnectorConfig(File configFile, String command, String... patterns) {
 		this.configFile = configFile;

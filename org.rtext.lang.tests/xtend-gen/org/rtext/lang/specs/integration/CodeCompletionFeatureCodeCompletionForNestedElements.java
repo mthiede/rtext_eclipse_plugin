@@ -58,6 +58,14 @@ public class CodeCompletionFeatureCodeCompletionForNestedElements extends CodeCo
   
   @Test
   @Order(1)
+  @Named("And the backend is connected")
+  public void andTheBackendIsConnected() {
+    Connector _connector = this.b.getConnector();
+    _connector.connect();
+  }
+  
+  @Test
+  @Order(2)
   @Named("When I invoke the code completion after \\\"EClass \\\"")
   public void whenIInvokeTheCodeCompletionAfterEClass() {
     StepArguments _stepArguments = new StepArguments("EClass ");
@@ -104,7 +112,7 @@ public class CodeCompletionFeatureCodeCompletionForNestedElements extends CodeCo
   }
   
   @Test
-  @Order(2)
+  @Order(3)
   @Named("Then the proposals should be")
   public void thenTheProposalsShouldBe() {
     StepArguments _stepArguments = new StepArguments("name [name] <EString>\nabstract: <EBoolean>\ninterface: <EBoolean>\neSuperTypes: <EClass>\ninstanceClassName: <EString>\n\t");

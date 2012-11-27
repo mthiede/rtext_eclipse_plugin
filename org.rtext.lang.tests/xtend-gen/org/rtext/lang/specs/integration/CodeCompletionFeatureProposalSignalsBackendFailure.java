@@ -107,7 +107,7 @@ public class CodeCompletionFeatureProposalSignalsBackendFailure extends CodeComp
   @Order(2)
   @Named("Then the proposals should be")
   public void thenTheProposalsShouldBe() {
-    StepArguments _stepArguments = new StepArguments("Cannot load backend\n\t");
+    StepArguments _stepArguments = new StepArguments("Backend not yet available\n\t");
     final StepArguments args = _stepArguments;
     String _first = JnarioIterableExtensions.<String>first(args);
     String _trim = _first.trim();

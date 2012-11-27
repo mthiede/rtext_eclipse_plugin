@@ -26,7 +26,7 @@ public class DefaultConnectorProvider implements ConnectorProvider{
 	
 	protected Connector createConnector(ConnectorConfig input) {
 		Connector connector = connectorProvider.createConnector(input);
-		connectors.put(getKey(input.configFile), connector);
+		connectors.put(getKey(input.getConfigFile()), connector);
 		return connector;
 	}
 
