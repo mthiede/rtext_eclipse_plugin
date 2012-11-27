@@ -26,6 +26,7 @@ import org.rtext.lang.backend.DocumentContext;
 import org.rtext.lang.commands.ReferenceTargets;
 import org.rtext.lang.commands.ReferenceTargets.Target;
 import org.rtext.lang.commands.ReferenceTargetsCommand;
+import org.rtext.lang.workspace.BackendConnectJob;
 
 public class HyperlinkDetector implements IHyperlinkDetector {
 	private Connected editor;
@@ -60,7 +61,7 @@ public class HyperlinkDetector implements IHyperlinkDetector {
 			return null;
 		}
 		if(!connector.isConnected()){
-			connector.connect();
+			startBackend(connector);
 			return createErrorLink("backend not yet available", region);
 		}
 		try {
@@ -71,6 +72,10 @@ public class HyperlinkDetector implements IHyperlinkDetector {
 		} catch (TimeoutException e) {
 			return null;
 		}
+	}
+
+	public void startBackend(final Connector connector) {
+		new BackendConnectJob(connector).schedule();
 	}
 
 	private IHyperlink[] createErrorLink(String message, IRegion region) {

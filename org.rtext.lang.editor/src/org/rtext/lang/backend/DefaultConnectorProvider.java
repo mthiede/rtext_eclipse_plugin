@@ -53,7 +53,7 @@ public class DefaultConnectorProvider implements ConnectorProvider{
 		connector.disconnect();
 	}
 
-	public Connector get(ConnectorConfig connectorConfig) {
+	public synchronized Connector get(ConnectorConfig connectorConfig) {
 		return createConnector(connectorConfig);
 	}
 }

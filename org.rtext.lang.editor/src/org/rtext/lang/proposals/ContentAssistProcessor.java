@@ -35,6 +35,7 @@ import org.rtext.lang.commands.ProposalsCommand;
 import org.rtext.lang.editor.Connected;
 import org.rtext.lang.editor.PluginImageHelper;
 import org.rtext.lang.util.ImageHelper;
+import org.rtext.lang.workspace.BackendConnectJob;
 
 
 public class ContentAssistProcessor implements IContentAssistProcessor,	ICompletionListener {
@@ -152,6 +153,9 @@ public class ContentAssistProcessor implements IContentAssistProcessor,	IComplet
 		Connector connector = getConnector();
 		if (connector  == null) {
 			proposals = errorProposal("Could not locate .rtext file");
+		}else if (!connector.isConnected()) {
+			new BackendConnectJob(getConnector()).schedule();
+			proposals = errorProposal("Backend not yet available");
 		}else{
 			try {
 				proposals = connector.execute(new ProposalsCommand(createContext(document, offset)));
