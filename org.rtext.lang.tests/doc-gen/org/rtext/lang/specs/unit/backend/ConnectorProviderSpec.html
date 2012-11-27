@@ -50,7 +50,7 @@ subject.get(config) should not be subject.get(anotherConfig)</pre>
 <pre class="prettyprint lang-spec linenums">
 subject.get(config)
 subject.dispose(config.configFile.path)
-verify(connector).dispose</pre>
+verify(connector).disconnect</pre>
 </li></ul>
 							</div>
 						    <div class="tab-pane" id="source">
@@ -108,7 +108,7 @@ describe ConnectorProvider {
   fact &quot;disposes all connectors for given config file&quot;{
     subject.get(config)
     subject.dispose(config.configFile.path)
-    verify(connector).dispose
+    verify(connector).disconnect
   }
 }
 </pre>

@@ -3,13 +3,14 @@ package org.rtext.lang.specs.unit.backend
 import org.rtext.lang.backend.DefaultConnectorProvider
 import org.rtext.lang.backend.ConnectorConfigProvider
 import org.mockito.Mock
-import static org.mockito.Mockito.*
 import org.rtext.lang.backend.ConnectorConfig
 import org.rtext.lang.backend.Connector
 import org.rtext.lang.backend.ConnectorFactory
 import org.jnario.runner.CreateWith
 import org.rtext.lang.specs.util.MockInjector
 import java.io.File
+
+import static org.mockito.Mockito.*
 
 @CreateWith(typeof(MockInjector))
 describe DefaultConnectorProvider {
@@ -39,6 +40,6 @@ describe DefaultConnectorProvider {
 	fact "disposes all connectors"{
 		subject.get(config)
 		subject.dispose
-		verify(connector).dispose
+		verify(connector).disconnect
 	}
 }

@@ -32,11 +32,10 @@ Feature: Finding the element declaration
     	val region = hyperlinks.head.getHyperlinkRegion
     b.document.get(region.offset, region.length) => args.first
     
-    
   Scenario: Disconnected backend
   	
   	Given the backend is disconnected
-  		b.connector.dispose
+  		b.connector.disconnect
   	When I get the hyperlinks for "/StatemachineMM/State"
    	Then the hyperlink message is "backend not yet available"
    		hyperlinks.head.hyperlinkText => args.first

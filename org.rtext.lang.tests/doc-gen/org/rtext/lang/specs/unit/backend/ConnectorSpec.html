@@ -126,14 +126,14 @@ subject.connected =&gt; true</pre>
 when(processRunner.running).thenReturn(false)
 subject.connected =&gt; false</pre>
 </li></ul>
-<h3 class="exampleGroup notrun"  id="Dispose">Dispose</h3>
-<ul><li><p id="Disposes_connection" class="example notrun"><strong>Disposes connection</strong></p>
+<h3 class="exampleGroup notrun"  id="disconnect">Disconnect</h3>
+<ul><li><p id="closes_connection" class="example notrun"><strong>closes connection</strong></p>
 <pre class="prettyprint lang-spec linenums">
-subject.dispose
+subject.disconnect
 verify(connection).close</pre>
-</li><li><p id="Stops_process_runner" class="example notrun"><strong>Stops process runner</strong></p>
+</li><li><p id="stops_process_runner" class="example notrun"><strong>stops process runner</strong></p>
 <pre class="prettyprint lang-spec linenums">
-subject.dispose
+subject.disconnect
 verify(processRunner).stop</pre>
 </li></ul>
 							</div>
@@ -155,14 +155,14 @@ import org.rtext.lang.backend.Connection
 import org.rtext.lang.backend.Connector
 import org.rtext.lang.commands.LoadModelCommand
 import org.rtext.lang.specs.util.MockInjector
-
-import static org.mockito.Matchers.*
-import static org.mockito.Mockito.*
-import static org.rtext.lang.specs.util.Commands.*
 import org.rtext.lang.commands.Response
 import org.rtext.lang.commands.LoadedModel
 import org.rtext.lang.commands.Command
 import org.rtext.lang.commands.LoadModelCallback
+
+import static org.mockito.Matchers.*
+import static org.mockito.Mockito.*
+import static org.rtext.lang.specs.util.Commands.*
 
 @CreateWith(typeof(MockInjector))
 describe Connector {
@@ -296,15 +296,15 @@ describe Connector {
     }
   }
   
-  context &quot;Dispose&quot;{
+  context disconnect{
     
-    fact &quot;Disposes connection&quot;{
-      subject.dispose
+    fact &quot;closes connection&quot;{
+      subject.disconnect
       verify(connection).close
     }
     
-    fact &quot;Stops process runner&quot;{
-      subject.dispose
+    fact &quot;stops process runner&quot;{
+      subject.disconnect
       verify(processRunner).stop
     }
   }

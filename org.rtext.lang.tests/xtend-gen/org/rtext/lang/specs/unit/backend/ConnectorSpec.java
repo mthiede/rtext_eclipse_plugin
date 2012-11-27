@@ -23,13 +23,13 @@ import org.rtext.lang.commands.Command;
 import org.rtext.lang.commands.LoadedModel;
 import org.rtext.lang.commands.Response;
 import org.rtext.lang.specs.unit.backend.ConnectorConnectedSpec;
-import org.rtext.lang.specs.unit.backend.ConnectorDisposeSpec;
+import org.rtext.lang.specs.unit.backend.ConnectorDisconnectSpec;
 import org.rtext.lang.specs.unit.backend.ConnectorErrorHandlingSpec;
 import org.rtext.lang.specs.unit.backend.ConnectorExecuteCommandSpec;
 import org.rtext.lang.specs.util.Commands;
 import org.rtext.lang.specs.util.MockInjector;
 
-@Contains({ ConnectorErrorHandlingSpec.class, ConnectorExecuteCommandSpec.class, ConnectorConnectedSpec.class, ConnectorDisposeSpec.class })
+@Contains({ ConnectorErrorHandlingSpec.class, ConnectorExecuteCommandSpec.class, ConnectorConnectedSpec.class, ConnectorDisconnectSpec.class })
 @SuppressWarnings("all")
 @RunWith(ExampleGroupRunner.class)
 @Named("Connector")

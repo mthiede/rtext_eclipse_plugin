@@ -49,6 +49,6 @@ describe ConnectorProvider {
 	fact "disposes all connectors for given config file"{
 		subject.get(config)
 		subject.dispose(config.configFile.path)
-		verify(connector).dispose
+		verify(connector).disconnect
 	}
 }

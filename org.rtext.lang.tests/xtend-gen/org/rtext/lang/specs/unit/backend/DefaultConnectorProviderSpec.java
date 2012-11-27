@@ -86,6 +86,6 @@ public class DefaultConnectorProviderSpec {
     this.subject.get(this.config);
     this.subject.dispose();
     Connector _verify = Mockito.<Connector>verify(this.connector);
-    _verify.dispose();
+    _verify.disconnect();
   }
 }

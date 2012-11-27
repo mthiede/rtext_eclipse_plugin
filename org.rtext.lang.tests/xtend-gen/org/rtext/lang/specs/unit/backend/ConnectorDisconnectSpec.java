@@ -12,22 +12,22 @@ import org.rtext.lang.specs.unit.backend.ConnectorSpec;
 
 @SuppressWarnings("all")
 @RunWith(ExampleGroupRunner.class)
-@Named("Dispose")
-public class ConnectorDisposeSpec extends ConnectorSpec {
+@Named("disconnect")
+public class ConnectorDisconnectSpec extends ConnectorSpec {
   @Test
-  @Named("Disposes connection")
+  @Named("closes connection")
   @Order(17)
-  public void _disposesConnection() throws Exception {
-    this.subject.dispose();
+  public void _closesConnection() throws Exception {
+    this.subject.disconnect();
     Connection _verify = Mockito.<Connection>verify(this.connection);
     _verify.close();
   }
   
   @Test
-  @Named("Stops process runner")
+  @Named("stops process runner")
   @Order(18)
   public void _stopsProcessRunner() throws Exception {
-    this.subject.dispose();
+    this.subject.disconnect();
     BackendStarter _verify = Mockito.<BackendStarter>verify(this.processRunner);
     _verify.stop();
   }

@@ -41,7 +41,7 @@ public class DefaultConnectorProvider implements ConnectorProvider{
 
 	public void dispose() {
 		for (Connector connector : connectors.values()) {
-			connector.dispose();
+			connector.disconnect();
 		}
 	}
 
@@ -50,7 +50,7 @@ public class DefaultConnectorProvider implements ConnectorProvider{
 		if(connector == null){
 			return;
 		}
-		connector.dispose();
+		connector.disconnect();
 	}
 
 	public Connector get(ConnectorConfig connectorConfig) {

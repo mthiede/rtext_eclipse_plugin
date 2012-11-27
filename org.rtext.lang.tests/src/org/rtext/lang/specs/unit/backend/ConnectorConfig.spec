@@ -1,8 +1,12 @@
 package org.rtext.lang.specs.unit.backend
 
 import org.rtext.lang.backend.ConnectorConfig
-import java.io.File
+
+import static org.jnario.lib.JnarioCollectionLiterals.*
+
 import static extension com.google.common.collect.Iterables.*
+import static extension org.jnario.lib.ExampleTableIterators.*
+import static extension org.jnario.lib.Should.*
 
 describe ConnectorConfig {
 	

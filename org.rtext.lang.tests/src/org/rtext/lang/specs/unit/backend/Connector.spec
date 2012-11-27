@@ -12,14 +12,14 @@ import org.rtext.lang.backend.Connection
 import org.rtext.lang.backend.Connector
 import org.rtext.lang.commands.LoadModelCommand
 import org.rtext.lang.specs.util.MockInjector
-
-import static org.mockito.Matchers.*
-import static org.mockito.Mockito.*
-import static org.rtext.lang.specs.util.Commands.*
 import org.rtext.lang.commands.Response
 import org.rtext.lang.commands.LoadedModel
 import org.rtext.lang.commands.Command
 import org.rtext.lang.commands.LoadModelCallback
+
+import static org.mockito.Matchers.*
+import static org.mockito.Mockito.*
+import static org.rtext.lang.specs.util.Commands.*
 
 @CreateWith(typeof(MockInjector))
 describe Connector {
@@ -153,15 +153,15 @@ describe Connector {
 		}
 	}
 	
-	context "Dispose"{
+	context disconnect{
 		
-		fact "Disposes connection"{
-			subject.dispose
+		fact "closes connection"{
+			subject.disconnect
 			verify(connection).close
 		}
 		
-		fact "Stops process runner"{
-			subject.dispose
+		fact "stops process runner"{
+			subject.disconnect
 			verify(processRunner).stop
 		}
 	}

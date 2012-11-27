@@ -64,15 +64,6 @@
 	</tbody>
 </table>
 </li><li><p id="examples_forEach_val_config_new_ConnectorConfig___anyCommand_patterns_toArray_typeof_String_config_matches_fileName_doesMatch" class="example notrun"><strong>examples.forEach[ val config = new ConnectorConfig[ _, "anyCommand", patterns.toArray[typeof[String]] ] config.matches[fileName] => doesMatch ]</strong></p>
-<pre class="prettyprint lang-spec linenums">
-examples.forEach[
-      val config = new ConnectorConfig(
-        _,
-        &quot;anyCommand&quot;,
-        patterns.toArray(typeof(String))
-      )
-      config.matches(fileName) =&gt; doesMatch
-    ]</pre>
 </li></ul>
 							</div>
 						    <div class="tab-pane" id="source">
@@ -82,8 +73,12 @@ examples.forEach[
 package org.rtext.lang.specs.unit.backend
 
 import org.rtext.lang.backend.ConnectorConfig
-import java.io.File
+
+import static org.jnario.lib.JnarioCollectionLiterals.*
+
 import static extension com.google.common.collect.Iterables.*
+import static extension org.jnario.lib.ExampleTableIterators.*
+import static extension org.jnario.lib.Should.*
 
 describe ConnectorConfig {
   

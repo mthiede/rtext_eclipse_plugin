@@ -42,7 +42,7 @@ public class Connector {
 		}
 
 		public void handleError(String error) {
-			dispose();
+			disconnect();
 			delegate.handleError(error);
 		}
 		
@@ -94,7 +94,7 @@ public class Connector {
 		try{
 			connection.sendRequest(command, wrap(callback));
 		}catch(Throwable e){
-			dispose();
+			disconnect();
 			Exceptions.rethrow(e);
 		}
 	}
@@ -109,7 +109,7 @@ public class Connector {
 			connection.connect(ADDRESS, processRunner.getPort());
 			return true;
 		}catch(Throwable e){
-			dispose();
+			disconnect();
 			return false;
 		}
 	}
@@ -131,7 +131,7 @@ public class Connector {
 		return true;
 	}
 
-	public void dispose(){
+	public void disconnect(){
 		processRunner.stop();
 		connection.close();
 	}

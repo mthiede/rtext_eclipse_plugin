@@ -49,7 +49,7 @@ public class FindingTheElementDeclarationFeatureDisconnectedBackend extends Find
   @Named("Given the backend is disconnected")
   public void givenTheBackendIsDisconnected() {
     Connector _connector = this.b.getConnector();
-    _connector.dispose();
+    _connector.disconnect();
   }
   
   @Test

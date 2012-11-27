@@ -124,6 +124,6 @@ public class ConnectorProviderSpec {
     String _path = _configFile.getPath();
     this.subject.dispose(_path);
     Connector _verify = Mockito.<Connector>verify(this.connector);
-    _verify.dispose();
+    _verify.disconnect();
   }
 }
