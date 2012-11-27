@@ -123,31 +123,16 @@ public class ConnectorExecuteCommandSpec extends ConnectorSpec {
   @Named("Loads model after connection only if command is not load model")
   @Order(12)
   public void _loadsModelAfterConnectionOnlyIfCommandIsNotLoadModel() throws Exception {
+    boolean _isRunning = this.processRunner.isRunning();
+    OngoingStubbing<Boolean> _when = Mockito.<Boolean>when(Boolean.valueOf(_isRunning));
+    _when.thenReturn(Boolean.valueOf(false), Boolean.valueOf(true));
     LoadModelCommand _loadModelCommand = new LoadModelCommand();
     LoadModelCallback _create = LoadModelCallback.create(this.config);
     this.subject.<LoadedModel>execute(_loadModelCommand, _create);
-    boolean _isRunning = this.processRunner.isRunning();
-    OngoingStubbing<Boolean> _when = Mockito.<Boolean>when(Boolean.valueOf(_isRunning));
-    _when.thenReturn(Boolean.valueOf(true));
-    this.subject.<Response>execute(this.otherCommand, this.callback);
-    InOrder _inOrder = Mockito.inOrder(this.connection);
-    final Procedure1<InOrder> _function = new Procedure1<InOrder>() {
-        public void apply(final InOrder it) {
-          Connection _verify = it.<Connection>verify(ConnectorExecuteCommandSpec.this.connection);
-          LoadModelCommand _isA = Matchers.<LoadModelCommand>isA(LoadModelCommand.class);
-          Callback<LoadedModel> _any = Matchers.<Callback<LoadedModel>>any();
-          _verify.<LoadedModel>sendRequest(_isA, _any);
-          Connection _verify_1 = it.<Connection>verify(ConnectorExecuteCommandSpec.this.connection);
-          Command<Response> _eq = Matchers.<Command<Response>>eq(ConnectorExecuteCommandSpec.this.anyCommand);
-          Callback<Response> _any_1 = Matchers.<Callback<Response>>any();
-          _verify_1.<Response>sendRequest(_eq, _any_1);
-          Connection _verify_2 = it.<Connection>verify(ConnectorExecuteCommandSpec.this.connection);
-          Command<Response> _eq_1 = Matchers.<Command<Response>>eq(ConnectorExecuteCommandSpec.this.otherCommand);
-          Callback<Response> _any_2 = Matchers.<Callback<Response>>any();
-          _verify_2.<Response>sendRequest(_eq_1, _any_2);
-        }
-      };
-    ObjectExtensions.<InOrder>operator_doubleArrow(_inOrder, _function);
+    Connection _verify = Mockito.<Connection>verify(this.connection);
+    LoadModelCommand _isA = Matchers.<LoadModelCommand>isA(LoadModelCommand.class);
+    Callback<LoadedModel> _any = Matchers.<Callback<LoadedModel>>any();
+    _verify.<LoadedModel>sendRequest(_isA, _any);
   }
   
   @Test

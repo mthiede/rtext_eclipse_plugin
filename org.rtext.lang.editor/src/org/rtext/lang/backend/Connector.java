@@ -78,21 +78,22 @@ public class Connector {
 	}
 	
 	public <T extends Response> void execute(Command<T> command, Callback<T> callback){
-		if(!connect()){
+		if(!connect(!(command instanceof LoadModelCommand))){
 			callback.handleError("Could not connect to backend");
 			return;
 		}
-		try{
+		
 			sendRequest(command, callback);
+		
+	}
+
+	private <T extends Response> void sendRequest(Command<T> command, Callback<T> callback) {
+		try{
+			connection.sendRequest(command, wrap(callback));
 		}catch(Throwable e){
 			dispose();
 			Exceptions.rethrow(e);
 		}
-	}
-
-	private <T extends Response> void sendRequest(Command<T> command,
-			Callback<T> callback) {
-		connection.sendRequest(command, wrap(callback));
 	}
 	
 	private <T extends Response> Callback<T> wrap(Callback<T> delegate){
@@ -103,7 +104,6 @@ public class Connector {
 		try{
 			processRunner.startProcess(connectorConfig);
 			connection.connect(ADDRESS, processRunner.getPort());
-			sendRequest(new LoadModelCommand(), loadModelCallBack);
 			return true;
 		}catch(Throwable e){
 			dispose();
@@ -111,11 +111,21 @@ public class Connector {
 		}
 	}
 
-	public boolean connect() {
+	public void connect() {
+		connect(true);
+	}
+	
+	private boolean connect(boolean loadModel) {
 		if(isConnected()){
 			return true;
 		}
-		return startBackend();
+		if(!startBackend()){
+			return false;
+		}
+		if(loadModel){
+			sendRequest(new LoadModelCommand(), loadModelCallBack);
+		}
+		return true;
 	}
 
 	public void dispose(){

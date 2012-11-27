@@ -44,17 +44,17 @@ verify(processRunner).stop</pre>
 </li><li><p id="Closes_tcp_client_if_connection_fails" class="example notrun"><strong>Closes tcp client if connection fails</strong></p>
 <pre class="prettyprint lang-spec linenums">
 doThrow(new RuntimeException()).when(connection).connect(anyString, anyInt) 
-subject.execute(anyCommand, callback)
+subject.execute(anyCommand, callback) 
 verify(connection).close</pre>
 </li><li><p id="Kills_backend_process_if_sending_command_fails" class="example notrun"><strong>Kills backend process if sending command fails</strong></p>
 <pre class="prettyprint lang-spec linenums">
 doThrow(new RuntimeException()).when(connection).sendRequest(&lt;Command&gt;any, &lt;Callback&gt;any) 
-subject.execute(anyCommand, callback)
+subject.execute(anyCommand, callback) throws RuntimeException
 verify(processRunner).stop</pre>
 </li><li><p id="Closes_tcp_client_if_sending_command_fails" class="example notrun"><strong>Closes tcp client if sending command fails</strong></p>
 <pre class="prettyprint lang-spec linenums">
 doThrow(new RuntimeException()).when(connection).sendRequest(&lt;Command&gt;any, &lt;Callback&gt;any) 
-subject.execute(anyCommand, callback) 
+subject.execute(anyCommand, callback) throws RuntimeException
 verify(connection).close</pre>
 </li><li><p id="Kills_backend_process_tcp_client_if_an_error_occurs" class="example notrun"><strong>Kills backend process & tcp client if an error occurs</strong></p>
 <pre class="prettyprint lang-spec linenums">
@@ -105,14 +105,9 @@ inOrder(connection) =&gt; [
 ]</pre>
 </li><li><p id="Loads_model_after_connection_only_if_command_is_not_load_model" class="example notrun"><strong>Loads model after connection only if command is not load model</strong></p>
 <pre class="prettyprint lang-spec linenums">
+when(processRunner.running).thenReturn(false, true)
 subject.execute(new LoadModelCommand, LoadModelCallback::create(config))
-when(processRunner.running).thenReturn(true)
-subject.execute(otherCommand, callback)
-inOrder(connection) =&gt; [
-  it.verify(connection).sendRequest(isA(typeof(LoadModelCommand)), any)
-  it.verify(connection).sendRequest(eq(anyCommand), any)
-  it.verify(connection).sendRequest(eq(otherCommand), any)
-]</pre>
+verify(connection).sendRequest(isA(typeof(LoadModelCommand)), any)</pre>
 </li><li><p id="Returns_commands_response" class="example notrun"><strong>Returns commands response</strong></p>
 <pre class="prettyprint lang-spec linenums">
 subject.execute(anyCommand, callback)
@@ -202,19 +197,19 @@ describe Connector {
     
     fact &quot;Closes tcp client if connection fails&quot;{
       doThrow(new RuntimeException()).when(connection).connect(anyString, anyInt) 
-      subject.execute(anyCommand, callback)
+      subject.execute(anyCommand, callback) 
       verify(connection).close
     }
     
     fact &quot;Kills backend process if sending command fails&quot;{
       doThrow(new RuntimeException()).when(connection).sendRequest(&lt;Command&gt;any, &lt;Callback&gt;any) 
-      subject.execute(anyCommand, callback)
+      subject.execute(anyCommand, callback) throws RuntimeException
       verify(processRunner).stop
     }
     
     fact &quot;Closes tcp client if sending command fails&quot;{
       doThrow(new RuntimeException()).when(connection).sendRequest(&lt;Command&gt;any, &lt;Callback&gt;any) 
-      subject.execute(anyCommand, callback) 
+      subject.execute(anyCommand, callback) throws RuntimeException
       verify(connection).close
     }
     
@@ -274,14 +269,9 @@ describe Connector {
     }
     
     fact &quot;Loads model after connection only if command is not load model&quot;{
+      when(processRunner.running).thenReturn(false, true)
       subject.execute(new LoadModelCommand, LoadModelCallback::create(config))
-      when(processRunner.running).thenReturn(true)
-      subject.execute(otherCommand, callback)
-      inOrder(connection) =&gt; [
-        it.verify(connection).sendRequest(isA(typeof(LoadModelCommand)), any)
-        it.verify(connection).sendRequest(eq(anyCommand), any)
-        it.verify(connection).sendRequest(eq(otherCommand), any)
-      ]
+      verify(connection).sendRequest(isA(typeof(LoadModelCommand)), any)
     }
     
     fact &quot;Returns commands response&quot;{

@@ -54,19 +54,19 @@ describe Connector {
 		
 		fact "Closes tcp client if connection fails"{
 			doThrow(new RuntimeException()).when(connection).connect(anyString, anyInt) 
-			subject.execute(anyCommand, callback)
+			subject.execute(anyCommand, callback) 
 			verify(connection).close
 		}
 		
 		fact "Kills backend process if sending command fails"{
 			doThrow(new RuntimeException()).when(connection).sendRequest(<Command>any, <Callback>any) 
-			subject.execute(anyCommand, callback)
+			subject.execute(anyCommand, callback) throws RuntimeException
 			verify(processRunner).stop
 		}
 		
 		fact "Closes tcp client if sending command fails"{
 			doThrow(new RuntimeException()).when(connection).sendRequest(<Command>any, <Callback>any) 
-			subject.execute(anyCommand, callback) 
+			subject.execute(anyCommand, callback) throws RuntimeException
 			verify(connection).close
 		}
 		
@@ -126,14 +126,9 @@ describe Connector {
 		}
 		
 		fact "Loads model after connection only if command is not load model"{
+			when(processRunner.running).thenReturn(false, true)
 			subject.execute(new LoadModelCommand, LoadModelCallback::create(config))
-			when(processRunner.running).thenReturn(true)
-			subject.execute(otherCommand, callback)
-			inOrder(connection) => [
-				it.verify(connection).sendRequest(isA(typeof(LoadModelCommand)), any)
-				it.verify(connection).sendRequest(eq(anyCommand), any)
-				it.verify(connection).sendRequest(eq(otherCommand), any)
-			]
+			verify(connection).sendRequest(isA(typeof(LoadModelCommand)), any)
 		}
 		
 		fact "Returns commands response"{
