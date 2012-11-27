@@ -138,4 +138,5 @@ public class RTextDocument extends Document implements IRTextDocument {
 			positionsWriteLock.unlock();
 		}
 	}
+	
 }

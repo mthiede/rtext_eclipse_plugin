@@ -78,13 +78,16 @@ public class Connector {
 	}
 	
 	public <T extends Response> void execute(Command<T> command, Callback<T> callback){
-		if(!connect(!(command instanceof LoadModelCommand))){
+		if(!connect(requiresModelLoad(command))){
 			callback.handleError("Could not connect to backend");
 			return;
 		}
+		sendRequest(command, callback);
 		
-			sendRequest(command, callback);
-		
+	}
+
+	public <T extends Response> boolean requiresModelLoad(Command<T> command) {
+		return !(command instanceof LoadModelCommand);
 	}
 
 	private <T extends Response> void sendRequest(Command<T> command, Callback<T> callback) {

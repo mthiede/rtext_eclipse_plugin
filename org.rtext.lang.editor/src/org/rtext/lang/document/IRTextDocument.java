@@ -20,5 +20,7 @@ public interface IRTextDocument {
 	public abstract void removeModelListener(ModelChangeListener listener);
 
 	public abstract void addModelListener(ModelChangeListener listener);
+	
+	public abstract int getNumberOfLines();
 
 }
