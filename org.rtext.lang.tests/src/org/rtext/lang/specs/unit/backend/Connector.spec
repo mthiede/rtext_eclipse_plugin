@@ -19,6 +19,7 @@ import static org.rtext.lang.specs.util.Commands.*
 import org.rtext.lang.commands.Response
 import org.rtext.lang.commands.LoadedModel
 import org.rtext.lang.commands.Command
+import org.rtext.lang.commands.LoadModelCallback
 
 @CreateWith(typeof(MockInjector))
 describe Connector {
@@ -115,6 +116,17 @@ describe Connector {
 		
 		fact "Loads model after connection"{
 			subject.execute(anyCommand, callback)
+			when(processRunner.running).thenReturn(true)
+			subject.execute(otherCommand, callback)
+			inOrder(connection) => [
+				it.verify(connection).sendRequest(isA(typeof(LoadModelCommand)), any)
+				it.verify(connection).sendRequest(eq(anyCommand), any)
+				it.verify(connection).sendRequest(eq(otherCommand), any)
+			]
+		}
+		
+		fact "Loads model after connection only if command is not load model"{
+			subject.execute(new LoadModelCommand, LoadModelCallback::create(config))
 			when(processRunner.running).thenReturn(true)
 			subject.execute(otherCommand, callback)
 			inOrder(connection) => [

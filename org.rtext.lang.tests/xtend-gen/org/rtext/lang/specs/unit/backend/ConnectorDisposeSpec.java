@@ -16,7 +16,7 @@ import org.rtext.lang.specs.unit.backend.ConnectorSpec;
 public class ConnectorDisposeSpec extends ConnectorSpec {
   @Test
   @Named("Disposes connection")
-  @Order(16)
+  @Order(17)
   public void _disposesConnection() throws Exception {
     this.subject.dispose();
     Connection _verify = Mockito.<Connection>verify(this.connection);
@@ -25,7 +25,7 @@ public class ConnectorDisposeSpec extends ConnectorSpec {
   
   @Test
   @Named("Stops process runner")
-  @Order(17)
+  @Order(18)
   public void _stopsProcessRunner() throws Exception {
     this.subject.dispose();
     BackendStarter _verify = Mockito.<BackendStarter>verify(this.processRunner);

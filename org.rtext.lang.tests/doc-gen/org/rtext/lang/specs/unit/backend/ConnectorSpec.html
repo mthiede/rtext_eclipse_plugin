@@ -103,12 +103,22 @@ inOrder(connection) =&gt; [
   it.verify(connection).sendRequest(eq(anyCommand), any)
   it.verify(connection).sendRequest(eq(otherCommand), any)
 ]</pre>
+</li><li><p id="Loads_model_after_connection_only_if_command_is_not_load_model" class="example notrun"><strong>Loads model after connection only if command is not load model</strong></p>
+<pre class="prettyprint lang-spec linenums">
+subject.execute(new LoadModelCommand, LoadModelCallback::create(config))
+when(processRunner.running).thenReturn(true)
+subject.execute(otherCommand, callback)
+inOrder(connection) =&gt; [
+  it.verify(connection).sendRequest(isA(typeof(LoadModelCommand)), any)
+  it.verify(connection).sendRequest(eq(anyCommand), any)
+  it.verify(connection).sendRequest(eq(otherCommand), any)
+]</pre>
 </li><li><p id="Returns_commands_response" class="example notrun"><strong>Returns commands response</strong></p>
 <pre class="prettyprint lang-spec linenums">
 subject.execute(anyCommand, callback)
 verify(connection).sendRequest(eq(anyCommand), any)</pre>
 </li></ul>
-<h3 class="exampleGroup pending"  id="Connected">Connected</h3>
+<h3 class="exampleGroup notrun"  id="Connected">Connected</h3>
 <ul><li><p id="initially_disconnected" class="example notrun"><strong>initially disconnected</strong></p>
 <pre class="prettyprint lang-spec linenums">
 subject.connected =&gt; false</pre>
@@ -157,6 +167,7 @@ import static org.rtext.lang.specs.util.Commands.*
 import org.rtext.lang.commands.Response
 import org.rtext.lang.commands.LoadedModel
 import org.rtext.lang.commands.Command
+import org.rtext.lang.commands.LoadModelCallback
 
 @CreateWith(typeof(MockInjector))
 describe Connector {
@@ -253,6 +264,17 @@ describe Connector {
     
     fact &quot;Loads model after connection&quot;{
       subject.execute(anyCommand, callback)
+      when(processRunner.running).thenReturn(true)
+      subject.execute(otherCommand, callback)
+      inOrder(connection) =&gt; [
+        it.verify(connection).sendRequest(isA(typeof(LoadModelCommand)), any)
+        it.verify(connection).sendRequest(eq(anyCommand), any)
+        it.verify(connection).sendRequest(eq(otherCommand), any)
+      ]
+    }
+    
+    fact &quot;Loads model after connection only if command is not load model&quot;{
+      subject.execute(new LoadModelCommand, LoadModelCallback::create(config))
       when(processRunner.running).thenReturn(true)
       subject.execute(otherCommand, callback)
       inOrder(connection) =&gt; [

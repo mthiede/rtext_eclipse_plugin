@@ -18,7 +18,7 @@ import org.rtext.lang.specs.unit.backend.ConnectorSpec;
 public class ConnectorConnectedSpec extends ConnectorSpec {
   @Test
   @Named("initially disconnected")
-  @Order(13)
+  @Order(14)
   public void _initiallyDisconnected() throws Exception {
     boolean _isConnected = this.subject.isConnected();
     boolean _doubleArrow = Should.operator_doubleArrow(Boolean.valueOf(_isConnected), Boolean.valueOf(false));
@@ -30,7 +30,7 @@ public class ConnectorConnectedSpec extends ConnectorSpec {
   
   @Test
   @Named("connected if process is running")
-  @Order(14)
+  @Order(15)
   public void _connectedIfProcessIsRunning() throws Exception {
     boolean _isRunning = this.processRunner.isRunning();
     OngoingStubbing<Boolean> _when = Mockito.<Boolean>when(Boolean.valueOf(_isRunning));
@@ -45,7 +45,7 @@ public class ConnectorConnectedSpec extends ConnectorSpec {
   
   @Test
   @Named("disconnected if process is not running")
-  @Order(15)
+  @Order(16)
   public void _disconnectedIfProcessIsNotRunning() throws Exception {
     boolean _isRunning = this.processRunner.isRunning();
     OngoingStubbing<Boolean> _when = Mockito.<Boolean>when(Boolean.valueOf(_isRunning));

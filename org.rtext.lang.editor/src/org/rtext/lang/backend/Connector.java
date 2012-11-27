@@ -90,12 +90,12 @@ public class Connector {
 		}
 	}
 
-	public <T extends Response> void sendRequest(Command<T> command,
+	private <T extends Response> void sendRequest(Command<T> command,
 			Callback<T> callback) {
 		connection.sendRequest(command, wrap(callback));
 	}
 	
-	public <T extends Response> Callback<T> wrap(Callback<T> delegate){
+	private <T extends Response> Callback<T> wrap(Callback<T> delegate){
 		return new OnErrorClosingCallback<T>(delegate);
 	}
 
@@ -126,6 +126,4 @@ public class Connector {
 	public boolean isConnected(){
 		return processRunner.isRunning();
 	}
-
-	
 }
