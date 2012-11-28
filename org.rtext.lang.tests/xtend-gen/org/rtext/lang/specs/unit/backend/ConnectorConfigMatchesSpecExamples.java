@@ -1,6 +1,7 @@
 package org.rtext.lang.specs.unit.backend;
 
 import java.util.List;
+
 import org.jnario.lib.ExampleTableRow;
 
 public class ConnectorConfigMatchesSpecExamples extends ExampleTableRow {

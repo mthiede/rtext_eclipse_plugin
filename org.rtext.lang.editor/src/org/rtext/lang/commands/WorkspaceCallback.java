@@ -12,7 +12,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.rtext.lang.RTextPlugin;
 import org.rtext.lang.util.RTextJob;
 
 public class WorkspaceCallback<T extends Response> extends RTextJob implements Callback<T> {
@@ -46,10 +45,12 @@ public class WorkspaceCallback<T extends Response> extends RTextJob implements C
 
 	public void handleError(String error) {
 		monitor.done();
-		done(new Status(IStatus.ERROR, RTextPlugin.PLUGIN_ID, error));
+//		done(new Status(IStatus.ERROR, RTextPlugin.PLUGIN_ID, error));
+		done(Status.OK_STATUS);
 	}
 	
 	public void commandSent() {
+		lastProgress = 0;
 		schedule();
 	}
 	

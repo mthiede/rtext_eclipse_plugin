@@ -8,7 +8,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.rtext.lang.backend.BackendStarter;
 import org.rtext.lang.backend.Connection;
-import org.rtext.lang.specs.unit.backend.ConnectorSpec;
 
 @SuppressWarnings("all")
 @RunWith(ExampleGroupRunner.class)

@@ -7,6 +7,7 @@
  *******************************************************************************/
 package org.rtext.lang.editor;
 
+import static org.rtext.lang.backend.CallbackWithTimeout.waitForResponse;
 import static org.rtext.lang.util.Workbenches.getActivePage;
 
 import java.util.List;
@@ -20,6 +21,7 @@ import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
+import org.rtext.lang.backend.CallbackWithTimeout;
 import org.rtext.lang.backend.Connector;
 import org.rtext.lang.backend.ContextParser;
 import org.rtext.lang.backend.DocumentContext;
@@ -31,24 +33,10 @@ import org.rtext.lang.workspace.BackendConnectJob;
 public class HyperlinkDetector implements IHyperlinkDetector {
 	private Connected editor;
 	private BackendConnectJob backendConnectJob;
+	private CallbackWithTimeout<ReferenceTargets> responseCallback = null;
 
 	public HyperlinkDetector(Connected editor) {
 		this.editor = editor;
-	}
-
-	private IHyperlink[] createHyperlinks(Region linkRegion, ReferenceTargets referenceTargets) {
-		if (referenceTargets.getTargets().isEmpty()) {
-			return null;
-		}
-		List<IHyperlink> links = new Vector<IHyperlink>();
-
-		for (Target target : referenceTargets.getTargets()) {
-			String filename = target.getFile();
-			int line = target.getLine();
-			String displayName = target.getDisplay();
-			links.add(new Hyperlink(getActivePage(), linkRegion, filename, 	line, displayName));
-		}
-		return links.toArray(new IHyperlink[0]);
 	}
 
 	public IHyperlink[] detectHyperlinks(ITextViewer textViewer,
@@ -57,6 +45,9 @@ public class HyperlinkDetector implements IHyperlinkDetector {
 	}
 
 	public IHyperlink[] detectHyperLinks(IDocument document, IRegion region) {
+		if(isWaiting()){
+			return null;
+		}
 		Connector connector = editor.getConnector();
 		if (connector == null) {
 			return null;
@@ -66,13 +57,14 @@ public class HyperlinkDetector implements IHyperlinkDetector {
 			return createErrorLink("backend not yet available", region);
 		}
 		try {
-			DocumentContext context = createContext(document, region);
-			ReferenceTargets referenceTargets = requestReferenceTargets(connector, context);
-			Region linkRegion = createHyperLinkRegion(document, region,	referenceTargets);
-			return createHyperlinks(linkRegion, referenceTargets);
+			return requestReferenceTargets(connector, document, region);
 		} catch (Exception e) {
 			return createErrorLink("backend not yet available", region);
 		}
+	}
+
+	private boolean isWaiting() {
+		return responseCallback != null && responseCallback.isWaiting();
 	}
 
 	public void startBackend(final Connector connector) {
@@ -87,15 +79,39 @@ public class HyperlinkDetector implements IHyperlinkDetector {
 		return new IHyperlink[]{new Hyperlink(getActivePage(), region, "", 0, message), new Hyperlink(getActivePage(), region, "", 0, "")};
 	}
 
-	public ReferenceTargets requestReferenceTargets(Connector connector, DocumentContext context) throws TimeoutException {
-		return connector.execute(new ReferenceTargetsCommand(context));
+	public IHyperlink[] requestReferenceTargets(Connector connector, IDocument document, IRegion region) {
+		DocumentContext context = createContext(document, region);
+		responseCallback = waitForResponse("Backend is busy", 500);
+		connector.execute(new ReferenceTargetsCommand(context), responseCallback);
+		try {
+			ReferenceTargets referenceTargets = responseCallback.waitForResponse();
+			return createHyperlinks(document, region, referenceTargets);
+		} catch (TimeoutException e) {
+			return createErrorLink(e.getMessage(), region);
+		}
 	}
+
 	public DocumentContext createContext(IDocument document, IRegion region) {
 		return new ContextParser(document).getContext(region.getOffset());
 	}
+	
+	private IHyperlink[] createHyperlinks(IDocument document, IRegion region, ReferenceTargets referenceTargets) {
+		Region hyperLinkRegion = createHyperLinkRegion(document, region, referenceTargets);
+		if (referenceTargets.getTargets().isEmpty()) {
+			return null;
+		}
+		List<IHyperlink> links = new Vector<IHyperlink>();
 
-	private Region createHyperLinkRegion(IDocument document, IRegion region,
-			ReferenceTargets referenceTargets) {
+		for (Target target : referenceTargets.getTargets()) {
+			String filename = target.getFile();
+			int line = target.getLine();
+			String displayName = target.getDisplay();
+			links.add(new Hyperlink(getActivePage(), hyperLinkRegion, filename,	line, displayName));
+		}
+		return links.toArray(new IHyperlink[0]);
+	}
+
+	private Region createHyperLinkRegion(IDocument document, IRegion region, ReferenceTargets referenceTargets) {
 		int endColumn  = referenceTargets.getBeginColumn();
 		int beginColumn = referenceTargets.getEndColumn();
 		try {

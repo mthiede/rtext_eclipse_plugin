@@ -11,21 +11,28 @@ import java.util.concurrent.TimeoutException;
 
 public class Wait {
 
+	private static final long DEFAULT_TIMEOUT = 5000l;
 	private String message = "Timeout occurred";
-	private long duration = 5000l;
-	private long pollEvery = 50l;
+	private final long duration;
+	private final long pollEvery = 50l;
+	
+	public static void waitUntil(Condition condition, long duration, String message) throws TimeoutException{
+		Wait wait = new Wait(Sleeper.SYSTEM_SLEEPER, Clock.SYSTEM_CLOCK, duration, message);
+		wait.until(condition);
+	}
 
 	public static void waitUntil(Condition condition) throws TimeoutException{
-		Wait wait = new Wait(Sleeper.SYSTEM_SLEEPER, Clock.SYSTEM_CLOCK);
-		wait.until(condition);
+		waitUntil(condition, DEFAULT_TIMEOUT, "Timeout occured");
 	}
 
 	private final Sleeper sleeper;
 	private final Clock clock;
 	
-	public Wait(Sleeper sleeper, Clock clock){
+	public Wait(Sleeper sleeper, Clock clock, long duration, String message){
 		this.sleeper = sleeper;
 		this.clock = clock;
+		this.message = message;
+		this.duration = duration;
 	}
 
 	public void until(Condition condition) throws TimeoutException {

@@ -1,6 +1,5 @@
 package org.rtext.lang.specs.unit.backend;
 
-import com.google.common.base.Objects;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.hamcrest.StringDescription;
 import org.jnario.lib.Should;
@@ -11,10 +10,11 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.rtext.lang.commands.Response;
-import org.rtext.lang.specs.unit.backend.TcpClientSpec;
 import org.rtext.lang.specs.util.Commands;
 import org.rtext.lang.specs.util.Wait;
 import org.rtext.lang.specs.util.WaitConfig;
+
+import com.google.common.base.Objects;
 
 @SuppressWarnings("all")
 @RunWith(ExampleGroupRunner.class)

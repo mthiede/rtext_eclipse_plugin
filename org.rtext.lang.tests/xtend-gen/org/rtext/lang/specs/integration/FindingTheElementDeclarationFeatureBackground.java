@@ -1,6 +1,7 @@
 package org.rtext.lang.specs.integration;
 
 import java.util.List;
+
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.xtext.xbase.lib.Functions.Function0;
 import org.jnario.lib.JnarioIterableExtensions;
@@ -15,7 +16,6 @@ import org.rtext.lang.backend.Connector;
 import org.rtext.lang.editor.Connected;
 import org.rtext.lang.editor.HyperlinkDetector;
 import org.rtext.lang.proposals.ContentAssistProcessor;
-import org.rtext.lang.specs.integration.FindingTheElementDeclarationFeature;
 import org.rtext.lang.specs.util.BackendHelper;
 import org.rtext.lang.specs.util.TestFileLocator;
 import org.rtext.lang.specs.util.WorkspaceHelper;

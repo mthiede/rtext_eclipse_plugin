@@ -1,8 +1,8 @@
 package org.rtext.lang.specs.unit.backend;
 
-import com.google.common.collect.Iterables;
 import java.io.File;
 import java.util.List;
+
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
 import org.hamcrest.StringDescription;
 import org.jnario.lib.ExampleTable;
@@ -16,8 +16,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.rtext.lang.backend.ConnectorConfig;
-import org.rtext.lang.specs.unit.backend.ConnectorConfigMatchesSpecExamples;
-import org.rtext.lang.specs.unit.backend.ConnectorConfigSpec;
+
+import com.google.common.collect.Iterables;
 
 @SuppressWarnings("all")
 @RunWith(ExampleGroupRunner.class)

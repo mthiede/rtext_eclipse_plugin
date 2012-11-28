@@ -1,6 +1,7 @@
 package org.rtext.lang.specs.integration;
 
 import java.util.List;
+
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.contentassist.ContentAssistEvent;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
@@ -24,7 +25,6 @@ import org.junit.runner.RunWith;
 import org.rtext.lang.backend.Connector;
 import org.rtext.lang.editor.Connected;
 import org.rtext.lang.proposals.ContentAssistProcessor;
-import org.rtext.lang.specs.integration.CodeCompletionFeature;
 import org.rtext.lang.specs.util.BackendHelper;
 
 @RunWith(FeatureRunner.class)

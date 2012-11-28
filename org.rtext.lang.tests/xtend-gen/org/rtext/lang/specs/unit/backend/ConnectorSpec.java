@@ -1,6 +1,7 @@
 package org.rtext.lang.specs.unit.backend;
 
 import java.io.File;
+
 import org.eclipse.xtext.xbase.lib.Functions.Function0;
 import org.jnario.runner.Contains;
 import org.jnario.runner.CreateWith;
@@ -22,10 +23,6 @@ import org.rtext.lang.commands.Callback;
 import org.rtext.lang.commands.Command;
 import org.rtext.lang.commands.LoadedModel;
 import org.rtext.lang.commands.Response;
-import org.rtext.lang.specs.unit.backend.ConnectorConnectedSpec;
-import org.rtext.lang.specs.unit.backend.ConnectorDisconnectSpec;
-import org.rtext.lang.specs.unit.backend.ConnectorErrorHandlingSpec;
-import org.rtext.lang.specs.unit.backend.ConnectorExecuteCommandSpec;
 import org.rtext.lang.specs.util.Commands;
 import org.rtext.lang.specs.util.MockInjector;
 

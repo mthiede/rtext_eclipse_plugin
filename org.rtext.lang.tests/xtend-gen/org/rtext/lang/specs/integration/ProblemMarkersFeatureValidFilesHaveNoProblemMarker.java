@@ -1,6 +1,7 @@
 package org.rtext.lang.specs.integration;
 
 import java.util.List;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.xtext.xbase.lib.Functions.Function0;
@@ -17,7 +18,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.rtext.lang.backend.ConnectorConfig;
 import org.rtext.lang.commands.LoadModelCallback;
-import org.rtext.lang.specs.integration.ProblemMarkersFeature;
 import org.rtext.lang.specs.util.BackendHelper;
 import org.rtext.lang.specs.util.Jobs;
 import org.rtext.lang.specs.util.TestFileLocator;

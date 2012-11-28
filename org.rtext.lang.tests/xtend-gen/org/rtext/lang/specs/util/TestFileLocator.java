@@ -3,6 +3,7 @@ package org.rtext.lang.specs.util;
 import java.io.File;
 import java.net.URI;
 import java.net.URL;
+
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;

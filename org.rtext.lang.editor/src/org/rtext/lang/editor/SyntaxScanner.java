@@ -76,10 +76,14 @@ public class SyntaxScanner extends AbstractRTextParser<IToken> implements IToken
 	}
 	
 	protected IToken createToken(RGB rgb) {
-		int style = SWT.NORMAL;
-		if(rgb == IColorConstants.COMMAND){
-			style = SWT.BOLD;
-		}
+		return createToken(rgb, SWT.NORMAL);
+	}
+	
+	protected IToken createBoldToken(RGB rgb) {
+		return createToken(rgb, SWT.BOLD);
+	}
+	
+	protected IToken createToken(RGB rgb, int style) {
 		TextAttribute textAttribute = new TextAttribute(color(rgb), null, style);
 		return new Token(textAttribute);
 	}

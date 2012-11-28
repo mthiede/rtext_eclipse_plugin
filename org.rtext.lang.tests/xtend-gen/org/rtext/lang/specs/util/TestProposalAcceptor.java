@@ -1,6 +1,7 @@
 package org.rtext.lang.specs.util;
 
 import java.util.ArrayList;
+
 import org.eclipse.xtext.xbase.lib.CollectionLiterals;
 import org.eclipse.xtext.xbase.lib.Functions.Function0;
 import org.rtext.lang.backend.ProposalAcceptor;

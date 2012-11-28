@@ -1,6 +1,7 @@
 package org.rtext.lang.specs.unit.backend;
 
 import java.util.concurrent.CountDownLatch;
+
 import org.eclipse.xtext.xbase.lib.Functions.Function0;
 import org.eclipse.xtext.xbase.lib.InputOutput;
 import org.hamcrest.StringDescription;
@@ -18,10 +19,6 @@ import org.mockito.Mock;
 import org.rtext.lang.backend.TcpClient;
 import org.rtext.lang.backend.TcpClientListener;
 import org.rtext.lang.commands.Response;
-import org.rtext.lang.specs.unit.backend.TcpClientConnectionErrorsSpec;
-import org.rtext.lang.specs.unit.backend.TcpClientConnectionStateSpec;
-import org.rtext.lang.specs.unit.backend.TcpClientNotifiesMessageListenerOnSpec;
-import org.rtext.lang.specs.unit.backend.TcpClientSendingRequestsSpec;
 import org.rtext.lang.specs.util.MockInjector;
 import org.rtext.lang.specs.util.TcpTestServer;
 import org.rtext.lang.specs.util.TestCallBack;

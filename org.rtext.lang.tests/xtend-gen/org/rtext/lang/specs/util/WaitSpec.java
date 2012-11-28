@@ -15,12 +15,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.stubbing.OngoingStubbing;
 import org.mockito.verification.VerificationMode;
-import org.rtext.lang.specs.util.Clock;
-import org.rtext.lang.specs.util.MockInjector;
-import org.rtext.lang.specs.util.Sleeper;
-import org.rtext.lang.specs.util.TimeoutError;
-import org.rtext.lang.specs.util.Wait;
-import org.rtext.lang.specs.util.WaitConfig;
 
 @SuppressWarnings("all")
 @RunWith(ExampleGroupRunner.class)

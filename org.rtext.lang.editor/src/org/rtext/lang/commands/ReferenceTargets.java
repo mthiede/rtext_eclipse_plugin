@@ -25,6 +25,10 @@ public class ReferenceTargets extends Response {
 		public String getDesc() {
 			return desc;
 		}
+		
+		public void setDisplay(String display) {
+			this.display = display;
+		}
 	}
 
 	public ReferenceTargets(int invocationId, String type) {

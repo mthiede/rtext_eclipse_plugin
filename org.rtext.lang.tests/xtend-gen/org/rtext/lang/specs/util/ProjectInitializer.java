@@ -1,13 +1,13 @@
 package org.rtext.lang.specs.util;
 
 import java.util.ArrayList;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.xtext.xbase.lib.CollectionLiterals;
 import org.eclipse.xtext.xbase.lib.Functions.Function0;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.Pair;
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
-import org.rtext.lang.specs.util.WorkspaceHelper;
 
 @SuppressWarnings("all")
 public class ProjectInitializer implements Procedure1<IContainer> {

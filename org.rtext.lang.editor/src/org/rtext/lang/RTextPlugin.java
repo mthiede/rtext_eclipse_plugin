@@ -9,7 +9,6 @@ package org.rtext.lang;
 
 import java.util.ResourceBundle;
 
-import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;

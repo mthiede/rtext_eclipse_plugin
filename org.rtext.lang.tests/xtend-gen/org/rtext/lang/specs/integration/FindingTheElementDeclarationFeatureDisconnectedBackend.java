@@ -1,6 +1,7 @@
 package org.rtext.lang.specs.integration;
 
 import java.util.List;
+
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
@@ -17,7 +18,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.rtext.lang.backend.Connector;
-import org.rtext.lang.specs.integration.FindingTheElementDeclarationFeatureBackground;
 
 @RunWith(FeatureRunner.class)
 @Named("Scenario: Disconnected backend")

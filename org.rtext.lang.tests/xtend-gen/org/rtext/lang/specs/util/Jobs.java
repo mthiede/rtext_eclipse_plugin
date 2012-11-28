@@ -1,6 +1,7 @@
 package org.rtext.lang.specs.util;
 
 import java.util.List;
+
 import org.eclipse.core.runtime.jobs.IJobManager;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.xtext.xbase.lib.Conversions;

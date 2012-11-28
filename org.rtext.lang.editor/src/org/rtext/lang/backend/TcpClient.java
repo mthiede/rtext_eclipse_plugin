@@ -19,9 +19,8 @@ import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 
+import org.rtext.lang.backend.CommandQueue.Task;
 import org.rtext.lang.commands.Callback;
 import org.rtext.lang.commands.Command;
 import org.rtext.lang.commands.CommandSerializer;
@@ -39,7 +38,7 @@ public class TcpClient implements Connection {
 		public void run() {
 			while (running) {
 				try {
-					Task<?> task = tasks.take();
+					Task<?> task = commandQueue.take();
 					try {
 						executeCommand(task);
 						receiveResponse(task);
@@ -84,16 +83,6 @@ public class TcpClient implements Connection {
 		}
 	}
 
-	public static class Task<T extends Response> {
-		private final Command<T> command;
-		private final Callback<T> callback;
-
-		public Task(Command<T> command, Callback<T> callback) {
-			this.command = command;
-			this.callback = callback;
-		}
-	}
-
 	public static TcpClient create() {
 		return create(new PrintingTcpClientListener());
 	}
@@ -108,7 +97,7 @@ public class TcpClient implements Connection {
 	private CommandSerializer serializer;
 
 	private ResponseParser responseParser;
-	private BlockingQueue<Task<?>> tasks = new LinkedBlockingQueue<Task<?>>();
+	private CommandQueue commandQueue = new CommandQueue();
 	private Worker worker;
 	private TcpClientListener listener;
 	private String address;
@@ -177,7 +166,7 @@ public class TcpClient implements Connection {
 	public void stopWorker() {
 		if(worker != null){
 			worker.stopWorking();
-			tasks.clear();
+			commandQueue.clear();
 			worker = null;
 		}
 	}
@@ -187,7 +176,7 @@ public class TcpClient implements Connection {
 		if (!isConnected()) {
 			throw new BackendException("Not connected");
 		}
-		tasks.add(new Task<T>(request, callback));
+		commandQueue.add(Task.create(request, callback));
 	}
 
 	protected String readMessage(int messageLength) throws IOException {

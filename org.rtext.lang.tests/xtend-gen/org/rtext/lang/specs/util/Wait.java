@@ -3,10 +3,6 @@ package org.rtext.lang.specs.util;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.Functions.Function0;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
-import org.rtext.lang.specs.util.Clock;
-import org.rtext.lang.specs.util.Sleeper;
-import org.rtext.lang.specs.util.TimeoutError;
-import org.rtext.lang.specs.util.WaitConfig;
 
 @SuppressWarnings("all")
 public class Wait {

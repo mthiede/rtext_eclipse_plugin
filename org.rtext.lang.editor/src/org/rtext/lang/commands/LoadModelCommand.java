@@ -11,4 +11,5 @@ public class LoadModelCommand extends Command<LoadedModel> {
 	public LoadModelCommand() {
 		super("load_model", LoadedModel.class);
 	}
+	
 }
