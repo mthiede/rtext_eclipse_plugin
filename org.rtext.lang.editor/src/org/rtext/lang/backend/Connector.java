@@ -118,7 +118,7 @@ public class Connector {
 		connect(true);
 	}
 	
-	private boolean connect(boolean loadModel) {
+	private synchronized boolean connect(boolean loadModel) {
 		if(isConnected()){
 			return true;
 		}

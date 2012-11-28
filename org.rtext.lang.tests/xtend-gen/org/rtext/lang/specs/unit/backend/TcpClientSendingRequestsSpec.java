@@ -14,7 +14,10 @@ import org.jnario.runner.Order;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InOrder;
+import org.mockito.Mockito;
 import org.rtext.lang.backend.BackendException;
+import org.rtext.lang.backend.TcpClientListener;
 import org.rtext.lang.commands.Progress;
 import org.rtext.lang.commands.Response;
 import org.rtext.lang.specs.unit.backend.TcpClientSpec;
@@ -27,8 +30,38 @@ import org.rtext.lang.specs.util.WaitConfig;
 @Named("Sending requests")
 public class TcpClientSendingRequestsSpec extends TcpClientSpec {
   @Test
-  @Named("Receives responses from server")
+  @Named("Connecting to the same address twice will create only one socket")
   @Order(2)
+  public void _connectingToTheSameAddressTwiceWillCreateOnlyOneSocket() throws Exception {
+    this.subject.connect(this.ADDRESS, this.PORT);
+    this.subject.connect(this.ADDRESS, this.PORT);
+    TcpClientListener _verify = Mockito.<TcpClientListener>verify(this.listener);
+    _verify.connected(this.ADDRESS, this.PORT);
+  }
+  
+  @Test
+  @Named("Connecting to a different address will close the previous connection")
+  @Order(3)
+  public void _connectingToADifferentAddressWillCloseThePreviousConnection() throws Exception {
+    this.subject.connect(this.ADDRESS, this.PORT);
+    this.subject.connect(this.ADDRESS, this.ANOTHER_PORT);
+    InOrder _inOrder = Mockito.inOrder(this.listener);
+    final Procedure1<InOrder> _function = new Procedure1<InOrder>() {
+        public void apply(final InOrder it) {
+          TcpClientListener _verify = it.<TcpClientListener>verify(TcpClientSendingRequestsSpec.this.listener);
+          _verify.connected(TcpClientSendingRequestsSpec.this.ADDRESS, TcpClientSendingRequestsSpec.this.PORT);
+          TcpClientListener _verify_1 = it.<TcpClientListener>verify(TcpClientSendingRequestsSpec.this.listener);
+          _verify_1.close();
+          TcpClientListener _verify_2 = it.<TcpClientListener>verify(TcpClientSendingRequestsSpec.this.listener);
+          _verify_2.connected(TcpClientSendingRequestsSpec.this.ADDRESS, TcpClientSendingRequestsSpec.this.ANOTHER_PORT);
+        }
+      };
+    ObjectExtensions.<InOrder>operator_doubleArrow(_inOrder, _function);
+  }
+  
+  @Test
+  @Named("Receives responses from server")
+  @Order(4)
   public void _receivesResponsesFromServer() throws Exception {
     ArrayList<String> _responses = this.server.getResponses();
     _responses.add(this.responseMessage);
@@ -57,7 +90,7 @@ public class TcpClientSendingRequestsSpec extends TcpClientSpec {
   
   @Test
   @Named("Notifies callback when command is sent")
-  @Order(3)
+  @Order(5)
   public void _notifiesCallbackWhenCommandIsSent() throws Exception {
     ArrayList<String> _responses = this.server.getResponses();
     _responses.add(this.responseMessage);
@@ -79,7 +112,7 @@ public class TcpClientSendingRequestsSpec extends TcpClientSpec {
   
   @Test
   @Named("Receives progress from server")
-  @Order(4)
+  @Order(6)
   public void _receivesProgressFromServer() throws Exception {
     ArrayList<String> _responses = this.server.getResponses();
     _responses.add(this.progressMessage);
@@ -118,7 +151,7 @@ public class TcpClientSendingRequestsSpec extends TcpClientSpec {
   
   @Test
   @Named("Throws exception if not connected")
-  @Order(5)
+  @Order(7)
   public void _throwsExceptionIfNotConnected() throws Exception {
     try{
       this.subject.<Response>sendRequest(Commands.ANY_COMMAND, this.callback);

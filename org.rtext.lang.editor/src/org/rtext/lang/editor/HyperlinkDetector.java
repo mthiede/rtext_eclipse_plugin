@@ -30,6 +30,7 @@ import org.rtext.lang.workspace.BackendConnectJob;
 
 public class HyperlinkDetector implements IHyperlinkDetector {
 	private Connected editor;
+	private BackendConnectJob backendConnectJob;
 
 	public HyperlinkDetector(Connected editor) {
 		this.editor = editor;
@@ -75,7 +76,11 @@ public class HyperlinkDetector implements IHyperlinkDetector {
 	}
 
 	public void startBackend(final Connector connector) {
-		new BackendConnectJob(connector).schedule(500);
+		if(backendConnectJob != null && backendConnectJob.getResult() == null){
+			return;
+		}
+		backendConnectJob = new BackendConnectJob(connector);
+		backendConnectJob.schedule(500);
 	}
 
 	private IHyperlink[] createErrorLink(String message, IRegion region) {

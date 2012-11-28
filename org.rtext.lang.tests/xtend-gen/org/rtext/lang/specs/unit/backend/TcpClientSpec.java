@@ -5,6 +5,7 @@ import org.eclipse.xtext.xbase.lib.Functions.Function0;
 import org.eclipse.xtext.xbase.lib.InputOutput;
 import org.hamcrest.StringDescription;
 import org.jnario.runner.Contains;
+import org.jnario.runner.CreateWith;
 import org.jnario.runner.ExampleGroupRunner;
 import org.jnario.runner.Named;
 import org.jnario.runner.Order;
@@ -13,18 +14,23 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.rtext.lang.backend.TcpClient;
+import org.rtext.lang.backend.TcpClientListener;
 import org.rtext.lang.commands.Response;
 import org.rtext.lang.specs.unit.backend.TcpClientConnectionErrorsSpec;
 import org.rtext.lang.specs.unit.backend.TcpClientConnectionStateSpec;
+import org.rtext.lang.specs.unit.backend.TcpClientNotifiesMessageListenerOnSpec;
 import org.rtext.lang.specs.unit.backend.TcpClientSendingRequestsSpec;
+import org.rtext.lang.specs.util.MockInjector;
 import org.rtext.lang.specs.util.TcpTestServer;
 import org.rtext.lang.specs.util.TestCallBack;
 
-@Contains({ TcpClientSendingRequestsSpec.class, TcpClientConnectionErrorsSpec.class, TcpClientConnectionStateSpec.class })
+@Contains({ TcpClientSendingRequestsSpec.class, TcpClientConnectionErrorsSpec.class, TcpClientConnectionStateSpec.class, TcpClientNotifiesMessageListenerOnSpec.class })
 @SuppressWarnings("all")
 @RunWith(ExampleGroupRunner.class)
 @Named("TcpClient")
+@CreateWith(value = MockInjector.class)
 public class TcpClientSpec {
   public TcpClient subject;
   
@@ -41,11 +47,18 @@ public class TcpClientSpec {
   
   final int PORT = 12345;
   
+  final int ANOTHER_PORT = new Function0<Integer>() {
+    public Integer apply() {
+      int _plus = (TcpClientSpec.this.PORT + 1);
+      return _plus;
+    }
+  }.apply();
+  
   final String ADDRESS = "127.0.0.1";
   
   final CountDownLatch startSignal = new Function0<CountDownLatch>() {
     public CountDownLatch apply() {
-      CountDownLatch _countDownLatch = new CountDownLatch(1);
+      CountDownLatch _countDownLatch = new CountDownLatch(2);
       return _countDownLatch;
     }
   }.apply();
@@ -57,6 +70,13 @@ public class TcpClientSpec {
     }
   }.apply();
   
+  final TcpTestServer anotherSever = new Function0<TcpTestServer>() {
+    public TcpTestServer apply() {
+      TcpTestServer _tcpTestServer = new TcpTestServer(TcpClientSpec.this.ADDRESS, TcpClientSpec.this.ANOTHER_PORT);
+      return _tcpTestServer;
+    }
+  }.apply();
+  
   final TestCallBack<Response> callback = new Function0<TestCallBack<Response>>() {
     public TestCallBack<Response> apply() {
       TestCallBack<Response> _testCallBack = new TestCallBack<Response>();
@@ -64,12 +84,16 @@ public class TcpClientSpec {
     }
   }.apply();
   
+  @Mock
+  TcpClientListener listener;
+  
   @Before
   public void before() throws Exception {
     this.server.start(this.startSignal);
+    this.anotherSever.start(this.startSignal);
     InputOutput.<String>println("wait for server");
     this.startSignal.await();
-    TcpClient _create = TcpClient.create();
+    TcpClient _create = TcpClient.create(this.listener);
     this.subject = _create;
   }
   
@@ -90,6 +114,7 @@ public class TcpClientSpec {
   @After
   public void after() throws Exception {
     this.server.shutdown();
+    this.anotherSever.shutdown();
   }
   
   public void is(final Response actual, final CharSequence expected) {

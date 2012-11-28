@@ -22,7 +22,7 @@ import org.rtext.lang.specs.util.WaitConfig;
 public class TcpClientConnectionStateSpec extends TcpClientSpec {
   @Test
   @Named("is initially disconnected")
-  @Order(9)
+  @Order(11)
   public void _isInitiallyDisconnected() throws Exception {
     boolean _isConnected = this.subject.isConnected();
     boolean _doubleArrow = Should.operator_doubleArrow(Boolean.valueOf(_isConnected), Boolean.valueOf(false));
@@ -34,7 +34,7 @@ public class TcpClientConnectionStateSpec extends TcpClientSpec {
   
   @Test
   @Named("is connected after successful connection to server")
-  @Order(10)
+  @Order(12)
   public void _isConnectedAfterSuccessfulConnectionToServer() throws Exception {
     this.subject.connect(this.ADDRESS, this.PORT);
     boolean _isConnected = this.subject.isConnected();
@@ -47,7 +47,7 @@ public class TcpClientConnectionStateSpec extends TcpClientSpec {
   
   @Test
   @Named("is disconnected when server shuts down")
-  @Order(11)
+  @Order(13)
   public void _isDisconnectedWhenServerShutsDown() throws Exception {
     this.subject.connect(this.ADDRESS, this.PORT);
     this.server.shutdown();
