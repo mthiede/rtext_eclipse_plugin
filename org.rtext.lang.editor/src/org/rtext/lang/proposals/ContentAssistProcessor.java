@@ -154,7 +154,7 @@ public class ContentAssistProcessor implements IContentAssistProcessor,	IComplet
 		if (connector  == null) {
 			proposals = errorProposal("Could not locate .rtext file");
 		}else if (!connector.isConnected()) {
-			new BackendConnectJob(getConnector()).schedule();
+			new BackendConnectJob(getConnector()).schedule(500);
 			proposals = errorProposal("Backend not yet available");
 		}else{
 			try {

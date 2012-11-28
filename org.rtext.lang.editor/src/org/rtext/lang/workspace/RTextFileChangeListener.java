@@ -55,7 +55,7 @@ public class RTextFileChangeListener implements IResourceChangeListener {
 	}
 
 	private void runCleanupJob(IResource resource) {
-		ReloadJob.create(connectorProvider, resource).schedule();
+		ReloadJob.create(connectorProvider, resource).schedule(200);
 	}
 
 	public boolean hasNotChanged(IResourceDelta delta) {

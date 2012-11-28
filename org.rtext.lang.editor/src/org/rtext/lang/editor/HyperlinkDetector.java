@@ -75,7 +75,7 @@ public class HyperlinkDetector implements IHyperlinkDetector {
 	}
 
 	public void startBackend(final Connector connector) {
-		new BackendConnectJob(connector).schedule();
+		new BackendConnectJob(connector).schedule(500);
 	}
 
 	private IHyperlink[] createErrorLink(String message, IRegion region) {

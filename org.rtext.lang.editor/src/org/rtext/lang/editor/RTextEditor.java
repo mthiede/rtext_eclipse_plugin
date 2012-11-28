@@ -95,7 +95,7 @@ public class RTextEditor extends TextEditor implements Connected{
 
 	protected void editorSaved() {
 		super.editorSaved();
-		new ModelLoadJob(getConnector(), currentConfig()).schedule();
+		new ModelLoadJob(getConnector(), currentConfig()).schedule(100);
 	}
 	
 	private IPath getInputPath() {

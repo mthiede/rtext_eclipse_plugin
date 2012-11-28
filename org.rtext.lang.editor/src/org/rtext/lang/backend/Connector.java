@@ -70,14 +70,14 @@ public class Connector {
 		this.loadModelCallBack = loadModelCallBack;
 	}
 
-	public<T extends Response> T execute(Command<T> command) throws TimeoutException{
+	public<T extends Response> T execute(Command<T> command) throws TimeoutException, BackendException{
 		SynchronousCallBack<T> callback = new SynchronousCallBack<T>();
 		execute(command, callback);
 		callback.waitForResponse();
 		return callback.response();
 	}
 	
-	public <T extends Response> void execute(Command<T> command, Callback<T> callback){
+	public <T extends Response> void execute(Command<T> command, Callback<T> callback) throws BackendException{
 		if(!connect(requiresModelLoad(command))){
 			callback.handleError("Could not connect to backend");
 			return;

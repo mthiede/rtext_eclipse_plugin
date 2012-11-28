@@ -109,7 +109,7 @@ public class TcpClient implements Connection {
 		this.responseParser = responseParser;
 	}
 
-	public void connect(String address, int port) {
+	public void connect(String address, int port) throws BackendException {
 		try {
 			Expectations.greaterThanZero(port);
 			System.out.println("TCP Client: connecting to backend on port " + port);
@@ -157,7 +157,7 @@ public class TcpClient implements Connection {
 	}
 
 	public <T extends Response> void sendRequest(Command<T> request,
-			Callback<T> callback) {
+			Callback<T> callback) throws BackendException {
 		if (!isConnected()) {
 			throw new BackendException("Not connected");
 		}
