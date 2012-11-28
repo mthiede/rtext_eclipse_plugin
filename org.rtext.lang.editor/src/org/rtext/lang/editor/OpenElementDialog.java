@@ -7,6 +7,8 @@ b  * Copyright (c) 2012 E.S.R. Labs and others.
  *******************************************************************************/
 package org.rtext.lang.editor;
 
+import static org.eclipse.swt.widgets.Display.getDefault;
+
 import java.util.Date;
 
 import org.eclipse.jface.dialogs.DialogSettings;
@@ -26,7 +28,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.SelectionStatusDialog;
@@ -42,13 +43,16 @@ public class OpenElementDialog extends SelectionStatusDialog  {
 	public class DialogUpdater implements Callback<Elements> {
 
 		public void commandSent() {
+			indicateStartSearch();
 		}
 
 		public void handleProgress(Progress progress) {
+			updateStatus("Searching... " + progress.getPercentage());
 		}
 
 		public void handleResponse(final Elements elements) {
-			Display.getDefault().asyncExec(new Runnable() {
+			indicateStopSearch();
+			getDefault().asyncExec(new Runnable() {
 				public void run() {
 					responseReceived(elements);
 				}
@@ -56,6 +60,7 @@ public class OpenElementDialog extends SelectionStatusDialog  {
 		}
 
 		public void handleError(String error) {
+			updateStatus(error);
 		}
 
 	}
@@ -136,7 +141,9 @@ public class OpenElementDialog extends SelectionStatusDialog  {
 		});
 
 		applyDialogFont(content);
-
+		if(editor.getConnector() != null){
+			editor.getConnector().connect();
+		}
 		return dialogArea;
 	}
 	
@@ -165,10 +172,15 @@ public class OpenElementDialog extends SelectionStatusDialog  {
 		if (requestSentDate == null || (new Date().getTime() - requestSentDate.getTime()) > 10000) {
 			Connector bc = editor.getConnector();
 			if (bc != null) {
+				if(bc.isBusy()){
+					updateStatus("Loading model,..");
+					bc.connect();
+				}
 				bc.execute(new FindElementsCommand(pattern.getText()), callback);
 				requestSentDate = new Date();
 				lastRequestedPattern = pattern.getText();
-				indicateStartSearch();
+			}else{
+				updateStatus("Cannot find .rtext file");
 			}
 		}
 	}
@@ -200,11 +212,19 @@ public class OpenElementDialog extends SelectionStatusDialog  {
 	}
 	
 	private void indicateStartSearch() {
-		statusLabel.setText("Searching...");
+		updateStatus("Searching...");
 	}
 	
 	private void indicateStopSearch() {
-		statusLabel.setText("");
+		updateStatus("");
+	}
+	
+	private void updateStatus(final String text){
+		getDefault().asyncExec(new Runnable() {
+			public void run() {
+				statusLabel.setText(text);
+			}
+		});
 	}
 
 }
