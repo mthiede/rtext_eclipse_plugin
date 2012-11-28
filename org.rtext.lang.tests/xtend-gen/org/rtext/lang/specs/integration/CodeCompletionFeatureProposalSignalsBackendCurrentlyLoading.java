@@ -29,9 +29,9 @@ import org.rtext.lang.specs.integration.CodeCompletionFeature;
 import org.rtext.lang.specs.util.BackendHelper;
 
 @RunWith(FeatureRunner.class)
-@Named("Scenario: Code completion for nested elements")
+@Named("Scenario: Proposal signals backend currently loading")
 @SuppressWarnings("all")
-public class CodeCompletionFeatureCodeCompletionForNestedElements extends CodeCompletionFeature {
+public class CodeCompletionFeatureProposalSignalsBackendCurrentlyLoading extends CodeCompletionFeature {
   @Extension
   public BackendHelper b = new Function0<BackendHelper>() {
     public BackendHelper apply() {
@@ -59,20 +59,20 @@ public class CodeCompletionFeatureCodeCompletionForNestedElements extends CodeCo
   
   @Test
   @Order(1)
-  @Named("And the model is loaded")
-  public void andTheModelIsLoaded() {
-    this.b.connect();
+  @Named("And the backend is busy")
+  public void andTheBackendIsBusy() {
+    this.b.busy();
   }
   
   @Test
   @Order(2)
-  @Named("When I invoke the code completion after \\\"EClass \\\"")
-  public void whenIInvokeTheCodeCompletionAfterEClass() {
-    StepArguments _stepArguments = new StepArguments("EClass ");
+  @Named("When I invoke the code completion after \\\"EPackage StatemachineMM {\\\\n\\\"")
+  public void whenIInvokeTheCodeCompletionAfterEPackageStatemachineMMN() {
+    StepArguments _stepArguments = new StepArguments("EPackage StatemachineMM {\\n");
     final StepArguments args = _stepArguments;
     final Function0<Connector> _function = new Function0<Connector>() {
         public Connector apply() {
-          Connector _connector = CodeCompletionFeatureCodeCompletionForNestedElements.this.b.getConnector();
+          Connector _connector = CodeCompletionFeatureProposalSignalsBackendCurrentlyLoading.this.b.getConnector();
           return _connector;
         }
       };
@@ -87,10 +87,10 @@ public class CodeCompletionFeatureCodeCompletionForNestedElements extends CodeCo
     Display _default = Display.getDefault();
     final Procedure0 _function_1 = new Procedure0() {
         public void apply() {
-          IDocument _document = CodeCompletionFeatureCodeCompletionForNestedElements.this.b.getDocument();
+          IDocument _document = CodeCompletionFeatureProposalSignalsBackendCurrentlyLoading.this.b.getDocument();
           String _first = JnarioIterableExtensions.<String>first(args);
-          int _offsetAfter = CodeCompletionFeatureCodeCompletionForNestedElements.this.b.offsetAfter(_first);
-          ICompletionProposal[] _computeCompletionProposals = CodeCompletionFeatureCodeCompletionForNestedElements.this.proposalProvider.computeCompletionProposals(_document, _offsetAfter, 0);
+          int _offsetAfter = CodeCompletionFeatureProposalSignalsBackendCurrentlyLoading.this.b.offsetAfter(_first);
+          ICompletionProposal[] _computeCompletionProposals = CodeCompletionFeatureProposalSignalsBackendCurrentlyLoading.this.proposalProvider.computeCompletionProposals(_document, _offsetAfter, 0);
           final Function1<ICompletionProposal,String> _function = new Function1<ICompletionProposal,String>() {
               public String apply(final ICompletionProposal it) {
                 String _displayString = it.getDisplayString();
@@ -99,7 +99,7 @@ public class CodeCompletionFeatureCodeCompletionForNestedElements extends CodeCo
               }
             };
           List<String> _map = ListExtensions.<ICompletionProposal, String>map(((List<ICompletionProposal>)Conversions.doWrapArray(_computeCompletionProposals)), _function);
-          CodeCompletionFeatureCodeCompletionForNestedElements.this.proposals = _map;
+          CodeCompletionFeatureProposalSignalsBackendCurrentlyLoading.this.proposals = _map;
         }
       };
     _default.syncExec(new Runnable() {
@@ -115,7 +115,7 @@ public class CodeCompletionFeatureCodeCompletionForNestedElements extends CodeCo
   @Order(3)
   @Named("Then the proposals should be")
   public void thenTheProposalsShouldBe() {
-    StepArguments _stepArguments = new StepArguments("name [name] <EString>\nabstract: <EBoolean>\ninterface: <EBoolean>\neSuperTypes: <EClass>\ninstanceClassName: <EString>\n\t");
+    StepArguments _stepArguments = new StepArguments("loading model\n\t");
     final StepArguments args = _stepArguments;
     String _first = JnarioIterableExtensions.<String>first(args);
     String _trim = _first.trim();

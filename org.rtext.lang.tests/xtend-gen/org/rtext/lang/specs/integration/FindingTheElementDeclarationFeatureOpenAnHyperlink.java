@@ -1,7 +1,6 @@
 package org.rtext.lang.specs.integration;
 
 import java.util.List;
-
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
@@ -19,7 +18,7 @@ import org.jnario.runner.Order;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.rtext.lang.backend.Connector;
+import org.rtext.lang.specs.integration.FindingTheElementDeclarationFeatureBackground;
 import org.rtext.lang.util.Workbenches;
 
 @RunWith(FeatureRunner.class)
@@ -49,10 +48,9 @@ public class FindingTheElementDeclarationFeatureOpenAnHyperlink extends FindingT
   
   @Test
   @Order(3)
-  @Named("Given the backend is connected")
-  public void givenTheBackendIsConnected() {
-    Connector _connector = this.b.getConnector();
-    _connector.connect();
+  @Named("Given the model is loaded")
+  public void givenTheModelIsLoaded() {
+    this.b.connect();
   }
   
   @Test

@@ -1,7 +1,7 @@
 package org.rtext.lang.specs.util;
 
+import com.google.common.base.Objects;
 import java.util.ArrayList;
-
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.Region;
@@ -19,8 +19,14 @@ import org.rtext.lang.commands.Command;
 import org.rtext.lang.commands.LoadModelCommand;
 import org.rtext.lang.commands.LoadedModel;
 import org.rtext.lang.commands.Response;
-
-import com.google.common.base.Objects;
+import org.rtext.lang.specs.util.Files;
+import org.rtext.lang.specs.util.SimpleDocument;
+import org.rtext.lang.specs.util.TestCallBack;
+import org.rtext.lang.specs.util.TestFileLocator;
+import org.rtext.lang.specs.util.TestProposalAcceptor;
+import org.rtext.lang.specs.util.Wait;
+import org.rtext.lang.specs.util.WaitConfig;
+import org.rtext.lang.specs.util.WrappingCallback;
 
 @SuppressWarnings("all")
 public class BackendHelper {
@@ -189,5 +195,24 @@ public class BackendHelper {
       _xblockexpression = (_region);
     }
     return _xblockexpression;
+  }
+  
+  public void connect() {
+    Connector _connector = this.getConnector();
+    _connector.connect();
+    final Function1<WaitConfig,Boolean> _function = new Function1<WaitConfig,Boolean>() {
+        public Boolean apply(final WaitConfig it) {
+          Connector _connector = BackendHelper.this.getConnector();
+          boolean _isBusy = _connector.isBusy();
+          boolean _not = (!_isBusy);
+          return Boolean.valueOf(_not);
+        }
+      };
+    Wait.waitUntil(_function);
+  }
+  
+  public void busy() {
+    Connector _connector = this.getConnector();
+    _connector.connect();
   }
 }

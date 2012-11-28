@@ -1,7 +1,6 @@
 package org.rtext.lang.specs.integration;
 
 import java.util.List;
-
 import org.eclipse.xtext.xbase.lib.Functions.Function0;
 import org.hamcrest.StringDescription;
 import org.jnario.lib.JnarioIterableExtensions;
@@ -16,6 +15,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.rtext.lang.commands.Response;
 import org.rtext.lang.proposals.ContentAssistProcessor;
+import org.rtext.lang.specs.integration.SendingReceivingMessagesFeature;
 import org.rtext.lang.specs.util.BackendHelper;
 
 @RunWith(FeatureRunner.class)

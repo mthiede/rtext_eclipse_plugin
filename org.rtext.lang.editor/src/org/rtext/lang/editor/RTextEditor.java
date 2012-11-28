@@ -63,14 +63,8 @@ public class RTextEditor extends TextEditor implements Connected{
 		IContextService cs = (IContextService) getSite().getService(
 				IContextService.class);
 		cs.activateContext("org.rtext.lang.EditorContext");
-		IHandlerService hs = (IHandlerService) getSite().getService(
-				IHandlerService.class);
-		hs.activateHandler("org.rtext.lang.OpenElementCommand",
-				new OpenElementHandler(this));
 		super.createPartControl(parent);
-		
 		ProjectionViewer viewer = (ProjectionViewer) getSourceViewer();
-		
 		projectionSupport = new ProjectionSupport(viewer, getAnnotationAccess(), getSharedColors());
 		projectionSupport.install();
 		installFoldingSupport(viewer);
@@ -84,7 +78,8 @@ public class RTextEditor extends TextEditor implements Connected{
 
 	protected void createActions() {
 		super.createActions();
-
+		IHandlerService hs = (IHandlerService) getSite().getService(IHandlerService.class);
+		hs.activateHandler("org.rtext.lang.OpenElementCommand",	new OpenElementHandler(this));
 		ResourceBundle bundle = RTextPlugin.getDefault().getResourceBundle();
 		IAction a = new TextOperationAction(bundle, "ContentAssistProposal.",
 				this, ISourceViewer.CONTENTASSIST_PROPOSALS);

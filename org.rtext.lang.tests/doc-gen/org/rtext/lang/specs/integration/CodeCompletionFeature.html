@@ -40,7 +40,7 @@
 <ul>
 <li><span class="step notrun"><p>Given a backend for <code>"rtext/test/integration/model/test_metamodel.ect"</code></p></span>
 </li>
-<li><span class="step notrun"><p>And the backend is connected</p></span>
+<li><span class="step notrun"><p>And the model is loaded</p></span>
 </li>
 <li><span class="step notrun"><p>When I invoke the code completion after <code>" E"</code></p></span>
 </li>
@@ -59,7 +59,7 @@ EPackage &lt;name&gt;</pre></span>
 <ul>
 <li><span class="step notrun"><p>Given a backend for <code>"rtext/test/integration/model/test_metamodel.ect"</code></p></span>
 </li>
-<li><span class="step notrun"><p>And the backend is connected</p></span>
+<li><span class="step notrun"><p>And the model is loaded</p></span>
 </li>
 <li><span class="step notrun"><p>When I invoke the code completion after <code>"EClass "</code></p></span>
 </li>
@@ -71,6 +71,30 @@ instanceClassName: &lt;EString&gt;</pre></span>
 </li>
 </ul>
 </div>
+<div><h3 class="scenario notrun"  id="Scenario_Proposal_signals_backend_currently_loading">Scenario: Proposal signals backend currently loading
+</h3>
+<ul>
+<li><span class="step notrun"><p>Given a backend for <code>"rtext/test/integration/model/test_metamodel.ect"</code></p></span>
+</li>
+<li><span class="step notrun"><p>And the backend is busy</p></span>
+</li>
+<li><span class="step notrun"><p>When I invoke the code completion after <code>"EPackage StatemachineMM {n"</code></p></span>
+</li>
+<li><span class="step notrun"><p>Then the proposals should be</p><pre>loading model</pre></span>
+</li>
+</ul>
+</div>
+<div><h3 class="scenario notrun"  id="Scenario_Proposal_signals_backend_not_yet_loaded">Scenario: Proposal signals backend not yet loaded
+</h3>
+<ul>
+<li><span class="step notrun"><p>Given a backend for <code>"rtext/test/integration/model/test_metamodel.ect"</code></p></span>
+</li>
+<li><span class="step notrun"><p>When I invoke the code completion after <code>"EPackage StatemachineMM {n"</code></p></span>
+</li>
+<li><span class="step notrun"><p>Then the proposals should be</p><pre>model not yet loaded</pre></span>
+</li>
+</ul>
+</div>
 <div><h3 class="scenario notrun"  id="Scenario_Proposal_signals_backend_failure">Scenario: Proposal signals backend failure
 </h3>
 <ul>
@@ -78,7 +102,7 @@ instanceClassName: &lt;EString&gt;</pre></span>
 </li>
 <li><span class="step notrun"><p>When I invoke the code completion after <code>"EPackage StatemachineMM {n"</code></p></span>
 </li>
-<li><span class="step notrun"><p>Then the proposals should be</p><pre>Backend not yet available</pre></span>
+<li><span class="step notrun"><p>Then the proposals should be</p><pre>model not yet loaded</pre></span>
 </li>
 </ul>
 </div>
@@ -104,8 +128,8 @@ Scenario: Sucessfully using code completion
   
   Given a backend for &quot;rtext/test/integration/model/test_metamodel.ect&quot;
     b.startBackendFor(args.first.absolutPath)
-  And the backend is connected    
-    b.connector.connect 
+  And the model is loaded
+    b.connect
   When I invoke the code completion after &quot;  E&quot;
     proposalProvider = ContentAssistProcessor::create([|b.connector]) 
     proposalProvider.assistSessionStarted(_)
@@ -124,12 +148,13 @@ Scenario: Sucessfully using code completion
     EPackage &lt;name&gt;
   '''
   val expectedProposals = args.first.trim.split(&quot;\r?\n&quot;).map[trim]
+  println(proposals)
   proposals =&gt; expectedProposals
 
 Scenario: Code completion for nested elements
   
   Given a backend for &quot;rtext/test/integration/model/test_metamodel.ect&quot;
-  And the backend is connected    
+  And the model is loaded
   When I invoke the code completion after &quot;EClass &quot;
   Then the proposals should be
   '''
@@ -140,13 +165,33 @@ Scenario: Code completion for nested elements
     instanceClassName: &lt;EString&gt;
   '''
 
+Scenario: Proposal signals backend currently loading
+  
+  Given a backend for &quot;rtext/test/integration/model/test_metamodel.ect&quot;
+  And the backend is busy
+    b.busy
+  When I invoke the code completion after &quot;EPackage StatemachineMM {\n&quot;
+  Then the proposals should be
+  '''
+    loading model
+  '''
+
+Scenario: Proposal signals backend not yet loaded
+  
+  Given a backend for &quot;rtext/test/integration/model/test_metamodel.ect&quot;
+  When I invoke the code completion after &quot;EPackage StatemachineMM {\n&quot;
+  Then the proposals should be
+  '''
+    model not yet loaded
+  '''
+
 Scenario: Proposal signals backend failure
   
   Given a backend for &quot;rtext/test/integration/model/test.crashing_backend&quot;
   When I invoke the code completion after &quot;EPackage StatemachineMM {\n&quot;
   Then the proposals should be
   '''
-    Backend not yet available
+    model not yet loaded
   '''
 </pre>
 						    </p></div>

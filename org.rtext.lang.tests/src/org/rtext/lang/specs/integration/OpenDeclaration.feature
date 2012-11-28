@@ -17,7 +17,7 @@ Feature: Finding the element declaration
    	hyperLinkDetector = new HyperlinkDetector([|return b.connector])
 
   Scenario: Open an hyperlink
-  Given the backend is connected
+  Given the model is loaded
    When I get the hyperlinks for "/StatemachineMM/State"
     	hyperlinks = hyperLinkDetector.detectHyperLinks(b.document, b.regionOf(args.first))
   Then it opens an editor for "test_metamodel.ect" 
@@ -25,7 +25,7 @@ Feature: Finding the element declaration
     Workbenches::activePage.activeEditor?.title should contain args.first
 
   Scenario: Hyperlink highlighting
-  Given the backend is connected
+  Given the model is loaded
   When I get the hyperlinks for "/StatemachineMM/State"
    Then the hyperlink text is "/StatemachineMM/State"
     	val region = hyperlinks.head.getHyperlinkRegion
@@ -36,6 +36,6 @@ Feature: Finding the element declaration
   	Given the backend is disconnected
   		b.connector.disconnect
   	When I get the hyperlinks for "/StatemachineMM/State"
-   	Then the hyperlink message is "backend not yet available"
+   	Then the hyperlink message is "model not yet loaded"
    		hyperlinks.head.hyperlinkText => args.first
   	

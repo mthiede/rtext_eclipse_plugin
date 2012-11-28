@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.mockito.stubbing.OngoingStubbing;
+import org.rtext.lang.specs.unit.backend.ConnectorSpec;
 
 @SuppressWarnings("all")
 @RunWith(ExampleGroupRunner.class)
@@ -17,7 +18,7 @@ import org.mockito.stubbing.OngoingStubbing;
 public class ConnectorConnectedSpec extends ConnectorSpec {
   @Test
   @Named("initially disconnected")
-  @Order(14)
+  @Order(15)
   public void _initiallyDisconnected() throws Exception {
     boolean _isConnected = this.subject.isConnected();
     boolean _doubleArrow = Should.operator_doubleArrow(Boolean.valueOf(_isConnected), Boolean.valueOf(false));
@@ -29,7 +30,7 @@ public class ConnectorConnectedSpec extends ConnectorSpec {
   
   @Test
   @Named("connected if process is running")
-  @Order(15)
+  @Order(16)
   public void _connectedIfProcessIsRunning() throws Exception {
     boolean _isRunning = this.processRunner.isRunning();
     OngoingStubbing<Boolean> _when = Mockito.<Boolean>when(Boolean.valueOf(_isRunning));
@@ -44,7 +45,7 @@ public class ConnectorConnectedSpec extends ConnectorSpec {
   
   @Test
   @Named("disconnected if process is not running")
-  @Order(16)
+  @Order(17)
   public void _disconnectedIfProcessIsNotRunning() throws Exception {
     boolean _isRunning = this.processRunner.isRunning();
     OngoingStubbing<Boolean> _when = Mockito.<Boolean>when(Boolean.valueOf(_isRunning));

@@ -1,7 +1,6 @@
 package org.rtext.lang.specs.integration;
 
 import java.util.List;
-
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.contentassist.ContentAssistEvent;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
@@ -9,6 +8,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Functions.Function0;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
+import org.eclipse.xtext.xbase.lib.InputOutput;
 import org.eclipse.xtext.xbase.lib.ListExtensions;
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure0;
 import org.hamcrest.StringDescription;
@@ -25,6 +25,7 @@ import org.junit.runner.RunWith;
 import org.rtext.lang.backend.Connector;
 import org.rtext.lang.editor.Connected;
 import org.rtext.lang.proposals.ContentAssistProcessor;
+import org.rtext.lang.specs.integration.CodeCompletionFeature;
 import org.rtext.lang.specs.util.BackendHelper;
 
 @RunWith(FeatureRunner.class)
@@ -58,10 +59,9 @@ public class CodeCompletionFeatureSucessfullyUsingCodeCompletion extends CodeCom
   
   @Test
   @Order(1)
-  @Named("And the backend is connected")
-  public void andTheBackendIsConnected() {
-    Connector _connector = this.b.getConnector();
-    _connector.connect();
+  @Named("And the model is loaded")
+  public void andTheModelIsLoaded() {
+    this.b.connect();
   }
   
   @Test
@@ -127,6 +127,7 @@ public class CodeCompletionFeatureSucessfullyUsingCodeCompletion extends CodeCom
         }
       };
     final List<String> expectedProposals = ListExtensions.<String, String>map(((List<String>)Conversions.doWrapArray(_split)), _function);
+    InputOutput.<List<String>>println(this.proposals);
     boolean _doubleArrow = Should.operator_doubleArrow(
       this.proposals, expectedProposals);
     Assert.assertTrue("\nExpected proposals => expectedProposals but"

@@ -15,8 +15,8 @@ Scenario: Sucessfully using code completion
 	
 	Given a backend for "rtext/test/integration/model/test_metamodel.ect"
 		b.startBackendFor(args.first.absolutPath)
-	And the backend is connected		
-		b.connector.connect 
+	And the model is loaded
+		b.connect
 	When I invoke the code completion after "  E"
 		proposalProvider = ContentAssistProcessor::create([|b.connector]) 
 		proposalProvider.assistSessionStarted(_)
@@ -35,12 +35,13 @@ Scenario: Sucessfully using code completion
 		EPackage <name>
 	'''
 	val expectedProposals = args.first.trim.split("\r?\n").map[trim]
+	println(proposals)
 	proposals => expectedProposals
 
 Scenario: Code completion for nested elements
 	
 	Given a backend for "rtext/test/integration/model/test_metamodel.ect"
-	And the backend is connected		
+	And the model is loaded
 	When I invoke the code completion after "EClass "
 	Then the proposals should be
 	'''
@@ -51,11 +52,31 @@ Scenario: Code completion for nested elements
 		instanceClassName: <EString>
 	'''
 
+Scenario: Proposal signals backend currently loading
+	
+	Given a backend for "rtext/test/integration/model/test_metamodel.ect"
+	And the backend is busy
+		b.busy
+	When I invoke the code completion after "EPackage StatemachineMM {\n"
+	Then the proposals should be
+	'''
+		loading model
+	'''
+
+Scenario: Proposal signals backend not yet loaded
+	
+	Given a backend for "rtext/test/integration/model/test_metamodel.ect"
+	When I invoke the code completion after "EPackage StatemachineMM {\n"
+	Then the proposals should be
+	'''
+		model not yet loaded
+	'''
+
 Scenario: Proposal signals backend failure
 	
 	Given a backend for "rtext/test/integration/model/test.crashing_backend"
 	When I invoke the code completion after "EPackage StatemachineMM {\n"
 	Then the proposals should be
 	'''
-		Backend not yet available
+		model not yet loaded
 	'''

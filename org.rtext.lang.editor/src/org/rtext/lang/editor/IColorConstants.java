@@ -11,7 +11,7 @@ import org.eclipse.swt.graphics.RGB;
 
 public interface IColorConstants {
 	RGB DEFAULT = new RGB(0, 0, 0);
-	RGB LABEL = new RGB(127, 0, 85);
+	RGB LABEL = new RGB(171, 48, 0);
 	RGB STRING = new RGB(42, 0, 255);
 	RGB IDENTIFIER = new RGB(0, 0, 0);
 	RGB NUMBER = new RGB(125, 125, 125);

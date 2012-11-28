@@ -1,7 +1,6 @@
 package org.rtext.lang.specs.unit.parser;
 
 import java.util.List;
-
 import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.swt.graphics.Color;

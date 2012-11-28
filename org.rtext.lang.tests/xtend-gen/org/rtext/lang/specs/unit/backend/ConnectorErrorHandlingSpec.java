@@ -1,7 +1,6 @@
 package org.rtext.lang.specs.unit.backend;
 
 import java.util.List;
-
 import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.hamcrest.StringDescription;
@@ -22,6 +21,7 @@ import org.rtext.lang.backend.Connection;
 import org.rtext.lang.commands.Callback;
 import org.rtext.lang.commands.Command;
 import org.rtext.lang.commands.Response;
+import org.rtext.lang.specs.unit.backend.ConnectorSpec;
 
 @SuppressWarnings("all")
 @RunWith(ExampleGroupRunner.class)

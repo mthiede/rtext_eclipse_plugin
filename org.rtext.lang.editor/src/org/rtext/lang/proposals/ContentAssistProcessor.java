@@ -151,20 +151,22 @@ public class ContentAssistProcessor implements IContentAssistProcessor,	IComplet
 			return emptyList();
 		}
 		Connector connector = getConnector();
-		if (connector  == null) {
-			proposals = errorProposal("Could not locate .rtext file");
-		}else if (!connector.isConnected()) {
-			new BackendConnectJob(getConnector()).schedule(500);
-			proposals = errorProposal("Backend not yet available");
+		if (connector == null) {
+			return null;
+		}
+		if(!connector.isConnected()){
+			new BackendConnectJob(getConnector()).schedule(100);
+			proposals = errorProposal("model not yet loaded");
+		}else if(connector.isBusy()){
+			proposals = errorProposal("loading model");
 		}else{
 			try {
 				proposals = connector.execute(new ProposalsCommand(createContext(document, offset)));
-			}catch (BackendException e) {
-				proposals = errorProposal("Cannot load backend");
-			}catch (TimeoutException e) {
-				proposals = errorProposal("Cannot load backend");
+			} catch (Exception e) {
+				proposals = errorProposal("Backend not yet available");
 			}
 		}
+		
 		return proposals.getOptions();
 	}
 

@@ -38,6 +38,7 @@ public class Connector {
 		}
 
 		public void handleResponse(T response) {
+			isBusy = false;
 			delegate.handleResponse(response);
 		}
 
@@ -53,6 +54,7 @@ public class Connector {
 	private final ConnectorConfig connectorConfig;
 	private BackendStarter processRunner;
 	private Connection connection;
+	private volatile boolean isBusy = false;
 
 	private Callback<LoadedModel> loadModelCallBack;
 	
@@ -92,6 +94,7 @@ public class Connector {
 
 	private <T extends Response> void sendRequest(Command<T> command, Callback<T> callback) {
 		try{
+			isBusy = true;
 			connection.sendRequest(command, wrap(callback));
 		}catch(Throwable e){
 			disconnect();
@@ -138,5 +141,9 @@ public class Connector {
 
 	public boolean isConnected(){
 		return processRunner.isRunning();
+	}
+
+	public boolean isBusy(){
+		return isBusy;
 	}
 }

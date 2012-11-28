@@ -49,7 +49,7 @@
 <div><h3 class="scenario notrun"  id="Scenario_Open_an_hyperlink">Scenario: Open an hyperlink
 </h3>
 <ul>
-<li><span class="step notrun"><p>Given the backend is connected</p></span>
+<li><span class="step notrun"><p>Given the model is loaded</p></span>
 </li>
 <li><span class="step notrun"><p>When I get the hyperlinks for <code>"/StatemachineMM/State"</code></p></span>
 </li>
@@ -60,7 +60,7 @@
 <div><h3 class="scenario notrun"  id="Scenario_Hyperlink_highlighting">Scenario: Hyperlink highlighting
 </h3>
 <ul>
-<li><span class="step notrun"><p>Given the backend is connected</p></span>
+<li><span class="step notrun"><p>Given the model is loaded</p></span>
 </li>
 <li><span class="step notrun"><p>When I get the hyperlinks for <code>"/StatemachineMM/State"</code></p></span>
 </li>
@@ -75,7 +75,7 @@
 </li>
 <li><span class="step notrun"><p>When I get the hyperlinks for <code>"/StatemachineMM/State"</code></p></span>
 </li>
-<li><span class="step notrun"><p>Then the hyperlink message is <code>"backend not yet available"</code></p></span>
+<li><span class="step notrun"><p>Then the hyperlink message is <code>"model not yet loaded"</code></p></span>
 </li>
 </ul>
 </div>
@@ -103,7 +103,7 @@ Feature: Finding the element declaration
      hyperLinkDetector = new HyperlinkDetector([|return b.connector])
 
   Scenario: Open an hyperlink
-  Given the backend is connected
+  Given the model is loaded
    When I get the hyperlinks for &quot;/StatemachineMM/State&quot;
       hyperlinks = hyperLinkDetector.detectHyperLinks(b.document, b.regionOf(args.first))
   Then it opens an editor for &quot;test_metamodel.ect&quot; 
@@ -111,7 +111,7 @@ Feature: Finding the element declaration
     Workbenches::activePage.activeEditor?.title should contain args.first
 
   Scenario: Hyperlink highlighting
-  Given the backend is connected
+  Given the model is loaded
   When I get the hyperlinks for &quot;/StatemachineMM/State&quot;
    Then the hyperlink text is &quot;/StatemachineMM/State&quot;
       val region = hyperlinks.head.getHyperlinkRegion
@@ -122,7 +122,7 @@ Feature: Finding the element declaration
     Given the backend is disconnected
       b.connector.disconnect
     When I get the hyperlinks for &quot;/StatemachineMM/State&quot;
-     Then the hyperlink message is &quot;backend not yet available&quot;
+     Then the hyperlink message is &quot;model not yet loaded&quot;
        hyperlinks.head.hyperlinkText =&gt; args.first
 </pre>
 						    </p></div>

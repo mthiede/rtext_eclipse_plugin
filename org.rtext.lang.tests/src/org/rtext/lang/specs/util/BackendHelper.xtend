@@ -79,5 +79,15 @@ class BackendHelper {
 	def regionOf(String string){
 		val offset = document.get.indexOf(string)
 		new Region(offset+1, string.length)
+	}
+	def connect(){
+		connector.connect
+		waitUntil[!connector.busy]
 	}
+	
+	def busy(){
+		connector.connect
+	}
+	
+
 }

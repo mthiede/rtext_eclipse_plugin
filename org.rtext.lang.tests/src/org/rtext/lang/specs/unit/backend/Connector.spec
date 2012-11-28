@@ -137,6 +137,20 @@ describe Connector {
 		}
 	}
 	
+	context "Busy"{
+		fact "if waiting for response"{
+			subject.busy => false
+			doAnswer[
+				callback = getArguments().get(1) as Callback
+      		].when(connection).sendRequest(<Command>any, <Callback>any)
+
+      		subject.execute(anyCommand, callback)
+			subject.busy => true
+			callback.handleResponse(new Response(0, ""))
+      		subject.busy => false
+		}
+	}
+	
 	context "Connected"{
 		fact "initially disconnected"{
 			subject.connected => false

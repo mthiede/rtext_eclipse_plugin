@@ -47,7 +47,7 @@ public class SyntaxScanner extends AbstractRTextParser<IToken> implements IToken
 
 	@Override
 	protected IToken createCommand() {
-		return createToken(IColorConstants.COMMAND);
+		return createBoldToken(IColorConstants.COMMAND);
 	}
 
 	@Override

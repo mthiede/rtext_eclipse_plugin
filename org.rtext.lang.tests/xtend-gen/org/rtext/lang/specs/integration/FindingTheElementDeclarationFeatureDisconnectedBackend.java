@@ -1,7 +1,6 @@
 package org.rtext.lang.specs.integration;
 
 import java.util.List;
-
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
@@ -18,6 +17,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.rtext.lang.backend.Connector;
+import org.rtext.lang.specs.integration.FindingTheElementDeclarationFeatureBackground;
 
 @RunWith(FeatureRunner.class)
 @Named("Scenario: Disconnected backend")
@@ -67,9 +67,9 @@ public class FindingTheElementDeclarationFeatureDisconnectedBackend extends Find
   
   @Test
   @Order(5)
-  @Named("Then the hyperlink message is \\\"backend not yet available\\\"")
-  public void thenTheHyperlinkMessageIsBackendNotYetAvailable() {
-    StepArguments _stepArguments = new StepArguments("backend not yet available");
+  @Named("Then the hyperlink message is \\\"model not yet loaded\\\"")
+  public void thenTheHyperlinkMessageIsModelNotYetLoaded() {
+    StepArguments _stepArguments = new StepArguments("model not yet loaded");
     final StepArguments args = _stepArguments;
     IHyperlink _head = IterableExtensions.<IHyperlink>head(this.hyperlinks);
     String _hyperlinkText = _head.getHyperlinkText();

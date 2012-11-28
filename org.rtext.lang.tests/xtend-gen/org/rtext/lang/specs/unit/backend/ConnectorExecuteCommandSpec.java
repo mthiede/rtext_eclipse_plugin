@@ -21,6 +21,7 @@ import org.rtext.lang.commands.LoadModelCallback;
 import org.rtext.lang.commands.LoadModelCommand;
 import org.rtext.lang.commands.LoadedModel;
 import org.rtext.lang.commands.Response;
+import org.rtext.lang.specs.unit.backend.ConnectorSpec;
 
 @SuppressWarnings("all")
 @RunWith(ExampleGroupRunner.class)

@@ -54,12 +54,15 @@ public class HyperlinkDetector implements IHyperlinkDetector {
 		}
 		if(!connector.isConnected()){
 			startBackend(connector);
-			return createErrorLink("backend not yet available", region);
+			return createErrorLink("model not yet loaded", region);
+		}
+		if(connector.isBusy()){
+			return createErrorLink("loading model", region);
 		}
 		try {
 			return requestReferenceTargets(connector, document, region);
 		} catch (Exception e) {
-			return createErrorLink("backend not yet available", region);
+			return createErrorLink("model not yet loaded", region);
 		}
 	}
 
@@ -72,7 +75,7 @@ public class HyperlinkDetector implements IHyperlinkDetector {
 			return;
 		}
 		backendConnectJob = new BackendConnectJob(connector);
-		backendConnectJob.schedule(500);
+		backendConnectJob.schedule(100);
 	}
 
 	private IHyperlink[] createErrorLink(String message, IRegion region) {
