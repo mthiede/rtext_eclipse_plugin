@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 E.S.R. Labs and others.
+b  * Copyright (c) 2012 E.S.R. Labs and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the MIT License
  * which accompanies this distribution, and is available at
@@ -165,7 +165,7 @@ public class OpenElementDialog extends SelectionStatusDialog  {
 		if (requestSentDate == null || (new Date().getTime() - requestSentDate.getTime()) > 10000) {
 			Connector bc = editor.getConnector();
 			if (bc != null) {
-				bc.execute(new FindElementsCommand(lastRequestedPattern), callback);
+				bc.execute(new FindElementsCommand(pattern.getText()), callback);
 				requestSentDate = new Date();
 				lastRequestedPattern = pattern.getText();
 				indicateStartSearch();
