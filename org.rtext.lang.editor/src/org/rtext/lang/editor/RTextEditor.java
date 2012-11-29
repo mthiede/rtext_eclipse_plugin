@@ -46,6 +46,7 @@ public class RTextEditor extends TextEditor implements Connected{
 	private FoldingStructureProvider foldingStructureProvider = new FoldingStructureProvider();
 	private final ConnectorProvider connectorProvider;
 	private ConnectorConfigProvider configProvider;
+	public static final String RTEXT_EDITOR_ID = "org.rtext.lang.Editor";
 	
 	public RTextEditor() {
 		this(RTextPlugin.getDefault().getConnectorProvider(), FileSystemBasedConfigProvider.create());
@@ -60,14 +61,18 @@ public class RTextEditor extends TextEditor implements Connected{
 	}
 
 	public void createPartControl(Composite parent) {
-		IContextService cs = (IContextService) getSite().getService(
-				IContextService.class);
+		IContextService cs = (IContextService) getSite().getService(IContextService.class);
 		cs.activateContext("org.rtext.lang.EditorContext");
 		super.createPartControl(parent);
 		ProjectionViewer viewer = (ProjectionViewer) getSourceViewer();
 		projectionSupport = new ProjectionSupport(viewer, getAnnotationAccess(), getSharedColors());
 		projectionSupport.install();
 		installFoldingSupport(viewer);
+	}
+	
+	@Override
+	protected void initializeKeyBindingScopes() {
+		setKeyBindingScopes(new String[]{"org.rtext.lang.EditorContext", "org.eclipse.ui.textEditorScope"});
 	}
 	
 	public void dispose() {
@@ -81,16 +86,14 @@ public class RTextEditor extends TextEditor implements Connected{
 		IHandlerService hs = (IHandlerService) getSite().getService(IHandlerService.class);
 		hs.activateHandler("org.rtext.lang.OpenElementCommand",	new OpenElementHandler(this));
 		ResourceBundle bundle = RTextPlugin.getDefault().getResourceBundle();
-		IAction a = new TextOperationAction(bundle, "ContentAssistProposal.",
-				this, ISourceViewer.CONTENTASSIST_PROPOSALS);
-
+		
+		IAction a = new TextOperationAction(bundle, "ContentAssistProposal.", this, ISourceViewer.CONTENTASSIST_PROPOSALS);
 		a.setActionDefinitionId(ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS);
 		setAction("ContentAssistProposal", a);
 	}
 
 	protected void editorSaved() {
 		super.editorSaved();
-		new ModelLoadJob(getConnector(), currentConfig()).schedule(100);
 	}
 	
 	private IPath getInputPath() {
