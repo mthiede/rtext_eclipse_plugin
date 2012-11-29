@@ -68,11 +68,10 @@ public class ViewerConfiguration extends SourceViewerConfiguration {
 	{
 	    ContentAssistant assistant = new ContentAssistant();
 	    ContentAssistProcessor tagContentAssistProcessor = ContentAssistProcessor.create(editor);
-	    assistant.addCompletionListener(tagContentAssistProcessor);
-	    assistant.setContentAssistProcessor(tagContentAssistProcessor,
-	    		IDocument.DEFAULT_CONTENT_TYPE);
+	    assistant.enableAutoInsert(true);
+	    assistant.setContentAssistProcessor(tagContentAssistProcessor, IDocument.DEFAULT_CONTENT_TYPE);
 	    assistant.enableAutoActivation(true);
-	    assistant.setAutoActivationDelay(500);
+	    assistant.setAutoActivationDelay(0);
 	    assistant.setProposalPopupOrientation(IContentAssistant.CONTEXT_INFO_BELOW);
 	    assistant.setContextInformationPopupOrientation(IContentAssistant.CONTEXT_INFO_BELOW);
 	    return assistant;

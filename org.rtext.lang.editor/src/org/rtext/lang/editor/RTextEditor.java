@@ -12,7 +12,7 @@ import java.util.ResourceBundle;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.IVerticalRuler;
 import org.eclipse.jface.text.source.projection.ProjectionSupport;
@@ -24,8 +24,8 @@ import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.ide.FileStoreEditorInput;
+import org.eclipse.ui.texteditor.ContentAssistAction;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
-import org.eclipse.ui.texteditor.TextOperationAction;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.rtext.lang.RTextPlugin;
 import org.rtext.lang.backend.Connector;
@@ -36,7 +36,6 @@ import org.rtext.lang.backend.FileSystemBasedConfigProvider;
 import org.rtext.lang.document.IRTextDocument;
 import org.rtext.lang.document.RTextDocumentProvider;
 import org.rtext.lang.document.RTextDocumentUtil;
-import org.rtext.lang.workspace.ModelLoadJob;
 
 public class RTextEditor extends TextEditor implements Connected{
 
@@ -87,9 +86,11 @@ public class RTextEditor extends TextEditor implements Connected{
 		hs.activateHandler("org.rtext.lang.OpenElementCommand",	new OpenElementHandler(this));
 		ResourceBundle bundle = RTextPlugin.getDefault().getResourceBundle();
 		
-		IAction a = new TextOperationAction(bundle, "ContentAssistProposal.", this, ISourceViewer.CONTENTASSIST_PROPOSALS);
-		a.setActionDefinitionId(ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS);
-		setAction("ContentAssistProposal", a);
+		Action action = new ContentAssistAction(bundle, "ContentAssistProposal.", this); 
+		String id = ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS;
+		action.setActionDefinitionId(id);
+		setAction("ContentAssistProposal", action); 
+		markAsStateDependentAction("ContentAssistProposal", true);
 	}
 
 	protected void editorSaved() {
