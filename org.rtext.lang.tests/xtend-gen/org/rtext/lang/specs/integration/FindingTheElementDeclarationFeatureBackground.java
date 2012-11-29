@@ -17,7 +17,6 @@ import org.rtext.lang.editor.HyperlinkDetector;
 import org.rtext.lang.proposals.ContentAssistProcessor;
 import org.rtext.lang.specs.integration.FindingTheElementDeclarationFeature;
 import org.rtext.lang.specs.util.BackendHelper;
-import org.rtext.lang.specs.util.TestFileLocator;
 import org.rtext.lang.specs.util.WorkspaceHelper;
 
 @RunWith(FeatureRunner.class)
@@ -33,22 +32,6 @@ public class FindingTheElementDeclarationFeatureBackground extends FindingTheEle
     public WorkspaceHelper apply() {
       WorkspaceHelper _workspaceHelper = new WorkspaceHelper();
       return _workspaceHelper;
-    }
-  }.apply();
-  
-  @Extension
-  public TestFileLocator _testFileLocator = new Function0<TestFileLocator>() {
-    public TestFileLocator apply() {
-      TestFileLocator _default = TestFileLocator.getDefault();
-      return _default;
-    }
-  }.apply();
-  
-  @Extension
-  public BackendHelper _backendHelper = new Function0<BackendHelper>() {
-    public BackendHelper apply() {
-      BackendHelper _backendHelper = new BackendHelper();
-      return _backendHelper;
     }
   }.apply();
   
@@ -74,7 +57,7 @@ public class FindingTheElementDeclarationFeatureBackground extends FindingTheEle
     final StepArguments args = _stepArguments;
     String _first = JnarioIterableExtensions.<String>first(args);
     String _second = JnarioIterableExtensions.<String>second(args);
-    String _absolutPath = this._backendHelper.absolutPath(_second);
+    String _absolutPath = this.b.absolutPath(_second);
     this._workspaceHelper.createProject(_first, _absolutPath);
   }
   

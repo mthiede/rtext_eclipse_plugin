@@ -1,4 +1,4 @@
-package org.rtext.lang.util;
+package org.rtext.lang.workspace;
 
 import org.eclipse.core.runtime.jobs.Job;
 

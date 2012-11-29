@@ -75,16 +75,18 @@ public final class CliBackendStarter implements BackendStarter {
 	private Process process;
 	private OutputMonitor outputMonitor;
 	private InputStream inputStream;
-	private PortParser portParser;
-	private OutputHandler[] outputHandlers;
+	private final PortParser portParser;
+	private final OutputHandler[] outputHandlers;
 	private ShutdownHook shutdownHook;
+	private final ConnectorConfig connectorConfig;
 	
-	public CliBackendStarter(PortParser portParser, OutputHandler... outputHandlers) {
+	public CliBackendStarter(PortParser portParser, ConnectorConfig connectorConfig, OutputHandler... outputHandlers) {
 		this.portParser = portParser;
 		this.outputHandlers = outputHandlers;
+		this.connectorConfig = connectorConfig;
 	}
 
-	public void startProcess(ConnectorConfig connectorConfig) throws TimeoutException {
+	public void startProcess() throws TimeoutException {
 		try {
 			startRTextProcess(connectorConfig);
 			handleOutputStream();
@@ -171,6 +173,6 @@ public final class CliBackendStarter implements BackendStarter {
 	}
 
 	public static BackendStarter create(ConnectorConfig connectorConfig) {
-		return new CliBackendStarter(new PortParser(), new RTextConsole(connectorConfig), new SystemOutDebug());
+		return new CliBackendStarter(new PortParser(), connectorConfig, new RTextConsole(connectorConfig), new SystemOutDebug());
 	}
 }

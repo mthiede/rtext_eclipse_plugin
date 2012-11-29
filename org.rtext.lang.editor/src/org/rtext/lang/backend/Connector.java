@@ -7,6 +7,8 @@
  *******************************************************************************/
 package org.rtext.lang.backend;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.TimeoutException;
 
 import org.rtext.lang.commands.Callback;
@@ -18,6 +20,7 @@ import org.rtext.lang.commands.Progress;
 import org.rtext.lang.commands.Response;
 import org.rtext.lang.commands.SynchronousCallBack;
 import org.rtext.lang.util.Exceptions;
+import org.rtext.lang.backend.ConnectorListener;
 
 public class Connector {
 	
@@ -51,22 +54,22 @@ public class Connector {
 	
 	private static final String ADDRESS = "127.0.0.1";
 	
-	private final ConnectorConfig connectorConfig;
 	private BackendStarter processRunner;
 	private Connection connection;
 	private volatile boolean isBusy = false;
 
 	private Callback<LoadedModel> loadModelCallBack;
+
+	private Set<ConnectorListener> listeners = new HashSet<ConnectorListener>();
 	
 	public static Connector create(ConnectorConfig connectorConfig){
 		BackendStarter backendStarter = CliBackendStarter.create(connectorConfig);
 		LoadModelCallback modelCallBack = LoadModelCallback.create(connectorConfig);
 		TcpClient tcpClient = TcpClient.create();
-		return new Connector(connectorConfig, backendStarter, tcpClient, modelCallBack);
+		return new Connector(backendStarter, tcpClient, modelCallBack);
 	}
 	
-	public Connector(ConnectorConfig connectorConfig, BackendStarter processRunner, Connection connection, Callback<LoadedModel> loadModelCallBack) {
-		this.connectorConfig = connectorConfig;
+	public Connector(BackendStarter processRunner, Connection connection, Callback<LoadedModel> loadModelCallBack) {
 		this.processRunner = processRunner;
 		this.connection = connection;
 		this.loadModelCallBack = loadModelCallBack;
@@ -96,6 +99,7 @@ public class Connector {
 		try{
 			isBusy = true;
 			connection.sendRequest(command, wrap(callback));
+			notifyListenersCommand(command.toString());
 		}catch(Throwable e){
 			disconnect();
 			Exceptions.rethrow(e);
@@ -108,8 +112,10 @@ public class Connector {
 
 	private boolean startBackend()  {
 		try{
-			processRunner.startProcess(connectorConfig);
-			connection.connect(ADDRESS, processRunner.getPort());
+			processRunner.startProcess();
+			int port = processRunner.getPort();
+			connection.connect(ADDRESS, port);
+			notifyListenersAboutConnect(ADDRESS, port);
 			return true;
 		}catch(Throwable e){
 			disconnect();
@@ -137,6 +143,7 @@ public class Connector {
 	public void disconnect(){
 		processRunner.stop();
 		connection.close();
+		notifyListenersAboutDisconnect();
 	}
 
 	public boolean isConnected(){
@@ -145,5 +152,31 @@ public class Connector {
 
 	public boolean isBusy(){
 		return isBusy;
+	}
+	
+	private void notifyListenersAboutConnect(String address, int port) {
+		for (ConnectorListener listener : listeners) {
+			listener.connect(address, port);
+		}
+	}
+	
+	private void notifyListenersCommand(String command) {
+		for (ConnectorListener listener : listeners) {
+			listener.executeCommand(command);
+		}
+	}
+	
+	private void notifyListenersAboutDisconnect() {
+		for (ConnectorListener listener : listeners) {
+			listener.disconnect();
+		}
+	}
+
+	public void addListener(ConnectorListener listener){
+		listeners.add(listener);
+	}
+
+	public void removeListener(ConnectorListener listener){
+		listeners.remove(listener);
 	}
 }

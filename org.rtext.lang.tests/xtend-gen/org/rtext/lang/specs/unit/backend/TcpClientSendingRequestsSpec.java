@@ -1,8 +1,8 @@
 package org.rtext.lang.specs.unit.backend;
 
+import com.google.common.base.Objects;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.ObjectExtensions;
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
@@ -20,11 +20,10 @@ import org.rtext.lang.backend.BackendException;
 import org.rtext.lang.backend.TcpClientListener;
 import org.rtext.lang.commands.Progress;
 import org.rtext.lang.commands.Response;
+import org.rtext.lang.specs.unit.backend.TcpClientSpec;
 import org.rtext.lang.specs.util.Commands;
 import org.rtext.lang.specs.util.Wait;
 import org.rtext.lang.specs.util.WaitConfig;
-
-import com.google.common.base.Objects;
 
 @SuppressWarnings("all")
 @RunWith(ExampleGroupRunner.class)

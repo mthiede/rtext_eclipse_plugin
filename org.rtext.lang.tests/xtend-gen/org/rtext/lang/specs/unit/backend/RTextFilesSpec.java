@@ -1,7 +1,6 @@
 package org.rtext.lang.specs.unit.backend;
 
 import java.io.File;
-
 import org.eclipse.xtext.xbase.lib.Functions.Function0;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.hamcrest.StringDescription;
@@ -23,6 +22,7 @@ import org.rtext.lang.backend.RTextFile;
 import org.rtext.lang.backend.RTextFileFinder;
 import org.rtext.lang.backend.RTextFileParser;
 import org.rtext.lang.backend.RTextFiles;
+import org.rtext.lang.specs.unit.backend.RTextFilesFindingRtextFilesSpec;
 import org.rtext.lang.specs.util.Files;
 import org.rtext.lang.specs.util.MockInjector;
 

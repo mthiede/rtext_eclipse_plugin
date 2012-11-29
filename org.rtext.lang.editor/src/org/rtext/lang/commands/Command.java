@@ -51,8 +51,7 @@ public class Command<T extends Response> {
 
 	@Override
 	public String toString() {
-		return "Command [invocationId=" + invocationId + ", type=" + type
-				+ ", command=" + command + "]";
+		return "Command [" + command + "]";
 	}
 
 	@Override
@@ -85,4 +84,6 @@ public class Command<T extends Response> {
 			return false;
 		return true;
 	}
+	
+	
 }

@@ -56,7 +56,7 @@ public class RTextFileChangeListenerSpec {
   public void before() throws Exception {
     RTextPlugin _default = RTextPlugin.getDefault();
     _default.stopListeningForRTextFileChanges();
-    RTextFileChangeListenerSpec._workspaceHelper.createProject("test");
+    RTextFileChangeListenerSpec._workspaceHelper.createProject("rtext_test");
     RTextFileChangeListener _rTextFileChangeListener = new RTextFileChangeListener(this.connectorProvider);
     this.subject = _rTextFileChangeListener;
     ConnectorConfig _any = Matchers.<ConnectorConfig>any(ConnectorConfig.class);
@@ -128,13 +128,9 @@ public class RTextFileChangeListenerSpec {
   
   @After
   public void after() throws Exception {
+    RTextFileChangeListenerSpec._workspaceHelper.cleanUpWorkspace();
     IWorkspace _workspace = RTextFileChangeListenerSpec._workspaceHelper.getWorkspace();
     _workspace.removeResourceChangeListener(this.subject);
-  }
-  
-  @After
-  public void after2() throws Exception {
-    RTextFileChangeListenerSpec._workspaceHelper.cleanUpWorkspace();
     RTextPlugin _default = RTextPlugin.getDefault();
     _default.startListeningForRTextFileChanges();
   }
@@ -147,11 +143,11 @@ public class RTextFileChangeListenerSpec {
   }
   
   public IFile rtextFile() {
-    IFile _file = RTextFileChangeListenerSpec._workspaceHelper.file("test/.rtext");
+    IFile _file = RTextFileChangeListenerSpec._workspaceHelper.file("rtext_test/.rtext");
     return _file;
   }
   
-  public void createRTextFile() {
+  public IFile createRTextFile() {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("*.ect:");
     _builder.newLine();
@@ -161,6 +157,7 @@ public class RTextFileChangeListenerSpec {
     _builder.newLine();
     _builder.append("ruby -I../../../../rgen/lib -I ../../../lib ../ecore_editor.rb \"*.ect2\" 2>&1");
     _builder.newLine();
-    RTextFileChangeListenerSpec._workspaceHelper.writeToFile(_builder, "test/.rtext");
+    IFile _writeToFile = RTextFileChangeListenerSpec._workspaceHelper.writeToFile(_builder, "rtext_test/.rtext");
+    return _writeToFile;
   }
 }

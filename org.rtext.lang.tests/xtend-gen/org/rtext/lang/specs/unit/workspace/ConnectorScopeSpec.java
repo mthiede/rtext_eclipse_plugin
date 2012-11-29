@@ -3,7 +3,6 @@ package org.rtext.lang.specs.unit.workspace;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
@@ -50,7 +49,7 @@ public class ConnectorScopeSpec {
           it.file("file2.bbb", "content");
         }
       };
-    IProject _createProject = this._workspaceHelper.createProject("test", _function);
+    IProject _createProject = this._workspaceHelper.createProject("scope_test", _function);
     this.project = _createProject;
     ArrayList<String> _scope = this.scope(".rtext");
     List<String> _list = JnarioCollectionLiterals.<String>list("file1.aaa");
@@ -72,7 +71,7 @@ public class ConnectorScopeSpec {
           it.file("folder/file2.bbb", "content");
         }
       };
-    IProject _createProject = this._workspaceHelper.createProject("test", _function);
+    IProject _createProject = this._workspaceHelper.createProject("scope_test", _function);
     this.project = _createProject;
     ArrayList<String> _scope = this.scope(".rtext");
     List<String> _list = JnarioCollectionLiterals.<String>list("file1.aaa");
@@ -93,7 +92,7 @@ public class ConnectorScopeSpec {
           it.file("file2.bbb", "content");
         }
       };
-    IProject _createProject = this._workspaceHelper.createProject("test", _function);
+    IProject _createProject = this._workspaceHelper.createProject("scope_test", _function);
     this.project = _createProject;
     ArrayList<String> _scope = this.scope("../../.rtext");
     List<String> _list = JnarioCollectionLiterals.<String>list("file1.aaa");

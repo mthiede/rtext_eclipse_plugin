@@ -71,14 +71,14 @@ verify(connection, times(2)).close</pre>
 <ul><li><p id="Starts_backend_process" class="example notrun"><strong>Starts backend process</strong></p>
 <pre class="prettyprint lang-spec linenums">
 subject.execute(anyCommand, callback)
-verify(processRunner).startProcess(config)</pre>
+verify(processRunner).startProcess()</pre>
 </li><li><p id="Backend_process_is_started_only_once" class="example notrun"><strong>Backend process is started only once</strong></p>
 <pre class="prettyprint lang-spec linenums">
 subject.execute(anyCommand, callback)
 when(processRunner.isRunning).thenReturn(true)
 
 subject.execute(anyCommand, callback)
-verify(processRunner, times(1)).startProcess(config)</pre>
+verify(processRunner, times(1)).startProcess()</pre>
 </li><li><p id="Connects_to_127_0_0_1_on_specified_port" class="example notrun"><strong>Connects to 127.0.0.1 on specified port</strong></p>
 <pre class="prettyprint lang-spec linenums">
 subject.execute(anyCommand, callback)
@@ -113,7 +113,7 @@ verify(connection).sendRequest(isA(typeof(LoadModelCommand)), any)</pre>
 subject.execute(anyCommand, callback)
 verify(connection).sendRequest(eq(anyCommand), any)</pre>
 </li></ul>
-<h3 class="exampleGroup pending"  id="Busy">Busy</h3>
+<h3 class="exampleGroup notrun"  id="Busy">Busy</h3>
 <ul><li><p id="if_waiting_for_response" class="example notrun"><strong>if waiting for response</strong></p>
 <pre class="prettyprint lang-spec linenums">
 subject.busy =&gt; false
@@ -149,6 +149,25 @@ verify(connection).close</pre>
 subject.disconnect
 verify(processRunner).stop</pre>
 </li></ul>
+<h3 class="exampleGroup notrun"  id="listener">Listener</h3>
+<ul><li><p id="notifies_connect" class="example notrun"><strong>notifies connect</strong></p>
+<pre class="prettyprint lang-spec linenums">
+subject.connect()
+verify(listener).connect(ADDRESS, PORT)</pre>
+</li><li><p id="notifies_disconnect" class="example notrun"><strong>notifies disconnect</strong></p>
+<pre class="prettyprint lang-spec linenums">
+subject.disconnect()
+verify(listener).disconnect</pre>
+</li><li><p id="notifies_command_send" class="example notrun"><strong>notifies command send</strong></p>
+<pre class="prettyprint lang-spec linenums">
+subject.execute(ANY_COMMAND, callback)
+verify(listener).executeCommand(ANY_COMMAND.toString)</pre>
+</li><li><p id="removes_listeners" class="example notrun"><strong>removes listeners</strong></p>
+<pre class="prettyprint lang-spec linenums">
+subject.removeListener(listener)
+subject.disconnect()
+verify(listener, never).disconnect</pre>
+</li></ul>
 							</div>
 						    <div class="tab-pane" id="source">
 						    	<h3>Connector.spec</h3>
@@ -176,6 +195,7 @@ import org.rtext.lang.commands.LoadModelCallback
 import static org.mockito.Matchers.*
 import static org.mockito.Mockito.*
 import static org.rtext.lang.specs.util.Commands.*
+import org.rtext.lang.backend.ConnectorListener
 
 @CreateWith(typeof(MockInjector))
 describe Connector {
@@ -187,6 +207,7 @@ describe Connector {
   @Mock Callback&lt;LoadedModel&gt; loadedModelCallback
 
   val PORT = 1234
+  val ADDRESS = &quot;127.0.0.1&quot;
   val anyCommand = ANY_COMMAND
   val otherCommand = OTHER_COMMAND
   val COMMAND = &quot;cmd&quot;
@@ -197,7 +218,7 @@ describe Connector {
   before {
     executionDir = root
     config = new ConnectorConfig(executionDir, COMMAND, &quot;*.*&quot;)
-    subject = new Connector(config, processRunner, connection, loadedModelCallback)
+    subject = new Connector(processRunner, connection, loadedModelCallback)
     when(processRunner.getPort).thenReturn(PORT)
   }
   
@@ -242,7 +263,7 @@ describe Connector {
     
     fact &quot;Starts backend process&quot;{
       subject.execute(anyCommand, callback)
-      verify(processRunner).startProcess(config)
+      verify(processRunner).startProcess()
     }
     
     fact &quot;Backend process is started only once&quot;{
@@ -250,7 +271,7 @@ describe Connector {
       when(processRunner.isRunning).thenReturn(true)
       
       subject.execute(anyCommand, callback)
-      verify(processRunner, times(1)).startProcess(config)
+      verify(processRunner, times(1)).startProcess()
     }
     
     fact &quot;Connects to 127.0.0.1 on specified port&quot;{
@@ -333,6 +354,33 @@ describe Connector {
     fact &quot;stops process runner&quot;{
       subject.disconnect
       verify(processRunner).stop
+    }
+  }
+  
+  context &quot;listener&quot;{
+    @Mock ConnectorListener listener
+    
+    before subject.addListener(listener)
+    
+    fact &quot;notifies connect&quot;{
+      subject.connect()
+      verify(listener).connect(ADDRESS, PORT)
+    }
+    
+    fact &quot;notifies disconnect&quot;{
+      subject.disconnect()
+      verify(listener).disconnect
+    }
+    
+    fact &quot;notifies command send&quot;{
+      subject.execute(ANY_COMMAND, callback)
+      verify(listener).executeCommand(ANY_COMMAND.toString)
+    }
+    
+    fact &quot;removes listeners&quot;{
+      subject.removeListener(listener)
+      subject.disconnect()
+      verify(listener, never).disconnect
     }
   }
   

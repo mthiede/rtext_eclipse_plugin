@@ -27,10 +27,11 @@ import org.rtext.lang.specs.unit.backend.ConnectorConnectedSpec;
 import org.rtext.lang.specs.unit.backend.ConnectorDisconnectSpec;
 import org.rtext.lang.specs.unit.backend.ConnectorErrorHandlingSpec;
 import org.rtext.lang.specs.unit.backend.ConnectorExecuteCommandSpec;
+import org.rtext.lang.specs.unit.backend.ConnectorListenerSpec;
 import org.rtext.lang.specs.util.Commands;
 import org.rtext.lang.specs.util.MockInjector;
 
-@Contains({ ConnectorErrorHandlingSpec.class, ConnectorExecuteCommandSpec.class, ConnectorBusySpec.class, ConnectorConnectedSpec.class, ConnectorDisconnectSpec.class })
+@Contains({ ConnectorErrorHandlingSpec.class, ConnectorExecuteCommandSpec.class, ConnectorBusySpec.class, ConnectorConnectedSpec.class, ConnectorDisconnectSpec.class, ConnectorListenerSpec.class })
 @SuppressWarnings("all")
 @RunWith(ExampleGroupRunner.class)
 @Named("Connector")
@@ -61,6 +62,8 @@ public class ConnectorSpec {
   
   final int PORT = 1234;
   
+  final String ADDRESS = "127.0.0.1";
+  
   final Command<Response> anyCommand = Commands.ANY_COMMAND;
   
   final Command<Response> otherCommand = Commands.OTHER_COMMAND;
@@ -77,7 +80,7 @@ public class ConnectorSpec {
     this.executionDir = _root;
     ConnectorConfig _connectorConfig = new ConnectorConfig(this.executionDir, this.COMMAND, "*.*");
     this.config = _connectorConfig;
-    Connector _connector = new Connector(this.config, this.processRunner, this.connection, this.loadedModelCallback);
+    Connector _connector = new Connector(this.processRunner, this.connection, this.loadedModelCallback);
     this.subject = _connector;
     int _port = this.processRunner.getPort();
     OngoingStubbing<Integer> _when = Mockito.<Integer>when(Integer.valueOf(_port));

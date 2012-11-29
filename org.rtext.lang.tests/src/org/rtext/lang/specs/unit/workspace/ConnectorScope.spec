@@ -16,7 +16,7 @@ describe ConnectorScope{
 	IProject project
 	
 	fact "Contains files in same directory"{
-		project = createProject("test")[
+		project = createProject("scope_test")[
 			file("file1.aaa", "content")
 			file("file2.bbb", "content")
 		]
@@ -24,7 +24,7 @@ describe ConnectorScope{
 	}
 	
 	fact "Contains files in subdirectory directory"{
-		project = createProject("test")[
+		project = createProject("scope_test")[
 			folder("folder")
 			file("folder/file1.aaa", "content")
 			file("folder/file2.bbb", "content")
@@ -33,7 +33,7 @@ describe ConnectorScope{
 	}
 	
 	fact "Contains files in project"{
-		project = createProject("test")[
+		project = createProject("scope_test")[
 			file("file1.aaa", "content")
 			file("file2.bbb", "content")
 		]

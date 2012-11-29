@@ -4,7 +4,6 @@ import java.io.File;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IMarker;
@@ -14,6 +13,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.ui.texteditor.MarkerUtilities;
@@ -25,7 +25,11 @@ import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.ListExtensions;
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
-import org.junit.After;
+import org.junit.Before;
+import org.rtext.lang.RTextPlugin;
+import org.rtext.lang.backend.ConnectorProvider;
+import org.rtext.lang.specs.util.ProjectInitializer;
+import org.rtext.lang.specs.util.StringInputStream;
 
 @SuppressWarnings("all")
 public class WorkspaceHelper {
@@ -127,6 +131,11 @@ public class WorkspaceHelper {
     return _file;
   }
   
+  public IFile createFile(final String name, final CharSequence content) {
+    IFile _writeToFile = this.writeToFile(content, name);
+    return _writeToFile;
+  }
+  
   public void createFolder(final String path) {
     try {
       IWorkspace _workspace = this.getWorkspace();
@@ -140,12 +149,17 @@ public class WorkspaceHelper {
     }
   }
   
-  public void append(final IFile file, final CharSequence content) {
+  public IFile append(final IFile file, final CharSequence content) {
     try {
-      String _string = content.toString();
-      StringInputStream _stringInputStream = new StringInputStream(_string);
-      NullProgressMonitor _monitor = this.monitor();
-      file.appendContents(_stringInputStream, true, false, _monitor);
+      IFile _xblockexpression = null;
+      {
+        String _string = content.toString();
+        StringInputStream _stringInputStream = new StringInputStream(_string);
+        NullProgressMonitor _monitor = this.monitor();
+        file.appendContents(_stringInputStream, true, false, _monitor);
+        _xblockexpression = (file);
+      }
+      return _xblockexpression;
     } catch (Exception _e) {
       throw Exceptions.sneakyThrow(_e);
     }
@@ -160,13 +174,18 @@ public class WorkspaceHelper {
     }
   }
   
-  public void writeToFile(final CharSequence sequence, final String name) {
+  public IFile writeToFile(final CharSequence sequence, final String name) {
     try {
-      IFile _file = this.file(name);
-      String _string = sequence.toString();
-      StringInputStream _stringInputStream = new StringInputStream(_string);
-      NullProgressMonitor _monitor = this.monitor();
-      _file.create(_stringInputStream, true, _monitor);
+      IFile _xblockexpression = null;
+      {
+        final IFile newFile = this.file(name);
+        String _string = sequence.toString();
+        StringInputStream _stringInputStream = new StringInputStream(_string);
+        NullProgressMonitor _monitor = this.monitor();
+        newFile.create(_stringInputStream, true, _monitor);
+        _xblockexpression = (newFile);
+      }
+      return _xblockexpression;
     } catch (Exception _e) {
       throw Exceptions.sneakyThrow(_e);
     }
@@ -193,30 +212,35 @@ public class WorkspaceHelper {
     }
   }
   
-  @After
+  @Before
   public void cleanUpWorkspace() throws Exception {
+    RTextPlugin _default = RTextPlugin.getDefault();
+    ConnectorProvider _connectorProvider = _default.getConnectorProvider();
+    _connectorProvider.dispose();
+    IWorkspace _workspace = this.getWorkspace();
+    IWorkspaceRoot _root = _workspace.getRoot();
+    IProject[] _projects = _root.getProjects();
     final Procedure1<IProject> _function = new Procedure1<IProject>() {
         public void apply(final IProject it) {
           try {
-            NullProgressMonitor _monitor = WorkspaceHelper.this.monitor();
-            it.delete(false, true, _monitor);
+            IWorkspace _workspace = it.getWorkspace();
+            IWorkspaceRoot _root = _workspace.getRoot();
+            IPath _location = _root.getLocation();
+            IPath _location_1 = it.getLocation();
+            boolean _isPrefixOf = _location.isPrefixOf(_location_1);
+            if (_isPrefixOf) {
+              NullProgressMonitor _monitor = WorkspaceHelper.this.monitor();
+              it.delete(true, true, _monitor);
+            } else {
+              NullProgressMonitor _monitor_1 = WorkspaceHelper.this.monitor();
+              it.delete(false, true, _monitor_1);
+            }
           } catch (Exception _e) {
             throw Exceptions.sneakyThrow(_e);
           }
         }
       };
-    IterableExtensions.<IProject>forEach(this.linkedProjects, _function);
-    final Procedure1<IProject> _function_1 = new Procedure1<IProject>() {
-        public void apply(final IProject it) {
-          try {
-            NullProgressMonitor _monitor = WorkspaceHelper.this.monitor();
-            it.delete(true, true, _monitor);
-          } catch (Exception _e) {
-            throw Exceptions.sneakyThrow(_e);
-          }
-        }
-      };
-    IterableExtensions.<IProject>forEach(this.createdProjects, _function_1);
+    IterableExtensions.<IProject>forEach(((Iterable<IProject>)Conversions.doWrapArray(_projects)), _function);
   }
   
   public NullProgressMonitor monitor() {

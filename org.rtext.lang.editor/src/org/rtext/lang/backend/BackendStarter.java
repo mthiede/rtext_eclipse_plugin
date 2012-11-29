@@ -11,7 +11,7 @@ import java.util.concurrent.TimeoutException;
 
 
 public interface BackendStarter {
-	public void startProcess(ConnectorConfig connectorConfig) throws TimeoutException;
+	public void startProcess() throws TimeoutException;
 	public boolean isRunning();
 	public void stop();
 	int getPort() throws TimeoutException;

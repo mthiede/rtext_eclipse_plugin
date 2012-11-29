@@ -20,6 +20,7 @@ import org.rtext.lang.commands.LoadModelCallback
 import static org.mockito.Matchers.*
 import static org.mockito.Mockito.*
 import static org.rtext.lang.specs.util.Commands.*
+import org.rtext.lang.backend.ConnectorListener
 
 @CreateWith(typeof(MockInjector))
 describe Connector {
@@ -31,6 +32,7 @@ describe Connector {
 	@Mock Callback<LoadedModel> loadedModelCallback
 
 	val PORT = 1234
+	val ADDRESS = "127.0.0.1"
 	val anyCommand = ANY_COMMAND
 	val otherCommand = OTHER_COMMAND
 	val COMMAND = "cmd"
@@ -41,7 +43,7 @@ describe Connector {
 	before {
 		executionDir = root
 		config = new ConnectorConfig(executionDir, COMMAND, "*.*")
-		subject = new Connector(config, processRunner, connection, loadedModelCallback)
+		subject = new Connector(processRunner, connection, loadedModelCallback)
 		when(processRunner.getPort).thenReturn(PORT)
 	}
 	
@@ -86,7 +88,7 @@ describe Connector {
 		
 		fact "Starts backend process"{
 			subject.execute(anyCommand, callback)
-			verify(processRunner).startProcess(config)
+			verify(processRunner).startProcess()
 		}
 		
 		fact "Backend process is started only once"{
@@ -94,7 +96,7 @@ describe Connector {
 			when(processRunner.isRunning).thenReturn(true)
 			
 			subject.execute(anyCommand, callback)
-			verify(processRunner, times(1)).startProcess(config)
+			verify(processRunner, times(1)).startProcess()
 		}
 		
 		fact "Connects to 127.0.0.1 on specified port"{
@@ -177,6 +179,33 @@ describe Connector {
 		fact "stops process runner"{
 			subject.disconnect
 			verify(processRunner).stop
+		}
+	}
+	
+	context "listener"{
+		@Mock ConnectorListener listener
+		
+		before subject.addListener(listener)
+		
+		fact "notifies connect"{
+			subject.connect()
+			verify(listener).connect(ADDRESS, PORT)
+		}
+		
+		fact "notifies disconnect"{
+			subject.disconnect()
+			verify(listener).disconnect
+		}
+		
+		fact "notifies command send"{
+			subject.execute(ANY_COMMAND, callback)
+			verify(listener).executeCommand(ANY_COMMAND.toString)
+		}
+		
+		fact "removes listeners"{
+			subject.removeListener(listener)
+			subject.disconnect()
+			verify(listener, never).disconnect
 		}
 	}
 	

@@ -1,7 +1,7 @@
 package org.rtext.lang.specs.unit.backend;
 
+import com.google.common.base.Objects;
 import java.io.File;
-
 import org.eclipse.xtend2.lib.StringConcatenation;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.Functions.Function0;
@@ -23,8 +23,6 @@ import org.rtext.lang.backend.ConnectorConfig;
 import org.rtext.lang.backend.RTextFile;
 import org.rtext.lang.backend.RTextFileParser;
 import org.rtext.lang.specs.util.Files;
-
-import com.google.common.base.Objects;
 
 @SuppressWarnings("all")
 @RunWith(ExampleGroupRunner.class)

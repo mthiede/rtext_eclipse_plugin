@@ -1,7 +1,7 @@
 package org.rtext.lang.specs.unit.backend;
 
+import com.google.common.base.Objects;
 import java.util.ArrayList;
-
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.jnario.runner.ExampleGroupRunner;
 import org.jnario.runner.Named;
@@ -12,11 +12,10 @@ import org.mockito.Matchers;
 import org.mockito.Mockito;
 import org.rtext.lang.backend.TcpClientListener;
 import org.rtext.lang.commands.Response;
+import org.rtext.lang.specs.unit.backend.TcpClientSpec;
 import org.rtext.lang.specs.util.Commands;
 import org.rtext.lang.specs.util.Wait;
 import org.rtext.lang.specs.util.WaitConfig;
-
-import com.google.common.base.Objects;
 
 @SuppressWarnings("all")
 @RunWith(ExampleGroupRunner.class)

@@ -15,6 +15,8 @@ import org.eclipse.xtend.lib.Property
 import org.eclipse.xtext.xbase.lib.Pair
 import org.eclipse.xtext.xbase.lib.Procedures$Procedure1
 import org.junit.After
+import org.junit.Before
+import org.rtext.lang.RTextPlugin
 
 class ProjectInitializer implements Procedure1<IContainer> {
 	
@@ -63,7 +65,6 @@ class WorkspaceHelper {
 		init.apply(initializer)
 		initializer.apply(project)
 		project
-				
 	}
 	
 	def createProject(String name, String folder2Link){
@@ -87,20 +88,28 @@ class WorkspaceHelper {
 		workspace.root.getFile(new Path(path))
 	}
 	
+	def createFile(String name, CharSequence content){
+		content.writeToFile(name)
+	}
+	
+	
 	def createFolder(String path){
 		workspace.root.getFolder(new Path(path)).create(true, true, monitor)
 	}
 	
 	def append(IFile file, CharSequence content){
 		file.appendContents(new StringInputStream(content.toString), true, false, monitor)
+		file
 	}
 	
 	def delete(IFile file){
 		file.delete(true, monitor)
 	}
 	
-	def void writeToFile(CharSequence sequence, String name) {
-		name.file.create(new StringInputStream(sequence.toString), true, monitor)
+	def writeToFile(CharSequence sequence, String name) {
+		val newFile = name.file
+		newFile.create(new StringInputStream(sequence.toString), true, monitor)
+		newFile
 	}
 
 	def findProblems(IFile file){
@@ -108,9 +117,17 @@ class WorkspaceHelper {
 		file.findMarkers(IMarker::PROBLEM, true, depth).map[MarkerUtilities::getMessage(it)]
 	}
 	
-	@After def cleanUpWorkspace() throws Exception{
-		linkedProjects.forEach[delete(false, true, monitor)]
-		createdProjects.forEach[delete(true, true, monitor)]
+	
+	@Before def cleanUpWorkspace() throws Exception{
+		RTextPlugin::getDefault.connectorProvider.dispose
+		workspace.root.projects.forEach[
+			if(workspace.root.location.isPrefixOf(it.location)){
+				delete(true, true, monitor)
+			}
+			else{
+				delete(false, true, monitor)
+			}
+		]
 	}
 	
 	def monitor(){new NullProgressMonitor}

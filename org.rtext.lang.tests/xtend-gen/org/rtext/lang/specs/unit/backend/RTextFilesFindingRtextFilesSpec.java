@@ -1,7 +1,6 @@
 package org.rtext.lang.specs.unit.backend;
 
 import java.io.File;
-
 import org.hamcrest.StringDescription;
 import org.jnario.lib.JnarioIterableExtensions;
 import org.jnario.lib.Should;
@@ -14,6 +13,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.mockito.stubbing.OngoingStubbing;
 import org.rtext.lang.backend.RTextFile;
+import org.rtext.lang.specs.unit.backend.RTextFilesSpec;
 
 @SuppressWarnings("all")
 @RunWith(ExampleGroupRunner.class)

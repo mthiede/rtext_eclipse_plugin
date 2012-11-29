@@ -37,14 +37,14 @@
 							  	<div class="tab-pane active" id="spec">
 <ul><li><p id="Contains_files_in_same_directory" class="example notrun"><strong>Contains files in same directory</strong></p>
 <pre class="prettyprint lang-spec linenums">
-project = createProject(&quot;test&quot;)[
+project = createProject(&quot;scope_test&quot;)[
   file(&quot;file1.aaa&quot;, &quot;content&quot;)
   file(&quot;file2.bbb&quot;, &quot;content&quot;)
 ]
 scope(&quot;.rtext&quot;) =&gt; list(&quot;file1.aaa&quot;)</pre>
 </li><li><p id="Contains_files_in_subdirectory_directory" class="example notrun"><strong>Contains files in subdirectory directory</strong></p>
 <pre class="prettyprint lang-spec linenums">
-project = createProject(&quot;test&quot;)[
+project = createProject(&quot;scope_test&quot;)[
   folder(&quot;folder&quot;)
   file(&quot;folder/file1.aaa&quot;, &quot;content&quot;)
   file(&quot;folder/file2.bbb&quot;, &quot;content&quot;)
@@ -52,7 +52,7 @@ project = createProject(&quot;test&quot;)[
 scope(&quot;.rtext&quot;) =&gt; list(&quot;file1.aaa&quot;)</pre>
 </li><li><p id="Contains_files_in_project" class="example notrun"><strong>Contains files in project</strong></p>
 <pre class="prettyprint lang-spec linenums">
-project = createProject(&quot;test&quot;)[
+project = createProject(&quot;scope_test&quot;)[
   file(&quot;file1.aaa&quot;, &quot;content&quot;)
   file(&quot;file2.bbb&quot;, &quot;content&quot;)
 ]
@@ -92,7 +92,7 @@ describe ConnectorScope{
   IProject project
   
   fact &quot;Contains files in same directory&quot;{
-    project = createProject(&quot;test&quot;)[
+    project = createProject(&quot;scope_test&quot;)[
       file(&quot;file1.aaa&quot;, &quot;content&quot;)
       file(&quot;file2.bbb&quot;, &quot;content&quot;)
     ]
@@ -100,7 +100,7 @@ describe ConnectorScope{
   }
   
   fact &quot;Contains files in subdirectory directory&quot;{
-    project = createProject(&quot;test&quot;)[
+    project = createProject(&quot;scope_test&quot;)[
       folder(&quot;folder&quot;)
       file(&quot;folder/file1.aaa&quot;, &quot;content&quot;)
       file(&quot;folder/file2.bbb&quot;, &quot;content&quot;)
@@ -109,7 +109,7 @@ describe ConnectorScope{
   }
   
   fact &quot;Contains files in project&quot;{
-    project = createProject(&quot;test&quot;)[
+    project = createProject(&quot;scope_test&quot;)[
       file(&quot;file1.aaa&quot;, &quot;content&quot;)
       file(&quot;file2.bbb&quot;, &quot;content&quot;)
     ]

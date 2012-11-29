@@ -173,7 +173,7 @@ public class OpenElementDialog extends SelectionStatusDialog  {
 			Connector bc = editor.getConnector();
 			if (bc != null) {
 				if(bc.isBusy()){
-					updateStatus("Loading model,..");
+					updateStatus("Loading model...");
 					bc.connect();
 				}
 				bc.execute(new FindElementsCommand(pattern.getText()), callback);
@@ -197,10 +197,6 @@ public class OpenElementDialog extends SelectionStatusDialog  {
 				requestElements();
 			}
 		}
-	}
-
-	protected void handleShellCloseEvent() {
-		super.handleShellCloseEvent();
 	}
 
 	public void requestTimedOut() {

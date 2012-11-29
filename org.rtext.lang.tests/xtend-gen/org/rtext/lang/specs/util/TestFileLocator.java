@@ -3,7 +3,6 @@ package org.rtext.lang.specs.util;
 import java.io.File;
 import java.net.URI;
 import java.net.URL;
-
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
@@ -20,10 +19,10 @@ public class TestFileLocator {
     return _testFileLocator;
   }
   
-  private final String _root;
+  private final String _rootFolder;
   
-  public String getRoot() {
-    return this._root;
+  public String getRootFolder() {
+    return this._rootFolder;
   }
   
   private File file(final String relativePath) {
@@ -53,6 +52,11 @@ public class TestFileLocator {
     }
   }
   
+  public String getRoot() {
+    String _absolutPath = this.absolutPath("");
+    return _absolutPath;
+  }
+  
   public String absolutPath(final String relativePath) {
     File _file = this.file(relativePath);
     String _absolutePath = _file.getAbsolutePath();
@@ -66,22 +70,22 @@ public class TestFileLocator {
   }
   
   private String resolve(final String relativePath) {
-    String _root = this.getRoot();
-    String _plus = (_root + "/");
+    String _rootFolder = this.getRootFolder();
+    String _plus = (_rootFolder + "/");
     String _plus_1 = (_plus + relativePath);
     return _plus_1;
   }
   
-  public TestFileLocator(final String root) {
+  public TestFileLocator(final String rootFolder) {
     super();
-    this._root = root;
+    this._rootFolder = rootFolder;
   }
   
   @Override
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((_root== null) ? 0 : _root.hashCode());
+    result = prime * result + ((_rootFolder== null) ? 0 : _rootFolder.hashCode());
     return result;
   }
   
@@ -94,10 +98,10 @@ public class TestFileLocator {
     if (getClass() != obj.getClass())
       return false;
     TestFileLocator other = (TestFileLocator) obj;
-    if (_root == null) {
-      if (other._root != null)
+    if (_rootFolder == null) {
+      if (other._rootFolder != null)
         return false;
-    } else if (!_root.equals(other._root))
+    } else if (!_rootFolder.equals(other._rootFolder))
       return false;
     return true;
   }

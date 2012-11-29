@@ -25,8 +25,8 @@ import org.rtext.lang.backend.ConnectorScope;
 import org.rtext.lang.commands.LoadedModel.FileProblems;
 import org.rtext.lang.commands.LoadedModel.Problem;
 import org.rtext.lang.util.FileLocator;
-import org.rtext.lang.util.RTextJob;
 import org.rtext.lang.workspace.MarkerUtil;
+import org.rtext.lang.workspace.RTextJob;
 
 public class LoadModelCallback extends WorkspaceCallback<LoadedModel> {
 

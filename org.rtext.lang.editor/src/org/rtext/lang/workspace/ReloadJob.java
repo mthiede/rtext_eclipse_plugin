@@ -16,7 +16,6 @@ import org.rtext.lang.backend.RTextFile;
 import org.rtext.lang.backend.RTextFileParser;
 import org.rtext.lang.commands.LoadModelCallback;
 import org.rtext.lang.commands.LoadModelCommand;
-import org.rtext.lang.util.RTextJob;
 
 public class ReloadJob extends RTextJob{
 		

@@ -13,7 +13,7 @@ class TestFileLocator {
 		new TestFileLocator("backends/head")
 	}
 	
-	String root
+	String rootFolder
 	
 	def private file(String relativePath){
 		if(Platform::running){
@@ -26,6 +26,10 @@ class TestFileLocator {
 		}
 	}
 	
+	def getRoot(){
+		"".absolutPath
+	}
+	
 	def absolutPath(String relativePath){
 		relativePath.file.absolutePath
 	}
@@ -35,7 +39,7 @@ class TestFileLocator {
 	}
 	
 	def private resolve(String relativePath){
-		root + "/" + relativePath
+		rootFolder + "/" + relativePath
 	}
 	
 }

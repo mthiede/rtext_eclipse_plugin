@@ -1,7 +1,6 @@
 package org.rtext.lang.specs.unit.backend;
 
 import java.util.List;
-
 import org.eclipse.xtext.xbase.lib.ObjectExtensions;
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
 import org.hamcrest.StringDescription;

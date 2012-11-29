@@ -1,7 +1,6 @@
 package org.rtext.lang.specs.unit.parser;
 
 import java.util.List;
-
 import org.eclipse.xtend2.lib.StringConcatenation;
 import org.hamcrest.StringDescription;
 import org.jnario.lib.JnarioIterableExtensions;
@@ -12,6 +11,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.rtext.lang.model.Element;
+import org.rtext.lang.specs.unit.parser.RTextModelParserSpec;
 
 @SuppressWarnings("all")
 @RunWith(ExampleGroupRunner.class)
@@ -129,10 +129,10 @@ public class RTextModelParserFullTextRegionSpec extends RTextModelParserSpec {
     _builder_1.append("}");
     String _string = _builder_1.toString();
     boolean _doubleArrow = this.operator_doubleArrow(content, _string);
-    Assert.assertTrue("\nExpected content => \'\'\'\n\t\t\tChild child{\n\t\t\t\t\tChildChild childChild\n\t\t\t\t}\'\'\'.toString but"
+    Assert.assertTrue("\nExpected content => \'\'\'\r\n\t\t\tChild child{\r\n\t\t\t\t\tChildChild childChild\r\n\t\t\t\t}\'\'\'.toString but"
      + "\n     content is " + new StringDescription().appendValue(content).toString()
-     + "\n     \'\'\'\n\t\t\tChild child{\n\t\t\t\t\tChildChild childChild\n\t\t\t\t}\'\'\'.toString is " + new StringDescription().appendValue(_string).toString()
-     + "\n     \'\'\'\n\t\t\tChild child{\n\t\t\t\t\tChildChild childChild\n\t\t\t\t}\'\'\' is " + new StringDescription().appendValue(_builder_1).toString() + "\n", _doubleArrow);
+     + "\n     \'\'\'\r\n\t\t\tChild child{\r\n\t\t\t\t\tChildChild childChild\r\n\t\t\t\t}\'\'\'.toString is " + new StringDescription().appendValue(_string).toString()
+     + "\n     \'\'\'\r\n\t\t\tChild child{\r\n\t\t\t\t\tChildChild childChild\r\n\t\t\t\t}\'\'\' is " + new StringDescription().appendValue(_builder_1).toString() + "\n", _doubleArrow);
     
   }
   
@@ -181,10 +181,10 @@ public class RTextModelParserFullTextRegionSpec extends RTextModelParserSpec {
     _builder_1.append("}");
     String _string = _builder_1.toString();
     boolean _doubleArrow = this.operator_doubleArrow(region, _string);
-    Assert.assertTrue("\nExpected region => \'\'\'\n\t\t\tChildChildChild childChildChild\t{\n\t\t\t\t\t\t\tX x\n\t\t\t\t\t\t}\'\'\'.toString but"
+    Assert.assertTrue("\nExpected region => \'\'\'\r\n\t\t\tChildChildChild childChildChild\t{\r\n\t\t\t\t\t\t\tX x\r\n\t\t\t\t\t\t}\'\'\'.toString but"
      + "\n     region is " + new StringDescription().appendValue(region).toString()
-     + "\n     \'\'\'\n\t\t\tChildChildChild childChildChild\t{\n\t\t\t\t\t\t\tX x\n\t\t\t\t\t\t}\'\'\'.toString is " + new StringDescription().appendValue(_string).toString()
-     + "\n     \'\'\'\n\t\t\tChildChildChild childChildChild\t{\n\t\t\t\t\t\t\tX x\n\t\t\t\t\t\t}\'\'\' is " + new StringDescription().appendValue(_builder_1).toString() + "\n", _doubleArrow);
+     + "\n     \'\'\'\r\n\t\t\tChildChildChild childChildChild\t{\r\n\t\t\t\t\t\t\tX x\r\n\t\t\t\t\t\t}\'\'\'.toString is " + new StringDescription().appendValue(_string).toString()
+     + "\n     \'\'\'\r\n\t\t\tChildChildChild childChildChild\t{\r\n\t\t\t\t\t\t\tX x\r\n\t\t\t\t\t\t}\'\'\' is " + new StringDescription().appendValue(_builder_1).toString() + "\n", _doubleArrow);
     
   }
 }

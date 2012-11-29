@@ -24,6 +24,7 @@ public class RTextFileChangeListener implements IResourceChangeListener {
 	}
 
 	public void resourceChanged(IResourceChangeEvent event) {
+		if(event.getDelta() == null) return;
 		try {
 			event.getDelta().accept(new IResourceDeltaVisitor() {
 				public boolean visit(IResourceDelta delta) throws CoreException {

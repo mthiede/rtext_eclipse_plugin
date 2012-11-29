@@ -16,7 +16,6 @@ import static org.mockito.Mockito.*
 import static org.rtext.lang.specs.util.Jobs.*
 
 import static extension org.rtext.lang.specs.unit.workspace.RTextFileChangeListenerSpec.*
-import org.rtext.lang.workspace.ModelLoadJob
 
 @CreateWith(typeof(MockInjector))
 describe RTextFileChangeListener {
@@ -28,7 +27,7 @@ describe RTextFileChangeListener {
 	
 	before{
 		RTextPlugin::getDefault.stopListeningForRTextFileChanges
-		createProject("test")
+		createProject("rtext_test")
 		subject = new RTextFileChangeListener(connectorProvider)
 		when(connectorProvider.get(any(typeof(ConnectorConfig)))).thenReturn(connector)
 	}
@@ -64,17 +63,13 @@ describe RTextFileChangeListener {
 		verify(connectorProvider).dispose(rtextFile.location.toString)
 	}
 	
-	after{
-		workspace.removeResourceChangeListener(subject)
-	}
-	
 	def addListener(){
 		subject = new RTextFileChangeListener(connectorProvider)
 		workspace.addResourceChangeListener(subject)
 	}
 	
 	def rtextFile(){
-		"test/.rtext".file
+		"rtext_test/.rtext".file
 	}
 	
 	def createRTextFile(){
@@ -83,11 +78,12 @@ describe RTextFileChangeListener {
 		ruby -I../../../../rgen/lib -I ../../../lib ../ecore_editor.rb "*.ect" 2>&1
 		*.ect2:
 		ruby -I../../../../rgen/lib -I ../../../lib ../ecore_editor.rb "*.ect2" 2>&1
-		'''.writeToFile("test/.rtext")
+		'''.writeToFile("rtext_test/.rtext")
 	}
 	
 	after {
 		cleanUpWorkspace
+		workspace.removeResourceChangeListener(subject)
 		RTextPlugin::getDefault.startListeningForRTextFileChanges
-		}
+	}
 }

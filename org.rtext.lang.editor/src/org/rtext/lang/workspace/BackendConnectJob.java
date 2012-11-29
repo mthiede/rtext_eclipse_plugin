@@ -3,10 +3,9 @@ package org.rtext.lang.workspace;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.rtext.lang.backend.Connector;
 
-public class BackendConnectJob extends Job {
+public class BackendConnectJob extends RTextJob {
 	private final Connector connector;
 
 	public BackendConnectJob(Connector connector) {

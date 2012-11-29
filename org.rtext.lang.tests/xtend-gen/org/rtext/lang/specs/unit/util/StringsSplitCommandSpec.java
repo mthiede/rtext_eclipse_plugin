@@ -1,7 +1,6 @@
 package org.rtext.lang.specs.unit.util;
 
 import java.util.List;
-
 import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
@@ -16,6 +15,8 @@ import org.jnario.runner.Order;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.rtext.lang.specs.unit.util.StringsSpec;
+import org.rtext.lang.specs.unit.util.StringsSplitCommandSpecExamples;
 import org.rtext.lang.util.Strings;
 
 @SuppressWarnings("all")

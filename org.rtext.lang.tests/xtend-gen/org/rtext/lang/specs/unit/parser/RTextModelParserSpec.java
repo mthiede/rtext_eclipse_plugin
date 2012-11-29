@@ -1,7 +1,7 @@
 package org.rtext.lang.specs.unit.parser;
 
+import com.google.common.base.Objects;
 import java.util.List;
-
 import org.eclipse.jface.text.Position;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
@@ -14,9 +14,10 @@ import org.junit.Assert;
 import org.junit.runner.RunWith;
 import org.rtext.lang.model.Element;
 import org.rtext.lang.model.RTextModelParser;
+import org.rtext.lang.specs.unit.parser.RTextModelParserErrorHandlingSpec;
+import org.rtext.lang.specs.unit.parser.RTextModelParserFullTextRegionSpec;
+import org.rtext.lang.specs.unit.parser.RTextModelParserStructureSpec;
 import org.rtext.lang.specs.util.SimpleDocument;
-
-import com.google.common.base.Objects;
 
 @Contains({ RTextModelParserStructureSpec.class, RTextModelParserFullTextRegionSpec.class, RTextModelParserErrorHandlingSpec.class })
 @SuppressWarnings("all")

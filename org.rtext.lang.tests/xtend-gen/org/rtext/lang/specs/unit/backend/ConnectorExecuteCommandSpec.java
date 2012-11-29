@@ -33,7 +33,7 @@ public class ConnectorExecuteCommandSpec extends ConnectorSpec {
   public void _startsBackendProcess() throws Exception {
     this.subject.<Response>execute(this.anyCommand, this.callback);
     BackendStarter _verify = Mockito.<BackendStarter>verify(this.processRunner);
-    _verify.startProcess(this.config);
+    _verify.startProcess();
   }
   
   @Test
@@ -47,7 +47,7 @@ public class ConnectorExecuteCommandSpec extends ConnectorSpec {
     this.subject.<Response>execute(this.anyCommand, this.callback);
     VerificationMode _times = Mockito.times(1);
     BackendStarter _verify = Mockito.<BackendStarter>verify(this.processRunner, _times);
-    _verify.startProcess(this.config);
+    _verify.startProcess();
   }
   
   @Test

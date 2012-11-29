@@ -70,7 +70,7 @@ Feature: Problem Markers
 Scenario: Valid files have no problem marker
   extension WorkspaceHelper = new WorkspaceHelper
   extension TestFileLocator = TestFileLocator::getDefault()
-  extension BackendHelper = new BackendHelper
+  extension BackendHelper b = new BackendHelper
   
   Given a project &quot;test&quot; linked to &quot;rtext/test/integration/model/&quot;
     createProject(args.first, args.second.absolutPath)

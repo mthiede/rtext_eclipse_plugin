@@ -44,7 +44,7 @@ public class ProblemMarkersFeatureValidFilesHaveNoProblemMarker extends ProblemM
   }.apply();
   
   @Extension
-  public BackendHelper _backendHelper = new Function0<BackendHelper>() {
+  public BackendHelper b = new Function0<BackendHelper>() {
     public BackendHelper apply() {
       BackendHelper _backendHelper = new BackendHelper();
       return _backendHelper;
@@ -59,7 +59,7 @@ public class ProblemMarkersFeatureValidFilesHaveNoProblemMarker extends ProblemM
     final StepArguments args = _stepArguments;
     String _first = JnarioIterableExtensions.<String>first(args);
     String _second = JnarioIterableExtensions.<String>second(args);
-    String _absolutPath = this._backendHelper.absolutPath(_second);
+    String _absolutPath = this.b.absolutPath(_second);
     this._workspaceHelper.createProject(_first, _absolutPath);
   }
   
@@ -72,9 +72,9 @@ public class ProblemMarkersFeatureValidFilesHaveNoProblemMarker extends ProblemM
     String _first = JnarioIterableExtensions.<String>first(args);
     IFile _file = this._workspaceHelper.file(_first);
     IPath _location = _file.getLocation();
-    final ConnectorConfig config = this._backendHelper.startBackendFor(_location);
+    final ConnectorConfig config = this.b.startBackendFor(_location);
     LoadModelCallback _create = LoadModelCallback.create(config);
-    this._backendHelper.executeSynchronousCommand(_create);
+    this.b.executeSynchronousCommand(_create);
     Jobs.waitForRTextJobs();
   }
   

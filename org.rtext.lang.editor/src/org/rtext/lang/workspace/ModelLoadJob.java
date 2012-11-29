@@ -3,14 +3,13 @@ package org.rtext.lang.workspace;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.rtext.lang.RTextPlugin;
 import org.rtext.lang.backend.Connector;
 import org.rtext.lang.backend.ConnectorConfig;
 import org.rtext.lang.commands.LoadModelCallback;
 import org.rtext.lang.commands.LoadModelCommand;
 
-public class ModelLoadJob extends Job {
+public class ModelLoadJob extends RTextJob {
 	private final Connector connector;
 	private ConnectorConfig config;
 
