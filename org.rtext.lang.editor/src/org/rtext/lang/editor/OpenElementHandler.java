@@ -21,7 +21,7 @@ public class OpenElementHandler extends AbstractHandler {
 	}
 	
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		OpenElementDialog dialog = new OpenElementDialog(editor);
+		OpenElementDialog dialog = OpenElementDialog.create(editor);
 		dialog.open();
 		Object[] result = dialog.getResult();
 		if (result != null && result.length > 0) {

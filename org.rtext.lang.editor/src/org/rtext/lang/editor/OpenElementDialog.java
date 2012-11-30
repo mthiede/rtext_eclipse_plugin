@@ -29,6 +29,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.SelectionStatusDialog;
 import org.rtext.lang.backend.Connector;
@@ -37,6 +38,7 @@ import org.rtext.lang.commands.Elements;
 import org.rtext.lang.commands.Elements.Element;
 import org.rtext.lang.commands.FindElementsCommand;
 import org.rtext.lang.commands.Progress;
+import org.rtext.lang.util.ImageHelper;
 
 
 public class OpenElementDialog extends SelectionStatusDialog  {
@@ -64,21 +66,26 @@ public class OpenElementDialog extends SelectionStatusDialog  {
 		}
 
 	}
+	
+	public static OpenElementDialog create(RTextEditor editor){
+		return new OpenElementDialog(editor, editor.getSite().getShell(), new PluginImageHelper());
+	}
 
 	private Text pattern;
 	private TableViewer list;
 	private Label statusLabel;
-	private RTextEditor editor;
+	private Connected connectorProvider;
 	private Date requestSentDate;
 	private String lastRequestedPattern;
 	private Callback<Elements> callback = new DialogUpdater();
 	
-	public OpenElementDialog(RTextEditor editor) {
-		super(editor.getSite().getShell());
-		this.editor = editor;
+	public OpenElementDialog(Connected connectorProvider, Shell shell, ImageHelper imageHelper) {
+		super(shell);
+		this.connectorProvider = connectorProvider;
 		requestSentDate = null;
 		setHelpAvailable(false);
 		setTitle("RText Open Element");
+		setImage(imageHelper.getImage("rtext_file.gif"));
 	}
 	
 	protected IDialogSettings getDialogBoundsSettings() {
@@ -141,8 +148,8 @@ public class OpenElementDialog extends SelectionStatusDialog  {
 		});
 
 		applyDialogFont(content);
-		if(editor.getConnector() != null){
-			editor.getConnector().connect();
+		if(connectorProvider.getConnector() != null){
+			connectorProvider.getConnector().connect();
 		}
 		return dialogArea;
 	}
@@ -170,7 +177,7 @@ public class OpenElementDialog extends SelectionStatusDialog  {
 		// while a request is ongoing, no new request will be made
 		// however after a timeout, the request is considered to be lost a new request will be made anyway
 		if (requestSentDate == null || (new Date().getTime() - requestSentDate.getTime()) > 10000) {
-			Connector bc = editor.getConnector();
+			Connector bc = connectorProvider.getConnector();
 			if (bc != null) {
 				if(bc.isBusy()){
 					updateStatus("Loading model...");
