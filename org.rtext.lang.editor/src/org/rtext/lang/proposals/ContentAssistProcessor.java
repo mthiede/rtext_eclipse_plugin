@@ -38,7 +38,7 @@ public class ContentAssistProcessor implements IContentAssistProcessor {
 
 	private static final String ERROR_REPLACEMENT_STRING = "";
 	private static final IContextInformation[] NO_CONTEXTS = {};
-	private static final char[] PROPOSAL_ACTIVATION_CHARS = { ':', '/' };
+	private static final char[] PROPOSAL_ACTIVATION_CHARS = { ':', '/', ',' };
 
 	private Connected connected;
 	private ImageHelper imageHelper;
@@ -82,7 +82,7 @@ public class ContentAssistProcessor implements IContentAssistProcessor {
 	protected CompletionProposal createProposal(String prefix, String wordStart, int wordStartOffset, Option option) {
 		String replacementString = option.getInsert();
 		Image image = imageHelper.getImage("element.gif");
-		if(wordStart.length() == 0 && prefix.equals(":")){
+		if(wordStart.length() == 0 && (prefix.equals(":") || prefix.equals(","))){
 			replacementString = " " + replacementString;
 		}
 		return new CompletionProposal(replacementString, wordStartOffset,
@@ -93,6 +93,9 @@ public class ContentAssistProcessor implements IContentAssistProcessor {
 
 	private boolean filterCompletionOption(String option, String wordStart) {
 		if (option.length() == 0) {
+			return true;
+		}
+		if(option.startsWith("\"")){
 			return true;
 		}
 		if (wordStart.contains("/")) {
