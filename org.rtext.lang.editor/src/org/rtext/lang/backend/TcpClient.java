@@ -53,7 +53,6 @@ public class TcpClient implements Connection {
 		}
 
 		public void handleException(Task<?> task, Throwable e) {
-			logError("Exception while communicating with backend", e);
 			task.callback.handleError(e.getMessage());
 			listener.receiveError(e);
 			TcpClient.this.close();

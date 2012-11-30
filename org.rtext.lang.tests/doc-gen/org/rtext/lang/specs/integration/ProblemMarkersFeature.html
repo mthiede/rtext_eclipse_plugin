@@ -76,9 +76,8 @@ Scenario: Valid files have no problem marker
     createProject(args.first, args.second.absolutPath)
     
   When I load the model for &quot;test/test_metamodel_ok.ect2&quot; 
-    val config = startBackendFor(file(args.first).location) 
-    executeSynchronousCommand(LoadModelCallback::create(config))
-    waitForRTextJobs
+    val config = b.startBackendFor(file(args.first).location) 
+    b.loadModel
   Then &quot;test/test_metamodel_ok.ect2&quot;  should have no error markers
     args.first.file.findProblems.empty should be true
   But &quot;test/test_metamodel_error.ect2&quot;  should have error markers 

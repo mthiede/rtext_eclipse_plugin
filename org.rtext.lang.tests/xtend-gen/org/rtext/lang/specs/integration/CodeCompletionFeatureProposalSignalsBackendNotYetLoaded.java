@@ -2,7 +2,6 @@ package org.rtext.lang.specs.integration;
 
 import java.util.List;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.contentassist.ContentAssistEvent;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.xtext.xbase.lib.Conversions;
@@ -11,9 +10,7 @@ import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.InputOutput;
 import org.eclipse.xtext.xbase.lib.ListExtensions;
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure0;
-import org.hamcrest.StringDescription;
 import org.jnario.lib.JnarioIterableExtensions;
-import org.jnario.lib.Should;
 import org.jnario.lib.StepArguments;
 import org.jnario.runner.Extension;
 import org.jnario.runner.FeatureRunner;
@@ -75,8 +72,6 @@ public class CodeCompletionFeatureProposalSignalsBackendNotYetLoaded extends Cod
         }
     });
     this.proposalProvider = _create;
-    ContentAssistEvent __ = Should.<ContentAssistEvent>_();
-    this.proposalProvider.assistSessionStarted(__);
     Display _default = Display.getDefault();
     final Procedure0 _function_1 = new Procedure0() {
         public void apply() {
@@ -100,15 +95,13 @@ public class CodeCompletionFeatureProposalSignalsBackendNotYetLoaded extends Cod
           _function_1.apply();
         }
     });
-    ContentAssistEvent ___1 = Should.<ContentAssistEvent>_();
-    this.proposalProvider.assistSessionEnded(___1);
   }
   
   @Test
   @Order(2)
   @Named("Then the proposals should be")
   public void thenTheProposalsShouldBe() {
-    StepArguments _stepArguments = new StepArguments("model not yet loaded\n\t");
+    StepArguments _stepArguments = new StepArguments("model not yet loaded\n");
     final StepArguments args = _stepArguments;
     String _first = JnarioIterableExtensions.<String>first(args);
     String _trim = _first.trim();
@@ -121,9 +114,8 @@ public class CodeCompletionFeatureProposalSignalsBackendNotYetLoaded extends Cod
       };
     final List<String> expectedProposals = ListExtensions.<String, String>map(((List<String>)Conversions.doWrapArray(_split)), _function);
     InputOutput.<List<String>>println(this.proposals);
-    boolean _doubleArrow = Should.operator_doubleArrow(this.proposals, expectedProposals);
-    Assert.assertTrue("\nExpected proposals => expectedProposals but"
-     + "\n     proposals => expectedProposals is " + new StringDescription().appendValue(_doubleArrow).toString() + "\n", _doubleArrow);
-    
+    String _string = expectedProposals.toString();
+    String _string_1 = this.proposals.toString();
+    Assert.assertEquals(_string, _string_1);
   }
 }

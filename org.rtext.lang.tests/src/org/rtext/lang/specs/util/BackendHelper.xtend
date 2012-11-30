@@ -15,12 +15,16 @@ import org.rtext.lang.commands.Response
 
 import static org.rtext.lang.specs.util.Wait.*
 import org.rtext.lang.backend.FileSystemBasedConfigProvider
+import org.rtext.lang.commands.LoadModelCallback
+import org.rtext.lang.backend.ConnectorConfig
 
 class BackendHelper {
+	ConnectorConfig config
 	extension TestFileLocator fileLocator = TestFileLocator::getDefault()
 	
 	val connectorProvider = CachingConnectorProvider::create
 	val callback = new TestCallBack<Response>
+	val configProvider = FileSystemBasedConfigProvider::create()
 	
 	@Property IDocument document
 	@Property var proposalAcceptor = new TestProposalAcceptor
@@ -38,8 +42,7 @@ class BackendHelper {
 	
 	def startBackendFor(String filePath) {
 		val absolutePath = filePath
-		val configProvider = FileSystemBasedConfigProvider::create()
-		val config = configProvider.get(absolutePath)
+		config = configProvider.get(absolutePath)
 		connector = connectorProvider.get(config)
 		document = new SimpleDocument(Files::read(absolutePath))
 		config
@@ -63,6 +66,13 @@ class BackendHelper {
 		response = callback.response
 	}
 	
+	def loadModel(){
+		val loadModelCallback = LoadModelCallback::create(config)
+		val waitingCallback = new WrappingCallback<LoadedModel>(loadModelCallback)
+		connector.execute(new LoadModelCommand, waitingCallback)
+		waitingCallback.waitForResponse
+	}
+	
 	@After
 	def teardown(){
 		connectorProvider.dispose
@@ -79,10 +89,6 @@ class BackendHelper {
 	def regionOf(String string){
 		val offset = document.get.indexOf(string)
 		new Region(offset+1, string.length)
-	}
-	def connect(){
-		connector.connect
-		waitUntil[!connector.busy]
 	}
 	
 	def busy(){

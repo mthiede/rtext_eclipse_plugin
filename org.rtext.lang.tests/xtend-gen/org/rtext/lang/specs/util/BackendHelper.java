@@ -16,6 +16,7 @@ import org.rtext.lang.backend.ConnectorProvider;
 import org.rtext.lang.backend.FileSystemBasedConfigProvider;
 import org.rtext.lang.commands.Callback;
 import org.rtext.lang.commands.Command;
+import org.rtext.lang.commands.LoadModelCallback;
 import org.rtext.lang.commands.LoadModelCommand;
 import org.rtext.lang.commands.LoadedModel;
 import org.rtext.lang.commands.Response;
@@ -30,6 +31,8 @@ import org.rtext.lang.specs.util.WrappingCallback;
 
 @SuppressWarnings("all")
 public class BackendHelper {
+  private ConnectorConfig config;
+  
   private TestFileLocator fileLocator = new Function0<TestFileLocator>() {
     public TestFileLocator apply() {
       TestFileLocator _default = TestFileLocator.getDefault();
@@ -48,6 +51,13 @@ public class BackendHelper {
     public TestCallBack<Response> apply() {
       TestCallBack<Response> _testCallBack = new TestCallBack<Response>();
       return _testCallBack;
+    }
+  }.apply();
+  
+  private final FileSystemBasedConfigProvider configProvider = new Function0<FileSystemBasedConfigProvider>() {
+    public FileSystemBasedConfigProvider apply() {
+      FileSystemBasedConfigProvider _create = FileSystemBasedConfigProvider.create();
+      return _create;
     }
   }.apply();
   
@@ -111,14 +121,14 @@ public class BackendHelper {
     ConnectorConfig _xblockexpression = null;
     {
       final String absolutePath = filePath;
-      final FileSystemBasedConfigProvider configProvider = FileSystemBasedConfigProvider.create();
-      final ConnectorConfig config = configProvider.get(absolutePath);
-      Connector _get = this.connectorProvider.get(config);
-      this.setConnector(_get);
+      ConnectorConfig _get = this.configProvider.get(absolutePath);
+      this.config = _get;
+      Connector _get_1 = this.connectorProvider.get(this.config);
+      this.setConnector(_get_1);
       String _read = Files.read(absolutePath);
       SimpleDocument _simpleDocument = new SimpleDocument(_read);
       this.setDocument(_simpleDocument);
-      _xblockexpression = (config);
+      _xblockexpression = (this.config);
     }
     return _xblockexpression;
   }
@@ -163,6 +173,16 @@ public class BackendHelper {
     this.setResponse(_response);
   }
   
+  public void loadModel() {
+    final LoadModelCallback loadModelCallback = LoadModelCallback.create(this.config);
+    WrappingCallback<LoadedModel> _wrappingCallback = new WrappingCallback<LoadedModel>(loadModelCallback);
+    final WrappingCallback<LoadedModel> waitingCallback = _wrappingCallback;
+    Connector _connector = this.getConnector();
+    LoadModelCommand _loadModelCommand = new LoadModelCommand();
+    _connector.<LoadedModel>execute(_loadModelCommand, waitingCallback);
+    waitingCallback.waitForResponse();
+  }
+  
   @After
   public void teardown() {
     this.connectorProvider.dispose();
@@ -195,20 +215,6 @@ public class BackendHelper {
       _xblockexpression = (_region);
     }
     return _xblockexpression;
-  }
-  
-  public void connect() {
-    Connector _connector = this.getConnector();
-    _connector.connect();
-    final Function1<WaitConfig,Boolean> _function = new Function1<WaitConfig,Boolean>() {
-        public Boolean apply(final WaitConfig it) {
-          Connector _connector = BackendHelper.this.getConnector();
-          boolean _isBusy = _connector.isBusy();
-          boolean _not = (!_isBusy);
-          return Boolean.valueOf(_not);
-        }
-      };
-    Wait.waitUntil(_function);
   }
   
   public void busy() {

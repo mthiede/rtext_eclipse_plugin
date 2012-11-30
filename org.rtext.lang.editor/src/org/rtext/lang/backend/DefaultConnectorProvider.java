@@ -43,10 +43,11 @@ public class DefaultConnectorProvider implements ConnectorProvider{
 		for (Connector connector : connectors.values()) {
 			connector.disconnect();
 		}
+		connectors.clear();
 	}
 
 	public void dispose(String rtextFilePath) {
-		Connector connector = connectors.get(getKey(new File(rtextFilePath)));
+		Connector connector = connectors.remove(getKey(new File(rtextFilePath)));
 		if(connector == null){
 			return;
 		}

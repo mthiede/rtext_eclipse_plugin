@@ -16,14 +16,12 @@ Scenario: Sucessfully using code completion
 	Given a backend for "rtext/test/integration/model/test_metamodel.ect"
 		b.startBackendFor(args.first.absolutPath)
 	And the model is loaded
-		b.connect
+		b.loadModel
 	When I invoke the code completion after "  E"
 		proposalProvider = ContentAssistProcessor::create([|b.connector]) 
-		proposalProvider.assistSessionStarted(_)
 		Display::getDefault.syncExec[|
 			proposals = proposalProvider.computeCompletionProposals(b.document, b.offsetAfter(args.first), 0).map[displayString.trim]
 		]
-		proposalProvider.assistSessionEnded(_)
 	Then the proposals should be
 	'''
 		EAnnotation
@@ -36,7 +34,7 @@ Scenario: Sucessfully using code completion
 	'''
 	val expectedProposals = args.first.trim.split("\r?\n").map[trim]
 	println(proposals)
-	proposals => expectedProposals
+	assertEquals(expectedProposals.toString, proposals.toString)
 
 Scenario: Code completion for nested elements
 	
@@ -62,7 +60,7 @@ Scenario: Proposal signals backend currently loading
 	'''
 		loading model
 	'''
-
+ 
 Scenario: Proposal signals backend not yet loaded
 	
 	Given a backend for "rtext/test/integration/model/test_metamodel.ect"

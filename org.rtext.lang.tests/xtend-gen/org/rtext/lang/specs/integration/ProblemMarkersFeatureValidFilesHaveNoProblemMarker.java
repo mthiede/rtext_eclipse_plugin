@@ -16,10 +16,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.rtext.lang.backend.ConnectorConfig;
-import org.rtext.lang.commands.LoadModelCallback;
 import org.rtext.lang.specs.integration.ProblemMarkersFeature;
 import org.rtext.lang.specs.util.BackendHelper;
-import org.rtext.lang.specs.util.Jobs;
 import org.rtext.lang.specs.util.TestFileLocator;
 import org.rtext.lang.specs.util.WorkspaceHelper;
 
@@ -73,9 +71,7 @@ public class ProblemMarkersFeatureValidFilesHaveNoProblemMarker extends ProblemM
     IFile _file = this._workspaceHelper.file(_first);
     IPath _location = _file.getLocation();
     final ConnectorConfig config = this.b.startBackendFor(_location);
-    LoadModelCallback _create = LoadModelCallback.create(config);
-    this.b.executeSynchronousCommand(_create);
-    Jobs.waitForRTextJobs();
+    this.b.loadModel();
   }
   
   @Test

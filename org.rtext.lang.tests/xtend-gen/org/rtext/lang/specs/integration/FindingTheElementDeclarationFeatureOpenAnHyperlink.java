@@ -50,7 +50,7 @@ public class FindingTheElementDeclarationFeatureOpenAnHyperlink extends FindingT
   @Order(3)
   @Named("Given the model is loaded")
   public void givenTheModelIsLoaded() {
-    this.b.connect();
+    this.b.loadModel();
   }
   
   @Test
