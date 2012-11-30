@@ -38,7 +38,7 @@ public class ContentAssistProcessor implements IContentAssistProcessor {
 
 	private static final String ERROR_REPLACEMENT_STRING = "";
 	private static final IContextInformation[] NO_CONTEXTS = {};
-	private static final char[] PROPOSAL_ACTIVATION_CHARS = { 'a', '/' };
+	private static final char[] PROPOSAL_ACTIVATION_CHARS = { ':', '/' };
 
 	private Connected connected;
 	private ImageHelper imageHelper;
@@ -56,22 +56,35 @@ public class ContentAssistProcessor implements IContentAssistProcessor {
 
 	public ICompletionProposal[] computeCompletionProposals(IDocument document, int offset, int topIndexStartOffset) {
 		String wordStart = wordStart(document, topIndexStartOffset, offset);
+		String prefix = prefix(document, offset);
 		int wordStartOffset = offset - wordStart.length();
-		List<Option> options = loadCompletions(document, wordStartOffset - 1);
+		List<Option> options = loadCompletions(document, offset, wordStart);
 		List<ICompletionProposal> result = new ArrayList<ICompletionProposal>(options.size());
 		for (int i = 0; i < options.size(); i++) {
 			Option option = options.get(i);
 			String replacementString = option.getInsert();
 			if (filterCompletionOption(replacementString, wordStart)) {
-				result.add(createProposal(wordStart, wordStartOffset, option));
+				result.add(createProposal(prefix, wordStart, wordStartOffset, option));
 			}
 		}
 		return result.toArray(new ICompletionProposal[result.size()]);
 	}
 
-	protected CompletionProposal createProposal(String wordStart, int wordStartOffset, Option option) {
+	private String prefix(IDocument document, int offset) {
+		String prefix = "";
+		try {
+			prefix = document.get(offset-1, 1);
+		} catch (BadLocationException e) {
+		}
+		return prefix;
+	}
+
+	protected CompletionProposal createProposal(String prefix, String wordStart, int wordStartOffset, Option option) {
 		String replacementString = option.getInsert();
 		Image image = imageHelper.getImage("element.gif");
+		if(wordStart.length() == 0 && prefix.equals(":")){
+			replacementString = " " + replacementString;
+		}
 		return new CompletionProposal(replacementString, wordStartOffset,
 				wordStart.length(), replacementString.length(), image,
 				option.getDisplay(), new ContextInformation(
@@ -126,7 +139,7 @@ public class ContentAssistProcessor implements IContentAssistProcessor {
 		return null;
 	}
 
-	private List<Option> loadCompletions(IDocument document, int offset) {
+	private List<Option> loadCompletions(IDocument document, int offset, String wordStart) {
 		Connector connector = getConnector();
 		if (connector == null) {
 			return null;
@@ -134,24 +147,23 @@ public class ContentAssistProcessor implements IContentAssistProcessor {
 		Proposals proposals;
 		if (!connector.isConnected()) {
 			new BackendConnectJob(getConnector()).schedule(100);
-			proposals = errorProposal("model not yet loaded");
+			proposals = errorProposal("model not yet loaded", wordStart);
 		} else if (connector.isBusy()) {
-			proposals = errorProposal("loading model");
+			proposals = errorProposal("loading model", wordStart);
 		} else {
 			try {
 				proposals = connector.execute(new ProposalsCommand(createContext(document, offset)));
 			} catch (Exception e) {
-				proposals = errorProposal("Backend not yet available");
+				proposals = errorProposal("Backend not yet available", wordStart);
 			}
 		}
 
 		return proposals.getOptions();
 	}
 
-	public Proposals errorProposal(String message) {
-		Option[] options = { new Option(ERROR_REPLACEMENT_STRING, message) };
-		Proposals errorProposal = new Proposals(-1, ERROR_REPLACEMENT_STRING,
-				asList(options));
+	public Proposals errorProposal(String message, String wordStart) {
+		Option[] options = { new Option(wordStart, message) };
+		Proposals errorProposal = new Proposals(-1, wordStart, asList(options));
 		return errorProposal;
 	}
 
