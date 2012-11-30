@@ -17,8 +17,9 @@ import static org.rtext.lang.specs.util.Wait.*
 import org.rtext.lang.backend.FileSystemBasedConfigProvider
 import org.rtext.lang.commands.LoadModelCallback
 import org.rtext.lang.backend.ConnectorConfig
+import org.rtext.lang.editor.Connected
 
-class BackendHelper {
+class BackendHelper implements Connected{
 	ConnectorConfig config
 	extension TestFileLocator fileLocator = TestFileLocator::getDefault()
 	

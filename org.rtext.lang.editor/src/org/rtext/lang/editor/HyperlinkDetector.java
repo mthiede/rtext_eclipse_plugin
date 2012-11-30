@@ -7,12 +7,10 @@
  *******************************************************************************/
 package org.rtext.lang.editor;
 
-import static org.rtext.lang.backend.CallbackWithTimeout.waitForResponse;
 import static org.rtext.lang.util.Workbenches.getActivePage;
 
 import java.util.List;
 import java.util.Vector;
-import java.util.concurrent.TimeoutException;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
@@ -21,22 +19,43 @@ import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
-import org.rtext.lang.backend.CallbackWithTimeout;
-import org.rtext.lang.backend.Connector;
+import org.rtext.lang.backend.CommandExecutor;
+import org.rtext.lang.backend.CommandExecutor.ExecutionHandler;
 import org.rtext.lang.backend.ContextParser;
 import org.rtext.lang.backend.DocumentContext;
+import org.rtext.lang.commands.Command;
 import org.rtext.lang.commands.ReferenceTargets;
 import org.rtext.lang.commands.ReferenceTargets.Target;
 import org.rtext.lang.commands.ReferenceTargetsCommand;
-import org.rtext.lang.workspace.BackendConnectJob;
 
 public class HyperlinkDetector implements IHyperlinkDetector {
-	private Connected editor;
-	private BackendConnectJob backendConnectJob;
-	private CallbackWithTimeout<ReferenceTargets> responseCallback = null;
+	
+	public class ReferenceTargetsHandler implements
+			ExecutionHandler<ReferenceTargets> {
 
-	public HyperlinkDetector(Connected editor) {
-		this.editor = editor;
+		private IRegion region;
+		private IDocument document;
+		private IHyperlink[] result = null;
+
+		public ReferenceTargetsHandler(IDocument document, IRegion region) {
+			this.document = document;
+			this.region = region;
+		}
+
+		public void handleResult(ReferenceTargets referenceTargets) {
+			result = createHyperlinks(document, region, referenceTargets);
+		}
+
+		public void handle(String message) {
+			result = createErrorLink(message, region);
+		}
+
+	}
+
+	private CommandExecutor commandExecutor;
+
+	public HyperlinkDetector(CommandExecutor commandExecutor) {
+		this.commandExecutor = commandExecutor;
 	}
 
 	public IHyperlink[] detectHyperlinks(ITextViewer textViewer,
@@ -45,53 +64,15 @@ public class HyperlinkDetector implements IHyperlinkDetector {
 	}
 
 	public IHyperlink[] detectHyperLinks(IDocument document, IRegion region) {
-		if(isWaiting()){
-			return null;
-		}
-		Connector connector = editor.getConnector();
-		if (connector == null) {
-			return null;
-		}
-		if(!connector.isConnected()){
-			startBackend(connector);
-			return createErrorLink("model not yet loaded", region);
-		}
-		if(connector.isBusy()){
-			return createErrorLink("loading model", region);
-		}
-		try {
-			return requestReferenceTargets(connector, document, region);
-		} catch (Exception e) {
-			return createErrorLink("model not yet loaded", region);
-		}
-	}
-
-	private boolean isWaiting() {
-		return responseCallback != null && responseCallback.isWaiting();
-	}
-
-	public void startBackend(final Connector connector) {
-		if(backendConnectJob != null && backendConnectJob.getResult() == null){
-			return;
-		}
-		backendConnectJob = new BackendConnectJob(connector);
-		backendConnectJob.schedule(100);
+		DocumentContext context = createContext(document, region);
+		Command<ReferenceTargets> command = new ReferenceTargetsCommand(context);
+		ReferenceTargetsHandler executionHandler = new ReferenceTargetsHandler(document, region);
+		commandExecutor.run(command, executionHandler);
+		return executionHandler.result;
 	}
 
 	private IHyperlink[] createErrorLink(String message, IRegion region) {
 		return new IHyperlink[]{new Hyperlink(getActivePage(), region, "", 0, message), new Hyperlink(getActivePage(), region, "", 0, "")};
-	}
-
-	public IHyperlink[] requestReferenceTargets(Connector connector, IDocument document, IRegion region) {
-		DocumentContext context = createContext(document, region);
-		responseCallback = waitForResponse("Backend is busy", 500);
-		connector.execute(new ReferenceTargetsCommand(context), responseCallback);
-		try {
-			ReferenceTargets referenceTargets = responseCallback.waitForResponse();
-			return createHyperlinks(document, region, referenceTargets);
-		} catch (TimeoutException e) {
-			return createErrorLink(e.getMessage(), region);
-		}
 	}
 
 	public DocumentContext createContext(IDocument document, IRegion region) {
@@ -126,6 +107,10 @@ public class HyperlinkDetector implements IHyperlinkDetector {
 		} catch (BadLocationException e) {
 			return new Region(0, 0);
 		}
+	}
+
+	public static IHyperlinkDetector create(Connected connected) {
+		return new HyperlinkDetector(CommandExecutor.create(connected));
 	}
 
 }

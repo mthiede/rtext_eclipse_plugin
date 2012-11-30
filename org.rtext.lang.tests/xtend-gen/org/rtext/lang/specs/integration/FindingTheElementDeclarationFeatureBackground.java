@@ -2,6 +2,7 @@ package org.rtext.lang.specs.integration;
 
 import java.util.List;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
+import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.xtext.xbase.lib.Functions.Function0;
 import org.jnario.lib.JnarioIterableExtensions;
 import org.jnario.lib.StepArguments;
@@ -11,8 +12,6 @@ import org.jnario.runner.Named;
 import org.jnario.runner.Order;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.rtext.lang.backend.Connector;
-import org.rtext.lang.editor.Connected;
 import org.rtext.lang.editor.HyperlinkDetector;
 import org.rtext.lang.proposals.ContentAssistProcessor;
 import org.rtext.lang.specs.integration.FindingTheElementDeclarationFeature;
@@ -76,16 +75,7 @@ public class FindingTheElementDeclarationFeatureBackground extends FindingTheEle
   @Order(2)
   @Named("And a hyperlink detector")
   public void andAHyperlinkDetector() {
-    final Function0<Connector> _function = new Function0<Connector>() {
-        public Connector apply() {
-          return FindingTheElementDeclarationFeatureBackground.this.b.getConnector();
-        }
-      };
-    HyperlinkDetector _hyperlinkDetector = new HyperlinkDetector(new Connected() {
-        public Connector getConnector() {
-          return _function.apply();
-        }
-    });
-    this.hyperLinkDetector = _hyperlinkDetector;
+    IHyperlinkDetector _create = HyperlinkDetector.create(this.b);
+    this.hyperLinkDetector = ((HyperlinkDetector) _create);
   }
 }

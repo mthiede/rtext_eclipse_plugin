@@ -12,7 +12,6 @@ import static java.util.Arrays.asList;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
@@ -24,29 +23,50 @@ import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 import org.eclipse.swt.graphics.Image;
-import org.rtext.lang.backend.Connector;
+import org.rtext.lang.backend.CommandExecutor;
+import org.rtext.lang.backend.CommandExecutor.ExecutionHandler;
 import org.rtext.lang.backend.ContextParser;
 import org.rtext.lang.backend.DocumentContext;
+import org.rtext.lang.commands.Command;
 import org.rtext.lang.commands.Proposals;
 import org.rtext.lang.commands.Proposals.Option;
 import org.rtext.lang.commands.ProposalsCommand;
 import org.rtext.lang.editor.Connected;
 import org.rtext.lang.editor.PluginImageHelper;
 import org.rtext.lang.util.ImageHelper;
-import org.rtext.lang.workspace.BackendConnectJob;
 
 public class ContentAssistProcessor implements IContentAssistProcessor {
+
+	private final class ProposalExecutionHandler implements ExecutionHandler<Proposals> {
+		private final String wordStart;
+		private Proposals proposals;
+
+		private ProposalExecutionHandler(String wordStart) {
+			this.wordStart = wordStart;
+		}
+
+		public void handleResult(Proposals result) {
+			proposals = result;
+		}
+
+		public void handle(String message) {
+			proposals = errorProposal(message, wordStart);
+		}
+	}
+
+	public static ContentAssistProcessor create(Connected connected) {
+		return new ContentAssistProcessor(CommandExecutor.create(connected), new PluginImageHelper());
+	}
 
 	private static final String ERROR_REPLACEMENT_STRING = "";
 	private static final IContextInformation[] NO_CONTEXTS = {};
 	private static final char[] PROPOSAL_ACTIVATION_CHARS = { ':', '/', ',' };
 
-	private Connected connected;
 	private ImageHelper imageHelper;
-	private BackendConnectJob backendConnectJob;
+	private CommandExecutor commandExecutor;
 
-	public ContentAssistProcessor(Connected connected, ImageHelper imageHelper) {
-		this.connected = connected;
+	public ContentAssistProcessor(CommandExecutor commandExecutor, ImageHelper imageHelper) {
+		this.commandExecutor = commandExecutor;
 		this.imageHelper = imageHelper;
 	}
 
@@ -145,31 +165,11 @@ public class ContentAssistProcessor implements IContentAssistProcessor {
 		return null;
 	}
 
-	private List<Option> loadCompletions(IDocument document, int offset, String wordStart) {
-		Proposals proposals;
-		Connector connector = getConnector();
-		if (connector == null) {
-			proposals = errorProposal("Backend not yet available", wordStart);
-		}
-		if (!connector.isConnected()) {
-			if(backendConnectJob != null && backendConnectJob.getResult() == null){
-				proposals = errorProposal("Backend not yet available", wordStart);
-			}else{
-				backendConnectJob = new BackendConnectJob(getConnector());
-				backendConnectJob.schedule(100);
-				proposals = errorProposal("model not yet loaded", wordStart);
-			}
-		} else if (connector.isBusy()) {
-			proposals = errorProposal("loading model", wordStart);
-		} else {
-			try {
-				proposals = connector.execute(new ProposalsCommand(createContext(document, offset)));
-			} catch (Exception e) {
-				proposals = errorProposal("Backend not yet available", wordStart);
-			}
-		}
-
-		return proposals.getOptions();
+	private List<Option> loadCompletions(IDocument document, int offset, final String wordStart) {
+		Command<Proposals> command = new ProposalsCommand(createContext(document, offset));
+		ProposalExecutionHandler executionHandler= new ProposalExecutionHandler(wordStart);
+		commandExecutor.run(command, executionHandler);
+		return executionHandler.proposals.getOptions();
 	}
 
 	public Proposals errorProposal(String message, String wordStart) {
@@ -181,15 +181,6 @@ public class ContentAssistProcessor implements IContentAssistProcessor {
 	public DocumentContext createContext(IDocument document, int offset) {
 		ContextParser contextParser = new ContextParser(document);
 		return contextParser.getContext(offset);
-	}
-
-	private Connector getConnector() {
-		return connected.getConnector();
-	}
-
-
-	public static ContentAssistProcessor create(Connected connected) {
-		return new ContentAssistProcessor(connected, new PluginImageHelper());
 	}
 
 	public IContextInformation[] computeContextInformation(ITextViewer viewer,

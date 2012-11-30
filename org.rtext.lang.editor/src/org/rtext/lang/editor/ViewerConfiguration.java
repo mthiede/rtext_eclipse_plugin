@@ -89,7 +89,7 @@ public class ViewerConfiguration extends SourceViewerConfiguration {
 	}
 	
 	public IHyperlinkDetector[] getHyperlinkDetectors(ISourceViewer sourceViewer) {
-		return new IHyperlinkDetector[] { new HyperlinkDetector(editor) };
+		return new IHyperlinkDetector[] { HyperlinkDetector.create(editor) };
 	}
 
 	public IHyperlinkPresenter getHyperlinkPresenter(ISourceViewer sourceViewer) {

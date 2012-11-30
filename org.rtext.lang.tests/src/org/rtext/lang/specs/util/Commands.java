@@ -14,5 +14,7 @@ public class Commands {
 	public static Command<Response> OTHER_COMMAND = newCommand("other");
 	
 	public static String ANY_COMMAND_SERIALIZED = new CommandSerializer().serialize(ANY_COMMAND);
+	
+	public static Response ANY_COMMAND_RESPONSE = new Response(0, "reponse");
 
 }

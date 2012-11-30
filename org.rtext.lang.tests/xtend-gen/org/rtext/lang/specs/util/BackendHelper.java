@@ -20,6 +20,7 @@ import org.rtext.lang.commands.LoadModelCallback;
 import org.rtext.lang.commands.LoadModelCommand;
 import org.rtext.lang.commands.LoadedModel;
 import org.rtext.lang.commands.Response;
+import org.rtext.lang.editor.Connected;
 import org.rtext.lang.specs.util.Files;
 import org.rtext.lang.specs.util.SimpleDocument;
 import org.rtext.lang.specs.util.TestCallBack;
@@ -30,7 +31,7 @@ import org.rtext.lang.specs.util.WaitConfig;
 import org.rtext.lang.specs.util.WrappingCallback;
 
 @SuppressWarnings("all")
-public class BackendHelper {
+public class BackendHelper implements Connected {
   private ConnectorConfig config;
   
   private TestFileLocator fileLocator = new Function0<TestFileLocator>() {

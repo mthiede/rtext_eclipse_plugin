@@ -1,9 +1,12 @@
 package org.rtext.lang.specs.integration
 
-import org.rtext.lang.editor.HyperlinkDetector
-import org.eclipse.jface.text.hyperlink.IHyperlink
 import java.util.List
+import org.eclipse.jface.text.hyperlink.IHyperlink
+import org.rtext.lang.editor.HyperlinkDetector
 import org.rtext.lang.util.Workbenches
+
+import static extension org.jnario.lib.JnarioIterableExtensions.*
+import static extension org.jnario.lib.Should.*
 
 Feature: Finding the element declaration
 
@@ -14,8 +17,8 @@ Feature: Finding the element declaration
   Given a project "test" linked to "rtext/test/integration/model/"
     And a backend for "rtext/test/integration/model/test_metamodel.ect"
     And a hyperlink detector
-   	hyperLinkDetector = new HyperlinkDetector([|return b.connector])
-
+   	hyperLinkDetector = HyperlinkDetector::create(b) as HyperlinkDetector
+ 
   Scenario: Open an hyperlink
   Given the model is loaded
    When I get the hyperlinks for "/StatemachineMM/State"

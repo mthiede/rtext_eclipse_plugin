@@ -86,10 +86,13 @@
 <pre class="prettyprint lang-feature linenums">
 package org.rtext.lang.specs.integration
 
-import org.rtext.lang.editor.HyperlinkDetector
-import org.eclipse.jface.text.hyperlink.IHyperlink
 import java.util.List
+import org.eclipse.jface.text.hyperlink.IHyperlink
+import org.rtext.lang.editor.HyperlinkDetector
 import org.rtext.lang.util.Workbenches
+
+import static extension org.jnario.lib.JnarioIterableExtensions.*
+import static extension org.jnario.lib.Should.*
 
 Feature: Finding the element declaration
 
@@ -100,8 +103,8 @@ Feature: Finding the element declaration
   Given a project &quot;test&quot; linked to &quot;rtext/test/integration/model/&quot;
     And a backend for &quot;rtext/test/integration/model/test_metamodel.ect&quot;
     And a hyperlink detector
-     hyperLinkDetector = new HyperlinkDetector([|return b.connector])
-
+     hyperLinkDetector = HyperlinkDetector::create(b) as HyperlinkDetector
+ 
   Scenario: Open an hyperlink
   Given the model is loaded
    When I get the hyperlinks for &quot;/StatemachineMM/State&quot;

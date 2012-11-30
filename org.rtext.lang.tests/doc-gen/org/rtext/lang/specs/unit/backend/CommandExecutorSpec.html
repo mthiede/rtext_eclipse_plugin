@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>CommandExecutor</title>
+<meta name="description" content="">
+<meta name="author" content="Jnario">
+
+<!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+<link rel="stylesheet" href="../../../../../../css/bootstrap.min.css">
+<link rel="stylesheet" href="../../../../../../css/bootstrap-responsive.min.css">
+<link rel="stylesheet" href="../../../../../../css/custom.css">
+<link rel="stylesheet" href="../../../../../../css/prettify.css">
+<script type="text/javascript" src="../../../../../../js/prettify.js"></script>
+<script type="text/javascript" src="../../../../../../js/lang-jnario.js"></script>
+<script type="text/javascript" src="../../../../../../js/jquery.js"></script>
+<script type="text/javascript" src="../../../../../../js/bootstrap-tab.js"></script>
+</head>
+
+<body onload="prettyPrint()">
+	<div class="container">
+		<div class="tabbable">
+			<div class="content">
+				<div class="page-header pending">
+					<h1>CommandExecutor</h1>
+					  <ul class="nav nav-tabs pull-right">
+					    <li class="active"><a href="#spec" data-toggle="tab">Spec</a></li>
+						<li><a href="#source" data-toggle="tab">Source</a></li>
+					  </ul>
+				</div>
+				<div class="row">
+					<div class="span12">
+						  <div class="tab-content">
+							  	<div class="tab-pane active" id="spec">
+<ul><li><p id="provides_error_if_no_connector" class="example notrun"><strong>provides error if no connector</strong></p>
+<pre class="prettyprint lang-spec linenums">
+when(connected.connector).thenReturn(null)
+subject.run(ANY_COMMAND, handler)
+verify(handler).handle(BACKEND_NOT_FOUND)
+verifyNoMoreInteractions(handler)</pre>
+</li><li><p id="provides_error_if_not_connected" class="example notrun"><strong>provides error if not connected</strong></p>
+<pre class="prettyprint lang-spec linenums">
+when(connector.connected).thenReturn(false)
+subject.run(ANY_COMMAND, handler)
+verify(handler).handle(MODEL_NOT_YET_LOADED)
+verifyNoMoreInteractions(handler)</pre>
+</li><li><p id="start_backend_if_not_connected" class="example notrun"><strong>start backend if not connected</strong></p>
+<pre class="prettyprint lang-spec linenums">
+when(connector.connected).thenReturn(false)
+subject.run(ANY_COMMAND, handler)
+verify(connectJob).execute</pre>
+</li><li><p id="starts_backend_only_once_if_job_is_already_running" class="example notrun"><strong>starts backend only once if job is already running</strong></p>
+<pre class="prettyprint lang-spec linenums">
+when(connector.connected).thenReturn(false)
+subject.run(ANY_COMMAND, handler)
+when(connectJob.isRunning).thenReturn(true)
+subject.run(ANY_COMMAND, handler)
+verify(connectJob).execute</pre>
+</li><li><p id="provides_error_if_busy" class="example notrun"><strong>provides error if busy</strong></p>
+<pre class="prettyprint lang-spec linenums">
+when(connector.connected).thenReturn(true)
+when(connector.busy).thenReturn(true)
+subject.run(ANY_COMMAND, handler)
+verify(handler).handle(LOADING_MODEL)
+verifyNoMoreInteractions(handler)</pre>
+</li><li><p id="provides_response" class="example notrun"><strong>provides response</strong></p>
+<pre class="prettyprint lang-spec linenums">
+when(connector.connected).thenReturn(true)
+when(connector.busy).thenReturn(false)
+when(connector.execute(ANY_COMMAND)).thenReturn(ANY_COMMAND_RESPONSE)
+subject.run(ANY_COMMAND, handler)
+verify(handler).handleResult(ANY_COMMAND_RESPONSE)
+verifyNoMoreInteractions(handler)</pre>
+</li></ul>
+							</div>
+						    <div class="tab-pane" id="source">
+						    	<h3>CommandExecutor.spec</h3>
+						    	<p>
+<pre class="prettyprint lang-spec linenums">
+package org.rtext.lang.specs.unit.backend
+
+import org.rtext.lang.backend.CommandExecutor
+import org.jnario.runner.CreateWith
+import org.rtext.lang.specs.util.MockInjector
+import org.mockito.Mock
+import org.rtext.lang.workspace.BackendConnectJob$Factory
+import org.rtext.lang.editor.Connected
+import static org.mockito.Mockito.*
+import org.rtext.lang.backend.Connector
+import org.rtext.lang.workspace.BackendConnectJob
+import static org.rtext.lang.specs.util.Commands.*
+import org.rtext.lang.backend.CommandExecutor$ExecutionHandler
+import org.rtext.lang.commands.Response
+import static org.rtext.lang.backend.CommandExecutor.*
+
+@CreateWith(typeof(MockInjector))
+describe CommandExecutor {
+  
+  @Mock ExecutionHandler&lt;Response&gt; handler
+  @Mock BackendConnectJob connectJob
+  @Mock Factory connectJobFactory
+  @Mock Connected connected
+  @Mock Connector connector
+  
+  before{
+    when(connected.connector).thenReturn(connector)
+    when(connectJobFactory.create(any)).thenReturn(connectJob)
+    subject = new CommandExecutor(connected, connectJobFactory)
+  }
+
+  fact &quot;provides error if no connector&quot;{
+    when(connected.connector).thenReturn(null)
+    subject.run(ANY_COMMAND, handler)
+    verify(handler).handle(BACKEND_NOT_FOUND)
+    verifyNoMoreInteractions(handler)
+  }
+  
+  fact &quot;provides error if not connected&quot;{
+    when(connector.connected).thenReturn(false)
+    subject.run(ANY_COMMAND, handler)
+    verify(handler).handle(MODEL_NOT_YET_LOADED)
+    verifyNoMoreInteractions(handler)
+  }
+  
+  fact &quot;start backend if not connected&quot;{
+    when(connector.connected).thenReturn(false)
+    subject.run(ANY_COMMAND, handler)
+    verify(connectJob).execute
+  }
+  
+  fact &quot;starts backend only once if job is already running&quot;{
+    when(connector.connected).thenReturn(false)
+    subject.run(ANY_COMMAND, handler)
+    when(connectJob.isRunning).thenReturn(true)
+    subject.run(ANY_COMMAND, handler)
+    verify(connectJob).execute
+  }
+  
+  fact &quot;provides error if busy&quot;{
+    when(connector.connected).thenReturn(true)
+    when(connector.busy).thenReturn(true)
+    subject.run(ANY_COMMAND, handler)
+    verify(handler).handle(LOADING_MODEL)
+    verifyNoMoreInteractions(handler)
+  }
+  
+  fact &quot;provides response&quot;{
+    when(connector.connected).thenReturn(true)
+    when(connector.busy).thenReturn(false)
+    when(connector.execute(ANY_COMMAND)).thenReturn(ANY_COMMAND_RESPONSE)
+    subject.run(ANY_COMMAND, handler)
+    verify(handler).handleResult(ANY_COMMAND_RESPONSE)
+    verifyNoMoreInteractions(handler)
+  }
+}
+</pre>
+						    </p></div>
+						  </div>
+					</div> 
+				</div> <!-- /row -->
+			</div> <!-- /content -->
+		</div> <!-- /tabbable -->
+		<footer>
+			<p><small>Generated by <a href="http://www.jnario.org">Jnario</a>.</small></p>
+		</footer>
+	</div> <!-- /container -->
+
+</body>
+</html>
