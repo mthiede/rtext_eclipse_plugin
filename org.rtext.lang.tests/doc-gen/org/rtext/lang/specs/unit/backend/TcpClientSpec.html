@@ -71,11 +71,11 @@ assert callback.hasStarted</pre>
 <pre class="prettyprint lang-spec linenums">
 server.responses += progressMessage
 server.responses += responseMessage
-  
+
 subject.connect(ADDRESS, PORT)
 subject.sendRequest(ANY_COMMAND, callback)
 waitUntil[callback.response != null]
-  
+
 callback.progress.size =&gt; 1
 callback.response =&gt; [
   type =&gt; &quot;response&quot;

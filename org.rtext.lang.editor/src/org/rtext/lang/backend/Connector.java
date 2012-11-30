@@ -49,7 +49,6 @@ public class Connector {
 			disconnect();
 			delegate.handleError(error);
 		}
-		
 	}
 	
 	private static final String ADDRESS = "127.0.0.1";

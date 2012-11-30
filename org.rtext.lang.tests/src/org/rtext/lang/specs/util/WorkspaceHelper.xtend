@@ -14,7 +14,6 @@ import org.eclipse.ui.texteditor.MarkerUtilities
 import org.eclipse.xtend.lib.Property
 import org.eclipse.xtext.xbase.lib.Pair
 import org.eclipse.xtext.xbase.lib.Procedures$Procedure1
-import org.junit.After
 import org.junit.Before
 import org.rtext.lang.RTextPlugin
 

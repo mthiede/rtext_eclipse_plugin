@@ -8,7 +8,6 @@
 package org.rtext.lang.backend;
 
 import static java.lang.Integer.parseInt;
-import static org.rtext.lang.RTextPlugin.logError;
 import static org.rtext.lang.util.Closables.closeQuietly;
 import static org.rtext.lang.util.Expectations.greaterThanZero;
 

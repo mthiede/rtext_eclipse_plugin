@@ -12,6 +12,7 @@ import static java.util.Arrays.asList;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
@@ -42,6 +43,7 @@ public class ContentAssistProcessor implements IContentAssistProcessor {
 
 	private Connected connected;
 	private ImageHelper imageHelper;
+	private BackendConnectJob backendConnectJob;
 
 	public ContentAssistProcessor(Connected connected, ImageHelper imageHelper) {
 		this.connected = connected;
@@ -144,14 +146,19 @@ public class ContentAssistProcessor implements IContentAssistProcessor {
 	}
 
 	private List<Option> loadCompletions(IDocument document, int offset, String wordStart) {
+		Proposals proposals;
 		Connector connector = getConnector();
 		if (connector == null) {
-			return null;
+			proposals = errorProposal("Backend not yet available", wordStart);
 		}
-		Proposals proposals;
 		if (!connector.isConnected()) {
-			new BackendConnectJob(getConnector()).schedule(100);
-			proposals = errorProposal("model not yet loaded", wordStart);
+			if(backendConnectJob != null && backendConnectJob.getResult() == null){
+				proposals = errorProposal("Backend not yet available", wordStart);
+			}else{
+				backendConnectJob = new BackendConnectJob(getConnector());
+				backendConnectJob.schedule(100);
+				proposals = errorProposal("model not yet loaded", wordStart);
+			}
 		} else if (connector.isBusy()) {
 			proposals = errorProposal("loading model", wordStart);
 		} else {
