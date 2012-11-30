@@ -95,7 +95,7 @@ public class ContentAssistProcessor implements IContentAssistProcessor {
 		if (option.length() == 0) {
 			return true;
 		}
-		if(option.startsWith("\"")){
+		if(option.startsWith("\"") && !wordStart.startsWith("\"")){
 			return true;
 		}
 		if (wordStart.contains("/")) {
@@ -118,8 +118,9 @@ public class ContentAssistProcessor implements IContentAssistProcessor {
 			int start = offset - 1;
 			while (((start) >= topIndexStartOffset)
 					&& (Character.isLetterOrDigit(document.getChar(start))
-							|| document.getChar(start) == '/' || document
-							.getChar(start) == '_')) {
+							|| document.getChar(start) == '/' 
+							|| document.getChar(start) == '_'
+							|| document.getChar(start) == '"')) {
 				start--;
 			}
 			start++;
