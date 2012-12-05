@@ -29,6 +29,9 @@ public class MarkerUtil {
 	}};
 	
 	public void createMarker(IResource resource, Problem problem){
+		if(cannotAcceptMarker(resource)){
+			return;
+		}
 		Map<Object, Object> attributes = new HashMap<Object, Object>();
 		setLineNumber(attributes, problem.getLine());
 		setMessage(attributes, problem.getMessage());
@@ -42,11 +45,18 @@ public class MarkerUtil {
 			logError("Exception when setting marker on :" + resource.getFullPath(), e);
 		}
 	}
+
+	private boolean cannotAcceptMarker(IResource resource) {
+		return !resource.isAccessible();
+	}
 	
 	public void clearExistingMarkers(ConnectorScope scope) {
 		scope.forEach(new Procedure<IResource>() {
 			public void apply(IResource resource) {
 				try{
+					if(cannotAcceptMarker(resource)){
+						return;
+					}
 					resource.deleteMarkers(MarkerUtil.RTEXT_MARKERS, true, IResource.DEPTH_INFINITE);
 				} catch (CoreException e) {
 					logError("Exception when deleting marker on :" + "workspace", e);

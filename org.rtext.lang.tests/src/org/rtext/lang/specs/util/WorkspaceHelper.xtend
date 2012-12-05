@@ -23,8 +23,12 @@ class ProjectInitializer implements Procedure1<IContainer> {
 	
 	val files = <Pair<String, CharSequence>>newArrayList
 	val folders = <String>newArrayList
+	val linkedFolders = <Pair<String, String>>newArrayList
 	
 	override apply(IContainer p) {
+		linkedFolders.forEach[
+			helper.createLinkedFolder(p.name + "/" + it.key, it.value)
+		]
 		folders.forEach[
 			helper.createFolder(p.name + "/" + it)
 		]
@@ -42,10 +46,14 @@ class ProjectInitializer implements Procedure1<IContainer> {
 		folders += name
 	}
 	
+	def linkedFolder(String name, String path){
+		linkedFolders += name -> path
+	}
+	
 }
 
 class WorkspaceHelper {
-	
+	 
 	@Property val workspace = ResourcesPlugin::workspace
 	
 	val linkedProjects = <IProject>newArrayList
@@ -94,6 +102,16 @@ class WorkspaceHelper {
 	
 	def createFolder(String path){
 		workspace.root.getFolder(new Path(path)).create(true, true, monitor)
+	}
+	
+	def createLinkedFolder(String path, String location){
+	   val link = workspace.root.getFolder(new Path(path))
+	   val locationPath = file(location).location;
+	   if (workspace.validateLinkLocation(link, locationPath).isOK()) {
+	      link.createLink(locationPath, IResource::NONE, null);
+	   } else {
+	     throw new UnsupportedOperationException
+	   }
 	}
 	
 	def append(IFile file, CharSequence content){

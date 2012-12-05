@@ -24,7 +24,7 @@
 	<div class="container">
 		<div class="tabbable">
 			<div class="content">
-				<div class="page-header pending">
+				<div class="page-header notrun">
 					<h1>CommandExecutor</h1>
 					  <ul class="nav nav-tabs pull-right">
 					    <li class="active"><a href="#spec" data-toggle="tab">Spec</a></li>
@@ -117,7 +117,7 @@ describe CommandExecutor {
     verify(handler).handle(BACKEND_NOT_FOUND)
     verifyNoMoreInteractions(handler)
   }
-  
+   
   fact &quot;provides error if not connected&quot;{
     when(connector.connected).thenReturn(false)
     subject.run(ANY_COMMAND, handler)

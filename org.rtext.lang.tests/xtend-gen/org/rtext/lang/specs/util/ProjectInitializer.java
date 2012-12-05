@@ -32,8 +32,26 @@ public class ProjectInitializer implements Procedure1<IContainer> {
     }
   }.apply();
   
+  private final ArrayList<Pair<String,String>> linkedFolders = new Function0<ArrayList<Pair<String,String>>>() {
+    public ArrayList<Pair<String,String>> apply() {
+      ArrayList<Pair<String,String>> _newArrayList = CollectionLiterals.<Pair<String,String>>newArrayList();
+      return _newArrayList;
+    }
+  }.apply();
+  
   public void apply(final IContainer p) {
-    final Procedure1<String> _function = new Procedure1<String>() {
+    final Procedure1<Pair<String,String>> _function = new Procedure1<Pair<String,String>>() {
+        public void apply(final Pair<String,String> it) {
+          String _name = p.getName();
+          String _plus = (_name + "/");
+          String _key = it.getKey();
+          String _plus_1 = (_plus + _key);
+          String _value = it.getValue();
+          ProjectInitializer.this.helper.createLinkedFolder(_plus_1, _value);
+        }
+      };
+    IterableExtensions.<Pair<String,String>>forEach(this.linkedFolders, _function);
+    final Procedure1<String> _function_1 = new Procedure1<String>() {
         public void apply(final String it) {
           String _name = p.getName();
           String _plus = (_name + "/");
@@ -41,8 +59,8 @@ public class ProjectInitializer implements Procedure1<IContainer> {
           ProjectInitializer.this.helper.createFolder(_plus_1);
         }
       };
-    IterableExtensions.<String>forEach(this.folders, _function);
-    final Procedure1<Pair<String,CharSequence>> _function_1 = new Procedure1<Pair<String,CharSequence>>() {
+    IterableExtensions.<String>forEach(this.folders, _function_1);
+    final Procedure1<Pair<String,CharSequence>> _function_2 = new Procedure1<Pair<String,CharSequence>>() {
         public void apply(final Pair<String,CharSequence> it) {
           String _name = p.getName();
           String _plus = (_name + "/");
@@ -52,7 +70,7 @@ public class ProjectInitializer implements Procedure1<IContainer> {
           ProjectInitializer.this.helper.writeToFile(_value, fileName);
         }
       };
-    IterableExtensions.<Pair<String,CharSequence>>forEach(this.files, _function_1);
+    IterableExtensions.<Pair<String,CharSequence>>forEach(this.files, _function_2);
   }
   
   public boolean file(final String name, final CharSequence contents) {
@@ -63,6 +81,12 @@ public class ProjectInitializer implements Procedure1<IContainer> {
   
   public boolean folder(final String name) {
     boolean _add = this.folders.add(name);
+    return _add;
+  }
+  
+  public boolean linkedFolder(final String name, final String path) {
+    Pair<String,String> _mappedTo = Pair.<String, String>of(name, path);
+    boolean _add = this.linkedFolders.add(_mappedTo);
     return _add;
   }
 }

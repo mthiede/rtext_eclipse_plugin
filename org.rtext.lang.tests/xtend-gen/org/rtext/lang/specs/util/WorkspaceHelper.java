@@ -14,6 +14,7 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.ui.texteditor.MarkerUtilities;
@@ -144,6 +145,28 @@ public class WorkspaceHelper {
       IFolder _folder = _root.getFolder(_path);
       NullProgressMonitor _monitor = this.monitor();
       _folder.create(true, true, _monitor);
+    } catch (Exception _e) {
+      throw Exceptions.sneakyThrow(_e);
+    }
+  }
+  
+  public void createLinkedFolder(final String path, final String location) {
+    try {
+      IWorkspace _workspace = this.getWorkspace();
+      IWorkspaceRoot _root = _workspace.getRoot();
+      Path _path = new Path(path);
+      final IFolder link = _root.getFolder(_path);
+      IFile _file = this.file(location);
+      final IPath locationPath = _file.getLocation();
+      IWorkspace _workspace_1 = this.getWorkspace();
+      IStatus _validateLinkLocation = _workspace_1.validateLinkLocation(link, locationPath);
+      boolean _isOK = _validateLinkLocation.isOK();
+      if (_isOK) {
+        link.createLink(locationPath, IResource.NONE, null);
+      } else {
+        UnsupportedOperationException _unsupportedOperationException = new UnsupportedOperationException();
+        throw _unsupportedOperationException;
+      }
     } catch (Exception _e) {
       throw Exceptions.sneakyThrow(_e);
     }

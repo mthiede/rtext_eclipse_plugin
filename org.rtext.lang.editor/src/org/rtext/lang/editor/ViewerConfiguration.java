@@ -68,7 +68,7 @@ public class ViewerConfiguration extends SourceViewerConfiguration {
 	{
 	    ContentAssistant assistant = new ContentAssistant();
 	    ContentAssistProcessor tagContentAssistProcessor = ContentAssistProcessor.create(editor);
-	    assistant.enableAutoInsert(true);
+	    assistant.enableAutoInsert(false);
 	    assistant.setContentAssistProcessor(tagContentAssistProcessor, IDocument.DEFAULT_CONTENT_TYPE);
 	    assistant.enableAutoActivation(true);
 	    assistant.setAutoActivationDelay(0);

@@ -112,7 +112,7 @@ Feature: Finding the element declaration
   Then it opens an editor for &quot;test_metamodel.ect&quot; 
       hyperlinks.head.open
     Workbenches::activePage.activeEditor?.title should contain args.first
-
+ 
   Scenario: Hyperlink highlighting
   Given the model is loaded
   When I get the hyperlinks for &quot;/StatemachineMM/State&quot;

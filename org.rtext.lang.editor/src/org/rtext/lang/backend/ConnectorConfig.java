@@ -7,27 +7,29 @@
  *******************************************************************************/
 package org.rtext.lang.backend;
 
+import static java.util.Arrays.asList;
 import static org.rtext.lang.util.Files.extension;
 
 import java.io.File;
-import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ConnectorConfig {
 	
 	private File configFile;
-	private String[] patterns;
+	private Set<String> patterns;
 	private String command;
 	
 	public ConnectorConfig(File configFile, String command, String... patterns) {
 		this.configFile = configFile;
-		this.patterns = patterns;
+		this.patterns = new HashSet<String>(asList(patterns));
 		this.command = command;
 	}
 	
 	public File getConfigFile() {
 		return configFile;
 	}
-	public String[] getPatterns() {
+	public Set<String> getPatterns() {
 		return patterns;
 	}
 	public String getCommand() {
@@ -37,6 +39,14 @@ public class ConnectorConfig {
 		return configFile.getAbsolutePath() + command;
 	}
 	
+	public boolean matches(String fileName){
+		return patterns.contains(extension(fileName));
+	}
+
+	public File getWorkingDir(){
+		return configFile.getParentFile();
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -44,14 +54,11 @@ public class ConnectorConfig {
 		result = prime * result + ((command == null) ? 0 : command.hashCode());
 		result = prime * result
 				+ ((configFile == null) ? 0 : configFile.hashCode());
-		result = prime * result + Arrays.hashCode(patterns);
+		result = prime * result
+				+ ((patterns == null) ? 0 : patterns.hashCode());
 		return result;
 	}
-	
-	public File getWorkingDir(){
-		return configFile.getParentFile();
-	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -71,18 +78,12 @@ public class ConnectorConfig {
 				return false;
 		} else if (!configFile.equals(other.configFile))
 			return false;
-		if (!Arrays.equals(patterns, other.patterns))
+		if (patterns == null) {
+			if (other.patterns != null)
+				return false;
+		} else if (!patterns.equals(other.patterns))
 			return false;
 		return true;
 	}
-
-	public boolean matches(String fileName){
-		String extension = extension(fileName);
-		for (String pattern : patterns) {
-			if(pattern.equals(extension)){
-				return true;
-			}
-		}
-		return false;
-	}
+	
 }

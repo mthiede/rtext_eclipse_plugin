@@ -35,7 +35,7 @@ describe CommandExecutor {
 		verify(handler).handle(BACKEND_NOT_FOUND)
 		verifyNoMoreInteractions(handler)
 	}
-	
+	 
 	fact "provides error if not connected"{
 		when(connector.connected).thenReturn(false)
 		subject.run(ANY_COMMAND, handler)

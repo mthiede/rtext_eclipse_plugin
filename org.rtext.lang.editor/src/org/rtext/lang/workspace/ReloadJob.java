@@ -1,12 +1,8 @@
 package org.rtext.lang.workspace;
 
-import static org.rtext.lang.backend.RTextFile.RTEXT_FILE_NAME;
+import java.util.Map;
+import java.util.Map.Entry;
 
-import java.io.File;
-import java.util.Collection;
-import java.util.Collections;
-
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -16,75 +12,57 @@ import org.rtext.lang.backend.Connector;
 import org.rtext.lang.backend.ConnectorConfig;
 import org.rtext.lang.backend.ConnectorProvider;
 import org.rtext.lang.backend.ConnectorScope;
-import org.rtext.lang.backend.FileSystemBasedConfigProvider;
-import org.rtext.lang.backend.RTextFile;
-import org.rtext.lang.backend.RTextFileParser;
 import org.rtext.lang.commands.LoadModelCallback;
 import org.rtext.lang.commands.LoadModelCommand;
 
-public class ReloadJob extends RTextJob{
-		
-		public static Job create(ConnectorProvider connectorProvider, IResource resource) {
-			return new ReloadJob(connectorProvider, resource, new MarkerUtil(), FileSystemBasedConfigProvider.create());
-		}
+public class ReloadJob extends RTextJob {
 
-		private IResource resource;
-		private ConnectorProvider connectorProvider;
-		private MarkerUtil markerUtil;
-		private FileSystemBasedConfigProvider configProvider;
-
-		public ReloadJob(ConnectorProvider connectorProvider, IResource resource, MarkerUtil markerUtil, FileSystemBasedConfigProvider configProvider) {
-			super("Reloading RText backends");
-			this.connectorProvider = connectorProvider;
-			this.resource = resource;
-			this.markerUtil = markerUtil;
-			this.configProvider = configProvider;
-		}
-
-		@Override
-		protected IStatus run(IProgressMonitor monitor) {
-			connectorProvider.dispose(resource.getLocation().toString());
-			if(!resource.exists()){
-				return Status.OK_STATUS;
-			}
-			triggerReload(resource, monitor);
-			return Status.OK_STATUS;
-		}
-		
-		private void triggerReload(IResource resource, IProgressMonitor monitor) {
-			Collection<ConnectorConfig> configurations = getConfigurations(resource);
-			monitor.beginTask("Reloading models", configurations.size());
-			for (ConnectorConfig config : configurations) {
-				try{
-					clearMarkers(config);
-					reloadModels(config);
-					monitor.worked(1);
-				}catch(Throwable e){
-					RTextPlugin.logError(e.getMessage(), e);
-				}
-			}
-			monitor.done();
-		}
-
-		private Collection<ConnectorConfig> getConfigurations(IResource resource) {
-			Collection<ConnectorConfig> configurations;
-			if(RTEXT_FILE_NAME.equals(resource.getName())){
-				File configFile = new File(resource.getLocation().toString());
-				RTextFile rTextFile = new RTextFileParser().doParse(configFile);
-				configurations = rTextFile.getConfigurations();
-			}else{
-				ConnectorConfig config = configProvider.get(resource.getLocation().toFile().toString());
-				configurations = Collections.singletonList(config);
-			}
-			return configurations;
-		}
-
-		private void clearMarkers(ConnectorConfig config) {
-			markerUtil.clearExistingMarkers(ConnectorScope.create(config));
-		}
-
-		private void reloadModels(ConnectorConfig config) {
-			Connector connector = connectorProvider.get(config);
-			connector.execute(new LoadModelCommand(), LoadModelCallback.create(config));
-		}
+	public static Job create(ConnectorProvider connectorProvider, Map<ConnectorConfig, Boolean> configs) {
+		return new ReloadJob(configs, connectorProvider, new MarkerUtil());
 	}
+	
+	private MarkerUtil markerUtil;
+	
+	private Map<ConnectorConfig, Boolean> configurations;
+	private ConnectorProvider connectorProvider;
+
+	public ReloadJob(Map<ConnectorConfig, Boolean> configs, ConnectorProvider connectorProvider,
+			MarkerUtil markerUtil) {
+		super("Reloading RText backends");
+		this.configurations = configs;
+		this.connectorProvider = connectorProvider;
+		this.markerUtil = markerUtil;
+	}
+	
+	@Override
+	protected IStatus run(IProgressMonitor monitor) {
+		System.out.println("Starting reload job");
+		monitor.beginTask("Reloading models", configurations.size());
+		for (Entry<ConnectorConfig, Boolean> entry : configurations.entrySet()) {
+			try {
+				ConnectorConfig config = entry.getKey();
+				clearMarkers(config);
+				Connector connector = connectorProvider.get(config);
+				if(entry.getValue()){
+					connector.disconnect();
+				}
+				reloadModels(connector, config);
+				monitor.worked(1);
+			} catch (Throwable e) {
+				RTextPlugin.logError(e.getMessage(), e);
+			}
+		}
+		monitor.done();
+		return Status.OK_STATUS;
+	}
+
+	
+	private void clearMarkers(ConnectorConfig config) {
+		markerUtil.clearExistingMarkers(ConnectorScope.create(config));
+	}
+
+	private void reloadModels(Connector connector, ConnectorConfig config) {
+		connector.execute(new LoadModelCommand(),
+				LoadModelCallback.create(config));
+	}
+}

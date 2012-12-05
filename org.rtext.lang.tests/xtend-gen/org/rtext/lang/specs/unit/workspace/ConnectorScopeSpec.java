@@ -2,12 +2,13 @@ package org.rtext.lang.specs.unit.workspace;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.xtext.xbase.lib.CollectionLiterals;
 import org.eclipse.xtext.xbase.lib.Functions.Function0;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
 import org.hamcrest.StringDescription;
 import org.jnario.lib.JnarioCollectionLiterals;
@@ -51,12 +52,12 @@ public class ConnectorScopeSpec {
       };
     IProject _createProject = this._workspaceHelper.createProject("scope_test", _function);
     this.project = _createProject;
-    ArrayList<String> _scope = this.scope(".rtext");
-    List<String> _list = JnarioCollectionLiterals.<String>list("file1.aaa");
-    boolean _doubleArrow = Should.operator_doubleArrow(_scope, _list);
-    Assert.assertTrue("\nExpected scope(\".rtext\") => list(\"file1.aaa\") but"
+    Set<String> _scope = this.scope(".rtext");
+    Set<String> _set = JnarioCollectionLiterals.<String>set("/scope_test/file1.aaa");
+    boolean _doubleArrow = Should.operator_doubleArrow(_scope, _set);
+    Assert.assertTrue("\nExpected scope(\".rtext\") => set(\"/scope_test/file1.aaa\") but"
      + "\n     scope(\".rtext\") is " + new StringDescription().appendValue(_scope).toString()
-     + "\n     list(\"file1.aaa\") is " + new StringDescription().appendValue(_list).toString() + "\n", _doubleArrow);
+     + "\n     set(\"/scope_test/file1.aaa\") is " + new StringDescription().appendValue(_set).toString() + "\n", _doubleArrow);
     
   }
   
@@ -73,12 +74,12 @@ public class ConnectorScopeSpec {
       };
     IProject _createProject = this._workspaceHelper.createProject("scope_test", _function);
     this.project = _createProject;
-    ArrayList<String> _scope = this.scope(".rtext");
-    List<String> _list = JnarioCollectionLiterals.<String>list("file1.aaa");
-    boolean _doubleArrow = Should.operator_doubleArrow(_scope, _list);
-    Assert.assertTrue("\nExpected scope(\".rtext\") => list(\"file1.aaa\") but"
+    Set<String> _scope = this.scope(".rtext");
+    Set<String> _set = JnarioCollectionLiterals.<String>set("/scope_test/folder/file1.aaa");
+    boolean _doubleArrow = Should.operator_doubleArrow(_scope, _set);
+    Assert.assertTrue("\nExpected scope(\".rtext\") => set(\"/scope_test/folder/file1.aaa\") but"
      + "\n     scope(\".rtext\") is " + new StringDescription().appendValue(_scope).toString()
-     + "\n     list(\"file1.aaa\") is " + new StringDescription().appendValue(_list).toString() + "\n", _doubleArrow);
+     + "\n     set(\"/scope_test/folder/file1.aaa\") is " + new StringDescription().appendValue(_set).toString() + "\n", _doubleArrow);
     
   }
   
@@ -94,12 +95,12 @@ public class ConnectorScopeSpec {
       };
     IProject _createProject = this._workspaceHelper.createProject("scope_test", _function);
     this.project = _createProject;
-    ArrayList<String> _scope = this.scope("../../.rtext");
-    List<String> _list = JnarioCollectionLiterals.<String>list("file1.aaa");
-    boolean _doubleArrow = Should.operator_doubleArrow(_scope, _list);
-    Assert.assertTrue("\nExpected scope(\"../../.rtext\") => list(\"file1.aaa\") but"
+    Set<String> _scope = this.scope("../../.rtext");
+    Set<String> _set = JnarioCollectionLiterals.<String>set("/scope_test/file1.aaa");
+    boolean _doubleArrow = Should.operator_doubleArrow(_scope, _set);
+    Assert.assertTrue("\nExpected scope(\"../../.rtext\") => set(\"/scope_test/file1.aaa\") but"
      + "\n     scope(\"../../.rtext\") is " + new StringDescription().appendValue(_scope).toString()
-     + "\n     list(\"file1.aaa\") is " + new StringDescription().appendValue(_list).toString() + "\n", _doubleArrow);
+     + "\n     set(\"/scope_test/file1.aaa\") is " + new StringDescription().appendValue(_set).toString() + "\n", _doubleArrow);
     
   }
   
@@ -113,7 +114,7 @@ public class ConnectorScopeSpec {
           it.file("file2.bbb", "content");
         }
       };
-    IProject _createProject = this._workspaceHelper.createProject("test1", _function);
+    IProject _createProject = this._workspaceHelper.createProject("scope_test1", _function);
     this.project = _createProject;
     final Procedure1<ProjectInitializer> _function_1 = new Procedure1<ProjectInitializer>() {
         public void apply(final ProjectInitializer it) {
@@ -121,18 +122,45 @@ public class ConnectorScopeSpec {
           it.file("file4.bbb", "content");
         }
       };
-    this._workspaceHelper.createProject("test2", _function_1);
-    ArrayList<String> _scope = this.scope("../../.rtext");
-    List<String> _list = JnarioCollectionLiterals.<String>list("file1.aaa", "file3.aaa");
-    boolean _doubleArrow = Should.operator_doubleArrow(_scope, _list);
-    Assert.assertTrue("\nExpected scope(\"../../.rtext\") => list(\"file1.aaa\", \"file3.aaa\") but"
+    this._workspaceHelper.createProject("scope_test2", _function_1);
+    Set<String> _scope = this.scope("../../.rtext");
+    Set<String> _set = JnarioCollectionLiterals.<String>set("/scope_test1/file1.aaa", "/scope_test2/file3.aaa");
+    boolean _doubleArrow = Should.operator_doubleArrow(_scope, _set);
+    Assert.assertTrue("\nExpected scope(\"../../.rtext\") => set(\"/scope_test1/file1.aaa\", \"/scope_test2/file3.aaa\") but"
      + "\n     scope(\"../../.rtext\") is " + new StringDescription().appendValue(_scope).toString()
-     + "\n     list(\"file1.aaa\", \"file3.aaa\") is " + new StringDescription().appendValue(_list).toString() + "\n", _doubleArrow);
+     + "\n     set(\"/scope_test1/file1.aaa\", \"/scope_test2/file3.aaa\") is " + new StringDescription().appendValue(_set).toString() + "\n", _doubleArrow);
     
   }
   
-  public ArrayList<String> scope(final String path) {
-    ArrayList<String> _xblockexpression = null;
+  @Test
+  @Named("Contains linked files in multiple projects")
+  @Order(5)
+  public void _containsLinkedFilesInMultipleProjects() throws Exception {
+    final Procedure1<ProjectInitializer> _function = new Procedure1<ProjectInitializer>() {
+        public void apply(final ProjectInitializer it) {
+          it.folder("folder");
+          it.file("folder/file1.aaa", "content");
+        }
+      };
+    IProject _createProject = this._workspaceHelper.createProject("scope_test1", _function);
+    this.project = _createProject;
+    final Procedure1<ProjectInitializer> _function_1 = new Procedure1<ProjectInitializer>() {
+        public void apply(final ProjectInitializer it) {
+          it.linkedFolder("folder", "scope_test1/folder");
+        }
+      };
+    this._workspaceHelper.createProject("scope_test2", _function_1);
+    Set<String> _scope = this.scope("../../.rtext");
+    Set<String> _set = JnarioCollectionLiterals.<String>set("/scope_test1/folder/file1.aaa", "/scope_test2/folder/file1.aaa");
+    boolean _doubleArrow = Should.operator_doubleArrow(_scope, _set);
+    Assert.assertTrue("\nExpected scope(\"../../.rtext\") => set(\"/scope_test1/folder/file1.aaa\", \"/scope_test2/folder/file1.aaa\") but"
+     + "\n     scope(\"../../.rtext\") is " + new StringDescription().appendValue(_scope).toString()
+     + "\n     set(\"/scope_test1/folder/file1.aaa\", \"/scope_test2/folder/file1.aaa\") is " + new StringDescription().appendValue(_set).toString() + "\n", _doubleArrow);
+    
+  }
+  
+  public Set<String> scope(final String path) {
+    Set<String> _xblockexpression = null;
     {
       IPath _location = this.project.getLocation();
       File location = _location.toFile();
@@ -146,8 +174,9 @@ public class ConnectorScopeSpec {
       final ArrayList<String> scopedElements = CollectionLiterals.<String>newArrayList();
       final Procedure1<IResource> _function = new Procedure1<IResource>() {
           public void apply(final IResource it) {
-            String _name = it.getName();
-            scopedElements.add(_name);
+            IPath _fullPath = it.getFullPath();
+            String _string = _fullPath.toString();
+            scopedElements.add(_string);
           }
         };
       scope.forEach(new Procedure<IResource>() {
@@ -155,7 +184,8 @@ public class ConnectorScopeSpec {
             _function.apply(param);
           }
       });
-      _xblockexpression = (scopedElements);
+      Set<String> _set = IterableExtensions.<String>toSet(scopedElements);
+      _xblockexpression = (_set);
     }
     return _xblockexpression;
   }

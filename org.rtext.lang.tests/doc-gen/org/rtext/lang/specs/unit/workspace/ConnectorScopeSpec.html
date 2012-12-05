@@ -41,7 +41,7 @@ project = createProject(&quot;scope_test&quot;)[
   file(&quot;file1.aaa&quot;, &quot;content&quot;)
   file(&quot;file2.bbb&quot;, &quot;content&quot;)
 ]
-scope(&quot;.rtext&quot;) =&gt; list(&quot;file1.aaa&quot;)</pre>
+scope(&quot;.rtext&quot;) =&gt; set(&quot;/scope_test/file1.aaa&quot;)</pre>
 </li><li><p id="Contains_files_in_subdirectory_directory" class="example notrun"><strong>Contains files in subdirectory directory</strong></p>
 <pre class="prettyprint lang-spec linenums">
 project = createProject(&quot;scope_test&quot;)[
@@ -49,25 +49,35 @@ project = createProject(&quot;scope_test&quot;)[
   file(&quot;folder/file1.aaa&quot;, &quot;content&quot;)
   file(&quot;folder/file2.bbb&quot;, &quot;content&quot;)
 ]
-scope(&quot;.rtext&quot;) =&gt; list(&quot;file1.aaa&quot;)</pre>
+scope(&quot;.rtext&quot;) =&gt; set(&quot;/scope_test/folder/file1.aaa&quot;)</pre>
 </li><li><p id="Contains_files_in_project" class="example notrun"><strong>Contains files in project</strong></p>
 <pre class="prettyprint lang-spec linenums">
 project = createProject(&quot;scope_test&quot;)[
   file(&quot;file1.aaa&quot;, &quot;content&quot;)
   file(&quot;file2.bbb&quot;, &quot;content&quot;)
 ]
-scope(&quot;../../.rtext&quot;) =&gt; list(&quot;file1.aaa&quot;)</pre>
+scope(&quot;../../.rtext&quot;) =&gt; set(&quot;/scope_test/file1.aaa&quot;)</pre>
 </li><li><p id="Contains_files_in_multiple_projects" class="example notrun"><strong>Contains files in multiple projects</strong></p>
 <pre class="prettyprint lang-spec linenums">
-project = createProject(&quot;test1&quot;)[
+project = createProject(&quot;scope_test1&quot;)[
   file(&quot;file1.aaa&quot;, &quot;content&quot;)
   file(&quot;file2.bbb&quot;, &quot;content&quot;)
 ]
-createProject(&quot;test2&quot;)[
+createProject(&quot;scope_test2&quot;)[
   file(&quot;file3.aaa&quot;, &quot;content&quot;)
   file(&quot;file4.bbb&quot;, &quot;content&quot;)
 ]
-scope(&quot;../../.rtext&quot;) =&gt; list(&quot;file1.aaa&quot;, &quot;file3.aaa&quot;)</pre>
+scope(&quot;../../.rtext&quot;) =&gt; set(&quot;/scope_test1/file1.aaa&quot;, &quot;/scope_test2/file3.aaa&quot;)</pre>
+</li><li><p id="Contains_linked_files_in_multiple_projects" class="example notrun"><strong>Contains linked files in multiple projects</strong></p>
+<pre class="prettyprint lang-spec linenums">
+project = createProject(&quot;scope_test1&quot;)[
+  folder(&quot;folder&quot;)
+  file(&quot;folder/file1.aaa&quot;, &quot;content&quot;)
+]
+createProject(&quot;scope_test2&quot;)[
+  linkedFolder(&quot;folder&quot;, &quot;scope_test1/folder&quot;)
+]
+scope(&quot;../../.rtext&quot;) =&gt; set(&quot;/scope_test1/folder/file1.aaa&quot;, &quot;/scope_test2/folder/file1.aaa&quot;)</pre>
 </li></ul>
 							</div>
 						    <div class="tab-pane" id="source">
@@ -87,7 +97,7 @@ import static org.jnario.lib.JnarioCollectionLiterals.*
 import static extension org.jnario.lib.Should.*
 
 describe ConnectorScope{
-  
+   
   extension WorkspaceHelper = new WorkspaceHelper
   IProject project
   
@@ -96,7 +106,7 @@ describe ConnectorScope{
       file(&quot;file1.aaa&quot;, &quot;content&quot;)
       file(&quot;file2.bbb&quot;, &quot;content&quot;)
     ]
-    scope(&quot;.rtext&quot;) =&gt; list(&quot;file1.aaa&quot;)
+    scope(&quot;.rtext&quot;) =&gt; set(&quot;/scope_test/file1.aaa&quot;)
   }
   
   fact &quot;Contains files in subdirectory directory&quot;{
@@ -105,7 +115,7 @@ describe ConnectorScope{
       file(&quot;folder/file1.aaa&quot;, &quot;content&quot;)
       file(&quot;folder/file2.bbb&quot;, &quot;content&quot;)
     ]
-    scope(&quot;.rtext&quot;) =&gt; list(&quot;file1.aaa&quot;)
+    scope(&quot;.rtext&quot;) =&gt; set(&quot;/scope_test/folder/file1.aaa&quot;)
   }
   
   fact &quot;Contains files in project&quot;{
@@ -113,19 +123,30 @@ describe ConnectorScope{
       file(&quot;file1.aaa&quot;, &quot;content&quot;)
       file(&quot;file2.bbb&quot;, &quot;content&quot;)
     ]
-    scope(&quot;../../.rtext&quot;) =&gt; list(&quot;file1.aaa&quot;)
+    scope(&quot;../../.rtext&quot;) =&gt; set(&quot;/scope_test/file1.aaa&quot;)
   }
   
   fact &quot;Contains files in multiple projects&quot;{
-    project = createProject(&quot;test1&quot;)[
+    project = createProject(&quot;scope_test1&quot;)[
       file(&quot;file1.aaa&quot;, &quot;content&quot;)
       file(&quot;file2.bbb&quot;, &quot;content&quot;)
     ]
-    createProject(&quot;test2&quot;)[
+    createProject(&quot;scope_test2&quot;)[
       file(&quot;file3.aaa&quot;, &quot;content&quot;)
       file(&quot;file4.bbb&quot;, &quot;content&quot;)
     ]
-    scope(&quot;../../.rtext&quot;) =&gt; list(&quot;file1.aaa&quot;, &quot;file3.aaa&quot;)
+    scope(&quot;../../.rtext&quot;) =&gt; set(&quot;/scope_test1/file1.aaa&quot;, &quot;/scope_test2/file3.aaa&quot;)
+  }
+  
+  fact &quot;Contains linked files in multiple projects&quot;{
+    project = createProject(&quot;scope_test1&quot;)[
+      folder(&quot;folder&quot;)
+      file(&quot;folder/file1.aaa&quot;, &quot;content&quot;)
+    ]
+    createProject(&quot;scope_test2&quot;)[
+      linkedFolder(&quot;folder&quot;, &quot;scope_test1/folder&quot;)
+    ]
+    scope(&quot;../../.rtext&quot;) =&gt; set(&quot;/scope_test1/folder/file1.aaa&quot;, &quot;/scope_test2/folder/file1.aaa&quot;)
   }
   
   def scope(String path){
@@ -133,8 +154,8 @@ describe ConnectorScope{
     location = new File(location.toString + &quot;/&quot; + path)
     val scope = ConnectorScope::create(new ConnectorConfig(location, &quot;&quot;, &quot;*.aaa&quot;))
     val scopedElements = &lt;String&gt;newArrayList
-    scope.forEach[scopedElements+=name]
-    scopedElements
+    scope.forEach[scopedElements+=fullPath.toString]
+    scopedElements.toSet
   }
 }
 </pre>
