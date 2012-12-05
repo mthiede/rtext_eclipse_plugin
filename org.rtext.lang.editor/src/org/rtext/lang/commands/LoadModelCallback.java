@@ -40,13 +40,11 @@ public class LoadModelCallback extends WorkspaceCallback<LoadedModel> {
 	
 	public static class ProblemUpdateJob extends RTextJob{
 		private Map<IResource, List<Problem>> problems;
-		private ConnectorScope scope;
 		private MarkerUtil makerUtil = new MarkerUtil();
 
 		public ProblemUpdateJob(Map<IResource, List<Problem>> problems, ConnectorScope scope) {
 			super(PROBLEM_MARKER_JOB);
 			this.problems = problems;
-			this.scope = scope;
 			setRule(lockAll(problems.keySet()));
 		}
 		
@@ -56,27 +54,26 @@ public class LoadModelCallback extends WorkspaceCallback<LoadedModel> {
 		
 		@Override
 		protected IStatus run(IProgressMonitor monitor) {
-			makerUtil.clearExistingMarkers(scope);
-			addNewMarkers();
+			addNewMarkers(monitor);
 			return Status.OK_STATUS;
 		}
 
-		public void addNewMarkers() {
+		public void addNewMarkers(IProgressMonitor monitor) {
+			monitor.beginTask(PROBLEM_MARKER_JOB, problems.size());
 			int problemCount = 0;
 			for (Entry<IResource, List<Problem>> entry : problems.entrySet()) {
-				if(problemCount >= 100){
-					return;
-				}
 				IResource resource = entry.getKey();
 				for (Problem problem : entry.getValue()) {
+					if(problemCount >= 100){
+						return;
+					}
+					problemCount++;
 					makerUtil.createMarker(resource, problem);
 				}
+				monitor.worked(1);
 			}
+			monitor.done();
 		}
-
-		
-
-		
 	}
 	
 	private ProblemUpdateJobFactory jobFactory;
