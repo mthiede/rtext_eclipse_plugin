@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.rtext.lang.feature"
-      label="RText Feature"
+      label="RText Editor"
       version="0.0.8.qualifier"
       provider-name="E.S.R. Labs">
 
