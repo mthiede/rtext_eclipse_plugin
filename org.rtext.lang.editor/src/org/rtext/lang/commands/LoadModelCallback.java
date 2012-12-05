@@ -60,12 +60,12 @@ public class LoadModelCallback extends WorkspaceCallback<LoadedModel> {
 
 		public void addNewMarkers(IProgressMonitor monitor) {
 			monitor.beginTask(PROBLEM_MARKER_JOB, problems.size());
-			int problemCount = 0;
 			for (Entry<IResource, List<Problem>> entry : problems.entrySet()) {
 				IResource resource = entry.getKey();
+				int problemCount = 0;
 				for (Problem problem : entry.getValue()) {
 					if(problemCount >= 100){
-						return;
+						break;
 					}
 					problemCount++;
 					makerUtil.createMarker(resource, problem);
