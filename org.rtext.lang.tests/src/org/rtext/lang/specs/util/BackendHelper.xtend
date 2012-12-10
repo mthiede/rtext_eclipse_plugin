@@ -18,6 +18,8 @@ import org.rtext.lang.backend.FileSystemBasedConfigProvider
 import org.rtext.lang.commands.LoadModelCallback
 import org.rtext.lang.backend.ConnectorConfig
 import org.rtext.lang.editor.Connected
+import org.rtext.lang.RTextPlugin
+import org.junit.Before
 
 class BackendHelper implements Connected{
 	ConnectorConfig config
@@ -74,9 +76,16 @@ class BackendHelper implements Connected{
 		waitingCallback.waitForResponse
 	}
 	
+	@Before
+	def setUp(){
+		connectorProvider.dispose
+		RTextPlugin::getDefault().stopListeningForRTextFileChanges
+	}	
+	
 	@After
 	def teardown(){
 		connectorProvider.dispose
+		RTextPlugin::getDefault().startListeningForRTextFileChanges
 	}	
 	
 	def offsetAfter(String substring){

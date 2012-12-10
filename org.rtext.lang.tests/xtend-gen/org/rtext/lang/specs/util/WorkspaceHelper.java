@@ -26,6 +26,7 @@ import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.ListExtensions;
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
+import org.junit.After;
 import org.junit.Before;
 import org.rtext.lang.RTextPlugin;
 import org.rtext.lang.backend.ConnectorProvider;
@@ -238,32 +239,55 @@ public class WorkspaceHelper {
   @Before
   public void cleanUpWorkspace() throws Exception {
     RTextPlugin _default = RTextPlugin.getDefault();
-    ConnectorProvider _connectorProvider = _default.getConnectorProvider();
+    _default.stopListeningForRTextFileChanges();
+    RTextPlugin _default_1 = RTextPlugin.getDefault();
+    ConnectorProvider _connectorProvider = _default_1.getConnectorProvider();
     _connectorProvider.dispose();
     IWorkspace _workspace = this.getWorkspace();
     IWorkspaceRoot _root = _workspace.getRoot();
     IProject[] _projects = _root.getProjects();
     final Procedure1<IProject> _function = new Procedure1<IProject>() {
         public void apply(final IProject it) {
-          try {
-            IWorkspace _workspace = it.getWorkspace();
-            IWorkspaceRoot _root = _workspace.getRoot();
-            IPath _location = _root.getLocation();
-            IPath _location_1 = it.getLocation();
-            boolean _isPrefixOf = _location.isPrefixOf(_location_1);
-            if (_isPrefixOf) {
+          IWorkspace _workspace = it.getWorkspace();
+          IWorkspaceRoot _root = _workspace.getRoot();
+          IPath _location = _root.getLocation();
+          IPath _location_1 = it.getLocation();
+          boolean _isPrefixOf = _location.isPrefixOf(_location_1);
+          if (_isPrefixOf) {
+            try {
               NullProgressMonitor _monitor = WorkspaceHelper.this.monitor();
               it.delete(true, true, _monitor);
-            } else {
+            } catch (final Throwable _t) {
+              if (_t instanceof Exception) {
+                final Exception e = (Exception)_t;
+              } else {
+                throw Exceptions.sneakyThrow(_t);
+              }
+            }
+          } else {
+            try {
               NullProgressMonitor _monitor_1 = WorkspaceHelper.this.monitor();
               it.delete(false, true, _monitor_1);
+            } catch (final Throwable _t_1) {
+              if (_t_1 instanceof Exception) {
+                final Exception e_1 = (Exception)_t_1;
+              } else {
+                throw Exceptions.sneakyThrow(_t_1);
+              }
             }
-          } catch (Exception _e) {
-            throw Exceptions.sneakyThrow(_e);
           }
         }
       };
     IterableExtensions.<IProject>forEach(((Iterable<IProject>)Conversions.doWrapArray(_projects)), _function);
+  }
+  
+  @After
+  public void restoreWorkspace() {
+    RTextPlugin _default = RTextPlugin.getDefault();
+    ConnectorProvider _connectorProvider = _default.getConnectorProvider();
+    _connectorProvider.dispose();
+    RTextPlugin _default_1 = RTextPlugin.getDefault();
+    _default_1.startListeningForRTextFileChanges();
   }
   
   public NullProgressMonitor monitor() {

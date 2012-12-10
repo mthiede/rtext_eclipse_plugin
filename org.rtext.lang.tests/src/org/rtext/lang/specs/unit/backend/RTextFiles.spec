@@ -41,8 +41,7 @@ describe RTextFiles {
 		rootFolder = newFolder("root")
 		parentFolder = newFolder("root/parent")
 		currentFolder = newFolder("root/parent/current")
-		modelFile = newFile(currentFolder, "input.txt")
-		
+		modelFile = new File(currentFolder + "/input.txt")
 		fileFinder = new RTextFiles(parser, modelFile) 
 	}
 
@@ -80,7 +79,9 @@ describe RTextFiles {
 	}
 	
 	def newRTextFile(File folder){
-		newFile(folder, ".rtext")
+		val file = new File(folder + "/.rtext")
+		file.createNewFile
+		file
 	}
 	
 }

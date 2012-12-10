@@ -2,7 +2,6 @@ package org.rtext.lang.specs.unit.workspace;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.xtend2.lib.StringConcatenation;
 import org.eclipse.xtext.xbase.lib.Functions.Function0;
 import org.jnario.runner.CreateWith;
@@ -12,6 +11,7 @@ import org.jnario.runner.Named;
 import org.jnario.runner.Order;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
@@ -19,7 +19,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.stubbing.OngoingStubbing;
 import org.mockito.verification.VerificationMode;
-import org.rtext.lang.RTextPlugin;
 import org.rtext.lang.backend.Connector;
 import org.rtext.lang.backend.ConnectorConfig;
 import org.rtext.lang.backend.ConnectorProvider;
@@ -35,6 +34,7 @@ import org.rtext.lang.workspace.RTextFileChangeListener;
 @RunWith(ExampleGroupRunner.class)
 @Named("RTextFileChangeListener")
 @CreateWith(value = MockInjector.class)
+@Ignore
 public class RTextFileChangeListenerSpec {
   public RTextFileChangeListener subject;
   
@@ -54,9 +54,7 @@ public class RTextFileChangeListenerSpec {
   
   @Before
   public void before() throws Exception {
-    RTextPlugin _default = RTextPlugin.getDefault();
-    _default.stopListeningForRTextFileChanges();
-    RTextFileChangeListenerSpec._workspaceHelper.createProject("rtext_test");
+    RTextFileChangeListenerSpec._workspaceHelper.createProject("rtext_test2");
     RTextFileChangeListener _rTextFileChangeListener = new RTextFileChangeListener(this.connectorProvider);
     this.subject = _rTextFileChangeListener;
     ConnectorConfig _any = Matchers.<ConnectorConfig>any(ConnectorConfig.class);
@@ -66,23 +64,23 @@ public class RTextFileChangeListenerSpec {
   }
   
   @Test
-  @Named("stops connectors when file is changed")
+  @Ignore
+  @Named("stops connectors when rtext file is changed [PENDING]")
   @Order(1)
-  public void _stopsConnectorsWhenFileIsChanged() throws Exception {
+  public void _stopsConnectorsWhenRtextFileIsChanged() throws Exception {
     this.createRTextFile();
     this.addListener();
     IFile _rtextFile = this.rtextFile();
     RTextFileChangeListenerSpec._workspaceHelper.append(_rtextFile, "\n");
     Jobs.waitForRTextJobs();
-    ConnectorProvider _verify = Mockito.<ConnectorProvider>verify(this.connectorProvider);
-    IFile _rtextFile_1 = this.rtextFile();
-    IPath _location = _rtextFile_1.getLocation();
-    String _string = _location.toString();
-    _verify.dispose(_string);
+    VerificationMode _times = Mockito.times(2);
+    Connector _verify = Mockito.<Connector>verify(this.connector, _times);
+    _verify.disconnect();
   }
   
   @Test
-  @Named("reconnects each config")
+  @Ignore
+  @Named("reconnects each config [PENDING]")
   @Order(2)
   public void _reconnectsEachConfig() throws Exception {
     this.createRTextFile();
@@ -98,7 +96,8 @@ public class RTextFileChangeListenerSpec {
   }
   
   @Test
-  @Named("does nothing if file is created")
+  @Ignore
+  @Named("does nothing if file is created [PENDING]")
   @Order(3)
   public void _doesNothingIfFileIsCreated() throws Exception {
     this.addListener();
@@ -110,29 +109,11 @@ public class RTextFileChangeListenerSpec {
     _verify.dispose(_anyString);
   }
   
-  @Test
-  @Named("stops connectors when file is deleted")
-  @Order(4)
-  public void _stopsConnectorsWhenFileIsDeleted() throws Exception {
-    this.createRTextFile();
-    this.addListener();
-    IFile _rtextFile = this.rtextFile();
-    RTextFileChangeListenerSpec._workspaceHelper.delete(_rtextFile);
-    Jobs.waitForRTextJobs();
-    ConnectorProvider _verify = Mockito.<ConnectorProvider>verify(this.connectorProvider);
-    IFile _rtextFile_1 = this.rtextFile();
-    IPath _location = _rtextFile_1.getLocation();
-    String _string = _location.toString();
-    _verify.dispose(_string);
-  }
-  
   @After
   public void after() throws Exception {
     RTextFileChangeListenerSpec._workspaceHelper.cleanUpWorkspace();
     IWorkspace _workspace = RTextFileChangeListenerSpec._workspaceHelper.getWorkspace();
     _workspace.removeResourceChangeListener(this.subject);
-    RTextPlugin _default = RTextPlugin.getDefault();
-    _default.startListeningForRTextFileChanges();
   }
   
   public void addListener() {
@@ -143,7 +124,7 @@ public class RTextFileChangeListenerSpec {
   }
   
   public IFile rtextFile() {
-    IFile _file = RTextFileChangeListenerSpec._workspaceHelper.file("rtext_test/.rtext");
+    IFile _file = RTextFileChangeListenerSpec._workspaceHelper.file("rtext_test2/.rtext");
     return _file;
   }
   
@@ -157,7 +138,7 @@ public class RTextFileChangeListenerSpec {
     _builder.newLine();
     _builder.append("ruby -I../../../../rgen/lib -I ../../../lib ../ecore_editor.rb \"*.ect2\" 2>&1");
     _builder.newLine();
-    IFile _writeToFile = RTextFileChangeListenerSpec._workspaceHelper.writeToFile(_builder, "rtext_test/.rtext");
+    IFile _writeToFile = RTextFileChangeListenerSpec._workspaceHelper.writeToFile(_builder, "rtext_test2/.rtext");
     return _writeToFile;
   }
 }

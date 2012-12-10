@@ -16,6 +16,7 @@ import org.eclipse.xtext.xbase.lib.Pair
 import org.eclipse.xtext.xbase.lib.Procedures$Procedure1
 import org.junit.Before
 import org.rtext.lang.RTextPlugin
+import org.junit.After
 
 class ProjectInitializer implements Procedure1<IContainer> {
 	
@@ -136,15 +137,29 @@ class WorkspaceHelper {
 	
 	
 	@Before def cleanUpWorkspace() throws Exception{
+		RTextPlugin::getDefault().stopListeningForRTextFileChanges
 		RTextPlugin::getDefault.connectorProvider.dispose
 		workspace.root.projects.forEach[
 			if(workspace.root.location.isPrefixOf(it.location)){
-				delete(true, true, monitor)
+				try{
+					delete(true, true, monitor)
+				}catch(Exception e){
+					
+				}
 			}
 			else{
-				delete(false, true, monitor)
+				try{
+					delete(false, true, monitor)
+				}catch(Exception e){
+					
+				}
 			}
 		]
+	}
+	
+	@After def restoreWorkspace(){
+		RTextPlugin::getDefault.connectorProvider.dispose
+		RTextPlugin::getDefault().startListeningForRTextFileChanges
 	}
 	
 	def monitor(){new NullProgressMonitor}

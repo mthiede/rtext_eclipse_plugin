@@ -35,33 +35,9 @@
 					<div class="span12">
 						  <div class="tab-content">
 							  	<div class="tab-pane active" id="spec">
-<ul><li><p id="stops_connectors_when_file_is_changed" class="example notrun"><strong>stops connectors when file is changed</strong></p>
-<pre class="prettyprint lang-spec linenums">
-createRTextFile
-addListener
-rtextFile.append('\n')
-waitForRTextJobs
-verify(connectorProvider).dispose(rtextFile.location.toString)</pre>
-</li><li><p id="reconnects_each_config" class="example notrun"><strong>reconnects each config</strong></p>
-<pre class="prettyprint lang-spec linenums">
-createRTextFile
-addListener
-rtextFile.append('\n')
-waitForRTextJobs
-verify(connector, times(2)).execute(isA(typeof(LoadModelCommand)), any)</pre>
-</li><li><p id="does_nothing_if_file_is_created" class="example notrun"><strong>does nothing if file is created</strong></p>
-<pre class="prettyprint lang-spec linenums">
-addListener
-createRTextFile
-waitForRTextJobs
-verify(connectorProvider, never).dispose(anyString)</pre>
-</li><li><p id="stops_connectors_when_file_is_deleted" class="example notrun"><strong>stops connectors when file is deleted</strong></p>
-<pre class="prettyprint lang-spec linenums">
-createRTextFile
-addListener
-rtextFile.delete
-waitForRTextJobs
-verify(connectorProvider).dispose(rtextFile.location.toString)</pre>
+<ul><li><p id="stops_connectors_when_rtext_file_is_changed" class="example pending"><strong>stops connectors when rtext file is changed [PENDING]</strong></p>
+</li><li><p id="reconnects_each_config" class="example pending"><strong>reconnects each config [PENDING]</strong></p>
+</li><li><p id="does_nothing_if_file_is_created" class="example pending"><strong>does nothing if file is created [PENDING]</strong></p>
 </li></ul>
 							</div>
 						    <div class="tab-pane" id="source">
@@ -71,8 +47,8 @@ verify(connectorProvider).dispose(rtextFile.location.toString)</pre>
 package org.rtext.lang.specs.unit.workspace
 
 import org.jnario.runner.CreateWith
+import org.junit.Ignore
 import org.mockito.Mock
-import org.rtext.lang.RTextPlugin
 import org.rtext.lang.backend.Connector
 import org.rtext.lang.backend.ConnectorConfig
 import org.rtext.lang.backend.ConnectorProvider
@@ -88,6 +64,7 @@ import static org.rtext.lang.specs.util.Jobs.*
 import static extension org.rtext.lang.specs.unit.workspace.RTextFileChangeListenerSpec.*
 
 @CreateWith(typeof(MockInjector))
+@Ignore
 describe RTextFileChangeListener {
   
   extension static WorkspaceHelper = new WorkspaceHelper
@@ -96,21 +73,20 @@ describe RTextFileChangeListener {
   @Mock Connector connector
   
   before{
-    RTextPlugin::getDefault.stopListeningForRTextFileChanges
-    createProject(&quot;rtext_test&quot;)
+    createProject(&quot;rtext_test2&quot;)
     subject = new RTextFileChangeListener(connectorProvider)
     when(connectorProvider.get(any(typeof(ConnectorConfig)))).thenReturn(connector)
   }
   
-  facts &quot;stops connectors when file is changed&quot;{
+  pending fact &quot;stops connectors when rtext file is changed&quot;{
     createRTextFile
     addListener
     rtextFile.append('\n')
     waitForRTextJobs
-    verify(connectorProvider).dispose(rtextFile.location.toString)
+    verify(connector, times(2)).disconnect()
   }
   
-  facts &quot;reconnects each config&quot;{
+  pending fact &quot;reconnects each config&quot;{
     createRTextFile
     addListener
     rtextFile.append('\n')
@@ -118,19 +94,11 @@ describe RTextFileChangeListener {
     verify(connector, times(2)).execute(isA(typeof(LoadModelCommand)), any)
   }
   
-  facts &quot;does nothing if file is created&quot;{
+  pending fact &quot;does nothing if file is created&quot;{
     addListener
     createRTextFile
     waitForRTextJobs
     verify(connectorProvider, never).dispose(anyString)
-  }
-  
-  facts &quot;stops connectors when file is deleted&quot;{
-    createRTextFile
-    addListener
-    rtextFile.delete
-    waitForRTextJobs
-    verify(connectorProvider).dispose(rtextFile.location.toString)
   }
   
   def addListener(){
@@ -139,7 +107,7 @@ describe RTextFileChangeListener {
   }
   
   def rtextFile(){
-    &quot;rtext_test/.rtext&quot;.file
+    &quot;rtext_test2/.rtext&quot;.file
   }
   
   def createRTextFile(){
@@ -148,13 +116,12 @@ describe RTextFileChangeListener {
     ruby -I../../../../rgen/lib -I ../../../lib ../ecore_editor.rb &quot;*.ect&quot; 2&gt;&amp;1
     *.ect2:
     ruby -I../../../../rgen/lib -I ../../../lib ../ecore_editor.rb &quot;*.ect2&quot; 2&gt;&amp;1
-    '''.writeToFile(&quot;rtext_test/.rtext&quot;)
+    '''.writeToFile(&quot;rtext_test2/.rtext&quot;)
   }
   
   after {
     cleanUpWorkspace
     workspace.removeResourceChangeListener(subject)
-    RTextPlugin::getDefault.startListeningForRTextFileChanges
   }
 }
 </pre>

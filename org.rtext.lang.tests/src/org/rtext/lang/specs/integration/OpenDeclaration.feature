@@ -29,7 +29,7 @@ Feature: Finding the element declaration
  
   Scenario: Hyperlink highlighting
   Given the model is loaded
-  When I get the hyperlinks for "/StatemachineMM/State"
+    When I get the hyperlinks for "/StatemachineMM/State"
    Then the hyperlink text is "/StatemachineMM/State"
     	val region = hyperlinks.head.getHyperlinkRegion
     b.document.get(region.offset, region.length) => args.first

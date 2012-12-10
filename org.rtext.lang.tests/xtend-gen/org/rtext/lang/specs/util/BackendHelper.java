@@ -9,6 +9,8 @@ import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.Functions.Function0;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.junit.After;
+import org.junit.Before;
+import org.rtext.lang.RTextPlugin;
 import org.rtext.lang.backend.CachingConnectorProvider;
 import org.rtext.lang.backend.Connector;
 import org.rtext.lang.backend.ConnectorConfig;
@@ -184,9 +186,18 @@ public class BackendHelper implements Connected {
     waitingCallback.waitForResponse();
   }
   
+  @Before
+  public void setUp() {
+    this.connectorProvider.dispose();
+    RTextPlugin _default = RTextPlugin.getDefault();
+    _default.stopListeningForRTextFileChanges();
+  }
+  
   @After
   public void teardown() {
     this.connectorProvider.dispose();
+    RTextPlugin _default = RTextPlugin.getDefault();
+    _default.startListeningForRTextFileChanges();
   }
   
   public int offsetAfter(final String substring) {

@@ -1,6 +1,7 @@
 package org.rtext.lang.specs.unit.backend;
 
 import java.io.File;
+import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.Functions.Function0;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.hamcrest.StringDescription;
@@ -23,7 +24,6 @@ import org.rtext.lang.backend.RTextFileFinder;
 import org.rtext.lang.backend.RTextFileParser;
 import org.rtext.lang.backend.RTextFiles;
 import org.rtext.lang.specs.unit.backend.RTextFilesFindingRtextFilesSpec;
-import org.rtext.lang.specs.util.Files;
 import org.rtext.lang.specs.util.MockInjector;
 
 @Contains(RTextFilesFindingRtextFilesSpec.class)
@@ -77,8 +77,9 @@ public class RTextFilesSpec {
     this.parentFolder = _newFolder_1;
     File _newFolder_2 = this.tempFolder.newFolder("root/parent/current");
     this.currentFolder = _newFolder_2;
-    File _newFile = Files.newFile(this.currentFolder, "input.txt");
-    this.modelFile = _newFile;
+    String _plus = (this.currentFolder + "/input.txt");
+    File _file = new File(_plus);
+    this.modelFile = _file;
     RTextFiles _rTextFiles = new RTextFiles(this.parser, this.modelFile);
     this.fileFinder = _rTextFiles;
   }
@@ -118,7 +119,18 @@ public class RTextFilesSpec {
   }
   
   public File newRTextFile(final File folder) {
-    File _newFile = Files.newFile(folder, ".rtext");
-    return _newFile;
+    try {
+      File _xblockexpression = null;
+      {
+        String _plus = (folder + "/.rtext");
+        File _file = new File(_plus);
+        final File file = _file;
+        file.createNewFile();
+        _xblockexpression = (file);
+      }
+      return _xblockexpression;
+    } catch (Exception _e) {
+      throw Exceptions.sneakyThrow(_e);
+    }
   }
 }

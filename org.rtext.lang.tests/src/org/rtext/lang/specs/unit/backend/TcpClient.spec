@@ -1,21 +1,21 @@
 package org.rtext.lang.specs.unit.backend
 
 import java.util.concurrent.CountDownLatch
-import org.rtext.lang.commands.Response
+import org.jnario.runner.CreateWith
+import org.mockito.Mock
+import org.rtext.lang.backend.BackendException
 import org.rtext.lang.backend.TcpClient
+import org.rtext.lang.backend.TcpClientListener
+import org.rtext.lang.commands.Response
+import org.rtext.lang.specs.util.MockInjector
 import org.rtext.lang.specs.util.TcpTestServer
 import org.rtext.lang.specs.util.TestCallBack
-import org.rtext.lang.backend.BackendException
-import org.mockito.Mock
-import org.jnario.runner.CreateWith
-import org.rtext.lang.specs.util.MockInjector
-import org.rtext.lang.backend.TcpClientListener
-import org.rtext.lang.commands.CommandSerializer
 
 import static org.junit.Assert.*
+import static org.mockito.Matchers.*
+import static org.mockito.Mockito.*
 import static org.rtext.lang.specs.util.Commands.*
 import static org.rtext.lang.specs.util.Wait.*
-import static org.mockito.Mockito.*
 
 import static extension org.jnario.lib.Should.*
 
