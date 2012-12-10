@@ -63,10 +63,10 @@ public class TcpClient implements Connection {
 			while (!responseReceived) {
 				int messageLength = readMessageLength();
 				String message = readMessage(messageLength);
+				responseReceived = responseParser.parse(message, task.callback,	task.command.getResponseType());
 				if(responseReceived){
 					listener.messageReceived(message);
 				}
-				responseReceived = responseParser.parse(message, task.callback,	task.command.getResponseType());
 			}
 		}
 
