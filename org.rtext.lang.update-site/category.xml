@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/org.rtext.lang.feature_0.2.0.qualifier.jar" id="org.rtext.lang.feature" version="0.2.0.qualifier">
+   <feature url="features/org.rtext.lang.feature_0.1.1.qualifier.jar" id="org.rtext.lang.feature" version="0.1.1.qualifier">
       <category name="rtext"/>
    </feature>
    <category-def name="rtext" label="RText"/>
