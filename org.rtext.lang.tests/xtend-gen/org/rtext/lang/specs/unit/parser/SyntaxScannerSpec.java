@@ -359,6 +359,99 @@ public class SyntaxScannerSpec {
     
   }
   
+  @Test
+  @Named("positions macros correctly")
+  @Order(19)
+  public void _positionsMacrosCorrectly() throws Exception {
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.append("EPackage{");
+    _builder.newLine();
+    _builder.append("\t");
+    _builder.append("EClass{");
+    _builder.newLine();
+    _builder.append("\t\t");
+    _builder.append("EOperation{");
+    _builder.newLine();
+    _builder.append("\t\t\t");
+    _builder.append("EAnnotation source:<source> ");
+    _builder.newLine();
+    _builder.append("\t\t");
+    _builder.append("}");
+    _builder.newLine();
+    _builder.append("\t");
+    _builder.append("}");
+    _builder.newLine();
+    _builder.append("}\t");
+    _builder.newLine();
+    _builder.newLine();
+    List<String> _regions = this.regions(_builder);
+    String _get = _regions.get(12);
+    boolean _doubleArrow = Should.operator_doubleArrow(_get, "<source>");
+    Assert.assertTrue("\nExpected \'\'\'\r\n\t\tEPackage{\r\n\t\t\tEClass{\r\n\t\t\t\tEOperation{\r\n\t\t\t\t\tEAnnotation source:<source> \r\n\t\t\t\t}\r\n\t\t\t}\r\n\t\t}\t\r\n\r\n\t\t\'\'\'.regions.get(12) => \"<source>\" but"
+     + "\n     \'\'\'\r\n\t\tEPackage{\r\n\t\t\tEClass{\r\n\t\t\t\tEOperation{\r\n\t\t\t\t\tEAnnotation source:<source> \r\n\t\t\t\t}\r\n\t\t\t}\r\n\t\t}\t\r\n\r\n\t\t\'\'\'.regions.get(12) is " + new StringDescription().appendValue(_get).toString()
+     + "\n     \'\'\'\r\n\t\tEPackage{\r\n\t\t\tEClass{\r\n\t\t\t\tEOperation{\r\n\t\t\t\t\tEAnnotation source:<source> \r\n\t\t\t\t}\r\n\t\t\t}\r\n\t\t}\t\r\n\r\n\t\t\'\'\'.regions is " + new StringDescription().appendValue(_regions).toString()
+     + "\n     \'\'\'\r\n\t\tEPackage{\r\n\t\t\tEClass{\r\n\t\t\t\tEOperation{\r\n\t\t\t\t\tEAnnotation source:<source> \r\n\t\t\t\t}\r\n\t\t\t}\r\n\t\t}\t\r\n\r\n\t\t\'\'\' is " + new StringDescription().appendValue(_builder).toString() + "\n", _doubleArrow);
+    
+  }
+  
+  @Test
+  @Named("support escaped macros")
+  @Order(20)
+  public void _supportEscapedMacros() throws Exception {
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.append("EPackage{");
+    _builder.newLine();
+    _builder.append("\t");
+    _builder.append("EClass{");
+    _builder.newLine();
+    _builder.append("\t\t");
+    _builder.append("EOperation{");
+    _builder.newLine();
+    _builder.append("\t\t\t");
+    _builder.append("EAnnotation source:<%text>text%> ");
+    _builder.newLine();
+    _builder.append("\t\t");
+    _builder.append("}");
+    _builder.newLine();
+    _builder.append("\t");
+    _builder.append("}");
+    _builder.newLine();
+    _builder.append("}\t");
+    _builder.newLine();
+    _builder.newLine();
+    List<String> _regions = this.regions(_builder);
+    String _get = _regions.get(12);
+    boolean _doubleArrow = Should.operator_doubleArrow(_get, "<%text>text%>");
+    Assert.assertTrue("\nExpected \'\'\'\r\n\t\tEPackage{\r\n\t\t\tEClass{\r\n\t\t\t\tEOperation{\r\n\t\t\t\t\tEAnnotation source:<%text>text%> \r\n\t\t\t\t}\r\n\t\t\t}\r\n\t\t}\t\r\n\r\n\t\t\'\'\'.regions.get(12) => \"<%text>text%>\" but"
+     + "\n     \'\'\'\r\n\t\tEPackage{\r\n\t\t\tEClass{\r\n\t\t\t\tEOperation{\r\n\t\t\t\t\tEAnnotation source:<%text>text%> \r\n\t\t\t\t}\r\n\t\t\t}\r\n\t\t}\t\r\n\r\n\t\t\'\'\'.regions.get(12) is " + new StringDescription().appendValue(_get).toString()
+     + "\n     \'\'\'\r\n\t\tEPackage{\r\n\t\t\tEClass{\r\n\t\t\t\tEOperation{\r\n\t\t\t\t\tEAnnotation source:<%text>text%> \r\n\t\t\t\t}\r\n\t\t\t}\r\n\t\t}\t\r\n\r\n\t\t\'\'\'.regions is " + new StringDescription().appendValue(_regions).toString()
+     + "\n     \'\'\'\r\n\t\tEPackage{\r\n\t\t\tEClass{\r\n\t\t\t\tEOperation{\r\n\t\t\t\t\tEAnnotation source:<%text>text%> \r\n\t\t\t\t}\r\n\t\t\t}\r\n\t\t}\t\r\n\r\n\t\t\'\'\' is " + new StringDescription().appendValue(_builder).toString() + "\n", _doubleArrow);
+    
+  }
+  
+  @Test
+  @Named("support escaped macros without end")
+  @Order(21)
+  public void _supportEscapedMacrosWithoutEnd() throws Exception {
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.append("EPackage{");
+    _builder.newLine();
+    _builder.append("\t");
+    _builder.append("EClass{");
+    _builder.newLine();
+    _builder.append("\t\t");
+    _builder.append("EOperation{");
+    _builder.newLine();
+    _builder.append("\t\t\t");
+    _builder.append("EAnnotation source:<%text>text");
+    List<String> _regions = this.regions(_builder);
+    final String region = _regions.get(12);
+    boolean _doubleArrow = Should.operator_doubleArrow(region, "<%text>text");
+    Assert.assertTrue("\nExpected region => \"<%text>text\" but"
+     + "\n     region is " + new StringDescription().appendValue(region).toString() + "\n", _doubleArrow);
+    
+  }
+  
   public List<String> regions(final CharSequence s) {
     List<String> _xblockexpression = null;
     {

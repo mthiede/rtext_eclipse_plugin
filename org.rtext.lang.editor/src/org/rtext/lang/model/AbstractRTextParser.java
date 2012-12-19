@@ -71,6 +71,9 @@ public abstract class AbstractRTextParser<T> {
 		}else if (nextIsChar('"')) {
 			consumeString();
 			result = createString();
+		}else if (consume("<%")) {
+			consumeEscapedGenerics();
+			result = createGenerics();
 		}else if (nextIsChar('<')) {
 			consumeGenerics();
 			result = createGenerics();
@@ -86,6 +89,21 @@ public abstract class AbstractRTextParser<T> {
 			result = createDefault();
 		}
 		return result;
+	}
+
+	private void consumeEscapedGenerics() {
+		consumeUntil("%>");
+	}
+
+
+	private void consumeUntil(String string) {
+		char c = ' ';
+		while(!consume(string) && c != EOL){
+			c = readChar();
+		}
+		if(c == EOL){
+			unreadChar();
+		}
 	}
 
 	private T consumeReference() {
@@ -161,6 +179,26 @@ public abstract class AbstractRTextParser<T> {
 		while (c != postfix && c != EOL) {
 			c = readChar();
 		}
+	}
+	
+	public void consumeInside(String prefix, String postfix) {
+		consume(prefix);
+		char c = readChar();
+		while (!consume(postfix) && c != EOL) {
+			c = readChar();
+		}
+	}
+
+	private boolean consume(String string) {
+		for(int i = 0; i < string.length(); i++){
+			if(!consumeChar(string.charAt(i))){
+				for(int j = 0; j < i; j++){
+					unreadChar();
+				}
+				return false;
+			}
+		}
+		return true;
 	}
 
 	private boolean consumeWhitespace() {

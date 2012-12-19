@@ -119,6 +119,38 @@ assert subject.tokenOffset + subject.tokenLength &lt;= input.length</pre>
 </li><li><p id="parse_string_until_EOL" class="example notrun"><strong>parse string until EOL</strong></p>
 <pre class="prettyprint lang-spec linenums">
 ('Type name, label: &quot;a string ' + EOL).scan.get(7) =&gt; STRING</pre>
+</li><li><p id="positions_macros_correctly" class="example notrun"><strong>positions macros correctly</strong></p>
+<pre class="prettyprint lang-spec linenums">
+'''
+EPackage{
+  EClass{
+    EOperation{
+      EAnnotation source:&lt;source&gt; 
+    }
+  }
+}  
+
+'''.regions.get(12) =&gt; &quot;&lt;source&gt;&quot;</pre>
+</li><li><p id="support_escaped_macros" class="example notrun"><strong>support escaped macros</strong></p>
+<pre class="prettyprint lang-spec linenums">
+'''
+EPackage{
+  EClass{
+    EOperation{
+      EAnnotation source:&lt;%text&gt;text%&gt; 
+    }
+  }
+}  
+
+'''.regions.get(12) =&gt; &quot;&lt;%text&gt;text%&gt;&quot;</pre>
+</li><li><p id="support_escaped_macros_without_end" class="example notrun"><strong>support escaped macros without end</strong></p>
+<pre class="prettyprint lang-spec linenums">
+val region = '''
+EPackage{
+  EClass{
+    EOperation{
+      EAnnotation source:&lt;%text&gt;text'''.regions.get(12) 
+region =&gt; &quot;&lt;%text&gt;text&quot;</pre>
 </li></ul>
 							</div>
 						    <div class="tab-pane" id="source">
@@ -254,6 +286,40 @@ describe SyntaxScanner {
     ('Type name, label: &quot;a string ' + EOL).scan.get(7) =&gt; STRING
   }
   
+  fact &quot;positions macros correctly&quot;{
+    '''
+    EPackage{
+      EClass{
+        EOperation{
+          EAnnotation source:&lt;source&gt; 
+        }
+      }
+    }  
+
+    '''.regions.get(12) =&gt; &quot;&lt;source&gt;&quot;
+  } 
+  
+  fact &quot;support escaped macros&quot;{
+    '''
+    EPackage{
+      EClass{
+        EOperation{
+          EAnnotation source:&lt;%text&gt;text%&gt; 
+        }
+      }
+    }  
+
+    '''.regions.get(12) =&gt; &quot;&lt;%text&gt;text%&gt;&quot;
+  } 
+  
+  fact &quot;support escaped macros without end&quot;{
+    val region = '''
+    EPackage{
+      EClass{
+        EOperation{
+          EAnnotation source:&lt;%text&gt;text'''.regions.get(12) 
+    region =&gt; &quot;&lt;%text&gt;text&quot;
+  } 
 
   def regions(CharSequence s){
     val document = new SimpleDocument(s.toString)

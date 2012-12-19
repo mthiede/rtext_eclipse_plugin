@@ -127,6 +127,40 @@ describe SyntaxScanner {
 		('Type name, label: "a string ' + EOL).scan.get(7) => STRING
 	}
 	
+	fact "positions macros correctly"{
+		'''
+		EPackage{
+			EClass{
+				EOperation{
+					EAnnotation source:<source> 
+				}
+			}
+		}	
+
+		'''.regions.get(12) => "<source>"
+	} 
+	
+	fact "support escaped macros"{
+		'''
+		EPackage{
+			EClass{
+				EOperation{
+					EAnnotation source:<%text>text%> 
+				}
+			}
+		}	
+
+		'''.regions.get(12) => "<%text>text%>"
+	} 
+	
+	fact "support escaped macros without end"{
+		val region = '''
+		EPackage{
+			EClass{
+				EOperation{
+					EAnnotation source:<%text>text'''.regions.get(12) 
+		region => "<%text>text"
+	} 
 
 	def regions(CharSequence s){
 		val document = new SimpleDocument(s.toString)
