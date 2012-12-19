@@ -99,8 +99,11 @@ public class RTextFileChangeListener implements IResourceChangeListener {
 		
 		if(isModelFile(resource)){
 			scheduleModelLoad(configs, resource);
-		}else if(isNotRTextFile(resource)) {
+			return;
+		}
+		if(isRTextFile(resource)) {
 			scheduleRestart(configs, resource);
+			return;
 		}
 	}
 
@@ -152,8 +155,8 @@ public class RTextFileChangeListener implements IResourceChangeListener {
 		return (delta.getFlags() & IResourceDelta.CONTENT) == 0;
 	}
 
-	private boolean isNotRTextFile(IResource resource) {
-		return resource == null || !RTEXT_FILE_NAME.equals(resource.getName());
+	private boolean isRTextFile(IResource resource) {
+		return resource != null && RTEXT_FILE_NAME.equals(resource.getName());
 	}
 
 	private boolean isAdded(IResourceDelta delta) {
