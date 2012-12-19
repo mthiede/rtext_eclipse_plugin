@@ -10,14 +10,18 @@ package org.rtext.lang.proposals;
 import static java.util.Arrays.asList;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.CompletionProposal;
+import org.eclipse.jface.text.contentassist.ContentAssistEvent;
 import org.eclipse.jface.text.contentassist.ContextInformation;
 import org.eclipse.jface.text.contentassist.ContextInformationValidator;
+import org.eclipse.jface.text.contentassist.ICompletionListener;
+import org.eclipse.jface.text.contentassist.ICompletionListenerExtension;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContextInformation;
@@ -35,7 +39,7 @@ import org.rtext.lang.editor.Connected;
 import org.rtext.lang.editor.PluginImageHelper;
 import org.rtext.lang.util.ImageHelper;
 
-public class ContentAssistProcessor implements IContentAssistProcessor {
+public class ContentAssistProcessor implements IContentAssistProcessor, ICompletionListener, ICompletionListenerExtension {
 
 	private final class ProposalExecutionHandler implements ExecutionHandler<Proposals> {
 		private final String wordStart;
@@ -43,6 +47,7 @@ public class ContentAssistProcessor implements IContentAssistProcessor {
 
 		private ProposalExecutionHandler(String wordStart) {
 			this.wordStart = wordStart;
+			proposals = new Proposals(0, "", Collections.<Option>emptyList());
 		}
 
 		public void handleResult(Proposals result) {
@@ -64,6 +69,7 @@ public class ContentAssistProcessor implements IContentAssistProcessor {
 
 	private ImageHelper imageHelper;
 	private CommandExecutor commandExecutor;
+	private List<Option> options;
 
 	public ContentAssistProcessor(CommandExecutor commandExecutor, ImageHelper imageHelper) {
 		this.commandExecutor = commandExecutor;
@@ -80,7 +86,9 @@ public class ContentAssistProcessor implements IContentAssistProcessor {
 		String wordStart = wordStart(document, topIndexStartOffset, offset);
 		String prefix = prefix(document, offset);
 		int wordStartOffset = offset - wordStart.length();
-		List<Option> options = loadCompletions(document, offset, wordStart);
+		if(options == null){
+			options = loadCompletions(document, offset, wordStart);
+		}
 		List<ICompletionProposal> result = new ArrayList<ICompletionProposal>(options.size());
 		for (int i = 0; i < options.size(); i++) {
 			Option option = options.get(i);
@@ -190,5 +198,19 @@ public class ContentAssistProcessor implements IContentAssistProcessor {
 
 	public char[] getCompletionProposalAutoActivationCharacters() {
 		return PROPOSAL_ACTIVATION_CHARS;
+	}
+	
+	public void assistSessionStarted(ContentAssistEvent event) {
+		options = null;
+	}
+
+	public void assistSessionEnded(ContentAssistEvent event) {
+		options = null;
+	}
+
+	public void assistSessionRestarted(ContentAssistEvent event) {
+	}
+
+	public void selectionChanged(ICompletionProposal proposal,	boolean smartToggle) {
 	}
 }

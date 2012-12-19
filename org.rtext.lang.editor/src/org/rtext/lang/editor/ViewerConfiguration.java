@@ -74,6 +74,7 @@ public class ViewerConfiguration extends SourceViewerConfiguration {
 	    assistant.setAutoActivationDelay(0);
 	    assistant.setProposalPopupOrientation(IContentAssistant.CONTEXT_INFO_BELOW);
 	    assistant.setContextInformationPopupOrientation(IContentAssistant.CONTEXT_INFO_BELOW);
+	    assistant.addCompletionListener(tagContentAssistProcessor);
 	    return assistant;
 	}
 	
