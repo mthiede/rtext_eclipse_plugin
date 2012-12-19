@@ -18,8 +18,8 @@ import org.rtext.lang.specs.util.Wait;
 import org.rtext.lang.specs.util.WaitConfig;
 
 @SuppressWarnings("all")
-@RunWith(ExampleGroupRunner.class)
 @Named("notifies message listener on")
+@RunWith(ExampleGroupRunner.class)
 public class TcpClientNotifiesMessageListenerOnSpec extends TcpClientSpec {
   @Test
   @Named("connect")

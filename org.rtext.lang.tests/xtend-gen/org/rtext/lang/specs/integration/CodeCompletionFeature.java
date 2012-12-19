@@ -10,9 +10,9 @@ import org.rtext.lang.specs.integration.CodeCompletionFeatureProposalSignalsBack
 import org.rtext.lang.specs.integration.CodeCompletionFeatureProposalSignalsBackendNotYetLoaded;
 import org.rtext.lang.specs.integration.CodeCompletionFeatureSucessfullyUsingCodeCompletion;
 
-@RunWith(FeatureRunner.class)
 @Contains({ CodeCompletionFeatureSucessfullyUsingCodeCompletion.class, CodeCompletionFeatureCodeCompletionForNestedElements.class, CodeCompletionFeatureProposalSignalsBackendCurrentlyLoading.class, CodeCompletionFeatureProposalSignalsBackendNotYetLoaded.class, CodeCompletionFeatureProposalSignalsBackendFailure.class })
 @Named("Code completion")
 @SuppressWarnings("all")
+@RunWith(FeatureRunner.class)
 public class CodeCompletionFeature {
 }

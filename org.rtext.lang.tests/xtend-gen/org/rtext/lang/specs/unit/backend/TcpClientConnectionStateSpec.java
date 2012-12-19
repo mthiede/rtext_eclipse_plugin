@@ -3,11 +3,11 @@ package org.rtext.lang.specs.unit.backend;
 import com.google.common.base.Objects;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.hamcrest.StringDescription;
+import org.jnario.lib.Assert;
 import org.jnario.lib.Should;
 import org.jnario.runner.ExampleGroupRunner;
 import org.jnario.runner.Named;
 import org.jnario.runner.Order;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.rtext.lang.commands.Response;
@@ -17,8 +17,8 @@ import org.rtext.lang.specs.util.Wait;
 import org.rtext.lang.specs.util.WaitConfig;
 
 @SuppressWarnings("all")
-@RunWith(ExampleGroupRunner.class)
 @Named("connection state")
+@RunWith(ExampleGroupRunner.class)
 public class TcpClientConnectionStateSpec extends TcpClientSpec {
   @Test
   @Named("is initially disconnected")

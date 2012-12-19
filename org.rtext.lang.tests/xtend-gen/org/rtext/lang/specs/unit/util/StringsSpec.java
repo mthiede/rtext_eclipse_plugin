@@ -8,7 +8,7 @@ import org.rtext.lang.specs.unit.util.StringsSplitCommandSpec;
 
 @Contains(StringsSplitCommandSpec.class)
 @SuppressWarnings("all")
-@RunWith(ExampleGroupRunner.class)
 @Named("Strings")
+@RunWith(ExampleGroupRunner.class)
 public class StringsSpec {
 }

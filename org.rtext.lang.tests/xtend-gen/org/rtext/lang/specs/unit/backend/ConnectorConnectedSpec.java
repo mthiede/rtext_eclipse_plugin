@@ -1,11 +1,11 @@
 package org.rtext.lang.specs.unit.backend;
 
 import org.hamcrest.StringDescription;
+import org.jnario.lib.Assert;
 import org.jnario.lib.Should;
 import org.jnario.runner.ExampleGroupRunner;
 import org.jnario.runner.Named;
 import org.jnario.runner.Order;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -13,8 +13,8 @@ import org.mockito.stubbing.OngoingStubbing;
 import org.rtext.lang.specs.unit.backend.ConnectorSpec;
 
 @SuppressWarnings("all")
-@RunWith(ExampleGroupRunner.class)
 @Named("Connected")
+@RunWith(ExampleGroupRunner.class)
 public class ConnectorConnectedSpec extends ConnectorSpec {
   @Test
   @Named("initially disconnected")

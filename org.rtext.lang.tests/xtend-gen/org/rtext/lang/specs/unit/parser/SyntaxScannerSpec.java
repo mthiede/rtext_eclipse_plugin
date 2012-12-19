@@ -9,13 +9,13 @@ import org.eclipse.xtend2.lib.StringConcatenation;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.ListExtensions;
 import org.hamcrest.StringDescription;
+import org.jnario.lib.Assert;
 import org.jnario.lib.JnarioCollectionLiterals;
 import org.jnario.lib.JnarioIterableExtensions;
 import org.jnario.lib.Should;
 import org.jnario.runner.ExampleGroupRunner;
 import org.jnario.runner.Named;
 import org.jnario.runner.Order;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,8 +26,8 @@ import org.rtext.lang.model.AbstractRTextParser;
 import org.rtext.lang.specs.util.SimpleDocument;
 
 @SuppressWarnings("all")
-@RunWith(ExampleGroupRunner.class)
 @Named("SyntaxScanner")
+@RunWith(ExampleGroupRunner.class)
 public class SyntaxScannerSpec {
   public SyntaxScanner subject;
   
@@ -189,10 +189,10 @@ public class SyntaxScannerSpec {
     _builder.append("Type name, label: /a/Reference");
     _builder.newLine();
     List<RGB> _scan = this.scan(_builder);
-    RGB _forth = JnarioIterableExtensions.<RGB>forth(_scan);
-    boolean _doubleArrow = Should.operator_doubleArrow(_forth, IColorConstants.LABEL);
-    Assert.assertTrue("\nExpected \'\'\'\r\n\t\tType name, label: /a/Reference\r\n\t\t\'\'\'.scan.forth => LABEL but"
-     + "\n     \'\'\'\r\n\t\tType name, label: /a/Reference\r\n\t\t\'\'\'.scan.forth is " + new StringDescription().appendValue(_forth).toString()
+    RGB _get = _scan.get(5);
+    boolean _doubleArrow = Should.operator_doubleArrow(_get, IColorConstants.LABEL);
+    Assert.assertTrue("\nExpected \'\'\'\r\n\t\tType name, label: /a/Reference\r\n\t\t\'\'\'.scan.get(5) => LABEL but"
+     + "\n     \'\'\'\r\n\t\tType name, label: /a/Reference\r\n\t\t\'\'\'.scan.get(5) is " + new StringDescription().appendValue(_get).toString()
      + "\n     \'\'\'\r\n\t\tType name, label: /a/Reference\r\n\t\t\'\'\'.scan is " + new StringDescription().appendValue(_scan).toString()
      + "\n     \'\'\'\r\n\t\tType name, label: /a/Reference\r\n\t\t\'\'\' is " + new StringDescription().appendValue(_builder).toString()
      + "\n     LABEL is " + new StringDescription().appendValue(IColorConstants.LABEL).toString() + "\n", _doubleArrow);
@@ -207,10 +207,10 @@ public class SyntaxScannerSpec {
     _builder.append("Type name, label: /long/a/Reference");
     _builder.newLine();
     List<RGB> _scan = this.scan(_builder);
-    RGB _fifth = JnarioIterableExtensions.<RGB>fifth(_scan);
-    boolean _doubleArrow = Should.operator_doubleArrow(_fifth, IColorConstants.REFERENCE);
-    Assert.assertTrue("\nExpected \'\'\'\r\n\t\tType name, label: /long/a/Reference\r\n\t\t\'\'\'.scan.fifth => REFERENCE but"
-     + "\n     \'\'\'\r\n\t\tType name, label: /long/a/Reference\r\n\t\t\'\'\'.scan.fifth is " + new StringDescription().appendValue(_fifth).toString()
+    RGB _get = _scan.get(7);
+    boolean _doubleArrow = Should.operator_doubleArrow(_get, IColorConstants.REFERENCE);
+    Assert.assertTrue("\nExpected \'\'\'\r\n\t\tType name, label: /long/a/Reference\r\n\t\t\'\'\'.scan.get(7) => REFERENCE but"
+     + "\n     \'\'\'\r\n\t\tType name, label: /long/a/Reference\r\n\t\t\'\'\'.scan.get(7) is " + new StringDescription().appendValue(_get).toString()
      + "\n     \'\'\'\r\n\t\tType name, label: /long/a/Reference\r\n\t\t\'\'\'.scan is " + new StringDescription().appendValue(_scan).toString()
      + "\n     \'\'\'\r\n\t\tType name, label: /long/a/Reference\r\n\t\t\'\'\' is " + new StringDescription().appendValue(_builder).toString()
      + "\n     REFERENCE is " + new StringDescription().appendValue(IColorConstants.REFERENCE).toString() + "\n", _doubleArrow);
@@ -218,17 +218,17 @@ public class SyntaxScannerSpec {
   }
   
   @Test
-  @Named("parse generics")
+  @Named("parse macros")
   @Order(11)
-  public void _parseGenerics() throws Exception {
+  public void _parseMacros() throws Exception {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("Type name, label: <generic>");
     _builder.newLine();
     List<RGB> _scan = this.scan(_builder);
-    RGB _fifth = JnarioIterableExtensions.<RGB>fifth(_scan);
-    boolean _doubleArrow = Should.operator_doubleArrow(_fifth, IColorConstants.GENERICS);
-    Assert.assertTrue("\nExpected \'\'\'\r\n\t\tType name, label: <generic>\r\n\t\t\'\'\'.scan.fifth => GENERICS but"
-     + "\n     \'\'\'\r\n\t\tType name, label: <generic>\r\n\t\t\'\'\'.scan.fifth is " + new StringDescription().appendValue(_fifth).toString()
+    RGB _get = _scan.get(7);
+    boolean _doubleArrow = Should.operator_doubleArrow(_get, IColorConstants.GENERICS);
+    Assert.assertTrue("\nExpected \'\'\'\r\n\t\tType name, label: <generic>\r\n\t\t\'\'\'.scan.get(7) => GENERICS but"
+     + "\n     \'\'\'\r\n\t\tType name, label: <generic>\r\n\t\t\'\'\'.scan.get(7) is " + new StringDescription().appendValue(_get).toString()
      + "\n     \'\'\'\r\n\t\tType name, label: <generic>\r\n\t\t\'\'\'.scan is " + new StringDescription().appendValue(_scan).toString()
      + "\n     \'\'\'\r\n\t\tType name, label: <generic>\r\n\t\t\'\'\' is " + new StringDescription().appendValue(_builder).toString()
      + "\n     GENERICS is " + new StringDescription().appendValue(IColorConstants.GENERICS).toString() + "\n", _doubleArrow);
@@ -243,10 +243,10 @@ public class SyntaxScannerSpec {
     _builder.append("Type name, label: a/long/Reference");
     _builder.newLine();
     List<RGB> _scan = this.scan(_builder);
-    RGB _fifth = JnarioIterableExtensions.<RGB>fifth(_scan);
-    boolean _doubleArrow = Should.operator_doubleArrow(_fifth, IColorConstants.REFERENCE);
-    Assert.assertTrue("\nExpected \'\'\'\r\n\t\tType name, label: a/long/Reference\r\n\t\t\'\'\'.scan.fifth => REFERENCE but"
-     + "\n     \'\'\'\r\n\t\tType name, label: a/long/Reference\r\n\t\t\'\'\'.scan.fifth is " + new StringDescription().appendValue(_fifth).toString()
+    RGB _get = _scan.get(7);
+    boolean _doubleArrow = Should.operator_doubleArrow(_get, IColorConstants.REFERENCE);
+    Assert.assertTrue("\nExpected \'\'\'\r\n\t\tType name, label: a/long/Reference\r\n\t\t\'\'\'.scan.get(7) => REFERENCE but"
+     + "\n     \'\'\'\r\n\t\tType name, label: a/long/Reference\r\n\t\t\'\'\'.scan.get(7) is " + new StringDescription().appendValue(_get).toString()
      + "\n     \'\'\'\r\n\t\tType name, label: a/long/Reference\r\n\t\t\'\'\'.scan is " + new StringDescription().appendValue(_scan).toString()
      + "\n     \'\'\'\r\n\t\tType name, label: a/long/Reference\r\n\t\t\'\'\' is " + new StringDescription().appendValue(_builder).toString()
      + "\n     REFERENCE is " + new StringDescription().appendValue(IColorConstants.REFERENCE).toString() + "\n", _doubleArrow);
@@ -261,10 +261,10 @@ public class SyntaxScannerSpec {
     _builder.append("Type name, label: 8");
     _builder.newLine();
     List<RGB> _scan = this.scan(_builder);
-    RGB _fifth = JnarioIterableExtensions.<RGB>fifth(_scan);
-    boolean _doubleArrow = Should.operator_doubleArrow(_fifth, IColorConstants.NUMBER);
-    Assert.assertTrue("\nExpected \'\'\'\r\n\t\tType name, label: 8\r\n\t\t\'\'\'.scan.fifth => NUMBER but"
-     + "\n     \'\'\'\r\n\t\tType name, label: 8\r\n\t\t\'\'\'.scan.fifth is " + new StringDescription().appendValue(_fifth).toString()
+    RGB _get = _scan.get(7);
+    boolean _doubleArrow = Should.operator_doubleArrow(_get, IColorConstants.NUMBER);
+    Assert.assertTrue("\nExpected \'\'\'\r\n\t\tType name, label: 8\r\n\t\t\'\'\'.scan.get(7) => NUMBER but"
+     + "\n     \'\'\'\r\n\t\tType name, label: 8\r\n\t\t\'\'\'.scan.get(7) is " + new StringDescription().appendValue(_get).toString()
      + "\n     \'\'\'\r\n\t\tType name, label: 8\r\n\t\t\'\'\'.scan is " + new StringDescription().appendValue(_scan).toString()
      + "\n     \'\'\'\r\n\t\tType name, label: 8\r\n\t\t\'\'\' is " + new StringDescription().appendValue(_builder).toString()
      + "\n     NUMBER is " + new StringDescription().appendValue(IColorConstants.NUMBER).toString() + "\n", _doubleArrow);
@@ -279,10 +279,10 @@ public class SyntaxScannerSpec {
     _builder.append("Type name, label: \"a string\"");
     _builder.newLine();
     List<RGB> _scan = this.scan(_builder);
-    RGB _fifth = JnarioIterableExtensions.<RGB>fifth(_scan);
-    boolean _doubleArrow = Should.operator_doubleArrow(_fifth, IColorConstants.STRING);
-    Assert.assertTrue("\nExpected \'\'\'\r\n\t\tType name, label: \"a string\"\r\n\t\t\'\'\'.scan.fifth => STRING but"
-     + "\n     \'\'\'\r\n\t\tType name, label: \"a string\"\r\n\t\t\'\'\'.scan.fifth is " + new StringDescription().appendValue(_fifth).toString()
+    RGB _get = _scan.get(7);
+    boolean _doubleArrow = Should.operator_doubleArrow(_get, IColorConstants.STRING);
+    Assert.assertTrue("\nExpected \'\'\'\r\n\t\tType name, label: \"a string\"\r\n\t\t\'\'\'.scan.get(7) => STRING but"
+     + "\n     \'\'\'\r\n\t\tType name, label: \"a string\"\r\n\t\t\'\'\'.scan.get(7) is " + new StringDescription().appendValue(_get).toString()
      + "\n     \'\'\'\r\n\t\tType name, label: \"a string\"\r\n\t\t\'\'\'.scan is " + new StringDescription().appendValue(_scan).toString()
      + "\n     \'\'\'\r\n\t\tType name, label: \"a string\"\r\n\t\t\'\'\' is " + new StringDescription().appendValue(_builder).toString()
      + "\n     STRING is " + new StringDescription().appendValue(IColorConstants.STRING).toString() + "\n", _doubleArrow);
@@ -297,10 +297,10 @@ public class SyntaxScannerSpec {
     _builder.append("Type name, label: enum");
     _builder.newLine();
     List<RGB> _scan = this.scan(_builder);
-    RGB _fifth = JnarioIterableExtensions.<RGB>fifth(_scan);
-    boolean _doubleArrow = Should.operator_doubleArrow(_fifth, IColorConstants.IDENTIFIER);
-    Assert.assertTrue("\nExpected \'\'\'\r\n\t\tType name, label: enum\r\n\t\t\'\'\'.scan.fifth => IDENTIFIER but"
-     + "\n     \'\'\'\r\n\t\tType name, label: enum\r\n\t\t\'\'\'.scan.fifth is " + new StringDescription().appendValue(_fifth).toString()
+    RGB _get = _scan.get(7);
+    boolean _doubleArrow = Should.operator_doubleArrow(_get, IColorConstants.IDENTIFIER);
+    Assert.assertTrue("\nExpected \'\'\'\r\n\t\tType name, label: enum\r\n\t\t\'\'\'.scan.get(7) => IDENTIFIER but"
+     + "\n     \'\'\'\r\n\t\tType name, label: enum\r\n\t\t\'\'\'.scan.get(7) is " + new StringDescription().appendValue(_get).toString()
      + "\n     \'\'\'\r\n\t\tType name, label: enum\r\n\t\t\'\'\'.scan is " + new StringDescription().appendValue(_scan).toString()
      + "\n     \'\'\'\r\n\t\tType name, label: enum\r\n\t\t\'\'\' is " + new StringDescription().appendValue(_builder).toString()
      + "\n     IDENTIFIER is " + new StringDescription().appendValue(IColorConstants.IDENTIFIER).toString() + "\n", _doubleArrow);
@@ -348,10 +348,10 @@ public class SyntaxScannerSpec {
   public void _parseStringUntilEOL() throws Exception {
     String _plus = ("Type name, label: \"a string " + Character.valueOf(AbstractRTextParser.EOL));
     List<RGB> _scan = this.scan(_plus);
-    RGB _fifth = JnarioIterableExtensions.<RGB>fifth(_scan);
-    boolean _doubleArrow = Should.operator_doubleArrow(_fifth, IColorConstants.STRING);
-    Assert.assertTrue("\nExpected (\'Type name, label: \"a string \' + EOL).scan.fifth => STRING but"
-     + "\n     (\'Type name, label: \"a string \' + EOL).scan.fifth is " + new StringDescription().appendValue(_fifth).toString()
+    RGB _get = _scan.get(7);
+    boolean _doubleArrow = Should.operator_doubleArrow(_get, IColorConstants.STRING);
+    Assert.assertTrue("\nExpected (\'Type name, label: \"a string \' + EOL).scan.get(7) => STRING but"
+     + "\n     \'Type name, label: \"a string \' + EOL).scan.get(7 is " + new StringDescription().appendValue(_get).toString()
      + "\n     (\'Type name, label: \"a string \' + EOL).scan is " + new StringDescription().appendValue(_scan).toString()
      + "\n     \'Type name, label: \"a string \' + EOL is " + new StringDescription().appendValue(_plus).toString()
      + "\n     EOL is " + new StringDescription().appendValue(Character.valueOf(AbstractRTextParser.EOL)).toString()
@@ -359,55 +359,35 @@ public class SyntaxScannerSpec {
     
   }
   
-  @Test
-  @Named("parse nested elements")
-  @Order(19)
-  public void _parseNestedElements() throws Exception {
-    StringConcatenation _builder = new StringConcatenation();
-    _builder.append("AUTOSAR {");
-    _builder.newLine();
-    _builder.append("\t");
-    _builder.append("CalprmElementPrototype cpSorolloTMax, type: /AUTOSAR/DataTypes/UInt2 {");
-    _builder.newLine();
-    _builder.append("\t\t");
-    _builder.append("SwDataDefProps swCalibrationAccess: readOnly, swImplPolicy: standard, swVariableAccessImplPolicy: optimized");
-    _builder.newLine();
-    _builder.append("\t");
-    _builder.append("} ");
-    _builder.newLine();
-    _builder.append("\t");
-    _builder.newLine();
-    _builder.append("\t");
-    _builder.append("CalprmElementPrototype cpSoroTuerTRelax, \ttype: /AUTOSAR/DataTypes/UInt4 {");
-    _builder.newLine();
-    _builder.append("\t\t");
-    _builder.append("SwDataDefProps swCalibrationAccess: readOnly, swImplPolicy: standard, swVariableAccessImplPolicy: optimized");
-    _builder.newLine();
-    _builder.append("\t");
-    _builder.append("}");
-    _builder.newLine();
-    _builder.append("}");
-    _builder.newLine();
-    List<RGB> _scan = this.scan(_builder);
-    List<RGB> _list = JnarioCollectionLiterals.<RGB>list(IColorConstants.COMMAND, IColorConstants.DEFAULT, 
-      IColorConstants.COMMAND, IColorConstants.IDENTIFIER, IColorConstants.DEFAULT, IColorConstants.LABEL, IColorConstants.REFERENCE, IColorConstants.DEFAULT, 
-      IColorConstants.COMMAND, IColorConstants.LABEL, IColorConstants.IDENTIFIER, IColorConstants.DEFAULT, IColorConstants.LABEL, IColorConstants.IDENTIFIER, IColorConstants.DEFAULT, IColorConstants.LABEL, IColorConstants.IDENTIFIER, 
-      IColorConstants.DEFAULT, 
-      IColorConstants.COMMAND, IColorConstants.IDENTIFIER, IColorConstants.DEFAULT, IColorConstants.LABEL, IColorConstants.REFERENCE, IColorConstants.DEFAULT, 
-      IColorConstants.COMMAND, IColorConstants.LABEL, IColorConstants.IDENTIFIER, IColorConstants.DEFAULT, IColorConstants.LABEL, IColorConstants.IDENTIFIER, IColorConstants.DEFAULT, IColorConstants.LABEL, IColorConstants.IDENTIFIER, 
-      IColorConstants.DEFAULT, 
-      IColorConstants.DEFAULT);
-    boolean _doubleArrow = Should.operator_doubleArrow(_scan, _list);
-    Assert.assertTrue("\nExpected \'\'\'\r\n\t\t\tAUTOSAR {\r\n\t\t\t\tCalprmElementPrototype cpSorolloTMax, type: /AUTOSAR/DataTypes/UInt2 {\r\n\t\t\t\t\tSwDataDefProps swCalibrationAccess: readOnly, swImplPolicy: standard, swVariableAccessImplPolicy: optimized\r\n\t\t\t\t} \r\n\t\t\t\t\r\n\t\t\t\tCalprmElementPrototype cpSoroTuerTRelax, \ttype: /AUTOSAR/DataTypes/UInt4 {\r\n\t\t\t\t\tSwDataDefProps swCalibrationAccess: readOnly, swImplPolicy: standard, swVariableAccessImplPolicy: optimized\r\n\t\t\t\t}\r\n\t\t\t}\r\n\t\t\'\'\'.scan => list(COMMAND, DEFAULT, \r\n\t\t\t\t\t\t\tCOMMAND, IDENTIFIER, DEFAULT, LABEL, REFERENCE, DEFAULT, \r\n\t\t\t\t\t\t \t\tCOMMAND, LABEL, IDENTIFIER, DEFAULT, LABEL, IDENTIFIER, DEFAULT, LABEL, IDENTIFIER,\r\n\t\t\t\t\t\t \tDEFAULT,\r\n\t\t\t\t\t\t \tCOMMAND, IDENTIFIER, DEFAULT, LABEL, REFERENCE, DEFAULT, \r\n\t\t\t\t\t\t \t\tCOMMAND, LABEL, IDENTIFIER, DEFAULT, LABEL, IDENTIFIER, DEFAULT, LABEL, IDENTIFIER,\r\n\t\t\t\t\t\t \tDEFAULT,\r\n\t\t\t\t\t\t DEFAULT) but"
-     + "\n     \'\'\'\r\n\t\t\tAUTOSAR {\r\n\t\t\t\tCalprmElementPrototype cpSorolloTMax, type: /AUTOSAR/DataTypes/UInt2 {\r\n\t\t\t\t\tSwDataDefProps swCalibrationAccess: readOnly, swImplPolicy: standard, swVariableAccessImplPolicy: optimized\r\n\t\t\t\t} \r\n\t\t\t\t\r\n\t\t\t\tCalprmElementPrototype cpSoroTuerTRelax, \ttype: /AUTOSAR/DataTypes/UInt4 {\r\n\t\t\t\t\tSwDataDefProps swCalibrationAccess: readOnly, swImplPolicy: standard, swVariableAccessImplPolicy: optimized\r\n\t\t\t\t}\r\n\t\t\t}\r\n\t\t\'\'\'.scan is " + new StringDescription().appendValue(_scan).toString()
-     + "\n     \'\'\'\r\n\t\t\tAUTOSAR {\r\n\t\t\t\tCalprmElementPrototype cpSorolloTMax, type: /AUTOSAR/DataTypes/UInt2 {\r\n\t\t\t\t\tSwDataDefProps swCalibrationAccess: readOnly, swImplPolicy: standard, swVariableAccessImplPolicy: optimized\r\n\t\t\t\t} \r\n\t\t\t\t\r\n\t\t\t\tCalprmElementPrototype cpSoroTuerTRelax, \ttype: /AUTOSAR/DataTypes/UInt4 {\r\n\t\t\t\t\tSwDataDefProps swCalibrationAccess: readOnly, swImplPolicy: standard, swVariableAccessImplPolicy: optimized\r\n\t\t\t\t}\r\n\t\t\t}\r\n\t\t\'\'\' is " + new StringDescription().appendValue(_builder).toString()
-     + "\n     list(COMMAND, DEFAULT, \r\n\t\t\t\t\t\t\tCOMMAND, IDENTIFIER, DEFAULT, LABEL, REFERENCE, DEFAULT, \r\n\t\t\t\t\t\t \t\tCOMMAND, LABEL, IDENTIFIER, DEFAULT, LABEL, IDENTIFIER, DEFAULT, LABEL, IDENTIFIER,\r\n\t\t\t\t\t\t \tDEFAULT,\r\n\t\t\t\t\t\t \tCOMMAND, IDENTIFIER, DEFAULT, LABEL, REFERENCE, DEFAULT, \r\n\t\t\t\t\t\t \t\tCOMMAND, LABEL, IDENTIFIER, DEFAULT, LABEL, IDENTIFIER, DEFAULT, LABEL, IDENTIFIER,\r\n\t\t\t\t\t\t \tDEFAULT,\r\n\t\t\t\t\t\t DEFAULT) is " + new StringDescription().appendValue(_list).toString()
-     + "\n     COMMAND is " + new StringDescription().appendValue(IColorConstants.COMMAND).toString()
-     + "\n     DEFAULT is " + new StringDescription().appendValue(IColorConstants.DEFAULT).toString()
-     + "\n     IDENTIFIER is " + new StringDescription().appendValue(IColorConstants.IDENTIFIER).toString()
-     + "\n     LABEL is " + new StringDescription().appendValue(IColorConstants.LABEL).toString()
-     + "\n     REFERENCE is " + new StringDescription().appendValue(IColorConstants.REFERENCE).toString() + "\n", _doubleArrow);
-    
+  public List<String> regions(final CharSequence s) {
+    List<String> _xblockexpression = null;
+    {
+      String _string = s.toString();
+      SimpleDocument _simpleDocument = new SimpleDocument(_string);
+      final SimpleDocument document = _simpleDocument;
+      int _length = s.length();
+      this.subject.setRange(document, 0, _length);
+      final List<String> regions = JnarioCollectionLiterals.<String>list();
+      IToken token = this.subject.nextToken();
+      boolean _isEOF = token.isEOF();
+      boolean _not = (!_isEOF);
+      boolean _while = _not;
+      while (_while) {
+        {
+          int _tokenOffset = this.subject.getTokenOffset();
+          int _tokenLength = this.subject.getTokenLength();
+          String _get = document.get(_tokenOffset, _tokenLength);
+          regions.add(_get);
+          IToken _nextToken = this.subject.nextToken();
+          token = _nextToken;
+        }
+        boolean _isEOF_1 = token.isEOF();
+        boolean _not_1 = (!_isEOF_1);
+        _while = _not_1;
+      }
+      _xblockexpression = (regions);
+    }
+    return _xblockexpression;
   }
   
   public List<RGB> scan(final CharSequence s) {

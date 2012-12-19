@@ -24,8 +24,8 @@ import org.rtext.lang.commands.Response;
 import org.rtext.lang.specs.unit.backend.ConnectorSpec;
 
 @SuppressWarnings("all")
-@RunWith(ExampleGroupRunner.class)
 @Named("Execute command")
+@RunWith(ExampleGroupRunner.class)
 public class ConnectorExecuteCommandSpec extends ConnectorSpec {
   @Test
   @Named("Starts backend process")

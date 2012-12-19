@@ -6,9 +6,9 @@ import org.jnario.runner.Named;
 import org.junit.runner.RunWith;
 import org.rtext.lang.specs.integration.ProblemMarkersFeatureValidFilesHaveNoProblemMarker;
 
-@RunWith(FeatureRunner.class)
 @Contains(ProblemMarkersFeatureValidFilesHaveNoProblemMarker.class)
 @Named("Problem Markers")
 @SuppressWarnings("all")
+@RunWith(FeatureRunner.class)
 public class ProblemMarkersFeature {
 }

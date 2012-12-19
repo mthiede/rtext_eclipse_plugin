@@ -31,8 +31,8 @@ import org.rtext.lang.specs.util.WorkspaceHelper;
 import org.rtext.lang.workspace.RTextFileChangeListener;
 
 @SuppressWarnings("all")
-@RunWith(ExampleGroupRunner.class)
 @Named("RTextFileChangeListener")
+@RunWith(ExampleGroupRunner.class)
 @CreateWith(value = MockInjector.class)
 @Ignore
 public class RTextFileChangeListenerSpec {

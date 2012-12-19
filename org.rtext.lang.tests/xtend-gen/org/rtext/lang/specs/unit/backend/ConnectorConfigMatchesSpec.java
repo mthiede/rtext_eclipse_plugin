@@ -5,6 +5,7 @@ import java.io.File;
 import java.util.List;
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
 import org.hamcrest.StringDescription;
+import org.jnario.lib.Assert;
 import org.jnario.lib.ExampleTable;
 import org.jnario.lib.ExampleTableIterators;
 import org.jnario.lib.JnarioCollectionLiterals;
@@ -12,7 +13,6 @@ import org.jnario.lib.Should;
 import org.jnario.runner.ExampleGroupRunner;
 import org.jnario.runner.Named;
 import org.jnario.runner.Order;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.rtext.lang.backend.ConnectorConfig;
@@ -20,8 +20,8 @@ import org.rtext.lang.specs.unit.backend.ConnectorConfigMatchesSpecExamples;
 import org.rtext.lang.specs.unit.backend.ConnectorConfigSpec;
 
 @SuppressWarnings("all")
-@RunWith(ExampleGroupRunner.class)
 @Named("matches")
+@RunWith(ExampleGroupRunner.class)
 public class ConnectorConfigMatchesSpec extends ConnectorConfigSpec {
   public ExampleTable<ConnectorConfigMatchesSpecExamples> _initConnectorConfigMatchesSpecExamples() {
     

@@ -14,8 +14,8 @@ import org.rtext.lang.commands.CommandSerializer;
 import org.rtext.lang.commands.Response;
 
 @SuppressWarnings("all")
-@RunWith(ExampleGroupRunner.class)
 @Named("Converting Commands to JSON")
+@RunWith(ExampleGroupRunner.class)
 public class ConvertingCommandsToJSONSpec {
   final String command = "load_model";
   

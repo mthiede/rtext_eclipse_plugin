@@ -11,13 +11,13 @@ import org.eclipse.xtext.xbase.lib.Functions.Function0;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
 import org.hamcrest.StringDescription;
+import org.jnario.lib.Assert;
 import org.jnario.lib.JnarioCollectionLiterals;
 import org.jnario.lib.Should;
 import org.jnario.runner.ExampleGroupRunner;
 import org.jnario.runner.Extension;
 import org.jnario.runner.Named;
 import org.jnario.runner.Order;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.rtext.lang.backend.ConnectorConfig;
@@ -27,8 +27,8 @@ import org.rtext.lang.specs.util.WorkspaceHelper;
 import org.rtext.lang.util.Procedure;
 
 @SuppressWarnings("all")
-@RunWith(ExampleGroupRunner.class)
 @Named("ConnectorScope")
+@RunWith(ExampleGroupRunner.class)
 public class ConnectorScopeSpec {
   @Extension
   public WorkspaceHelper _workspaceHelper = new Function0<WorkspaceHelper>() {

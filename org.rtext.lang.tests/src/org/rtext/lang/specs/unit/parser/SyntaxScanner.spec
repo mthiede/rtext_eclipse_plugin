@@ -11,14 +11,14 @@ import org.eclipse.jface.text.TextAttribute
 import org.eclipse.jface.text.rules.IToken
 import org.rtext.lang.editor.ColorManager
 import org.rtext.lang.editor.SyntaxScanner
+import org.rtext.lang.specs.util.SimpleDocument
 
 import static org.jnario.lib.JnarioCollectionLiterals.*
-import static org.rtext.lang.model.AbstractRTextParser.*
 import static org.rtext.lang.editor.IColorConstants.*
+import static org.rtext.lang.model.AbstractRTextParser.*
 
 import static extension org.jnario.lib.JnarioIterableExtensions.*
 import static extension org.jnario.lib.Should.*
-import org.rtext.lang.specs.util.SimpleDocument
 
 describe SyntaxScanner {
  	
@@ -29,7 +29,7 @@ describe SyntaxScanner {
 		#a comment
 		'''.scan.first => COMMENT
 	}
-	
+	 
 	fact "parse annotations"{
 		'''
 		@a comment
@@ -74,43 +74,43 @@ describe SyntaxScanner {
 	fact "parse label"{
 		'''
 		Type name, label: /a/Reference
-		'''.scan.forth => LABEL
+		'''.scan.get(5) => LABEL
 	}
 	
 	fact "parse reference"{
 		'''
 		Type name, label: /long/a/Reference
-		'''.scan.fifth => REFERENCE
+		'''.scan.get(7) => REFERENCE
 	}
 	
-	fact "parse generics"{
+	fact "parse macros"{
 		'''
 		Type name, label: <generic>
-		'''.scan.fifth => GENERICS
+		'''.scan.get(7) => GENERICS
 	}
 	
 	fact "parse reference without leading '/'"{
 		'''
 		Type name, label: a/long/Reference
-		'''.scan.fifth => REFERENCE
+		'''.scan.get(7) => REFERENCE
 	}
 	
 	fact "parse number"{
 		'''
 		Type name, label: 8
-		'''.scan.fifth => NUMBER
+		'''.scan.get(7) => NUMBER
 	}
 	
 	fact "parse string"{
 		'''
 		Type name, label: "a string"
-		'''.scan.fifth => STRING
+		'''.scan.get(7) => STRING
 	}
 	
 	fact "parse enum"{
 		'''
 		Type name, label: enum
-		'''.scan.fifth => IDENTIFIER
+		'''.scan.get(7) => IDENTIFIER
 	}
 	
 	fact "parse whitespace"{
@@ -124,29 +124,21 @@ describe SyntaxScanner {
 	}
 	
 	fact "parse string until EOL"{
-		('Type name, label: "a string ' + EOL).scan.fifth => STRING
+		('Type name, label: "a string ' + EOL).scan.get(7) => STRING
 	}
 	
-	fact "parse nested elements"{
-		'''
-			AUTOSAR {
-				CalprmElementPrototype cpSorolloTMax, type: /AUTOSAR/DataTypes/UInt2 {
-					SwDataDefProps swCalibrationAccess: readOnly, swImplPolicy: standard, swVariableAccessImplPolicy: optimized
-				} 
-				
-				CalprmElementPrototype cpSoroTuerTRelax, 	type: /AUTOSAR/DataTypes/UInt4 {
-					SwDataDefProps swCalibrationAccess: readOnly, swImplPolicy: standard, swVariableAccessImplPolicy: optimized
-				}
-			}
-		'''.scan => list(COMMAND, DEFAULT, 
-							COMMAND, IDENTIFIER, DEFAULT, LABEL, REFERENCE, DEFAULT, 
-						 		COMMAND, LABEL, IDENTIFIER, DEFAULT, LABEL, IDENTIFIER, DEFAULT, LABEL, IDENTIFIER,
-						 	DEFAULT,
-						 	COMMAND, IDENTIFIER, DEFAULT, LABEL, REFERENCE, DEFAULT, 
-						 		COMMAND, LABEL, IDENTIFIER, DEFAULT, LABEL, IDENTIFIER, DEFAULT, LABEL, IDENTIFIER,
-						 	DEFAULT,
-						 DEFAULT)
-				
+
+	def regions(CharSequence s){
+		val document = new SimpleDocument(s.toString)
+		subject.setRange(document, 0, s.length)
+		
+		val regions = <String>list
+		var token = subject.nextToken()
+		while (!token.isEOF()) {
+			regions += document.get(subject.tokenOffset, subject.tokenLength)
+			token= subject.nextToken()
+		}
+		regions
 	}
 	
 	

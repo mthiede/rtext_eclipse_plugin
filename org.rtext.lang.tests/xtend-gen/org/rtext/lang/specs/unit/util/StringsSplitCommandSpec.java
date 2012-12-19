@@ -5,6 +5,7 @@ import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
 import org.hamcrest.StringDescription;
+import org.jnario.lib.Assert;
 import org.jnario.lib.ExampleTable;
 import org.jnario.lib.ExampleTableIterators;
 import org.jnario.lib.JnarioCollectionLiterals;
@@ -12,7 +13,6 @@ import org.jnario.lib.Should;
 import org.jnario.runner.ExampleGroupRunner;
 import org.jnario.runner.Named;
 import org.jnario.runner.Order;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.rtext.lang.specs.unit.util.StringsSpec;
@@ -20,8 +20,8 @@ import org.rtext.lang.specs.unit.util.StringsSplitCommandSpecExamples;
 import org.rtext.lang.util.Strings;
 
 @SuppressWarnings("all")
-@RunWith(ExampleGroupRunner.class)
 @Named("splitCommand")
+@RunWith(ExampleGroupRunner.class)
 public class StringsSplitCommandSpec extends StringsSpec {
   public ExampleTable<StringsSplitCommandSpecExamples> _initStringsSplitCommandSpecExamples() {
     

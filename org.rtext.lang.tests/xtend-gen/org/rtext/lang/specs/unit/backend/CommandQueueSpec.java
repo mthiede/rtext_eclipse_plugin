@@ -1,12 +1,12 @@
 package org.rtext.lang.specs.unit.backend;
 
 import org.hamcrest.StringDescription;
+import org.jnario.lib.Assert;
 import org.jnario.lib.Should;
 import org.jnario.runner.ExampleGroupRunner;
 import org.jnario.runner.Named;
 import org.jnario.runner.Order;
 import org.jnario.runner.Subject;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.rtext.lang.backend.CommandQueue;
@@ -17,8 +17,8 @@ import org.rtext.lang.commands.Response;
 import org.rtext.lang.specs.util.Commands;
 
 @SuppressWarnings("all")
-@RunWith(ExampleGroupRunner.class)
 @Named("CommandQueue")
+@RunWith(ExampleGroupRunner.class)
 public class CommandQueueSpec {
   @Subject
   public CommandQueue subject;

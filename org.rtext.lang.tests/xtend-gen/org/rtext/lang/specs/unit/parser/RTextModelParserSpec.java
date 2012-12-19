@@ -21,8 +21,8 @@ import org.rtext.lang.specs.util.SimpleDocument;
 
 @Contains({ RTextModelParserStructureSpec.class, RTextModelParserFullTextRegionSpec.class, RTextModelParserErrorHandlingSpec.class })
 @SuppressWarnings("all")
-@RunWith(ExampleGroupRunner.class)
 @Named("RTextModelParser")
+@RunWith(ExampleGroupRunner.class)
 public class RTextModelParserSpec {
   @Subject
   public RTextModelParser subject;

@@ -5,6 +5,7 @@ import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.Functions.Function0;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.hamcrest.StringDescription;
+import org.jnario.lib.Assert;
 import org.jnario.lib.Should;
 import org.jnario.runner.Contains;
 import org.jnario.runner.CreateWith;
@@ -12,7 +13,6 @@ import org.jnario.runner.ExampleGroupRunner;
 import org.jnario.runner.Extension;
 import org.jnario.runner.Named;
 import org.jnario.runner.Order;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -28,8 +28,8 @@ import org.rtext.lang.specs.util.MockInjector;
 
 @Contains(RTextFilesFindingRtextFilesSpec.class)
 @SuppressWarnings("all")
-@RunWith(ExampleGroupRunner.class)
 @Named("RTextFiles")
+@RunWith(ExampleGroupRunner.class)
 @CreateWith(value = MockInjector.class)
 public class RTextFilesSpec {
   File modelFile;

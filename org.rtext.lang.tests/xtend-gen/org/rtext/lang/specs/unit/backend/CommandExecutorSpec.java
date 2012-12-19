@@ -22,8 +22,8 @@ import org.rtext.lang.workspace.BackendConnectJob;
 import org.rtext.lang.workspace.BackendConnectJob.Factory;
 
 @SuppressWarnings("all")
-@RunWith(ExampleGroupRunner.class)
 @Named("CommandExecutor")
+@RunWith(ExampleGroupRunner.class)
 @CreateWith(value = MockInjector.class)
 public class CommandExecutorSpec {
   public CommandExecutor subject;

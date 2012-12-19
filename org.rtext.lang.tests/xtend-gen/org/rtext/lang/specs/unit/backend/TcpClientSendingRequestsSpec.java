@@ -7,11 +7,11 @@ import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.ObjectExtensions;
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
 import org.hamcrest.StringDescription;
+import org.jnario.lib.Assert;
 import org.jnario.lib.Should;
 import org.jnario.runner.ExampleGroupRunner;
 import org.jnario.runner.Named;
 import org.jnario.runner.Order;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
@@ -26,8 +26,8 @@ import org.rtext.lang.specs.util.Wait;
 import org.rtext.lang.specs.util.WaitConfig;
 
 @SuppressWarnings("all")
-@RunWith(ExampleGroupRunner.class)
 @Named("Sending requests")
+@RunWith(ExampleGroupRunner.class)
 public class TcpClientSendingRequestsSpec extends TcpClientSpec {
   @Test
   @Named("Connecting to the same address twice will create only one socket")
@@ -153,13 +153,17 @@ public class TcpClientSendingRequestsSpec extends TcpClientSpec {
   @Named("Throws exception if not connected")
   @Order(7)
   public void _throwsExceptionIfNotConnected() throws Exception {
+    boolean expectedException = false;
+    String message = "";
     try{
       this.subject.<Response>sendRequest(Commands.ANY_COMMAND, this.callback);
-      Assert.fail("Expected " + BackendException.class.getName() + " in \n     subject.sendRequest(ANY_COMMAND, callback)\n with:"
+      message = "Expected " + BackendException.class.getName() + " for \n     subject.sendRequest(ANY_COMMAND, callback)\n with:"
        + "\n     subject is " + new StringDescription().appendValue(this.subject).toString()
        + "\n     ANY_COMMAND is " + new StringDescription().appendValue(Commands.ANY_COMMAND).toString()
-       + "\n     callback is " + new StringDescription().appendValue(this.callback).toString());
+       + "\n     callback is " + new StringDescription().appendValue(this.callback).toString();
     }catch(BackendException e){
+      expectedException = true;
     }
+    Assert.assertTrue(message, expectedException);
   }
 }

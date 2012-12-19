@@ -4,13 +4,13 @@ import java.util.concurrent.CountDownLatch;
 import org.eclipse.xtext.xbase.lib.Functions.Function0;
 import org.eclipse.xtext.xbase.lib.InputOutput;
 import org.hamcrest.StringDescription;
+import org.jnario.lib.Assert;
 import org.jnario.runner.Contains;
 import org.jnario.runner.CreateWith;
 import org.jnario.runner.ExampleGroupRunner;
 import org.jnario.runner.Named;
 import org.jnario.runner.Order;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,8 +28,8 @@ import org.rtext.lang.specs.util.TestCallBack;
 
 @Contains({ TcpClientSendingRequestsSpec.class, TcpClientConnectionErrorsSpec.class, TcpClientConnectionStateSpec.class, TcpClientNotifiesMessageListenerOnSpec.class })
 @SuppressWarnings("all")
-@RunWith(ExampleGroupRunner.class)
 @Named("TcpClient")
+@RunWith(ExampleGroupRunner.class)
 @CreateWith(value = MockInjector.class)
 public class TcpClientSpec {
   public TcpClient subject;
@@ -101,14 +101,18 @@ public class TcpClientSpec {
   @Named("subject.connect[ADDRESS, INVALID_PORT] throws IllegalArgumentException")
   @Order(1)
   public void _subjectConnectADDRESSINVALIDPORTThrowsIllegalArgumentException() throws Exception {
+    boolean expectedException = false;
+    String message = "";
     try{
       this.subject.connect(this.ADDRESS, this.INVALID_PORT);
-      Assert.fail("Expected " + IllegalArgumentException.class.getName() + " in \n     subject.connect(ADDRESS, INVALID_PORT)\n with:"
+      message = "Expected " + IllegalArgumentException.class.getName() + " for \n     subject.connect(ADDRESS, INVALID_PORT)\n with:"
        + "\n     subject is " + new StringDescription().appendValue(this.subject).toString()
        + "\n     ADDRESS is " + new StringDescription().appendValue(this.ADDRESS).toString()
-       + "\n     INVALID_PORT is " + new StringDescription().appendValue(this.INVALID_PORT).toString());
+       + "\n     INVALID_PORT is " + new StringDescription().appendValue(this.INVALID_PORT).toString();
     }catch(IllegalArgumentException e){
+      expectedException = true;
     }
+    Assert.assertTrue(message, expectedException);
   }
   
   @After
@@ -119,6 +123,6 @@ public class TcpClientSpec {
   
   public void is(final Response actual, final CharSequence expected) {
     String _string = expected.toString();
-    Assert.assertEquals(_string, actual);
+    org.junit.Assert.assertEquals(_string, actual);
   }
 }

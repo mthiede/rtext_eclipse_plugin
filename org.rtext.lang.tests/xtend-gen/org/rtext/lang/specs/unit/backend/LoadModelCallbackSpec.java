@@ -35,8 +35,8 @@ import org.rtext.lang.specs.util.WorkspaceHelper;
 import org.rtext.lang.util.FileLocator;
 
 @SuppressWarnings("all")
-@RunWith(ExampleGroupRunner.class)
 @Named("LoadModelCallback")
+@RunWith(ExampleGroupRunner.class)
 @CreateWith(value = MockInjector.class)
 public class LoadModelCallbackSpec {
   public LoadModelCallback subject;

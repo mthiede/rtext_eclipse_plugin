@@ -3,12 +3,12 @@ package org.rtext.lang.specs.unit.backend;
 import java.io.File;
 import org.eclipse.xtext.xbase.lib.Functions.Function0;
 import org.hamcrest.StringDescription;
+import org.jnario.lib.Assert;
 import org.jnario.lib.Should;
 import org.jnario.runner.CreateWith;
 import org.jnario.runner.ExampleGroupRunner;
 import org.jnario.runner.Named;
 import org.jnario.runner.Order;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,8 +23,8 @@ import org.rtext.lang.backend.ConnectorProvider;
 import org.rtext.lang.specs.util.MockInjector;
 
 @SuppressWarnings("all")
-@RunWith(ExampleGroupRunner.class)
 @Named("ConnectorProvider")
+@RunWith(ExampleGroupRunner.class)
 @CreateWith(value = MockInjector.class)
 public class ConnectorProviderSpec {
   public ConnectorProvider subject;

@@ -11,8 +11,8 @@ import org.rtext.lang.backend.Connection;
 import org.rtext.lang.specs.unit.backend.ConnectorSpec;
 
 @SuppressWarnings("all")
-@RunWith(ExampleGroupRunner.class)
 @Named("disconnect")
+@RunWith(ExampleGroupRunner.class)
 public class ConnectorDisconnectSpec extends ConnectorSpec {
   @Test
   @Named("closes connection")

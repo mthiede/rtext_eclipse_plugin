@@ -9,12 +9,12 @@ import org.eclipse.xtext.xbase.lib.ObjectExtensions;
 import org.eclipse.xtext.xbase.lib.Pair;
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
 import org.hamcrest.StringDescription;
+import org.jnario.lib.Assert;
 import org.jnario.runner.ExampleGroupRunner;
 import org.jnario.runner.Extension;
 import org.jnario.runner.Named;
 import org.jnario.runner.Order;
 import org.jnario.runner.Subject;
-import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -25,8 +25,8 @@ import org.rtext.lang.backend.RTextFileParser;
 import org.rtext.lang.specs.util.Files;
 
 @SuppressWarnings("all")
-@RunWith(ExampleGroupRunner.class)
 @Named("RTextFileParser")
+@RunWith(ExampleGroupRunner.class)
 public class RTextFileParserSpec {
   @Subject
   public RTextFileParser subject;

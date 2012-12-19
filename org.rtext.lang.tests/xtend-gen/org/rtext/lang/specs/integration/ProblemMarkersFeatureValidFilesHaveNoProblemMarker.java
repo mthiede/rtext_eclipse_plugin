@@ -5,6 +5,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.xtext.xbase.lib.Functions.Function0;
 import org.hamcrest.StringDescription;
+import org.jnario.lib.Assert;
 import org.jnario.lib.JnarioIterableExtensions;
 import org.jnario.lib.Should;
 import org.jnario.lib.StepArguments;
@@ -12,7 +13,6 @@ import org.jnario.runner.Extension;
 import org.jnario.runner.FeatureRunner;
 import org.jnario.runner.Named;
 import org.jnario.runner.Order;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.rtext.lang.backend.ConnectorConfig;
@@ -88,7 +88,6 @@ public class ProblemMarkersFeatureValidFilesHaveNoProblemMarker extends ProblemM
     Assert.assertTrue("\nExpected args.first.file.findProblems.empty should be true but"
      + "\n     args.first.file.findProblems.empty is " + new StringDescription().appendValue(Boolean.valueOf(_isEmpty)).toString()
      + "\n     args.first.file.findProblems is " + new StringDescription().appendValue(_findProblems).toString()
-     + "\n      is " + new StringDescription().appendValue(this._workspaceHelper).toString()
      + "\n     args.first.file is " + new StringDescription().appendValue(_file).toString()
      + "\n     args.first is " + new StringDescription().appendValue(_first).toString()
      + "\n     args is " + new StringDescription().appendValue(args).toString() + "\n", _should_be);
@@ -109,7 +108,6 @@ public class ProblemMarkersFeatureValidFilesHaveNoProblemMarker extends ProblemM
     Assert.assertTrue("\nExpected args.first.file.findProblems.empty should be false but"
      + "\n     args.first.file.findProblems.empty is " + new StringDescription().appendValue(Boolean.valueOf(_isEmpty)).toString()
      + "\n     args.first.file.findProblems is " + new StringDescription().appendValue(_findProblems).toString()
-     + "\n      is " + new StringDescription().appendValue(this._workspaceHelper).toString()
      + "\n     args.first.file is " + new StringDescription().appendValue(_file).toString()
      + "\n     args.first is " + new StringDescription().appendValue(_first).toString()
      + "\n     args is " + new StringDescription().appendValue(args).toString() + "\n", _should_be);

@@ -2,12 +2,12 @@ package org.rtext.lang.specs.unit.backend;
 
 import java.io.File;
 import org.hamcrest.StringDescription;
+import org.jnario.lib.Assert;
 import org.jnario.lib.JnarioIterableExtensions;
 import org.jnario.lib.Should;
 import org.jnario.runner.ExampleGroupRunner;
 import org.jnario.runner.Named;
 import org.jnario.runner.Order;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -16,8 +16,8 @@ import org.rtext.lang.backend.RTextFile;
 import org.rtext.lang.specs.unit.backend.RTextFilesSpec;
 
 @SuppressWarnings("all")
-@RunWith(ExampleGroupRunner.class)
 @Named("Finding .rtext files")
+@RunWith(ExampleGroupRunner.class)
 public class RTextFilesFindingRtextFilesSpec extends RTextFilesSpec {
   @Test
   @Named("in the same folder")

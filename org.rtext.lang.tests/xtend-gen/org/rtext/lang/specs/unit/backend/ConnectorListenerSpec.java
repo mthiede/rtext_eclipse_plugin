@@ -15,8 +15,8 @@ import org.rtext.lang.specs.unit.backend.ConnectorSpec;
 import org.rtext.lang.specs.util.Commands;
 
 @SuppressWarnings("all")
-@RunWith(ExampleGroupRunner.class)
 @Named("listener")
+@RunWith(ExampleGroupRunner.class)
 public class ConnectorListenerSpec extends ConnectorSpec {
   @Mock
   ConnectorListener listener;

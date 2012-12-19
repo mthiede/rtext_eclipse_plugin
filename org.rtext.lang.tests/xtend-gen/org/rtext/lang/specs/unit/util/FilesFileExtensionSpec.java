@@ -3,13 +3,13 @@ package org.rtext.lang.specs.unit.util;
 import java.io.File;
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
 import org.hamcrest.StringDescription;
+import org.jnario.lib.Assert;
 import org.jnario.lib.ExampleTable;
 import org.jnario.lib.ExampleTableIterators;
 import org.jnario.lib.Should;
 import org.jnario.runner.ExampleGroupRunner;
 import org.jnario.runner.Named;
 import org.jnario.runner.Order;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.rtext.lang.specs.unit.util.FilesFileExtensionSpecExamples;
@@ -17,8 +17,8 @@ import org.rtext.lang.specs.unit.util.FilesSpec;
 import org.rtext.lang.util.Files;
 
 @SuppressWarnings("all")
-@RunWith(ExampleGroupRunner.class)
 @Named("fileExtension")
+@RunWith(ExampleGroupRunner.class)
 public class FilesFileExtensionSpec extends FilesSpec {
   String nameIsNull = null;
   
@@ -26,12 +26,16 @@ public class FilesFileExtensionSpec extends FilesSpec {
   @Named("^extension[nameIsNull] throws IllegalArgumentException")
   @Order(1)
   public void _extensionNameIsNullThrowsIllegalArgumentException() throws Exception {
+    boolean expectedException = false;
+    String message = "";
     try{
       Files.extension(this.nameIsNull);
-      Assert.fail("Expected " + IllegalArgumentException.class.getName() + " in \n     ^extension(nameIsNull)\n with:"
-       + "\n     nameIsNull is " + new StringDescription().appendValue(this.nameIsNull).toString());
+      message = "Expected " + IllegalArgumentException.class.getName() + " for \n     ^extension(nameIsNull)\n with:"
+       + "\n     nameIsNull is " + new StringDescription().appendValue(this.nameIsNull).toString();
     }catch(IllegalArgumentException e){
+      expectedException = true;
     }
+    Assert.assertTrue(message, expectedException);
   }
   
   public ExampleTable<FilesFileExtensionSpecExamples> _initFilesFileExtensionSpecExamples() {

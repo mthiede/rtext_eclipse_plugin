@@ -3,6 +3,7 @@ package org.rtext.lang.specs.integration;
 import java.util.List;
 import org.eclipse.xtext.xbase.lib.Functions.Function0;
 import org.hamcrest.StringDescription;
+import org.jnario.lib.Assert;
 import org.jnario.lib.JnarioIterableExtensions;
 import org.jnario.lib.Should;
 import org.jnario.lib.StepArguments;
@@ -10,7 +11,6 @@ import org.jnario.runner.Extension;
 import org.jnario.runner.FeatureRunner;
 import org.jnario.runner.Named;
 import org.jnario.runner.Order;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.rtext.lang.commands.Response;
@@ -62,7 +62,8 @@ public class SendingReceivingMessagesFeatureAnsynchronousCommunication extends S
     String _type = _response.getType();
     boolean _doubleArrow = Should.operator_doubleArrow(_type, "response");
     Assert.assertTrue("\nExpected response.type => \"response\" but"
-     + "\n     response.type is " + new StringDescription().appendValue(_type).toString() + "\n", _doubleArrow);
+     + "\n     response.type is " + new StringDescription().appendValue(_type).toString()
+     + "\n     response is " + new StringDescription().appendValue(_response).toString() + "\n", _doubleArrow);
     
   }
 }

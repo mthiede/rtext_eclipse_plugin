@@ -22,7 +22,7 @@ public abstract class AbstractRTextParser<T> {
 	private IDocument fDocument;
 	private int fOffset;
 	private int fTokenStart;
-	private boolean fNewLine;
+	private boolean fNewLine = false;
 
 	public int getTokenLength() {
 		return fOffset - fTokenStart;
@@ -34,12 +34,13 @@ public abstract class AbstractRTextParser<T> {
 
 	public T nextToken() {
 		T result;
-		consumeWhitespace();
 		if (fOffset >= fDocument.getLength()) {
 			return createEndOfFile();
 		}
 		tokenStart();
-		if (nextIsChar('#')) {
+		if(consumeWhitespace()){
+			result = createDefault();
+		}else if (nextIsChar('#')) {
 			consumeUntilEOL();
 			result = createComment();
 		}else if (nextIsChar('@')) {
@@ -56,24 +57,21 @@ public abstract class AbstractRTextParser<T> {
 			else {
 				if (fNewLine) {
 					result = createCommand();
+					fNewLine = false;
 				}
 				else {
 					result = createIdentifier();
 				}
 			}
-		}
-		else if (nextIsDigit())	{
+		}else if (nextIsDigit())	{
 			consumeNumber();
 			result = createNumber();
-		}
-		else if (isReference()) {
+		}else if (isReference()) {
 			result = consumeReference();
-		}
-		else if (nextIsChar('"')) {
+		}else if (nextIsChar('"')) {
 			consumeString();
 			result = createString();
-		}
-		else if (nextIsChar('<')) {
+		}else if (nextIsChar('<')) {
 			consumeGenerics();
 			result = createGenerics();
 		}
@@ -87,7 +85,6 @@ public abstract class AbstractRTextParser<T> {
 			consumeAnyChar();
 			result = createDefault();
 		}
-		fNewLine = false;
 		return result;
 	}
 
@@ -164,14 +161,12 @@ public abstract class AbstractRTextParser<T> {
 		while (c != postfix && c != EOL) {
 			c = readChar();
 		}
-		unreadChar();
-		consumeChar(postfix);
 	}
 
 	private boolean consumeWhitespace() {
 		boolean result = false;
 		char c = readChar();
-		while (c == ' ' || c == '\t' || c == '\n' || c == '\r') {
+		while (Character.isWhitespace(c)) {
 			if (c == '\n') {
 				fNewLine = true;
 			}
@@ -213,7 +208,7 @@ public abstract class AbstractRTextParser<T> {
 		fOffset--;
 	}
 
-	private char readChar() {
+	protected char readChar() {
 		char result = EOL;
 		try {
 			result = fDocument.getChar(fOffset);

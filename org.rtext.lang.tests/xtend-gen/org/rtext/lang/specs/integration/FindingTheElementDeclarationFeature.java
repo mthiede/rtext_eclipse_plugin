@@ -8,9 +8,9 @@ import org.rtext.lang.specs.integration.FindingTheElementDeclarationFeatureDisco
 import org.rtext.lang.specs.integration.FindingTheElementDeclarationFeatureHyperlinkHighlighting;
 import org.rtext.lang.specs.integration.FindingTheElementDeclarationFeatureOpenAnHyperlink;
 
-@RunWith(FeatureRunner.class)
 @Contains({ FindingTheElementDeclarationFeatureOpenAnHyperlink.class, FindingTheElementDeclarationFeatureHyperlinkHighlighting.class, FindingTheElementDeclarationFeatureDisconnectedBackend.class })
 @Named("Finding the element declaration")
 @SuppressWarnings("all")
+@RunWith(FeatureRunner.class)
 public class FindingTheElementDeclarationFeature {
 }

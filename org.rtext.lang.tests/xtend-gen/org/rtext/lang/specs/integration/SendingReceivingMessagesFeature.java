@@ -7,9 +7,9 @@ import org.junit.runner.RunWith;
 import org.rtext.lang.specs.integration.SendingReceivingMessagesFeatureAnsynchronousCommunication;
 import org.rtext.lang.specs.integration.SendingReceivingMessagesFeatureSynchronousCommunication;
 
-@RunWith(FeatureRunner.class)
 @Contains({ SendingReceivingMessagesFeatureSynchronousCommunication.class, SendingReceivingMessagesFeatureAnsynchronousCommunication.class })
 @Named("Sending & Receiving Messages")
 @SuppressWarnings("all")
+@RunWith(FeatureRunner.class)
 public class SendingReceivingMessagesFeature {
 }

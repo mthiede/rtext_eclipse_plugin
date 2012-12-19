@@ -33,8 +33,8 @@ import org.rtext.lang.specs.util.MockInjector;
 
 @Contains({ ConnectorErrorHandlingSpec.class, ConnectorExecuteCommandSpec.class, ConnectorBusySpec.class, ConnectorConnectedSpec.class, ConnectorDisconnectSpec.class, ConnectorListenerSpec.class })
 @SuppressWarnings("all")
-@RunWith(ExampleGroupRunner.class)
 @Named("Connector")
+@RunWith(ExampleGroupRunner.class)
 @CreateWith(value = MockInjector.class)
 public class ConnectorSpec {
   public Connector subject;

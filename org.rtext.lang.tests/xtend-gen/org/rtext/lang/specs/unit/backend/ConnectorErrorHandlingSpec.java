@@ -4,10 +4,10 @@ import java.util.List;
 import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.hamcrest.StringDescription;
+import org.jnario.lib.Assert;
 import org.jnario.runner.ExampleGroupRunner;
 import org.jnario.runner.Named;
 import org.jnario.runner.Order;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
@@ -24,8 +24,8 @@ import org.rtext.lang.commands.Response;
 import org.rtext.lang.specs.unit.backend.ConnectorSpec;
 
 @SuppressWarnings("all")
-@RunWith(ExampleGroupRunner.class)
 @Named("Error Handling")
+@RunWith(ExampleGroupRunner.class)
 public class ConnectorErrorHandlingSpec extends ConnectorSpec {
   @Test
   @Named("Kills backend process if connection fails")
@@ -67,14 +67,18 @@ public class ConnectorErrorHandlingSpec extends ConnectorSpec {
     Command _any = Matchers.<Command>any();
     Callback _any_1 = Matchers.<Callback>any();
     _when.sendRequest(_any, _any_1);
+    boolean expectedException = false;
+    String message = "";
     try{
       this.subject.<Response>execute(this.anyCommand, this.callback);
-      Assert.fail("Expected " + RuntimeException.class.getName() + " in \n     subject.execute(anyCommand, callback)\n with:"
+      message = "Expected " + RuntimeException.class.getName() + " for \n     subject.execute(anyCommand, callback)\n with:"
        + "\n     subject is " + new StringDescription().appendValue(this.subject).toString()
        + "\n     anyCommand is " + new StringDescription().appendValue(this.anyCommand).toString()
-       + "\n     callback is " + new StringDescription().appendValue(this.callback).toString());
+       + "\n     callback is " + new StringDescription().appendValue(this.callback).toString();
     }catch(RuntimeException e){
+      expectedException = true;
     }
+    Assert.assertTrue(message, expectedException);
     BackendStarter _verify = Mockito.<BackendStarter>verify(this.processRunner);
     _verify.stop();
   }
@@ -89,14 +93,18 @@ public class ConnectorErrorHandlingSpec extends ConnectorSpec {
     Command _any = Matchers.<Command>any();
     Callback _any_1 = Matchers.<Callback>any();
     _when.sendRequest(_any, _any_1);
+    boolean expectedException = false;
+    String message = "";
     try{
       this.subject.<Response>execute(this.anyCommand, this.callback);
-      Assert.fail("Expected " + RuntimeException.class.getName() + " in \n     subject.execute(anyCommand, callback)\n with:"
+      message = "Expected " + RuntimeException.class.getName() + " for \n     subject.execute(anyCommand, callback)\n with:"
        + "\n     subject is " + new StringDescription().appendValue(this.subject).toString()
        + "\n     anyCommand is " + new StringDescription().appendValue(this.anyCommand).toString()
-       + "\n     callback is " + new StringDescription().appendValue(this.callback).toString());
+       + "\n     callback is " + new StringDescription().appendValue(this.callback).toString();
     }catch(RuntimeException e){
+      expectedException = true;
     }
+    Assert.assertTrue(message, expectedException);
     Connection _verify = Mockito.<Connection>verify(this.connection);
     _verify.close();
   }
