@@ -1,6 +1,5 @@
 package org.rtext.lang.backend;
 
-import org.rtext.lang.commands.Command;
 
 public interface ConnectorListener {
 	public void executeCommand(String command);
