@@ -13,10 +13,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Strings {
+	private static final Pattern COMMAND_PATTERN = Pattern.compile("[^\\s\"']+|\"([^\"]*)\"|'([^']*)'");
+
 	public static String[] splitCommand(String s){
 		List<String> matchList = new ArrayList<String>();
-		Pattern regex = Pattern.compile("[^\\s\"']+|\"([^\"]*)\"|'([^']*)'");
-		Matcher regexMatcher = regex.matcher(s);
+		Matcher regexMatcher = COMMAND_PATTERN.matcher(s);
 		while (regexMatcher.find()) {
 		    if (regexMatcher.group(1) != null) {
 		        // Add double-quoted string without the quotes
