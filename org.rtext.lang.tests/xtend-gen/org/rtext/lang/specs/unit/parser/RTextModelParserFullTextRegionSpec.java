@@ -19,7 +19,7 @@ import org.rtext.lang.specs.unit.parser.RTextModelParserSpec;
 public class RTextModelParserFullTextRegionSpec extends RTextModelParserSpec {
   @Test
   @Named("spans type and name")
-  @Order(9)
+  @Order(10)
   public void _spansTypeAndName() throws Exception {
     String input = "Type parent";
     List<Element> _parse = this.parse(input);
@@ -34,7 +34,7 @@ public class RTextModelParserFullTextRegionSpec extends RTextModelParserSpec {
   
   @Test
   @Named("spans over children")
-  @Order(10)
+  @Order(11)
   public void _spansOverChildren() throws Exception {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("Type{");
@@ -67,7 +67,7 @@ public class RTextModelParserFullTextRegionSpec extends RTextModelParserSpec {
   
   @Test
   @Named("spans children with feature def")
-  @Order(11)
+  @Order(12)
   public void _spansChildrenWithFeatureDef() throws Exception {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("IntegerType myType { ");
@@ -97,7 +97,7 @@ public class RTextModelParserFullTextRegionSpec extends RTextModelParserSpec {
   
   @Test
   @Named("child element region spans all child childs")
-  @Order(12)
+  @Order(13)
   public void _childElementRegionSpansAllChildChilds() throws Exception {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("Type parent{");
@@ -138,7 +138,7 @@ public class RTextModelParserFullTextRegionSpec extends RTextModelParserSpec {
   
   @Test
   @Named("deeply nested elements")
-  @Order(13)
+  @Order(14)
   public void _deeplyNestedElements() throws Exception {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("Type parent{");

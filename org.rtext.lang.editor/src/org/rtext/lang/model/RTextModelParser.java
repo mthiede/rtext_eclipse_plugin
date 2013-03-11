@@ -83,6 +83,9 @@ public class RTextModelParser extends AbstractRTextParser<Element> {
 	}
 
 	private void increaseLength() {
+		if(current == null){
+			return;
+		}
 		current.length(currentOffset() - current.getOffset());
 	}
 

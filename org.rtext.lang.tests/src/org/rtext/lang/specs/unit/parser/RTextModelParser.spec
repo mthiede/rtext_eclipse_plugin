@@ -28,6 +28,10 @@ describe RTextModelParser {
 			"OtherType".parse.first		=> element("OtherType")
 		}
 		
+		fact "parse command with annotation"{
+			"@file-extension: ecuconfig\nType".parse.first 			=> element("Type")
+		}
+		
 		fact "parse multiple root elements"{
 			'''
 			Root1

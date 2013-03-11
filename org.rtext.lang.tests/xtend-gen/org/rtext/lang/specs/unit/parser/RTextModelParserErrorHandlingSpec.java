@@ -20,7 +20,7 @@ import org.rtext.lang.specs.util.IsElement;
 public class RTextModelParserErrorHandlingSpec extends RTextModelParserSpec {
   @Test
   @Named("ignores too many closing curly braces")
-  @Order(14)
+  @Order(15)
   public void _ignoresTooManyClosingCurlyBraces() throws Exception {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("Type parent{");
@@ -50,7 +50,7 @@ public class RTextModelParserErrorHandlingSpec extends RTextModelParserSpec {
   
   @Test
   @Named("creates no elements for empty string")
-  @Order(15)
+  @Order(16)
   public void _createsNoElementsForEmptyString() throws Exception {
     List<Element> _parse = this.parse("");
     int _size = _parse.size();

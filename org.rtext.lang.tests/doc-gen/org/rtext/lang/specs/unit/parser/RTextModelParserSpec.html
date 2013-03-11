@@ -40,6 +40,9 @@
 <pre class="prettyprint lang-spec linenums">
 &quot;Type&quot;.parse.first       =&gt; element(&quot;Type&quot;)
 &quot;OtherType&quot;.parse.first    =&gt; element(&quot;OtherType&quot;)</pre>
+</li><li><p id="parse_command_with_annotation" class="example notrun"><strong>parse command with annotation</strong></p>
+<pre class="prettyprint lang-spec linenums">
+&quot;@file-extension: ecuconfig\nType&quot;.parse.first       =&gt; element(&quot;Type&quot;)</pre>
 </li><li><p id="parse_multiple_root_elements" class="example notrun"><strong>parse multiple root elements</strong></p>
 <pre class="prettyprint lang-spec linenums">
 '''
@@ -206,6 +209,10 @@ describe RTextModelParser {
     fact &quot;parse command&quot;{
       &quot;Type&quot;.parse.first       =&gt; element(&quot;Type&quot;)
       &quot;OtherType&quot;.parse.first    =&gt; element(&quot;OtherType&quot;)
+    }
+    
+    fact &quot;parse command with annotation&quot;{
+      &quot;@file-extension: ecuconfig\nType&quot;.parse.first       =&gt; element(&quot;Type&quot;)
     }
     
     fact &quot;parse multiple root elements&quot;{
