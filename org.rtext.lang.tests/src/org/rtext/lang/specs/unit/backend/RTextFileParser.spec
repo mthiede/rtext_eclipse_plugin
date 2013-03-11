@@ -33,6 +33,15 @@ describe RTextFileParser{
 			it should contain "abc" -> "other command"
 		]
 	}
+	
+	facts "Handles whitespace at the end"{
+		'''
+		*.ect: 
+		the command
+		'''.parse => [
+			it should contain "ect" -> "the command"
+		]
+	}
 
 	def should_contain(RTextFile file, Pair<String, String> command){
 		val etc = file.getConfiguration("*." + command.key)

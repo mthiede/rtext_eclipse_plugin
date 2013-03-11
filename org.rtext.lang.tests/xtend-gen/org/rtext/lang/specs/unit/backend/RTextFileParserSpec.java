@@ -102,6 +102,29 @@ public class RTextFileParserSpec {
     ObjectExtensions.<RTextFile>operator_doubleArrow(_parse, _function);
   }
   
+  @Test
+  @Named("Handles whitespace at the end")
+  @Order(3)
+  public void _handlesWhitespaceAtTheEnd() throws Exception {
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.append("*.ect: ");
+    _builder.newLine();
+    _builder.append("the command");
+    _builder.newLine();
+    RTextFile _parse = this.parse(_builder);
+    final Procedure1<RTextFile> _function = new Procedure1<RTextFile>() {
+        public void apply(final RTextFile it) {
+          Pair<String,String> _mappedTo = Pair.<String, String>of("ect", "the command");
+          boolean _should_contain = RTextFileParserSpec.this.should_contain(it, _mappedTo);
+          Assert.assertTrue("\nExpected it should contain \"ect\" -> \"the command\" but"
+           + "\n     it is " + new StringDescription().appendValue(it).toString()
+           + "\n     \"ect\" -> \"the command\" is " + new StringDescription().appendValue(_mappedTo).toString() + "\n", _should_contain);
+          
+        }
+      };
+    ObjectExtensions.<RTextFile>operator_doubleArrow(_parse, _function);
+  }
+  
   public boolean should_contain(final RTextFile file, final Pair<String,String> command) {
     String _key = command.getKey();
     String _plus = ("*." + _key);

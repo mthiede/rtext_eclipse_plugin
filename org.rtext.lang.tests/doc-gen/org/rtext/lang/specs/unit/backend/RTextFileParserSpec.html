@@ -55,6 +55,14 @@ other command
   it should contain &quot;ect&quot; -&gt; &quot;the command&quot;
   it should contain &quot;abc&quot; -&gt; &quot;other command&quot;
 ]</pre>
+</li><li><p id="Handles_whitespace_at_the_end" class="example notrun"><strong>Handles whitespace at the end</strong></p>
+<pre class="prettyprint lang-spec linenums">
+'''
+*.ect: 
+the command
+'''.parse =&gt; [
+  it should contain &quot;ect&quot; -&gt; &quot;the command&quot;
+]</pre>
 </li></ul>
 							</div>
 						    <div class="tab-pane" id="source">
@@ -94,6 +102,15 @@ describe RTextFileParser{
     '''.parse =&gt; [
       it should contain &quot;ect&quot; -&gt; &quot;the command&quot;
       it should contain &quot;abc&quot; -&gt; &quot;other command&quot;
+    ]
+  }
+  
+  facts &quot;Handles whitespace at the end&quot;{
+    '''
+    *.ect: 
+    the command
+    '''.parse =&gt; [
+      it should contain &quot;ect&quot; -&gt; &quot;the command&quot;
     ]
   }
 

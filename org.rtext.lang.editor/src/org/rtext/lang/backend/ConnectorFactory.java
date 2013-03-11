@@ -7,10 +7,13 @@
  *******************************************************************************/
 package org.rtext.lang.backend;
 
+import org.rtext.lang.util.Expectations;
+
 
 public class ConnectorFactory {
 	
 	public Connector createConnector(ConnectorConfig connectorConfig){
+		Expectations.expectNotNull(connectorConfig);
 		return Connector.create(connectorConfig);
 	}
 

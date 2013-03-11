@@ -29,13 +29,15 @@ public class RTextFileParser {
 			BufferedReader br = new BufferedReader(new InputStreamReader(fis));
 			String line = br.readLine();
 			while (line != null) {
-				if (line.trim().length() > 1 && line.trim().endsWith(":")) {
-					String[] patterns = line.substring(0, line.length() - 1)
-							.split(",");
+				line = line.trim();
+				if (line.length() > 1 && line.endsWith(":")) {
+					String[] patterns = line.substring(0, line.length() - 1).split(",");
 					String nextLine = br.readLine();
-					if (nextLine != null && nextLine.trim().length() > 0
-							&& !nextLine.trim().endsWith(":")) {
-						result.add(new ConnectorConfig(configFile, nextLine, patterns));
+					if(nextLine != null){
+						nextLine = nextLine.trim();
+						if(nextLine.length() > 0 && !nextLine.endsWith(":")) {
+							result.add(new ConnectorConfig(configFile, nextLine, patterns));
+						}
 					}
 				}
 			line = br.readLine();
