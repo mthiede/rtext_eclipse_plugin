@@ -32,4 +32,12 @@ public class Strings {
 		} 
 		return matchList.toArray(new String[matchList.size()]);
 	}
+
+	public static String removeLeadingWhitespace(String indentationString) {
+		int i = 0;
+		while (i<indentationString.length() && Character.isWhitespace(indentationString.charAt(i)))
+			i++;
+		return indentationString.substring(i);
+	}
+	
 }

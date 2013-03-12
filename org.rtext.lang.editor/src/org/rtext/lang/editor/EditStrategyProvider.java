@@ -35,6 +35,12 @@ public class EditStrategyProvider {
 
 	private void configure(IEditStrategyAcceptor acceptor) {
 		acceptor.accept(new DefaultIndentLineAutoEditStrategy());
+		acceptor.accept(SingleLineTerminalsStrategy.create("{", "}"));
+		acceptor.accept(SingleLineTerminalsStrategy.create("\"", "\""));
+		acceptor.accept(SingleLineTerminalsStrategy.create("'", "'"));
+		acceptor.accept(SingleLineTerminalsStrategy.create("(", ")"));
+		acceptor.accept(SingleLineTerminalsStrategy.create("[", "]"));
+		acceptor.accept(CompoundMultiLineTerminalsEditStrategy.newInstanceFor("\t", "{", "}").and("\t", "[", "]").and("\t", "(", ")"));
 	}
 
 	public interface IEditStrategyAcceptor {

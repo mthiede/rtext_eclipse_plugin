@@ -92,7 +92,6 @@ public final class CliBackendStarter implements BackendStarter {
 			handleOutputStream();
 			registerShutDownHook();
 		} catch (Throwable e) {
-			e.printStackTrace();
 			Exceptions.rethrow(e);
 		}
 	}
