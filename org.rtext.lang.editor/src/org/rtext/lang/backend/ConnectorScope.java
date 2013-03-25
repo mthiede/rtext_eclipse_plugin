@@ -33,7 +33,8 @@ public class ConnectorScope {
 		try {
 			workspace.accept(new IResourceVisitor() {
 				public boolean visit(IResource resource) throws CoreException {
-					IContainer parentFolder = resource.getParent();
+					IContainer parentFolder = getParentFolder(resource);
+					
 					if(parentFolder == null){
 						return true;
 					}
@@ -53,5 +54,13 @@ public class ConnectorScope {
 			RTextPlugin.logError(e.getMessage(), e);
 		}
 		stopWatch.stop("Calculating connector scope");
+	}
+	
+	private IContainer getParentFolder(IResource resource) {
+		IContainer parentFolder = resource.getParent();
+		while(parentFolder != null && parentFolder.isVirtual()){
+			parentFolder = parentFolder.getParent();
+		}
+		return parentFolder;
 	}
 }
