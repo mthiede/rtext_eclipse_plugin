@@ -40,7 +40,7 @@ public class LoadModelCallback extends WorkspaceCallback<LoadedModel> {
 	
 	public static class ProblemUpdateJob extends RTextJob{
 		private Map<IResource, List<Problem>> problems;
-		private MarkerUtil makerUtil = new MarkerUtil();
+		private MarkerUtil markerUtil = new MarkerUtil();
 
 		public ProblemUpdateJob(Map<IResource, List<Problem>> problems, ConnectorScope scope) {
 			super(PROBLEM_MARKER_JOB);
@@ -62,17 +62,23 @@ public class LoadModelCallback extends WorkspaceCallback<LoadedModel> {
 			monitor.beginTask(PROBLEM_MARKER_JOB, problems.size());
 			for (Entry<IResource, List<Problem>> entry : problems.entrySet()) {
 				IResource resource = entry.getKey();
-				int problemCount = 0;
-				for (Problem problem : entry.getValue()) {
-					if(problemCount >= 100){
-						break;
-					}
-					problemCount++;
-					makerUtil.createMarker(resource, problem);
-				}
+				markerUtil.clearExistingMarkers(resource);
+				addMarkers(entry, resource);
 				monitor.worked(1);
 			}
 			monitor.done();
+		}
+
+		private void addMarkers(Entry<IResource, List<Problem>> entry,
+				IResource resource) {
+			int problemCount = 0;
+			for (Problem problem : entry.getValue()) {
+				if(problemCount >= 100){
+					break;
+				}
+				problemCount++;
+				markerUtil.createMarker(resource, problem);
+			}
 		}
 	}
 	

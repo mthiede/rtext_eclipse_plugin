@@ -53,16 +53,20 @@ public class MarkerUtil {
 	public void clearExistingMarkers(ConnectorScope scope) {
 		scope.forEach(new Procedure<IResource>() {
 			public void apply(IResource resource) {
-				try{
-					if(cannotAcceptMarker(resource)){
-						return;
-					}
-					resource.deleteMarkers(MarkerUtil.RTEXT_MARKERS, true, IResource.DEPTH_INFINITE);
-				} catch (CoreException e) {
-					logError("Exception when deleting marker on :" + "workspace", e);
-				}
+				clearExistingMarkers(resource);
 			}
+
 		});
 	}
 
+	public void clearExistingMarkers(IResource resource) {
+		if(cannotAcceptMarker(resource)){
+			return;
+		}
+		try{
+			resource.deleteMarkers(MarkerUtil.RTEXT_MARKERS, true, IResource.DEPTH_INFINITE);
+		} catch (CoreException e) {
+			logError("Exception when deleting marker on :" + "workspace", e);
+		}
+	}
 }
