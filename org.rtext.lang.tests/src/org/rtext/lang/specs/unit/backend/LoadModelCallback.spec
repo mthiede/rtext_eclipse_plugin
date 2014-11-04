@@ -18,6 +18,9 @@ import static org.jnario.lib.JnarioCollectionLiterals.*
 import static org.jnario.lib.Should.*
 import static org.mockito.Matchers.*
 import static org.mockito.Mockito.*
+import org.eclipse.core.resources.IResource
+import java.util.List
+import java.util.Map
 
 @CreateWith(typeof(MockInjector))
 describe LoadModelCallback {
@@ -63,12 +66,12 @@ describe LoadModelCallback {
 		subject.commandSent
 		subject.handleResponse(loadedModel)
 		
-		verify(jobFactory).create(argThat(matches("problems")[
+		val matcher = matches("problems")[Map<IResource, List<Problem>> it | 
 			containsKey(resolvedFile1) &&
 			containsKey(resolvedFile2) &&
 			containsValue(problems1)  &&
-			containsValue(problems2)
-		]), eq(connectorScope))
+			containsValue(problems2) ]
+		verify(jobFactory).create(argThat(matcher) as Map<IResource, List<Problem>>, eq(connectorScope))
 	}
 	
 	fact "schedules update job"{

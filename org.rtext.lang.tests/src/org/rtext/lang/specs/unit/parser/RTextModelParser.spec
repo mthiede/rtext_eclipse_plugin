@@ -179,14 +179,6 @@ describe RTextModelParser {
 		}
 	}
 	
-	def operator_doubleArrow(Object actual, Object expected){
-		if((actual instanceof String) && (expected instanceof String)){
-			Assert::assertEquals(expected, actual)
-			return true
-		}else{
-			return Should::operator_doubleArrow(actual, expected)
-		}
-	}
 	
 	def fullText(Element element, CharSequence s){
 		document.get(element.position.offset, element.position.length)		
@@ -196,7 +188,7 @@ describe RTextModelParser {
 		input.parse.find(name)
 	}
 	
-	def find(List<Element> elements, String name){
+	def Element find(List<Element> elements, String name){
 		var result = elements.findFirst[candidate | candidate.name == name ]
 		if(result != null) return result
 		for(candidate : elements){

@@ -4,6 +4,7 @@ import org.rtext.lang.specs.util.BackendHelper
 import org.rtext.lang.proposals.ContentAssistProcessor
 import java.util.List
 import org.eclipse.swt.widgets.Display
+import org.junit.Assert
 
 Feature: Code completion
 
@@ -34,7 +35,7 @@ Scenario: Sucessfully using code completion
 	'''
 	val expectedProposals = args.first.trim.split("\r?\n").map[trim]
 	println(proposals)
-	assertEquals(expectedProposals.toString, proposals.toString)
+	Assert.assertEquals(expectedProposals.toString, proposals.toString)
 
 Scenario: Code completion for nested elements
 	

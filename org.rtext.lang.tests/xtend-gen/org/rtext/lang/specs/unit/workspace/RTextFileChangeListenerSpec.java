@@ -3,10 +3,9 @@ package org.rtext.lang.specs.unit.workspace;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.xtend2.lib.StringConcatenation;
-import org.eclipse.xtext.xbase.lib.Functions.Function0;
+import org.eclipse.xtext.xbase.lib.Extension;
 import org.jnario.runner.CreateWith;
 import org.jnario.runner.ExampleGroupRunner;
-import org.jnario.runner.Extension;
 import org.jnario.runner.Named;
 import org.jnario.runner.Order;
 import org.junit.After;
@@ -30,21 +29,17 @@ import org.rtext.lang.specs.util.MockInjector;
 import org.rtext.lang.specs.util.WorkspaceHelper;
 import org.rtext.lang.workspace.RTextFileChangeListener;
 
-@SuppressWarnings("all")
+@CreateWith(MockInjector.class)
+@Ignore
 @Named("RTextFileChangeListener")
 @RunWith(ExampleGroupRunner.class)
-@CreateWith(value = MockInjector.class)
-@Ignore
+@SuppressWarnings("all")
 public class RTextFileChangeListenerSpec {
   public RTextFileChangeListener subject;
   
   @Extension
-  public static WorkspaceHelper _workspaceHelper = new Function0<WorkspaceHelper>() {
-    public WorkspaceHelper apply() {
-      WorkspaceHelper _workspaceHelper = new WorkspaceHelper();
-      return _workspaceHelper;
-    }
-  }.apply();
+  @org.jnario.runner.Extension
+  public static WorkspaceHelper _workspaceHelper = new WorkspaceHelper();
   
   @Mock
   ConnectorProvider connectorProvider;
@@ -109,13 +104,6 @@ public class RTextFileChangeListenerSpec {
     _verify.dispose(_anyString);
   }
   
-  @After
-  public void after() throws Exception {
-    RTextFileChangeListenerSpec._workspaceHelper.cleanUpWorkspace();
-    IWorkspace _workspace = RTextFileChangeListenerSpec._workspaceHelper.getWorkspace();
-    _workspace.removeResourceChangeListener(this.subject);
-  }
-  
   public void addListener() {
     RTextFileChangeListener _rTextFileChangeListener = new RTextFileChangeListener(this.connectorProvider);
     this.subject = _rTextFileChangeListener;
@@ -124,8 +112,7 @@ public class RTextFileChangeListenerSpec {
   }
   
   public IFile rtextFile() {
-    IFile _file = RTextFileChangeListenerSpec._workspaceHelper.file("rtext_test2/.rtext");
-    return _file;
+    return RTextFileChangeListenerSpec._workspaceHelper.file("rtext_test2/.rtext");
   }
   
   public IFile createRTextFile() {
@@ -138,7 +125,13 @@ public class RTextFileChangeListenerSpec {
     _builder.newLine();
     _builder.append("ruby -I../../../../rgen/lib -I ../../../lib ../ecore_editor.rb \"*.ect2\" 2>&1");
     _builder.newLine();
-    IFile _writeToFile = RTextFileChangeListenerSpec._workspaceHelper.writeToFile(_builder, "rtext_test2/.rtext");
-    return _writeToFile;
+    return RTextFileChangeListenerSpec._workspaceHelper.writeToFile(_builder, "rtext_test2/.rtext");
+  }
+  
+  @After
+  public void after() throws Exception {
+    RTextFileChangeListenerSpec._workspaceHelper.cleanUpWorkspace();
+    IWorkspace _workspace = RTextFileChangeListenerSpec._workspaceHelper.getWorkspace();
+    _workspace.removeResourceChangeListener(this.subject);
   }
 }

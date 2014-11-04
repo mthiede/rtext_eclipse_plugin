@@ -12,30 +12,28 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.stubbing.OngoingStubbing;
 import org.rtext.lang.backend.CommandExecutor;
-import org.rtext.lang.backend.CommandExecutor.ExecutionHandler;
 import org.rtext.lang.backend.Connector;
 import org.rtext.lang.commands.Response;
 import org.rtext.lang.editor.Connected;
 import org.rtext.lang.specs.util.Commands;
 import org.rtext.lang.specs.util.MockInjector;
 import org.rtext.lang.workspace.BackendConnectJob;
-import org.rtext.lang.workspace.BackendConnectJob.Factory;
 
-@SuppressWarnings("all")
+@CreateWith(MockInjector.class)
 @Named("CommandExecutor")
 @RunWith(ExampleGroupRunner.class)
-@CreateWith(value = MockInjector.class)
+@SuppressWarnings("all")
 public class CommandExecutorSpec {
   public CommandExecutor subject;
   
   @Mock
-  ExecutionHandler<Response> handler;
+  CommandExecutor.ExecutionHandler<Response> handler;
   
   @Mock
   BackendConnectJob connectJob;
   
   @Mock
-  Factory connectJobFactory;
+  BackendConnectJob.Factory connectJobFactory;
   
   @Mock
   Connected connected;
@@ -64,7 +62,7 @@ public class CommandExecutorSpec {
     OngoingStubbing<Connector> _when = Mockito.<Connector>when(_connector);
     _when.thenReturn(null);
     this.subject.<Response>run(Commands.ANY_COMMAND, this.handler);
-    ExecutionHandler<Response> _verify = Mockito.<ExecutionHandler<Response>>verify(this.handler);
+    CommandExecutor.ExecutionHandler<Response> _verify = Mockito.<CommandExecutor.ExecutionHandler<Response>>verify(this.handler);
     _verify.handle(CommandExecutor.BACKEND_NOT_FOUND);
     Mockito.verifyNoMoreInteractions(this.handler);
   }
@@ -77,7 +75,7 @@ public class CommandExecutorSpec {
     OngoingStubbing<Boolean> _when = Mockito.<Boolean>when(Boolean.valueOf(_isConnected));
     _when.thenReturn(Boolean.valueOf(false));
     this.subject.<Response>run(Commands.ANY_COMMAND, this.handler);
-    ExecutionHandler<Response> _verify = Mockito.<ExecutionHandler<Response>>verify(this.handler);
+    CommandExecutor.ExecutionHandler<Response> _verify = Mockito.<CommandExecutor.ExecutionHandler<Response>>verify(this.handler);
     _verify.handle(CommandExecutor.MODEL_NOT_YET_LOADED);
     Mockito.verifyNoMoreInteractions(this.handler);
   }
@@ -121,7 +119,7 @@ public class CommandExecutorSpec {
     OngoingStubbing<Boolean> _when_1 = Mockito.<Boolean>when(Boolean.valueOf(_isBusy));
     _when_1.thenReturn(Boolean.valueOf(true));
     this.subject.<Response>run(Commands.ANY_COMMAND, this.handler);
-    ExecutionHandler<Response> _verify = Mockito.<ExecutionHandler<Response>>verify(this.handler);
+    CommandExecutor.ExecutionHandler<Response> _verify = Mockito.<CommandExecutor.ExecutionHandler<Response>>verify(this.handler);
     _verify.handle(CommandExecutor.LOADING_MODEL);
     Mockito.verifyNoMoreInteractions(this.handler);
   }
@@ -140,7 +138,7 @@ public class CommandExecutorSpec {
     OngoingStubbing<Response> _when_2 = Mockito.<Response>when(_execute);
     _when_2.thenReturn(Commands.ANY_COMMAND_RESPONSE);
     this.subject.<Response>run(Commands.ANY_COMMAND, this.handler);
-    ExecutionHandler<Response> _verify = Mockito.<ExecutionHandler<Response>>verify(this.handler);
+    CommandExecutor.ExecutionHandler<Response> _verify = Mockito.<CommandExecutor.ExecutionHandler<Response>>verify(this.handler);
     _verify.handleResult(Commands.ANY_COMMAND_RESPONSE);
     Mockito.verifyNoMoreInteractions(this.handler);
   }

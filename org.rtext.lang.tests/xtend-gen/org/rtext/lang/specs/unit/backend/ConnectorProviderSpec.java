@@ -1,8 +1,6 @@
 package org.rtext.lang.specs.unit.backend;
 
 import java.io.File;
-import org.eclipse.xtext.xbase.lib.Functions.Function0;
-import org.hamcrest.StringDescription;
 import org.jnario.lib.Assert;
 import org.jnario.lib.Should;
 import org.jnario.runner.CreateWith;
@@ -22,28 +20,16 @@ import org.rtext.lang.backend.ConnectorFactory;
 import org.rtext.lang.backend.ConnectorProvider;
 import org.rtext.lang.specs.util.MockInjector;
 
-@SuppressWarnings("all")
+@CreateWith(MockInjector.class)
 @Named("ConnectorProvider")
 @RunWith(ExampleGroupRunner.class)
-@CreateWith(value = MockInjector.class)
+@SuppressWarnings("all")
 public class ConnectorProviderSpec {
   public ConnectorProvider subject;
   
-  ConnectorConfig config = new Function0<ConnectorConfig>() {
-    public ConnectorConfig apply() {
-      File _file = new File("test1/.rtext");
-      ConnectorConfig _connectorConfig = new ConnectorConfig(_file, "");
-      return _connectorConfig;
-    }
-  }.apply();
+  ConnectorConfig config = new ConnectorConfig(new File("test1/.rtext"), "");
   
-  ConnectorConfig anotherConfig = new Function0<ConnectorConfig>() {
-    public ConnectorConfig apply() {
-      File _file = new File("test2/.rtext");
-      ConnectorConfig _connectorConfig = new ConnectorConfig(_file, "");
-      return _connectorConfig;
-    }
-  }.apply();
+  ConnectorConfig anotherConfig = new ConnectorConfig(new File("test2/.rtext"), "");
   
   @Mock
   ConnectorFactory connectorFactory;
@@ -77,9 +63,9 @@ public class ConnectorProviderSpec {
     Connector _get = this.subject.get(this.config);
     boolean _doubleArrow = Should.operator_doubleArrow(_get, Connector.class);
     Assert.assertTrue("\nExpected subject.get(config) => typeof(Connector) but"
-     + "\n     subject.get(config) is " + new StringDescription().appendValue(_get).toString()
-     + "\n     subject is " + new StringDescription().appendValue(this.subject).toString()
-     + "\n     config is " + new StringDescription().appendValue(this.config).toString() + "\n", _doubleArrow);
+     + "\n     subject.get(config) is " + new org.hamcrest.StringDescription().appendValue(_get).toString()
+     + "\n     subject is " + new org.hamcrest.StringDescription().appendValue(this.subject).toString()
+     + "\n     config is " + new org.hamcrest.StringDescription().appendValue(this.config).toString() + "\n", _doubleArrow);
     
     ConnectorFactory _verify = Mockito.<ConnectorFactory>verify(this.connectorFactory);
     _verify.createConnector(this.config);
@@ -91,11 +77,10 @@ public class ConnectorProviderSpec {
   public void _returnsSameConnectorForSameConfiguration() throws Exception {
     Connector _get = this.subject.get(this.config);
     Connector _get_1 = this.subject.get(this.config);
-    boolean _should_be = Should.should_be(_get, _get_1);
     Assert.assertTrue("\nExpected subject.get(config) should be subject.get(config) but"
-     + "\n     subject.get(config) is " + new StringDescription().appendValue(_get).toString()
-     + "\n     subject is " + new StringDescription().appendValue(this.subject).toString()
-     + "\n     config is " + new StringDescription().appendValue(this.config).toString() + "\n", _should_be);
+     + "\n     subject.get(config) is " + new org.hamcrest.StringDescription().appendValue(_get).toString()
+     + "\n     subject is " + new org.hamcrest.StringDescription().appendValue(this.subject).toString()
+     + "\n     config is " + new org.hamcrest.StringDescription().appendValue(this.config).toString() + "\n", Should.<Connector>should_be(_get, _get_1));
     
   }
   
@@ -105,13 +90,12 @@ public class ConnectorProviderSpec {
   public void _returnsDifferentConnectorForDifferentConfiguration() throws Exception {
     Connector _get = this.subject.get(this.config);
     Connector _get_1 = this.subject.get(this.anotherConfig);
-    boolean _should_be = Should.should_be(_get, _get_1);
     Assert.assertFalse("\nExpected subject.get(config) should not be subject.get(anotherConfig) but"
-     + "\n     subject.get(config) is " + new StringDescription().appendValue(_get).toString()
-     + "\n     subject is " + new StringDescription().appendValue(this.subject).toString()
-     + "\n     config is " + new StringDescription().appendValue(this.config).toString()
-     + "\n     subject.get(anotherConfig) is " + new StringDescription().appendValue(_get_1).toString()
-     + "\n     anotherConfig is " + new StringDescription().appendValue(this.anotherConfig).toString() + "\n", _should_be);
+     + "\n     subject.get(config) is " + new org.hamcrest.StringDescription().appendValue(_get).toString()
+     + "\n     subject is " + new org.hamcrest.StringDescription().appendValue(this.subject).toString()
+     + "\n     config is " + new org.hamcrest.StringDescription().appendValue(this.config).toString()
+     + "\n     subject.get(anotherConfig) is " + new org.hamcrest.StringDescription().appendValue(_get_1).toString()
+     + "\n     anotherConfig is " + new org.hamcrest.StringDescription().appendValue(this.anotherConfig).toString() + "\n", Should.<Connector>should_be(_get, _get_1));
     
   }
   

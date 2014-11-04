@@ -8,7 +8,7 @@ import org.rtext.lang.specs.integration.ProblemMarkersFeatureValidFilesHaveNoPro
 
 @Contains(ProblemMarkersFeatureValidFilesHaveNoProblemMarker.class)
 @Named("Problem Markers")
-@SuppressWarnings("all")
 @RunWith(FeatureRunner.class)
+@SuppressWarnings("all")
 public class ProblemMarkersFeature {
 }

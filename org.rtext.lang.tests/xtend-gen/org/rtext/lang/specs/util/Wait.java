@@ -10,17 +10,14 @@ import org.rtext.lang.specs.util.WaitConfig;
 
 @SuppressWarnings("all")
 public class Wait {
-  public static void waitUntil(final Function1<WaitConfig,Boolean> initializer) {
-    WaitConfig _waitConfig = new WaitConfig();
-    final WaitConfig config = _waitConfig;
-    Wait _wait = new Wait(Sleeper.SYSTEM_SLEEPER, Clock.SYSTEM_CLOCK);
-    final Wait wait = _wait;
+  public static void waitUntil(final Function1<WaitConfig, Boolean> initializer) {
+    final WaitConfig config = new WaitConfig();
+    final Wait wait = new Wait(Sleeper.SYSTEM_SLEEPER, Clock.SYSTEM_CLOCK);
     final Function0<Boolean> _function = new Function0<Boolean>() {
-        public Boolean apply() {
-          Boolean _apply = initializer.apply(config);
-          return _apply;
-        }
-      };
+      public Boolean apply() {
+        return initializer.apply(config);
+      }
+    };
     final Function0<Boolean> condition = _function;
     wait.until(condition, config);
   }
@@ -37,34 +34,22 @@ public class Wait {
   public void until(final Function0<Boolean> condition, final WaitConfig config) {
     try {
       final long start = this.clock.currentTime();
-      Boolean _apply = condition.apply();
-      boolean _not = (!_apply);
-      boolean _while = _not;
-      while (_while) {
+      while ((!(condition.apply()).booleanValue())) {
         {
           boolean _timeOut = this.timeOut(config, start);
           if (_timeOut) {
-            String _message = config.getMessage();
-            TimeoutError _timeoutError = new TimeoutError(_message);
-            throw _timeoutError;
+            throw new TimeoutError(config.message);
           }
-          long _pollEvery = config.getPollEvery();
-          this.sleeper.sleep(_pollEvery);
+          this.sleeper.sleep(config.pollEvery);
         }
-        Boolean _apply_1 = condition.apply();
-        boolean _not_1 = (!_apply_1);
-        _while = _not_1;
       }
-    } catch (Exception _e) {
+    } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
   }
   
   public boolean timeOut(final WaitConfig config, final long start) {
     long _currentTime = this.clock.currentTime();
-    long _duration = config.getDuration();
-    long _plus = (start + _duration);
-    boolean _greaterThan = (_currentTime > _plus);
-    return _greaterThan;
+    return (_currentTime > (start + config.duration));
   }
 }

@@ -7,8 +7,8 @@ import org.junit.runner.RunWith;
 import org.rtext.lang.specs.unit.util.StringsSplitCommandSpec;
 
 @Contains(StringsSplitCommandSpec.class)
-@SuppressWarnings("all")
 @Named("Strings")
 @RunWith(ExampleGroupRunner.class)
+@SuppressWarnings("all")
 public class StringsSpec {
 }

@@ -1,20 +1,12 @@
 package org.rtext.lang.specs.integration
 
-import org.rtext.lang.commands.LoadModelCallback
 import org.rtext.lang.specs.util.BackendHelper
-import org.rtext.lang.specs.util.TestFileLocator
 import org.rtext.lang.specs.util.WorkspaceHelper
-
-import static org.rtext.lang.specs.util.Jobs.*
-
-import static extension org.jnario.lib.JnarioIterableExtensions.*
-import static extension org.jnario.lib.Should.*
 
 Feature: Problem Markers
 
 Scenario: Valid files have no problem marker
 	extension WorkspaceHelper = new WorkspaceHelper
-	extension TestFileLocator = TestFileLocator::getDefault()
 	extension BackendHelper b = new BackendHelper
 	
 	Given a project "test" linked to "rtext/test/integration/model/"

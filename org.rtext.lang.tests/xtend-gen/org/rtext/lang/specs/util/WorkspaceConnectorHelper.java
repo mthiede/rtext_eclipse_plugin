@@ -10,7 +10,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.xtend2.lib.StringConcatenation;
 import org.eclipse.xtext.xbase.lib.CollectionLiterals;
 import org.eclipse.xtext.xbase.lib.Exceptions;
-import org.eclipse.xtext.xbase.lib.Functions.Function0;
+import org.eclipse.xtext.xbase.lib.Extension;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
@@ -32,34 +32,14 @@ import org.rtext.lang.specs.util.WorkspaceHelper;
 
 @SuppressWarnings("all")
 public class WorkspaceConnectorHelper extends WorkspaceHelper {
-  private TestFileLocator _testFileLocator = new Function0<TestFileLocator>() {
-    public TestFileLocator apply() {
-      TestFileLocator _default = TestFileLocator.getDefault();
-      return _default;
-    }
-  }.apply();
+  @Extension
+  private TestFileLocator _testFileLocator = TestFileLocator.getDefault();
   
-  private final HashMap<String,Connector> connectors = new Function0<HashMap<String,Connector>>() {
-    public HashMap<String,Connector> apply() {
-      HashMap<String,Connector> _newHashMap = CollectionLiterals.<String, Connector>newHashMap();
-      return _newHashMap;
-    }
-  }.apply();
+  private final HashMap<String, Connector> connectors = CollectionLiterals.<String, Connector>newHashMap();
   
-  private final HashMap<Connector,RecordingConnectorListener> listeners = new Function0<HashMap<Connector,RecordingConnectorListener>>() {
-    public HashMap<Connector,RecordingConnectorListener> apply() {
-      HashMap<Connector,RecordingConnectorListener> _newHashMap = CollectionLiterals.<Connector, RecordingConnectorListener>newHashMap();
-      return _newHashMap;
-    }
-  }.apply();
+  private final HashMap<Connector, RecordingConnectorListener> listeners = CollectionLiterals.<Connector, RecordingConnectorListener>newHashMap();
   
-  private final ConnectorProvider connectorProvider = new Function0<ConnectorProvider>() {
-    public ConnectorProvider apply() {
-      RTextPlugin _default = RTextPlugin.getDefault();
-      ConnectorProvider _connectorProvider = _default.getConnectorProvider();
-      return _connectorProvider;
-    }
-  }.apply();
+  private final ConnectorProvider connectorProvider = RTextPlugin.getDefault().getConnectorProvider();
   
   public Connector connector(final String path) {
     Connector _xblockexpression = null;
@@ -71,11 +51,10 @@ public class WorkspaceConnectorHelper extends WorkspaceHelper {
       final ConnectorConfig config = _create.get(_string);
       final Connector connector = this.connectorProvider.get(config);
       this.connectors.put(path, connector);
-      RecordingConnectorListener _recordingConnectorListener = new RecordingConnectorListener();
-      final RecordingConnectorListener listener = _recordingConnectorListener;
+      final RecordingConnectorListener listener = new RecordingConnectorListener();
       connector.addListener(listener);
       this.listeners.put(connector, listener);
-      _xblockexpression = (connector);
+      _xblockexpression = connector;
     }
     return _xblockexpression;
   }
@@ -85,14 +64,13 @@ public class WorkspaceConnectorHelper extends WorkspaceHelper {
     {
       final Connector connector = this.connectors.get(path);
       connector.connect();
-      final Function1<Wait,Boolean> _function = new Function1<Wait,Boolean>() {
-          public Boolean apply(final Wait it) {
-            boolean _isConnected = connector.isConnected();
-            return Boolean.valueOf(_isConnected);
-          }
-        };
+      final Function1<Wait, Boolean> _function = new Function1<Wait, Boolean>() {
+        public Boolean apply(final Wait it) {
+          return Boolean.valueOf(connector.isConnected());
+        }
+      };
       Wait.waitUntil(_function);
-      _xblockexpression = (connector);
+      _xblockexpression = connector;
     }
     return _xblockexpression;
   }
@@ -101,9 +79,8 @@ public class WorkspaceConnectorHelper extends WorkspaceHelper {
     try {
       Connector _connector = this.connector(path);
       LoadModelCommand _loadModelCommand = new LoadModelCommand();
-      LoadedModel _execute = _connector.<LoadedModel>execute(_loadModelCommand);
-      return _execute;
-    } catch (Exception _e) {
+      return _connector.<LoadedModel>execute(_loadModelCommand);
+    } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
   }
@@ -111,25 +88,22 @@ public class WorkspaceConnectorHelper extends WorkspaceHelper {
   public Response executeAsynchronousCommand(final String path) {
     Response _xblockexpression = null;
     {
-      TestCallBack<Response> _testCallBack = new TestCallBack<Response>();
-      final TestCallBack<Response> callback = _testCallBack;
-      final Function1<Wait,Boolean> _function = new Function1<Wait,Boolean>() {
-          public Boolean apply(final Wait it) {
-            boolean _xblockexpression = false;
-            {
-              Connector _connector = WorkspaceConnectorHelper.this.connector(path);
-              Command<Response> _command = new Command<Response>("load_model", Response.class);
-              _connector.<Response>execute(_command, callback);
-              Response _response = callback.getResponse();
-              boolean _notEquals = (!Objects.equal(_response, null));
-              _xblockexpression = (_notEquals);
-            }
-            return Boolean.valueOf(_xblockexpression);
+      final TestCallBack<Response> callback = new TestCallBack<Response>();
+      final Function1<Wait, Boolean> _function = new Function1<Wait, Boolean>() {
+        public Boolean apply(final Wait it) {
+          boolean _xblockexpression = false;
+          {
+            Connector _connector = WorkspaceConnectorHelper.this.connector(path);
+            Command<Response> _command = new Command<Response>("load_model", Response.class);
+            _connector.<Response>execute(_command, callback);
+            Response _response = callback.getResponse();
+            _xblockexpression = (!Objects.equal(_response, null));
           }
-        };
+          return Boolean.valueOf(_xblockexpression);
+        }
+      };
       Wait.waitUntil(_function);
-      Response _response = callback.getResponse();
-      _xblockexpression = (_response);
+      _xblockexpression = callback.getResponse();
     }
     return _xblockexpression;
   }
@@ -156,8 +130,7 @@ public class WorkspaceConnectorHelper extends WorkspaceHelper {
         _builder.newLineIfNotEmpty();
       }
     }
-    IFile _createFile = this.createFile(path, _builder);
-    return _createFile;
+    return this.createFile(path, _builder);
   }
   
   @After
@@ -165,13 +138,13 @@ public class WorkspaceConnectorHelper extends WorkspaceHelper {
     try {
       Collection<Connector> _values = this.connectors.values();
       final Procedure1<Connector> _function = new Procedure1<Connector>() {
-          public void apply(final Connector it) {
-            it.disconnect();
-          }
-        };
+        public void apply(final Connector it) {
+          it.disconnect();
+        }
+      };
       IterableExtensions.<Connector>forEach(_values, _function);
       super.cleanUpWorkspace();
-    } catch (Exception _e) {
+    } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
   }
@@ -182,8 +155,7 @@ public class WorkspaceConnectorHelper extends WorkspaceHelper {
       final Connector connector = this.connectors.get(path);
       final RecordingConnectorListener listener = this.listeners.get(connector);
       ArrayList<String> _log = listener.getLog();
-      String _join = IterableExtensions.join(_log, "\n");
-      _xblockexpression = (_join);
+      _xblockexpression = IterableExtensions.join(_log, "\n");
     }
     return _xblockexpression;
   }

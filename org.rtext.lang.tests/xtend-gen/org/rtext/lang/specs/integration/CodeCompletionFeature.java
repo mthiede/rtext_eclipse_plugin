@@ -12,7 +12,7 @@ import org.rtext.lang.specs.integration.CodeCompletionFeatureSucessfullyUsingCod
 
 @Contains({ CodeCompletionFeatureSucessfullyUsingCodeCompletion.class, CodeCompletionFeatureCodeCompletionForNestedElements.class, CodeCompletionFeatureProposalSignalsBackendCurrentlyLoading.class, CodeCompletionFeatureProposalSignalsBackendNotYetLoaded.class, CodeCompletionFeatureProposalSignalsBackendFailure.class })
 @Named("Code completion")
-@SuppressWarnings("all")
 @RunWith(FeatureRunner.class)
+@SuppressWarnings("all")
 public class CodeCompletionFeature {
 }

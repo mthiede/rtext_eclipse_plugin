@@ -18,14 +18,15 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.ui.texteditor.MarkerUtilities;
+import org.eclipse.xtend.lib.Property;
 import org.eclipse.xtext.xbase.lib.CollectionLiterals;
 import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Exceptions;
-import org.eclipse.xtext.xbase.lib.Functions.Function0;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.ListExtensions;
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
+import org.eclipse.xtext.xbase.lib.Pure;
 import org.junit.After;
 import org.junit.Before;
 import org.rtext.lang.RTextPlugin;
@@ -35,30 +36,12 @@ import org.rtext.lang.specs.util.StringInputStream;
 
 @SuppressWarnings("all")
 public class WorkspaceHelper {
-  private final IWorkspace _workspace = new Function0<IWorkspace>() {
-    public IWorkspace apply() {
-      IWorkspace _workspace = ResourcesPlugin.getWorkspace();
-      return _workspace;
-    }
-  }.apply();
+  @Property
+  private final IWorkspace _workspace = ResourcesPlugin.getWorkspace();
   
-  public IWorkspace getWorkspace() {
-    return this._workspace;
-  }
+  private final ArrayList<IProject> linkedProjects = CollectionLiterals.<IProject>newArrayList();
   
-  private final ArrayList<IProject> linkedProjects = new Function0<ArrayList<IProject>>() {
-    public ArrayList<IProject> apply() {
-      ArrayList<IProject> _newArrayList = CollectionLiterals.<IProject>newArrayList();
-      return _newArrayList;
-    }
-  }.apply();
-  
-  private final ArrayList<IProject> createdProjects = new Function0<ArrayList<IProject>>() {
-    public ArrayList<IProject> apply() {
-      ArrayList<IProject> _newArrayList = CollectionLiterals.<IProject>newArrayList();
-      return _newArrayList;
-    }
-  }.apply();
+  private final ArrayList<IProject> createdProjects = CollectionLiterals.<IProject>newArrayList();
   
   public boolean createProject(final String name) {
     boolean _xblockexpression = false;
@@ -66,8 +49,7 @@ public class WorkspaceHelper {
       IWorkspace _workspace = this.getWorkspace();
       final IProjectDescription description = _workspace.newProjectDescription(name);
       IProject _doCreateProject = this.doCreateProject(name, description);
-      boolean _add = this.createdProjects.add(_doCreateProject);
-      _xblockexpression = (_add);
+      _xblockexpression = this.createdProjects.add(_doCreateProject);
     }
     return _xblockexpression;
   }
@@ -79,11 +61,10 @@ public class WorkspaceHelper {
       final IProjectDescription description = _workspace.newProjectDescription(name);
       final IProject project = this.doCreateProject(name, description);
       this.createdProjects.add(project);
-      ProjectInitializer _projectInitializer = new ProjectInitializer();
-      final ProjectInitializer initializer = _projectInitializer;
+      final ProjectInitializer initializer = new ProjectInitializer();
       init.apply(initializer);
       initializer.apply(project);
-      _xblockexpression = (project);
+      _xblockexpression = project;
     }
     return _xblockexpression;
   }
@@ -97,8 +78,7 @@ public class WorkspaceHelper {
       URI _uRI = _file.toURI();
       description.setLocationURI(_uRI);
       IProject _doCreateProject = this.doCreateProject(name, description);
-      boolean _add = this.linkedProjects.add(_doCreateProject);
-      _xblockexpression = (_add);
+      _xblockexpression = this.linkedProjects.add(_doCreateProject);
     }
     return _xblockexpression;
   }
@@ -113,7 +93,7 @@ public class WorkspaceHelper {
       NullProgressMonitor _monitor_1 = this.monitor();
       project.open(_monitor_1);
       return project;
-    } catch (Exception _e) {
+    } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
   }
@@ -121,21 +101,18 @@ public class WorkspaceHelper {
   public IProject project(final String name) {
     IWorkspace _workspace = this.getWorkspace();
     IWorkspaceRoot _root = _workspace.getRoot();
-    IProject _project = _root.getProject(name);
-    return _project;
+    return _root.getProject(name);
   }
   
   public IFile file(final String path) {
     IWorkspace _workspace = this.getWorkspace();
     IWorkspaceRoot _root = _workspace.getRoot();
     Path _path = new Path(path);
-    IFile _file = _root.getFile(_path);
-    return _file;
+    return _root.getFile(_path);
   }
   
   public IFile createFile(final String name, final CharSequence content) {
-    IFile _writeToFile = this.writeToFile(content, name);
-    return _writeToFile;
+    return this.writeToFile(content, name);
   }
   
   public void createFolder(final String path) {
@@ -146,7 +123,7 @@ public class WorkspaceHelper {
       IFolder _folder = _root.getFolder(_path);
       NullProgressMonitor _monitor = this.monitor();
       _folder.create(true, true, _monitor);
-    } catch (Exception _e) {
+    } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
   }
@@ -165,10 +142,9 @@ public class WorkspaceHelper {
       if (_isOK) {
         link.createLink(locationPath, IResource.NONE, null);
       } else {
-        UnsupportedOperationException _unsupportedOperationException = new UnsupportedOperationException();
-        throw _unsupportedOperationException;
+        throw new UnsupportedOperationException();
       }
-    } catch (Exception _e) {
+    } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
   }
@@ -181,10 +157,10 @@ public class WorkspaceHelper {
         StringInputStream _stringInputStream = new StringInputStream(_string);
         NullProgressMonitor _monitor = this.monitor();
         file.appendContents(_stringInputStream, true, false, _monitor);
-        _xblockexpression = (file);
+        _xblockexpression = file;
       }
       return _xblockexpression;
-    } catch (Exception _e) {
+    } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
   }
@@ -193,7 +169,7 @@ public class WorkspaceHelper {
     try {
       NullProgressMonitor _monitor = this.monitor();
       file.delete(true, _monitor);
-    } catch (Exception _e) {
+    } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
   }
@@ -207,10 +183,10 @@ public class WorkspaceHelper {
         StringInputStream _stringInputStream = new StringInputStream(_string);
         NullProgressMonitor _monitor = this.monitor();
         newFile.create(_stringInputStream, true, _monitor);
-        _xblockexpression = (newFile);
+        _xblockexpression = newFile;
       }
       return _xblockexpression;
-    } catch (Exception _e) {
+    } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
   }
@@ -221,17 +197,15 @@ public class WorkspaceHelper {
       {
         final int depth = IResource.DEPTH_INFINITE;
         IMarker[] _findMarkers = file.findMarkers(IMarker.PROBLEM, true, depth);
-        final Function1<IMarker,String> _function = new Function1<IMarker,String>() {
-            public String apply(final IMarker it) {
-              String _message = MarkerUtilities.getMessage(it);
-              return _message;
-            }
-          };
-        List<String> _map = ListExtensions.<IMarker, String>map(((List<IMarker>)Conversions.doWrapArray(_findMarkers)), _function);
-        _xblockexpression = (_map);
+        final Function1<IMarker, String> _function = new Function1<IMarker, String>() {
+          public String apply(final IMarker it) {
+            return MarkerUtilities.getMessage(it);
+          }
+        };
+        _xblockexpression = ListExtensions.<IMarker, String>map(((List<IMarker>)Conversions.doWrapArray(_findMarkers)), _function);
       }
       return _xblockexpression;
-    } catch (Exception _e) {
+    } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
   }
@@ -247,37 +221,37 @@ public class WorkspaceHelper {
     IWorkspaceRoot _root = _workspace.getRoot();
     IProject[] _projects = _root.getProjects();
     final Procedure1<IProject> _function = new Procedure1<IProject>() {
-        public void apply(final IProject it) {
-          IWorkspace _workspace = it.getWorkspace();
-          IWorkspaceRoot _root = _workspace.getRoot();
-          IPath _location = _root.getLocation();
-          IPath _location_1 = it.getLocation();
-          boolean _isPrefixOf = _location.isPrefixOf(_location_1);
-          if (_isPrefixOf) {
-            try {
-              NullProgressMonitor _monitor = WorkspaceHelper.this.monitor();
-              it.delete(true, true, _monitor);
-            } catch (final Throwable _t) {
-              if (_t instanceof Exception) {
-                final Exception e = (Exception)_t;
-              } else {
-                throw Exceptions.sneakyThrow(_t);
-              }
+      public void apply(final IProject it) {
+        IWorkspace _workspace = it.getWorkspace();
+        IWorkspaceRoot _root = _workspace.getRoot();
+        IPath _location = _root.getLocation();
+        IPath _location_1 = it.getLocation();
+        boolean _isPrefixOf = _location.isPrefixOf(_location_1);
+        if (_isPrefixOf) {
+          try {
+            NullProgressMonitor _monitor = WorkspaceHelper.this.monitor();
+            it.delete(true, true, _monitor);
+          } catch (final Throwable _t) {
+            if (_t instanceof Exception) {
+              final Exception e = (Exception)_t;
+            } else {
+              throw Exceptions.sneakyThrow(_t);
             }
-          } else {
-            try {
-              NullProgressMonitor _monitor_1 = WorkspaceHelper.this.monitor();
-              it.delete(false, true, _monitor_1);
-            } catch (final Throwable _t_1) {
-              if (_t_1 instanceof Exception) {
-                final Exception e_1 = (Exception)_t_1;
-              } else {
-                throw Exceptions.sneakyThrow(_t_1);
-              }
+          }
+        } else {
+          try {
+            NullProgressMonitor _monitor_1 = WorkspaceHelper.this.monitor();
+            it.delete(false, true, _monitor_1);
+          } catch (final Throwable _t_1) {
+            if (_t_1 instanceof Exception) {
+              final Exception e_1 = (Exception)_t_1;
+            } else {
+              throw Exceptions.sneakyThrow(_t_1);
             }
           }
         }
-      };
+      }
+    };
     IterableExtensions.<IProject>forEach(((Iterable<IProject>)Conversions.doWrapArray(_projects)), _function);
   }
   
@@ -291,7 +265,11 @@ public class WorkspaceHelper {
   }
   
   public NullProgressMonitor monitor() {
-    NullProgressMonitor _nullProgressMonitor = new NullProgressMonitor();
-    return _nullProgressMonitor;
+    return new NullProgressMonitor();
+  }
+  
+  @Pure
+  public IWorkspace getWorkspace() {
+    return this._workspace;
   }
 }

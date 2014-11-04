@@ -9,7 +9,7 @@ import org.rtext.lang.specs.RegressionSuite;
 
 @Named("RText Tests")
 @Contains({ ProgressSuite.class, RegressionSuite.class })
-@SuppressWarnings("all")
 @RunWith(ExampleGroupRunner.class)
+@SuppressWarnings("all")
 public class RTextTestsSuite {
 }

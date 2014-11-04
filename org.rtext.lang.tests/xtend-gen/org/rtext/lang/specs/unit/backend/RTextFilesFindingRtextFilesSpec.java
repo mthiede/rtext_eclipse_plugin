@@ -1,7 +1,6 @@
 package org.rtext.lang.specs.unit.backend;
 
 import java.io.File;
-import org.hamcrest.StringDescription;
 import org.jnario.lib.Assert;
 import org.jnario.lib.JnarioIterableExtensions;
 import org.jnario.lib.Should;
@@ -15,13 +14,13 @@ import org.mockito.stubbing.OngoingStubbing;
 import org.rtext.lang.backend.RTextFile;
 import org.rtext.lang.specs.unit.backend.RTextFilesSpec;
 
-@SuppressWarnings("all")
 @Named("Finding .rtext files")
 @RunWith(ExampleGroupRunner.class)
+@SuppressWarnings("all")
 public class RTextFilesFindingRtextFilesSpec extends RTextFilesSpec {
   @Test
   @Named("in the same folder")
-  @Order(3)
+  @Order(1)
   public void _inTheSameFolder() throws Exception {
     File _newRTextFile = this.newRTextFile(this.currentFolder);
     this.currentConfig = _newRTextFile;
@@ -29,17 +28,16 @@ public class RTextFilesFindingRtextFilesSpec extends RTextFilesSpec {
     OngoingStubbing<RTextFile> _when = Mockito.<RTextFile>when(_doParse);
     _when.thenReturn(this.currentRTextFile);
     RTextFile _first = JnarioIterableExtensions.<RTextFile>first(this.fileFinder);
-    boolean _doubleArrow = Should.operator_doubleArrow(_first, this.currentRTextFile);
     Assert.assertTrue("\nExpected fileFinder.first => currentRTextFile but"
-     + "\n     fileFinder.first is " + new StringDescription().appendValue(_first).toString()
-     + "\n     fileFinder is " + new StringDescription().appendValue(this.fileFinder).toString()
-     + "\n     currentRTextFile is " + new StringDescription().appendValue(this.currentRTextFile).toString() + "\n", _doubleArrow);
+     + "\n     fileFinder.first is " + new org.hamcrest.StringDescription().appendValue(_first).toString()
+     + "\n     fileFinder is " + new org.hamcrest.StringDescription().appendValue(this.fileFinder).toString()
+     + "\n     currentRTextFile is " + new org.hamcrest.StringDescription().appendValue(this.currentRTextFile).toString() + "\n", Should.<RTextFile>operator_doubleArrow(_first, this.currentRTextFile));
     
   }
   
   @Test
   @Named("in parent folder")
-  @Order(4)
+  @Order(2)
   public void _inParentFolder() throws Exception {
     File _newRTextFile = this.newRTextFile(this.parentFolder);
     this.parentConfig = _newRTextFile;
@@ -47,17 +45,16 @@ public class RTextFilesFindingRtextFilesSpec extends RTextFilesSpec {
     OngoingStubbing<RTextFile> _when = Mockito.<RTextFile>when(_doParse);
     _when.thenReturn(this.parentRTextFile);
     RTextFile _first = JnarioIterableExtensions.<RTextFile>first(this.fileFinder);
-    boolean _doubleArrow = Should.operator_doubleArrow(_first, this.parentRTextFile);
     Assert.assertTrue("\nExpected fileFinder.first => parentRTextFile but"
-     + "\n     fileFinder.first is " + new StringDescription().appendValue(_first).toString()
-     + "\n     fileFinder is " + new StringDescription().appendValue(this.fileFinder).toString()
-     + "\n     parentRTextFile is " + new StringDescription().appendValue(this.parentRTextFile).toString() + "\n", _doubleArrow);
+     + "\n     fileFinder.first is " + new org.hamcrest.StringDescription().appendValue(_first).toString()
+     + "\n     fileFinder is " + new org.hamcrest.StringDescription().appendValue(this.fileFinder).toString()
+     + "\n     parentRTextFile is " + new org.hamcrest.StringDescription().appendValue(this.parentRTextFile).toString() + "\n", Should.<RTextFile>operator_doubleArrow(_first, this.parentRTextFile));
     
   }
   
   @Test
   @Named("in root folder")
-  @Order(5)
+  @Order(3)
   public void _inRootFolder() throws Exception {
     File _newRTextFile = this.newRTextFile(this.rootFolder);
     this.rootConfig = _newRTextFile;
@@ -65,11 +62,10 @@ public class RTextFilesFindingRtextFilesSpec extends RTextFilesSpec {
     OngoingStubbing<RTextFile> _when = Mockito.<RTextFile>when(_doParse);
     _when.thenReturn(this.rootRTextFile);
     RTextFile _first = JnarioIterableExtensions.<RTextFile>first(this.fileFinder);
-    boolean _doubleArrow = Should.operator_doubleArrow(_first, this.rootRTextFile);
     Assert.assertTrue("\nExpected fileFinder.first => rootRTextFile but"
-     + "\n     fileFinder.first is " + new StringDescription().appendValue(_first).toString()
-     + "\n     fileFinder is " + new StringDescription().appendValue(this.fileFinder).toString()
-     + "\n     rootRTextFile is " + new StringDescription().appendValue(this.rootRTextFile).toString() + "\n", _doubleArrow);
+     + "\n     fileFinder.first is " + new org.hamcrest.StringDescription().appendValue(_first).toString()
+     + "\n     fileFinder is " + new org.hamcrest.StringDescription().appendValue(this.fileFinder).toString()
+     + "\n     rootRTextFile is " + new org.hamcrest.StringDescription().appendValue(this.rootRTextFile).toString() + "\n", Should.<RTextFile>operator_doubleArrow(_first, this.rootRTextFile));
     
   }
 }

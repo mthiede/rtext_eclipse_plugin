@@ -6,7 +6,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.Region;
 import org.eclipse.xtext.xbase.lib.Exceptions;
-import org.eclipse.xtext.xbase.lib.Functions.Function0;
+import org.eclipse.xtext.xbase.lib.Extension;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.junit.After;
 import org.junit.Before;
@@ -36,88 +36,30 @@ import org.rtext.lang.specs.util.WrappingCallback;
 public class BackendHelper implements Connected {
   private ConnectorConfig config;
   
-  private TestFileLocator fileLocator = new Function0<TestFileLocator>() {
-    public TestFileLocator apply() {
-      TestFileLocator _default = TestFileLocator.getDefault();
-      return _default;
-    }
-  }.apply();
+  @Extension
+  private TestFileLocator fileLocator = TestFileLocator.getDefault();
   
-  private final ConnectorProvider connectorProvider = new Function0<ConnectorProvider>() {
-    public ConnectorProvider apply() {
-      ConnectorProvider _create = CachingConnectorProvider.create();
-      return _create;
-    }
-  }.apply();
+  private final ConnectorProvider connectorProvider = CachingConnectorProvider.create();
   
-  private final TestCallBack<Response> callback = new Function0<TestCallBack<Response>>() {
-    public TestCallBack<Response> apply() {
-      TestCallBack<Response> _testCallBack = new TestCallBack<Response>();
-      return _testCallBack;
-    }
-  }.apply();
+  private final TestCallBack<Response> callback = new TestCallBack<Response>();
   
-  private final FileSystemBasedConfigProvider configProvider = new Function0<FileSystemBasedConfigProvider>() {
-    public FileSystemBasedConfigProvider apply() {
-      FileSystemBasedConfigProvider _create = FileSystemBasedConfigProvider.create();
-      return _create;
-    }
-  }.apply();
+  private final FileSystemBasedConfigProvider configProvider = FileSystemBasedConfigProvider.create();
   
-  private IDocument _document;
+  public IDocument document;
   
-  public IDocument getDocument() {
-    return this._document;
-  }
+  private TestProposalAcceptor proposalAcceptor = new TestProposalAcceptor();
   
-  public void setDocument(final IDocument document) {
-    this._document = document;
-  }
+  public Connector connector;
   
-  private TestProposalAcceptor _proposalAcceptor = new Function0<TestProposalAcceptor>() {
-    public TestProposalAcceptor apply() {
-      TestProposalAcceptor _testProposalAcceptor = new TestProposalAcceptor();
-      return _testProposalAcceptor;
-    }
-  }.apply();
-  
-  public TestProposalAcceptor getProposalAcceptor() {
-    return this._proposalAcceptor;
-  }
-  
-  public void setProposalAcceptor(final TestProposalAcceptor proposalAcceptor) {
-    this._proposalAcceptor = proposalAcceptor;
-  }
-  
-  private Connector _connector;
-  
-  public Connector getConnector() {
-    return this._connector;
-  }
-  
-  public void setConnector(final Connector connector) {
-    this._connector = connector;
-  }
-  
-  private Response _response;
-  
-  public Response getResponse() {
-    return this._response;
-  }
-  
-  public void setResponse(final Response response) {
-    this._response = response;
-  }
+  public Response response;
   
   public ConnectorConfig startBackendFor(final IPath filePath) {
     String _oSString = filePath.toOSString();
-    ConnectorConfig _startBackendFor = this.startBackendFor(_oSString);
-    return _startBackendFor;
+    return this.startBackendFor(_oSString);
   }
   
   public String absolutPath(final String relativePath) {
-    String _absolutPath = this.fileLocator.absolutPath(relativePath);
-    return _absolutPath;
+    return this.fileLocator.absolutPath(relativePath);
   }
   
   public ConnectorConfig startBackendFor(final String filePath) {
@@ -127,62 +69,59 @@ public class BackendHelper implements Connected {
       ConnectorConfig _get = this.configProvider.get(absolutePath);
       this.config = _get;
       Connector _get_1 = this.connectorProvider.get(this.config);
-      this.setConnector(_get_1);
+      this.connector = _get_1;
       String _read = Files.read(absolutePath);
       SimpleDocument _simpleDocument = new SimpleDocument(_read);
-      this.setDocument(_simpleDocument);
-      _xblockexpression = (this.config);
+      this.document = _simpleDocument;
+      _xblockexpression = this.config;
     }
     return _xblockexpression;
   }
   
-  public void executeSynchronousCommand() {
+  public Response executeSynchronousCommand() {
     try {
-      Connector _connector = this.getConnector();
       LoadModelCommand _loadModelCommand = new LoadModelCommand();
-      LoadedModel _execute = _connector.<LoadedModel>execute(_loadModelCommand);
-      this.setResponse(_execute);
-    } catch (Exception _e) {
+      LoadedModel _execute = this.connector.<LoadedModel>execute(_loadModelCommand);
+      return this.response = _execute;
+    } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
   }
   
   public void executeSynchronousCommand(final Callback<LoadedModel> callback) {
-    WrappingCallback<LoadedModel> _wrappingCallback = new WrappingCallback<LoadedModel>(callback);
-    final WrappingCallback<LoadedModel> waitingCallback = _wrappingCallback;
-    Connector _connector = this.getConnector();
+    final WrappingCallback<LoadedModel> waitingCallback = new WrappingCallback<LoadedModel>(callback);
     LoadModelCommand _loadModelCommand = new LoadModelCommand();
-    _connector.<LoadedModel>execute(_loadModelCommand, waitingCallback);
+    this.connector.<LoadedModel>execute(_loadModelCommand, waitingCallback);
     waitingCallback.waitForResponse();
   }
   
-  public void executeAsynchronousCommand() {
-    final Function1<WaitConfig,Boolean> _function = new Function1<WaitConfig,Boolean>() {
+  public Response executeAsynchronousCommand() {
+    Response _xblockexpression = null;
+    {
+      final Function1<WaitConfig, Boolean> _function = new Function1<WaitConfig, Boolean>() {
         public Boolean apply(final WaitConfig it) {
           boolean _xblockexpression = false;
           {
-            Connector _connector = BackendHelper.this.getConnector();
             Command<Response> _command = new Command<Response>("load_model", Response.class);
-            _connector.<Response>execute(_command, BackendHelper.this.callback);
+            BackendHelper.this.connector.<Response>execute(_command, BackendHelper.this.callback);
             Response _response = BackendHelper.this.callback.getResponse();
-            boolean _notEquals = (!Objects.equal(_response, null));
-            _xblockexpression = (_notEquals);
+            _xblockexpression = (!Objects.equal(_response, null));
           }
           return Boolean.valueOf(_xblockexpression);
         }
       };
-    Wait.waitUntil(_function);
-    Response _response = this.callback.getResponse();
-    this.setResponse(_response);
+      Wait.waitUntil(_function);
+      Response _response = this.callback.getResponse();
+      _xblockexpression = this.response = _response;
+    }
+    return _xblockexpression;
   }
   
   public void loadModel() {
     final LoadModelCallback loadModelCallback = LoadModelCallback.create(this.config);
-    WrappingCallback<LoadedModel> _wrappingCallback = new WrappingCallback<LoadedModel>(loadModelCallback);
-    final WrappingCallback<LoadedModel> waitingCallback = _wrappingCallback;
-    Connector _connector = this.getConnector();
+    final WrappingCallback<LoadedModel> waitingCallback = new WrappingCallback<LoadedModel>(loadModelCallback);
     LoadModelCommand _loadModelCommand = new LoadModelCommand();
-    _connector.<LoadedModel>execute(_loadModelCommand, waitingCallback);
+    this.connector.<LoadedModel>execute(_loadModelCommand, waitingCallback);
     waitingCallback.waitForResponse();
   }
   
@@ -201,36 +140,32 @@ public class BackendHelper implements Connected {
   }
   
   public int offsetAfter(final String substring) {
-    IDocument _document = this.getDocument();
-    String _get = _document.get();
+    String _get = this.document.get();
     int _indexOf = _get.indexOf(substring);
     int _length = substring.length();
-    int _plus = (_indexOf + _length);
-    return _plus;
+    return (_indexOf + _length);
   }
   
   public ArrayList<String> proposals() {
-    TestProposalAcceptor _proposalAcceptor = this.getProposalAcceptor();
-    ArrayList<String> _proposals = _proposalAcceptor.getProposals();
-    return _proposals;
+    return this.proposalAcceptor.proposals;
   }
   
   public Region regionOf(final String string) {
     Region _xblockexpression = null;
     {
-      IDocument _document = this.getDocument();
-      String _get = _document.get();
+      String _get = this.document.get();
       final int offset = _get.indexOf(string);
-      int _plus = (offset + 1);
       int _length = string.length();
-      Region _region = new Region(_plus, _length);
-      _xblockexpression = (_region);
+      _xblockexpression = new Region((offset + 1), _length);
     }
     return _xblockexpression;
   }
   
   public void busy() {
-    Connector _connector = this.getConnector();
-    _connector.connect();
+    this.connector.connect();
+  }
+  
+  public Connector getConnector() {
+    return this.connectorProvider.get(this.config);
   }
 }

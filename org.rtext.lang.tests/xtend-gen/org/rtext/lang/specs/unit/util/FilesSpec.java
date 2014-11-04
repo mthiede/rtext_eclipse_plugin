@@ -7,8 +7,8 @@ import org.junit.runner.RunWith;
 import org.rtext.lang.specs.unit.util.FilesFileExtensionSpec;
 
 @Contains(FilesFileExtensionSpec.class)
-@SuppressWarnings("all")
 @Named("Files")
 @RunWith(ExampleGroupRunner.class)
+@SuppressWarnings("all")
 public class FilesSpec {
 }

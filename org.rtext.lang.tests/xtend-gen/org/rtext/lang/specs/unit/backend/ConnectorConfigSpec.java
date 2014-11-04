@@ -7,8 +7,8 @@ import org.junit.runner.RunWith;
 import org.rtext.lang.specs.unit.backend.ConnectorConfigMatchesSpec;
 
 @Contains(ConnectorConfigMatchesSpec.class)
-@SuppressWarnings("all")
 @Named("ConnectorConfig")
 @RunWith(ExampleGroupRunner.class)
+@SuppressWarnings("all")
 public class ConnectorConfigSpec {
 }

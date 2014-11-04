@@ -10,7 +10,7 @@ import org.rtext.lang.specs.integration.FindingTheElementDeclarationFeatureOpenA
 
 @Contains({ FindingTheElementDeclarationFeatureOpenAnHyperlink.class, FindingTheElementDeclarationFeatureHyperlinkHighlighting.class, FindingTheElementDeclarationFeatureDisconnectedBackend.class })
 @Named("Finding the element declaration")
-@SuppressWarnings("all")
 @RunWith(FeatureRunner.class)
+@SuppressWarnings("all")
 public class FindingTheElementDeclarationFeature {
 }

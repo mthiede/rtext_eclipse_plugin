@@ -20,7 +20,7 @@ public class Jobs {
       }
       Job _head = IterableExtensions.<Job>head(((Iterable<Job>)Conversions.doWrapArray(build)));
       _head.join();
-    } catch (Exception _e) {
+    } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
   }

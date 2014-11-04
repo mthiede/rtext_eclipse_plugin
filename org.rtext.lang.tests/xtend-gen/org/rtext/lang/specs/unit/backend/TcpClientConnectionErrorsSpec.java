@@ -2,7 +2,6 @@ package org.rtext.lang.specs.unit.backend;
 
 import com.google.common.base.Objects;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
-import org.hamcrest.StringDescription;
 import org.jnario.lib.Assert;
 import org.jnario.runner.ExampleGroupRunner;
 import org.jnario.runner.Named;
@@ -16,20 +15,20 @@ import org.rtext.lang.specs.util.Commands;
 import org.rtext.lang.specs.util.Wait;
 import org.rtext.lang.specs.util.WaitConfig;
 
-@SuppressWarnings("all")
 @Named("connection errors")
 @RunWith(ExampleGroupRunner.class)
+@SuppressWarnings("all")
 public class TcpClientConnectionErrorsSpec extends TcpClientSpec {
   @Test
   @Named("throws exception when server does not exist")
-  @Order(8)
+  @Order(1)
   public void _throwsExceptionWhenServerDoesNotExist() throws Exception {
     boolean expectedException = false;
     String message = "";
     try{
       this.subject.connect("6.6.6.6", 6666);
       message = "Expected " + BackendException.class.getName() + " for \n     subject.connect(\"6.6.6.6\", 6666)\n with:"
-       + "\n     subject is " + new StringDescription().appendValue(this.subject).toString();
+       + "\n     subject is " + new org.hamcrest.StringDescription().appendValue(this.subject).toString();
     }catch(BackendException e){
       expectedException = true;
     }
@@ -38,7 +37,7 @@ public class TcpClientConnectionErrorsSpec extends TcpClientSpec {
   
   @Test
   @Named("throws exception when server is not running")
-  @Order(9)
+  @Order(2)
   public void _throwsExceptionWhenServerIsNotRunning() throws Exception {
     this.server.shutdown();
     boolean expectedException = false;
@@ -46,9 +45,9 @@ public class TcpClientConnectionErrorsSpec extends TcpClientSpec {
     try{
       this.subject.connect(this.ADDRESS, this.PORT);
       message = "Expected " + BackendException.class.getName() + " for \n     subject.connect(ADDRESS, PORT)\n with:"
-       + "\n     subject is " + new StringDescription().appendValue(this.subject).toString()
-       + "\n     ADDRESS is " + new StringDescription().appendValue(this.ADDRESS).toString()
-       + "\n     PORT is " + new StringDescription().appendValue(this.PORT).toString();
+       + "\n     subject is " + new org.hamcrest.StringDescription().appendValue(this.subject).toString()
+       + "\n     ADDRESS is " + new org.hamcrest.StringDescription().appendValue(this.ADDRESS).toString()
+       + "\n     PORT is " + new org.hamcrest.StringDescription().appendValue(this.PORT).toString();
     }catch(BackendException e){
       expectedException = true;
     }
@@ -57,18 +56,17 @@ public class TcpClientConnectionErrorsSpec extends TcpClientSpec {
   
   @Test
   @Named("callback receives error if connection is closed")
-  @Order(10)
+  @Order(3)
   public void _callbackReceivesErrorIfConnectionIsClosed() throws Exception {
     this.subject.connect(this.ADDRESS, this.PORT);
     this.server.shutdown();
     this.subject.<Response>sendRequest(Commands.ANY_COMMAND, this.callback);
-    final Function1<WaitConfig,Boolean> _function = new Function1<WaitConfig,Boolean>() {
-        public Boolean apply(final WaitConfig it) {
-          String _error = TcpClientConnectionErrorsSpec.this.callback.getError();
-          boolean _notEquals = (!Objects.equal(_error, null));
-          return Boolean.valueOf(_notEquals);
-        }
-      };
+    final Function1<WaitConfig, Boolean> _function = new Function1<WaitConfig, Boolean>() {
+      public Boolean apply(final WaitConfig it) {
+        String _error = TcpClientConnectionErrorsSpec.this.callback.getError();
+        return Boolean.valueOf((!Objects.equal(_error, null)));
+      }
+    };
     Wait.waitUntil(_function);
   }
 }

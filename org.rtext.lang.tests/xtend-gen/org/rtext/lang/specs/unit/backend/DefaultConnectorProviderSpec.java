@@ -1,8 +1,6 @@
 package org.rtext.lang.specs.unit.backend;
 
 import java.io.File;
-import org.eclipse.xtext.xbase.lib.Functions.Function0;
-import org.hamcrest.StringDescription;
 import org.jnario.lib.Assert;
 import org.jnario.lib.Should;
 import org.jnario.runner.CreateWith;
@@ -23,23 +21,17 @@ import org.rtext.lang.backend.ConnectorFactory;
 import org.rtext.lang.backend.DefaultConnectorProvider;
 import org.rtext.lang.specs.util.MockInjector;
 
-@SuppressWarnings("all")
+@CreateWith(MockInjector.class)
 @Named("DefaultConnectorProvider")
 @RunWith(ExampleGroupRunner.class)
-@CreateWith(value = MockInjector.class)
+@SuppressWarnings("all")
 public class DefaultConnectorProviderSpec {
   public DefaultConnectorProvider subject;
   
   @Mock
   ConnectorConfigProvider configFileProvider;
   
-  ConnectorConfig config = new Function0<ConnectorConfig>() {
-    public ConnectorConfig apply() {
-      File _file = new File("path");
-      ConnectorConfig _connectorConfig = new ConnectorConfig(_file, "");
-      return _connectorConfig;
-    }
-  }.apply();
+  ConnectorConfig config = new ConnectorConfig(new File("path"), "");
   
   @Mock
   Connector connector;
@@ -71,9 +63,9 @@ public class DefaultConnectorProviderSpec {
     Connector _get = this.subject.get(this.config);
     boolean _doubleArrow = Should.operator_doubleArrow(_get, Connector.class);
     Assert.assertTrue("\nExpected subject.get(config) => typeof(Connector) but"
-     + "\n     subject.get(config) is " + new StringDescription().appendValue(_get).toString()
-     + "\n     subject is " + new StringDescription().appendValue(this.subject).toString()
-     + "\n     config is " + new StringDescription().appendValue(this.config).toString() + "\n", _doubleArrow);
+     + "\n     subject.get(config) is " + new org.hamcrest.StringDescription().appendValue(_get).toString()
+     + "\n     subject is " + new org.hamcrest.StringDescription().appendValue(this.subject).toString()
+     + "\n     config is " + new org.hamcrest.StringDescription().appendValue(this.config).toString() + "\n", _doubleArrow);
     
     ConnectorFactory _verify = Mockito.<ConnectorFactory>verify(this.connectorFactory);
     _verify.createConnector(this.config);

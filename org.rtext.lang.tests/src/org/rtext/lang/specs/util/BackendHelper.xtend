@@ -29,11 +29,11 @@ class BackendHelper implements Connected{
 	val callback = new TestCallBack<Response>
 	val configProvider = FileSystemBasedConfigProvider::create()
 	
-	@Property IDocument document
-	@Property var proposalAcceptor = new TestProposalAcceptor
+	public IDocument document
+	var proposalAcceptor = new TestProposalAcceptor
 	
-	@Property Connector connector
-	@Property Response response
+	public Connector connector
+	public Response response
 	
 	def startBackendFor(IPath filePath) {
 		startBackendFor(filePath.toOSString)
@@ -105,5 +105,8 @@ class BackendHelper implements Connected{
 		connector.connect
 	}
 	
+	override getConnector() {
+		connectorProvider.get(config)
+	}
 
 }

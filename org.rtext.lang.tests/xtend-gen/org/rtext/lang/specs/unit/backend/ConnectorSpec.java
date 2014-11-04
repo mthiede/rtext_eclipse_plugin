@@ -1,11 +1,10 @@
 package org.rtext.lang.specs.unit.backend;
 
 import java.io.File;
-import org.eclipse.xtext.xbase.lib.Functions.Function0;
+import org.eclipse.xtext.xbase.lib.Extension;
 import org.jnario.runner.Contains;
 import org.jnario.runner.CreateWith;
 import org.jnario.runner.ExampleGroupRunner;
-import org.jnario.runner.Extension;
 import org.jnario.runner.Named;
 import org.junit.Before;
 import org.junit.Rule;
@@ -32,21 +31,17 @@ import org.rtext.lang.specs.util.Commands;
 import org.rtext.lang.specs.util.MockInjector;
 
 @Contains({ ConnectorErrorHandlingSpec.class, ConnectorExecuteCommandSpec.class, ConnectorBusySpec.class, ConnectorConnectedSpec.class, ConnectorDisconnectSpec.class, ConnectorListenerSpec.class })
-@SuppressWarnings("all")
+@CreateWith(MockInjector.class)
 @Named("Connector")
 @RunWith(ExampleGroupRunner.class)
-@CreateWith(value = MockInjector.class)
+@SuppressWarnings("all")
 public class ConnectorSpec {
   public Connector subject;
   
   @Rule
   @Extension
-  public TemporaryFolder _temporaryFolder = new Function0<TemporaryFolder>() {
-    public TemporaryFolder apply() {
-      TemporaryFolder _temporaryFolder = new TemporaryFolder();
-      return _temporaryFolder;
-    }
-  }.apply();
+  @org.jnario.runner.Extension
+  public TemporaryFolder _temporaryFolder = new TemporaryFolder();
   
   @Mock
   BackendStarter processRunner;

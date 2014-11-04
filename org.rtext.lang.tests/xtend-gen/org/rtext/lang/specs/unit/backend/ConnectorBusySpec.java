@@ -1,9 +1,5 @@
 package org.rtext.lang.specs.unit.backend;
 
-import java.util.List;
-import org.eclipse.xtext.xbase.lib.Conversions;
-import org.eclipse.xtext.xbase.lib.Functions.Function1;
-import org.hamcrest.StringDescription;
 import org.jnario.lib.Assert;
 import org.jnario.lib.Should;
 import org.jnario.runner.ExampleGroupRunner;
@@ -22,51 +18,45 @@ import org.rtext.lang.commands.Command;
 import org.rtext.lang.commands.Response;
 import org.rtext.lang.specs.unit.backend.ConnectorSpec;
 
-@SuppressWarnings("all")
 @Named("Busy")
 @RunWith(ExampleGroupRunner.class)
+@SuppressWarnings("all")
 public class ConnectorBusySpec extends ConnectorSpec {
   @Test
   @Named("if waiting for response")
-  @Order(14)
+  @Order(1)
   public void _ifWaitingForResponse() throws Exception {
     boolean _isBusy = this.subject.isBusy();
-    boolean _doubleArrow = Should.operator_doubleArrow(Boolean.valueOf(_isBusy), Boolean.valueOf(false));
+    boolean _doubleArrow = Should.<Boolean>operator_doubleArrow(Boolean.valueOf(_isBusy), false);
     Assert.assertTrue("\nExpected subject.busy => false but"
-     + "\n     subject.busy is " + new StringDescription().appendValue(Boolean.valueOf(_isBusy)).toString()
-     + "\n     subject is " + new StringDescription().appendValue(this.subject).toString() + "\n", _doubleArrow);
+     + "\n     subject.busy is " + new org.hamcrest.StringDescription().appendValue(Boolean.valueOf(_isBusy)).toString()
+     + "\n     subject is " + new org.hamcrest.StringDescription().appendValue(this.subject).toString() + "\n", _doubleArrow);
     
-    final Function1<InvocationOnMock,Callback<Response>> _function = new Function1<InvocationOnMock,Callback<Response>>() {
-        public Callback<Response> apply(final InvocationOnMock it) {
-          Object[] _arguments = it.getArguments();
-          Object _get = ((List<Object>)Conversions.doWrapArray(_arguments)).get(1);
-          Callback<Response> _callback = ConnectorBusySpec.this.callback = ((Callback) _get);
-          return _callback;
-        }
-      };
-    Stubber _doAnswer = Mockito.doAnswer(new Answer<Callback<Response>>() {
-        public Callback<Response> answer(InvocationOnMock invocation) {
-          return _function.apply(invocation);
-        }
-    });
+    final Answer<Callback<Response>> _function = new Answer<Callback<Response>>() {
+      public Callback<Response> answer(final InvocationOnMock it) throws Throwable {
+        Object[] _arguments = it.getArguments();
+        Object _get = _arguments[1];
+        return ConnectorBusySpec.this.callback = ((Callback) _get);
+      }
+    };
+    Stubber _doAnswer = Mockito.doAnswer(_function);
     Connection _when = _doAnswer.<Connection>when(this.connection);
     Command _any = Matchers.<Command>any();
     Callback _any_1 = Matchers.<Callback>any();
-    _when.sendRequest(_any, _any_1);
+    _when.<Response>sendRequest(_any, _any_1);
     this.subject.<Response>execute(this.anyCommand, this.callback);
     boolean _isBusy_1 = this.subject.isBusy();
-    boolean _doubleArrow_1 = Should.operator_doubleArrow(Boolean.valueOf(_isBusy_1), Boolean.valueOf(true));
+    boolean _doubleArrow_1 = Should.<Boolean>operator_doubleArrow(Boolean.valueOf(_isBusy_1), true);
     Assert.assertTrue("\nExpected subject.busy => true but"
-     + "\n     subject.busy is " + new StringDescription().appendValue(Boolean.valueOf(_isBusy_1)).toString()
-     + "\n     subject is " + new StringDescription().appendValue(this.subject).toString() + "\n", _doubleArrow_1);
+     + "\n     subject.busy is " + new org.hamcrest.StringDescription().appendValue(Boolean.valueOf(_isBusy_1)).toString()
+     + "\n     subject is " + new org.hamcrest.StringDescription().appendValue(this.subject).toString() + "\n", _doubleArrow_1);
     
     Response _response = new Response(0, "");
     this.callback.handleResponse(_response);
     boolean _isBusy_2 = this.subject.isBusy();
-    boolean _doubleArrow_2 = Should.operator_doubleArrow(Boolean.valueOf(_isBusy_2), Boolean.valueOf(false));
     Assert.assertTrue("\nExpected subject.busy => false but"
-     + "\n     subject.busy is " + new StringDescription().appendValue(Boolean.valueOf(_isBusy_2)).toString()
-     + "\n     subject is " + new StringDescription().appendValue(this.subject).toString() + "\n", _doubleArrow_2);
+     + "\n     subject.busy is " + new org.hamcrest.StringDescription().appendValue(Boolean.valueOf(_isBusy_2)).toString()
+     + "\n     subject is " + new org.hamcrest.StringDescription().appendValue(this.subject).toString() + "\n", Should.<Boolean>operator_doubleArrow(Boolean.valueOf(_isBusy_2), false));
     
   }
 }

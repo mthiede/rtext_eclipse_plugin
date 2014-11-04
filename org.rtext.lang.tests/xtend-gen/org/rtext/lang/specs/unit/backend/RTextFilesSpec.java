@@ -2,15 +2,13 @@ package org.rtext.lang.specs.unit.backend;
 
 import java.io.File;
 import org.eclipse.xtext.xbase.lib.Exceptions;
-import org.eclipse.xtext.xbase.lib.Functions.Function0;
+import org.eclipse.xtext.xbase.lib.Extension;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
-import org.hamcrest.StringDescription;
 import org.jnario.lib.Assert;
 import org.jnario.lib.Should;
 import org.jnario.runner.Contains;
 import org.jnario.runner.CreateWith;
 import org.jnario.runner.ExampleGroupRunner;
-import org.jnario.runner.Extension;
 import org.jnario.runner.Named;
 import org.jnario.runner.Order;
 import org.junit.Before;
@@ -27,10 +25,10 @@ import org.rtext.lang.specs.unit.backend.RTextFilesFindingRtextFilesSpec;
 import org.rtext.lang.specs.util.MockInjector;
 
 @Contains(RTextFilesFindingRtextFilesSpec.class)
-@SuppressWarnings("all")
+@CreateWith(MockInjector.class)
 @Named("RTextFiles")
 @RunWith(ExampleGroupRunner.class)
-@CreateWith(value = MockInjector.class)
+@SuppressWarnings("all")
 public class RTextFilesSpec {
   File modelFile;
   
@@ -57,12 +55,8 @@ public class RTextFilesSpec {
   
   @Rule
   @Extension
-  public TemporaryFolder tempFolder = new Function0<TemporaryFolder>() {
-    public TemporaryFolder apply() {
-      TemporaryFolder _temporaryFolder = new TemporaryFolder();
-      return _temporaryFolder;
-    }
-  }.apply();
+  @org.jnario.runner.Extension
+  public TemporaryFolder tempFolder = new TemporaryFolder();
   
   @Mock
   RTextFileParser parser;
@@ -90,10 +84,9 @@ public class RTextFilesSpec {
   public void _ignoresNull() throws Exception {
     RTextFiles _rtextFiles = this.rtextFiles(null);
     int _size = IterableExtensions.size(_rtextFiles);
-    boolean _doubleArrow = Should.operator_doubleArrow(Integer.valueOf(_size), Integer.valueOf(0));
     Assert.assertTrue("\nExpected rtextFiles(null).size => 0 but"
-     + "\n     rtextFiles(null).size is " + new StringDescription().appendValue(Integer.valueOf(_size)).toString()
-     + "\n     rtextFiles(null) is " + new StringDescription().appendValue(_rtextFiles).toString() + "\n", _doubleArrow);
+     + "\n     rtextFiles(null).size is " + new org.hamcrest.StringDescription().appendValue(Integer.valueOf(_size)).toString()
+     + "\n     rtextFiles(null) is " + new org.hamcrest.StringDescription().appendValue(_rtextFiles).toString() + "\n", Should.<Integer>operator_doubleArrow(Integer.valueOf(_size), Integer.valueOf(0)));
     
   }
   
@@ -104,18 +97,16 @@ public class RTextFilesSpec {
     File _file = new File("not existing");
     RTextFiles _rtextFiles = this.rtextFiles(_file);
     int _size = IterableExtensions.size(_rtextFiles);
-    boolean _doubleArrow = Should.operator_doubleArrow(Integer.valueOf(_size), Integer.valueOf(0));
     Assert.assertTrue("\nExpected rtextFiles(new File(\"not existing\")).size => 0 but"
-     + "\n     rtextFiles(new File(\"not existing\")).size is " + new StringDescription().appendValue(Integer.valueOf(_size)).toString()
-     + "\n     rtextFiles(new File(\"not existing\")) is " + new StringDescription().appendValue(_rtextFiles).toString()
-     + "\n     new File(\"not existing\") is " + new StringDescription().appendValue(_file).toString() + "\n", _doubleArrow);
+     + "\n     rtextFiles(new File(\"not existing\")).size is " + new org.hamcrest.StringDescription().appendValue(Integer.valueOf(_size)).toString()
+     + "\n     rtextFiles(new File(\"not existing\")) is " + new org.hamcrest.StringDescription().appendValue(_rtextFiles).toString()
+     + "\n     new File(\"not existing\") is " + new org.hamcrest.StringDescription().appendValue(_file).toString() + "\n", Should.<Integer>operator_doubleArrow(Integer.valueOf(_size), Integer.valueOf(0)));
     
   }
   
   public RTextFiles rtextFiles(final File file) {
     RTextFileFinder _rTextFileFinder = new RTextFileFinder();
-    RTextFiles _find = _rTextFileFinder.find(file);
-    return _find;
+    return _rTextFileFinder.find(file);
   }
   
   public File newRTextFile(final File folder) {
@@ -123,13 +114,12 @@ public class RTextFilesSpec {
       File _xblockexpression = null;
       {
         String _plus = (folder + "/.rtext");
-        File _file = new File(_plus);
-        final File file = _file;
+        final File file = new File(_plus);
         file.createNewFile();
-        _xblockexpression = (file);
+        _xblockexpression = file;
       }
       return _xblockexpression;
-    } catch (Exception _e) {
+    } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
   }

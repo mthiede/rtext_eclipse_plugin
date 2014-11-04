@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.xtext.xbase.lib.Functions.Function0;
+import org.eclipse.xtext.xbase.lib.Extension;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.ObjectExtensions;
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
@@ -13,7 +13,6 @@ import org.jnario.lib.JnarioCollectionLiterals;
 import org.jnario.lib.Should;
 import org.jnario.runner.CreateWith;
 import org.jnario.runner.ExampleGroupRunner;
-import org.jnario.runner.Extension;
 import org.jnario.runner.Named;
 import org.jnario.runner.Order;
 import org.junit.Before;
@@ -25,32 +24,24 @@ import org.mockito.Mockito;
 import org.mockito.stubbing.OngoingStubbing;
 import org.rtext.lang.backend.ConnectorScope;
 import org.rtext.lang.commands.LoadModelCallback;
-import org.rtext.lang.commands.LoadModelCallback.ProblemUpdateJob;
-import org.rtext.lang.commands.LoadModelCallback.ProblemUpdateJobFactory;
 import org.rtext.lang.commands.LoadedModel;
-import org.rtext.lang.commands.LoadedModel.FileProblems;
-import org.rtext.lang.commands.LoadedModel.Problem;
 import org.rtext.lang.specs.util.MockInjector;
 import org.rtext.lang.specs.util.WorkspaceHelper;
 import org.rtext.lang.util.FileLocator;
 
-@SuppressWarnings("all")
+@CreateWith(MockInjector.class)
 @Named("LoadModelCallback")
 @RunWith(ExampleGroupRunner.class)
-@CreateWith(value = MockInjector.class)
+@SuppressWarnings("all")
 public class LoadModelCallbackSpec {
   public LoadModelCallback subject;
   
   @Extension
-  public WorkspaceHelper _workspaceHelper = new Function0<WorkspaceHelper>() {
-    public WorkspaceHelper apply() {
-      WorkspaceHelper _workspaceHelper = new WorkspaceHelper();
-      return _workspaceHelper;
-    }
-  }.apply();
+  @org.jnario.runner.Extension
+  public WorkspaceHelper _workspaceHelper = new WorkspaceHelper();
   
   @Mock
-  ProblemUpdateJobFactory jobFactory;
+  LoadModelCallback.ProblemUpdateJobFactory jobFactory;
   
   @Mock
   ConnectorScope connectorScope;
@@ -59,7 +50,7 @@ public class LoadModelCallbackSpec {
   FileLocator fileLocator;
   
   @Mock
-  ProblemUpdateJob updateJob;
+  LoadModelCallback.ProblemUpdateJob updateJob;
   
   @Mock
   IFile resolvedFile1;
@@ -67,41 +58,24 @@ public class LoadModelCallbackSpec {
   @Mock
   IFile resolvedFile2;
   
-  final List<Problem> problems1 = new Function0<List<Problem>>() {
-    public List<Problem> apply() {
-      Problem _problem = new Problem("message1", "error", 1);
-      Problem _problem_1 = new Problem("message2", "warning", 2);
-      List<Problem> _list = JnarioCollectionLiterals.<Problem>list(_problem, _problem_1);
-      return _list;
-    }
-  }.apply();
+  final List<LoadedModel.Problem> problems1 = JnarioCollectionLiterals.<LoadedModel.Problem>list(
+    new LoadedModel.Problem("message1", "error", 1), 
+    new LoadedModel.Problem("message2", "warning", 2));
   
-  final List<Problem> problems2 = new Function0<List<Problem>>() {
-    public List<Problem> apply() {
-      Problem _problem = new Problem("message3", "error", 1);
-      Problem _problem_1 = new Problem("message4", "warning", 2);
-      List<Problem> _list = JnarioCollectionLiterals.<Problem>list(_problem, _problem_1);
-      return _list;
-    }
-  }.apply();
+  final List<LoadedModel.Problem> problems2 = JnarioCollectionLiterals.<LoadedModel.Problem>list(
+    new LoadedModel.Problem("message3", "error", 1), 
+    new LoadedModel.Problem("message4", "warning", 2));
   
-  final LoadedModel loadedModel = new Function0<LoadedModel>() {
-    public LoadedModel apply() {
-      LoadedModel _loadedModel = new LoadedModel();
-      final Procedure1<LoadedModel> _function = new Procedure1<LoadedModel>() {
-          public void apply(final LoadedModel it) {
-            List<FileProblems> _problems = it.getProblems();
-            FileProblems _fileProblems = new FileProblems("myfile1.txt", LoadModelCallbackSpec.this.problems1);
-            _problems.add(_fileProblems);
-            List<FileProblems> _problems_1 = it.getProblems();
-            FileProblems _fileProblems_1 = new FileProblems("myfile2.txt", LoadModelCallbackSpec.this.problems2);
-            _problems_1.add(_fileProblems_1);
-          }
-        };
-      LoadedModel _doubleArrow = ObjectExtensions.<LoadedModel>operator_doubleArrow(_loadedModel, _function);
-      return _doubleArrow;
+  final LoadedModel loadedModel = ObjectExtensions.<LoadedModel>operator_doubleArrow(new LoadedModel(), new Procedure1<LoadedModel>() {
+    public void apply(final LoadedModel it) {
+      List<LoadedModel.FileProblems> _problems = it.getProblems();
+      LoadedModel.FileProblems _fileProblems = new LoadedModel.FileProblems("myfile1.txt", LoadModelCallbackSpec.this.problems1);
+      _problems.add(_fileProblems);
+      List<LoadedModel.FileProblems> _problems_1 = it.getProblems();
+      LoadedModel.FileProblems _fileProblems_1 = new LoadedModel.FileProblems("myfile2.txt", LoadModelCallbackSpec.this.problems2);
+      _problems_1.add(_fileProblems_1);
     }
-  }.apply();
+  });
   
   @Before
   public void before() throws Exception {
@@ -109,8 +83,8 @@ public class LoadModelCallbackSpec {
     this.subject = _loadModelCallback;
     Map _anyMap = Matchers.anyMap();
     ConnectorScope _any = Matchers.<ConnectorScope>any();
-    ProblemUpdateJob _create = this.jobFactory.create(_anyMap, _any);
-    OngoingStubbing<ProblemUpdateJob> _when = Mockito.<ProblemUpdateJob>when(_create);
+    LoadModelCallback.ProblemUpdateJob _create = this.jobFactory.create(_anyMap, _any);
+    OngoingStubbing<LoadModelCallback.ProblemUpdateJob> _when = Mockito.<LoadModelCallback.ProblemUpdateJob>when(_create);
     _when.thenReturn(this.updateJob);
     List<IFile> _locate = this.fileLocator.locate("myfile1.txt");
     OngoingStubbing<List<IFile>> _when_1 = Mockito.<List<IFile>>when(_locate);
@@ -140,38 +114,38 @@ public class LoadModelCallbackSpec {
   public void _createsUpdateJobOnResponseWithProblemsPerFile() throws Exception {
     this.subject.commandSent();
     this.subject.handleResponse(this.loadedModel);
-    ProblemUpdateJobFactory _verify = Mockito.<ProblemUpdateJobFactory>verify(this.jobFactory);
-    final Function1<Map<IResource,List<Problem>>,Boolean> _function = new Function1<Map<IResource,List<Problem>>,Boolean>() {
-        public Boolean apply(final Map<IResource,List<Problem>> it) {
-          boolean _and = false;
-          boolean _and_1 = false;
-          boolean _and_2 = false;
-          boolean _containsKey = it.containsKey(LoadModelCallbackSpec.this.resolvedFile1);
-          if (!_containsKey) {
-            _and_2 = false;
-          } else {
-            boolean _containsKey_1 = it.containsKey(LoadModelCallbackSpec.this.resolvedFile2);
-            _and_2 = (_containsKey && _containsKey_1);
-          }
-          if (!_and_2) {
-            _and_1 = false;
-          } else {
-            boolean _containsValue = it.containsValue(LoadModelCallbackSpec.this.problems1);
-            _and_1 = (_and_2 && _containsValue);
-          }
-          if (!_and_1) {
-            _and = false;
-          } else {
-            boolean _containsValue_1 = it.containsValue(LoadModelCallbackSpec.this.problems2);
-            _and = (_and_1 && _containsValue_1);
-          }
-          return Boolean.valueOf(_and);
+    final Function1<Map<IResource, List<LoadedModel.Problem>>, Boolean> _function = new Function1<Map<IResource, List<LoadedModel.Problem>>, Boolean>() {
+      public Boolean apply(final Map<IResource, List<LoadedModel.Problem>> it) {
+        boolean _and = false;
+        boolean _and_1 = false;
+        boolean _and_2 = false;
+        boolean _containsKey = it.containsKey(LoadModelCallbackSpec.this.resolvedFile1);
+        if (!_containsKey) {
+          _and_2 = false;
+        } else {
+          boolean _containsKey_1 = it.containsKey(LoadModelCallbackSpec.this.resolvedFile2);
+          _and_2 = _containsKey_1;
         }
-      };
-    Matcher<Map<IResource,List<Problem>>> _matches = Should.<Map<IResource,List<Problem>>>matches("problems", _function);
-    Map<IResource,List<Problem>> _argThat = Matchers.<Map<IResource,List<Problem>>>argThat(_matches);
+        if (!_and_2) {
+          _and_1 = false;
+        } else {
+          boolean _containsValue = it.containsValue(LoadModelCallbackSpec.this.problems1);
+          _and_1 = _containsValue;
+        }
+        if (!_and_1) {
+          _and = false;
+        } else {
+          boolean _containsValue_1 = it.containsValue(LoadModelCallbackSpec.this.problems2);
+          _and = _containsValue_1;
+        }
+        return Boolean.valueOf(_and);
+      }
+    };
+    final Matcher<? super Map<IResource, List<LoadedModel.Problem>>> matcher = Should.<Map<IResource, List<LoadedModel.Problem>>>matches("problems", _function);
+    LoadModelCallback.ProblemUpdateJobFactory _verify = Mockito.<LoadModelCallback.ProblemUpdateJobFactory>verify(this.jobFactory);
+    Object _argThat = Matchers.argThat(matcher);
     ConnectorScope _eq = Matchers.<ConnectorScope>eq(this.connectorScope);
-    _verify.create(_argThat, _eq);
+    _verify.create(((Map<IResource, List<LoadedModel.Problem>>) _argThat), _eq);
   }
   
   @Test
@@ -180,7 +154,7 @@ public class LoadModelCallbackSpec {
   public void _schedulesUpdateJob() throws Exception {
     this.subject.commandSent();
     this.subject.handleResponse(this.loadedModel);
-    ProblemUpdateJob _verify = Mockito.<ProblemUpdateJob>verify(this.updateJob);
+    LoadModelCallback.ProblemUpdateJob _verify = Mockito.<LoadModelCallback.ProblemUpdateJob>verify(this.updateJob);
     _verify.schedule();
   }
 }

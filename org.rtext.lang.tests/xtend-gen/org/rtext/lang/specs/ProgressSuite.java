@@ -11,7 +11,7 @@ import org.rtext.lang.specs.integration.SendingReceivingMessagesFeature;
 
 @Named("Progress")
 @Contains({ CodeCompletionFeature.class, FindingTheElementDeclarationFeature.class, ProblemMarkersFeature.class, SendingReceivingMessagesFeature.class })
-@SuppressWarnings("all")
 @RunWith(ExampleGroupRunner.class)
+@SuppressWarnings("all")
 public class ProgressSuite {
 }

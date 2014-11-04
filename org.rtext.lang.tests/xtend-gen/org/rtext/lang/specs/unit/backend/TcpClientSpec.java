@@ -1,9 +1,7 @@
 package org.rtext.lang.specs.unit.backend;
 
 import java.util.concurrent.CountDownLatch;
-import org.eclipse.xtext.xbase.lib.Functions.Function0;
 import org.eclipse.xtext.xbase.lib.InputOutput;
-import org.hamcrest.StringDescription;
 import org.jnario.lib.Assert;
 import org.jnario.runner.Contains;
 import org.jnario.runner.CreateWith;
@@ -27,19 +25,14 @@ import org.rtext.lang.specs.util.TcpTestServer;
 import org.rtext.lang.specs.util.TestCallBack;
 
 @Contains({ TcpClientSendingRequestsSpec.class, TcpClientConnectionErrorsSpec.class, TcpClientConnectionStateSpec.class, TcpClientNotifiesMessageListenerOnSpec.class })
-@SuppressWarnings("all")
+@CreateWith(MockInjector.class)
 @Named("TcpClient")
 @RunWith(ExampleGroupRunner.class)
-@CreateWith(value = MockInjector.class)
+@SuppressWarnings("all")
 public class TcpClientSpec {
   public TcpClient subject;
   
-  int INVALID_PORT = new Function0<Integer>() {
-    public Integer apply() {
-      int _minus = (-1);
-      return _minus;
-    }
-  }.apply();
+  int INVALID_PORT = (-1);
   
   final String progressMessage = "{\"type\":\"progress\",\"invocation_id\":111,\"percentage\":100}";
   
@@ -47,42 +40,17 @@ public class TcpClientSpec {
   
   final int PORT = 12345;
   
-  final int ANOTHER_PORT = new Function0<Integer>() {
-    public Integer apply() {
-      int _plus = (TcpClientSpec.this.PORT + 1);
-      return _plus;
-    }
-  }.apply();
+  final int ANOTHER_PORT = (this.PORT + 1);
   
   final String ADDRESS = "127.0.0.1";
   
-  final CountDownLatch startSignal = new Function0<CountDownLatch>() {
-    public CountDownLatch apply() {
-      CountDownLatch _countDownLatch = new CountDownLatch(2);
-      return _countDownLatch;
-    }
-  }.apply();
+  final CountDownLatch startSignal = new CountDownLatch(2);
   
-  final TcpTestServer server = new Function0<TcpTestServer>() {
-    public TcpTestServer apply() {
-      TcpTestServer _tcpTestServer = new TcpTestServer(TcpClientSpec.this.ADDRESS, TcpClientSpec.this.PORT);
-      return _tcpTestServer;
-    }
-  }.apply();
+  final TcpTestServer server = new TcpTestServer(this.ADDRESS, this.PORT);
   
-  final TcpTestServer anotherSever = new Function0<TcpTestServer>() {
-    public TcpTestServer apply() {
-      TcpTestServer _tcpTestServer = new TcpTestServer(TcpClientSpec.this.ADDRESS, TcpClientSpec.this.ANOTHER_PORT);
-      return _tcpTestServer;
-    }
-  }.apply();
+  final TcpTestServer anotherSever = new TcpTestServer(this.ADDRESS, this.ANOTHER_PORT);
   
-  final TestCallBack<Response> callback = new Function0<TestCallBack<Response>>() {
-    public TestCallBack<Response> apply() {
-      TestCallBack<Response> _testCallBack = new TestCallBack<Response>();
-      return _testCallBack;
-    }
-  }.apply();
+  final TestCallBack<Response> callback = new TestCallBack<Response>();
   
   @Mock
   TcpClientListener listener;
@@ -106,9 +74,9 @@ public class TcpClientSpec {
     try{
       this.subject.connect(this.ADDRESS, this.INVALID_PORT);
       message = "Expected " + IllegalArgumentException.class.getName() + " for \n     subject.connect(ADDRESS, INVALID_PORT)\n with:"
-       + "\n     subject is " + new StringDescription().appendValue(this.subject).toString()
-       + "\n     ADDRESS is " + new StringDescription().appendValue(this.ADDRESS).toString()
-       + "\n     INVALID_PORT is " + new StringDescription().appendValue(this.INVALID_PORT).toString();
+       + "\n     subject is " + new org.hamcrest.StringDescription().appendValue(this.subject).toString()
+       + "\n     ADDRESS is " + new org.hamcrest.StringDescription().appendValue(this.ADDRESS).toString()
+       + "\n     INVALID_PORT is " + new org.hamcrest.StringDescription().appendValue(this.INVALID_PORT).toString();
     }catch(IllegalArgumentException e){
       expectedException = true;
     }

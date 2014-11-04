@@ -1,9 +1,8 @@
 package org.rtext.lang.specs.unit.backend;
 
 import org.eclipse.xtend2.lib.StringConcatenation;
-import org.eclipse.xtext.xbase.lib.Functions.Function0;
+import org.eclipse.xtext.xbase.lib.Extension;
 import org.jnario.runner.ExampleGroupRunner;
-import org.jnario.runner.Extension;
 import org.jnario.runner.Named;
 import org.jnario.runner.Order;
 import org.junit.Assert;
@@ -13,9 +12,9 @@ import org.rtext.lang.commands.Command;
 import org.rtext.lang.commands.CommandSerializer;
 import org.rtext.lang.commands.Response;
 
-@SuppressWarnings("all")
 @Named("Converting Commands to JSON")
 @RunWith(ExampleGroupRunner.class)
+@SuppressWarnings("all")
 public class ConvertingCommandsToJSONSpec {
   final String command = "load_model";
   
@@ -24,12 +23,8 @@ public class ConvertingCommandsToJSONSpec {
   final int invocationId = 42;
   
   @Extension
-  public CommandSerializer serializer = new Function0<CommandSerializer>() {
-    public CommandSerializer apply() {
-      CommandSerializer _commandSerializer = new CommandSerializer();
-      return _commandSerializer;
-    }
-  }.apply();
+  @org.jnario.runner.Extension
+  public CommandSerializer serializer = new CommandSerializer();
   
   @Test
   @Named("converts command to json")

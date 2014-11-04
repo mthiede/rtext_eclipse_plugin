@@ -14,9 +14,9 @@ import org.rtext.lang.commands.Response;
 import org.rtext.lang.specs.unit.backend.ConnectorSpec;
 import org.rtext.lang.specs.util.Commands;
 
-@SuppressWarnings("all")
 @Named("listener")
 @RunWith(ExampleGroupRunner.class)
+@SuppressWarnings("all")
 public class ConnectorListenerSpec extends ConnectorSpec {
   @Mock
   ConnectorListener listener;
@@ -28,7 +28,7 @@ public class ConnectorListenerSpec extends ConnectorSpec {
   
   @Test
   @Named("notifies connect")
-  @Order(20)
+  @Order(1)
   public void _notifiesConnect() throws Exception {
     this.subject.connect();
     ConnectorListener _verify = Mockito.<ConnectorListener>verify(this.listener);
@@ -37,7 +37,7 @@ public class ConnectorListenerSpec extends ConnectorSpec {
   
   @Test
   @Named("notifies disconnect")
-  @Order(21)
+  @Order(2)
   public void _notifiesDisconnect() throws Exception {
     this.subject.disconnect();
     ConnectorListener _verify = Mockito.<ConnectorListener>verify(this.listener);
@@ -46,7 +46,7 @@ public class ConnectorListenerSpec extends ConnectorSpec {
   
   @Test
   @Named("notifies command send")
-  @Order(22)
+  @Order(3)
   public void _notifiesCommandSend() throws Exception {
     this.subject.<Response>execute(Commands.ANY_COMMAND, this.callback);
     ConnectorListener _verify = Mockito.<ConnectorListener>verify(this.listener);
@@ -56,7 +56,7 @@ public class ConnectorListenerSpec extends ConnectorSpec {
   
   @Test
   @Named("removes listeners")
-  @Order(23)
+  @Order(4)
   public void _removesListeners() throws Exception {
     this.subject.removeListener(this.listener);
     this.subject.disconnect();

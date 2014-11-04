@@ -8,6 +8,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.xtend.lib.Data;
 import org.eclipse.xtext.xbase.lib.Exceptions;
+import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringHelper;
 import org.rtext.lang.specs.RTextPluginActivator;
 
@@ -15,15 +16,10 @@ import org.rtext.lang.specs.RTextPluginActivator;
 @SuppressWarnings("all")
 public class TestFileLocator {
   public static TestFileLocator getDefault() {
-    TestFileLocator _testFileLocator = new TestFileLocator("backends/head");
-    return _testFileLocator;
+    return new TestFileLocator("backends/head");
   }
   
   private final String _rootFolder;
-  
-  public String getRootFolder() {
-    return this._rootFolder;
-  }
   
   private File file(final String relativePath) {
     try {
@@ -37,43 +33,37 @@ public class TestFileLocator {
           final URL url = _default.find(fullpath);
           final URL fileUrl = FileLocator.toFileURL(url);
           URI _uRI = fileUrl.toURI();
-          File _file = new File(_uRI);
-          _xblockexpression = (_file);
+          _xblockexpression = new File(_uRI);
         }
         _xifexpression = _xblockexpression;
       } else {
         String _resolve = this.resolve(relativePath);
-        File _file = new File(_resolve);
-        _xifexpression = _file;
+        _xifexpression = new File(_resolve);
       }
       return _xifexpression;
-    } catch (Exception _e) {
+    } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
   }
   
   public String getRoot() {
-    String _absolutPath = this.absolutPath("");
-    return _absolutPath;
+    return this.absolutPath("");
   }
   
   public String absolutPath(final String relativePath) {
     File _file = this.file(relativePath);
-    String _absolutePath = _file.getAbsolutePath();
-    return _absolutePath;
+    return _file.getAbsolutePath();
   }
   
   private Path toFullPath(final String relativePath) {
     String _resolve = this.resolve(relativePath);
-    Path _path = new Path(_resolve);
-    return _path;
+    return new Path(_resolve);
   }
   
   private String resolve(final String relativePath) {
     String _rootFolder = this.getRootFolder();
     String _plus = (_rootFolder + "/");
-    String _plus_1 = (_plus + relativePath);
-    return _plus_1;
+    return (_plus + relativePath);
   }
   
   public TestFileLocator(final String rootFolder) {
@@ -82,14 +72,16 @@ public class TestFileLocator {
   }
   
   @Override
+  @Pure
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((_rootFolder== null) ? 0 : _rootFolder.hashCode());
+    result = prime * result + ((this._rootFolder== null) ? 0 : this._rootFolder.hashCode());
     return result;
   }
   
   @Override
+  @Pure
   public boolean equals(final Object obj) {
     if (this == obj)
       return true;
@@ -98,17 +90,23 @@ public class TestFileLocator {
     if (getClass() != obj.getClass())
       return false;
     TestFileLocator other = (TestFileLocator) obj;
-    if (_rootFolder == null) {
+    if (this._rootFolder == null) {
       if (other._rootFolder != null)
         return false;
-    } else if (!_rootFolder.equals(other._rootFolder))
+    } else if (!this._rootFolder.equals(other._rootFolder))
       return false;
     return true;
   }
   
   @Override
+  @Pure
   public String toString() {
     String result = new ToStringHelper().toString(this);
     return result;
+  }
+  
+  @Pure
+  public String getRootFolder() {
+    return this._rootFolder;
   }
 }

@@ -9,7 +9,7 @@ import org.rtext.lang.specs.integration.SendingReceivingMessagesFeatureSynchrono
 
 @Contains({ SendingReceivingMessagesFeatureSynchronousCommunication.class, SendingReceivingMessagesFeatureAnsynchronousCommunication.class })
 @Named("Sending & Receiving Messages")
-@SuppressWarnings("all")
 @RunWith(FeatureRunner.class)
+@SuppressWarnings("all")
 public class SendingReceivingMessagesFeature {
 }

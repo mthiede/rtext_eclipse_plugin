@@ -1,9 +1,5 @@
 package org.rtext.lang.specs.unit.backend;
 
-import java.util.List;
-import org.eclipse.xtext.xbase.lib.Conversions;
-import org.eclipse.xtext.xbase.lib.Functions.Function1;
-import org.hamcrest.StringDescription;
 import org.jnario.lib.Assert;
 import org.jnario.runner.ExampleGroupRunner;
 import org.jnario.runner.Named;
@@ -23,9 +19,9 @@ import org.rtext.lang.commands.Command;
 import org.rtext.lang.commands.Response;
 import org.rtext.lang.specs.unit.backend.ConnectorSpec;
 
-@SuppressWarnings("all")
 @Named("Error Handling")
 @RunWith(ExampleGroupRunner.class)
+@SuppressWarnings("all")
 public class ConnectorErrorHandlingSpec extends ConnectorSpec {
   @Test
   @Named("Kills backend process if connection fails")
@@ -66,15 +62,15 @@ public class ConnectorErrorHandlingSpec extends ConnectorSpec {
     Connection _when = _doThrow.<Connection>when(this.connection);
     Command _any = Matchers.<Command>any();
     Callback _any_1 = Matchers.<Callback>any();
-    _when.sendRequest(_any, _any_1);
+    _when.<Response>sendRequest(_any, _any_1);
     boolean expectedException = false;
     String message = "";
     try{
       this.subject.<Response>execute(this.anyCommand, this.callback);
       message = "Expected " + RuntimeException.class.getName() + " for \n     subject.execute(anyCommand, callback)\n with:"
-       + "\n     subject is " + new StringDescription().appendValue(this.subject).toString()
-       + "\n     anyCommand is " + new StringDescription().appendValue(this.anyCommand).toString()
-       + "\n     callback is " + new StringDescription().appendValue(this.callback).toString();
+       + "\n     subject is " + new org.hamcrest.StringDescription().appendValue(this.subject).toString()
+       + "\n     anyCommand is " + new org.hamcrest.StringDescription().appendValue(this.anyCommand).toString()
+       + "\n     callback is " + new org.hamcrest.StringDescription().appendValue(this.callback).toString();
     }catch(RuntimeException e){
       expectedException = true;
     }
@@ -92,15 +88,15 @@ public class ConnectorErrorHandlingSpec extends ConnectorSpec {
     Connection _when = _doThrow.<Connection>when(this.connection);
     Command _any = Matchers.<Command>any();
     Callback _any_1 = Matchers.<Callback>any();
-    _when.sendRequest(_any, _any_1);
+    _when.<Response>sendRequest(_any, _any_1);
     boolean expectedException = false;
     String message = "";
     try{
       this.subject.<Response>execute(this.anyCommand, this.callback);
       message = "Expected " + RuntimeException.class.getName() + " for \n     subject.execute(anyCommand, callback)\n with:"
-       + "\n     subject is " + new StringDescription().appendValue(this.subject).toString()
-       + "\n     anyCommand is " + new StringDescription().appendValue(this.anyCommand).toString()
-       + "\n     callback is " + new StringDescription().appendValue(this.callback).toString();
+       + "\n     subject is " + new org.hamcrest.StringDescription().appendValue(this.subject).toString()
+       + "\n     anyCommand is " + new org.hamcrest.StringDescription().appendValue(this.anyCommand).toString()
+       + "\n     callback is " + new org.hamcrest.StringDescription().appendValue(this.callback).toString();
     }catch(RuntimeException e){
       expectedException = true;
     }
@@ -113,24 +109,20 @@ public class ConnectorErrorHandlingSpec extends ConnectorSpec {
   @Named("Kills backend process & tcp client if an error occurs")
   @Order(5)
   public void _killsBackendProcessTcpClientIfAnErrorOccurs() throws Exception {
-    final Function1<InvocationOnMock,Object> _function = new Function1<InvocationOnMock,Object>() {
-        public Object apply(final InvocationOnMock it) {
-          Object[] _arguments = it.getArguments();
-          Object _get = ((List<Object>)Conversions.doWrapArray(_arguments)).get(1);
-          final Callback callback = ((Callback) _get);
-          callback.handleError("something happend");
-          return null;
-        }
-      };
-    Stubber _doAnswer = Mockito.doAnswer(new Answer<Object>() {
-        public Object answer(InvocationOnMock invocation) {
-          return _function.apply(invocation);
-        }
-    });
+    final Answer<Object> _function = new Answer<Object>() {
+      public Object answer(final InvocationOnMock it) throws Throwable {
+        Object[] _arguments = it.getArguments();
+        Object _get = _arguments[1];
+        final Callback callback = ((Callback) _get);
+        callback.handleError("something happend");
+        return null;
+      }
+    };
+    Stubber _doAnswer = Mockito.doAnswer(_function);
     Connection _when = _doAnswer.<Connection>when(this.connection);
     Command _any = Matchers.<Command>any();
     Callback _any_1 = Matchers.<Callback>any();
-    _when.sendRequest(_any, _any_1);
+    _when.<Response>sendRequest(_any, _any_1);
     this.subject.<Response>execute(this.anyCommand, this.callback);
     VerificationMode _times = Mockito.times(2);
     BackendStarter _verify = Mockito.<BackendStarter>verify(this.processRunner, _times);

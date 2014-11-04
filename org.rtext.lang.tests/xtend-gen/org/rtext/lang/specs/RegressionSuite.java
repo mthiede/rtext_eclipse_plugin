@@ -25,7 +25,7 @@ import org.rtext.lang.specs.unit.workspace.RTextFileChangeListenerSpec;
 
 @Named("Regression")
 @Contains({ CommandExecutorSpec.class, CommandQueueSpec.class, ConnectorSpec.class, ConnectorConfigSpec.class, ConnectorProviderSpec.class, ConnectorScopeSpec.class, ConvertingCommandsToJSONSpec.class, DefaultConnectorProviderSpec.class, FilesSpec.class, LoadModelCallbackSpec.class, ResponseParserSpec.class, RTextFileChangeListenerSpec.class, RTextFileParserSpec.class, RTextFilesSpec.class, RTextModelParserSpec.class, StringsSpec.class, SyntaxScannerSpec.class, TcpClientSpec.class })
-@SuppressWarnings("all")
 @RunWith(ExampleGroupRunner.class)
+@SuppressWarnings("all")
 public class RegressionSuite {
 }

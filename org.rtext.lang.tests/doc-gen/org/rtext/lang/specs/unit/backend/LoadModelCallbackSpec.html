@@ -40,12 +40,12 @@
 subject.commandSent
 subject.handleResponse(loadedModel)
 
-verify(jobFactory).create(argThat(matches(&quot;problems&quot;)[
+val matcher = matches(&quot;problems&quot;)[Map&lt;IResource, List&lt;Problem&gt;&gt; it | 
   containsKey(resolvedFile1) &amp;&amp;
   containsKey(resolvedFile2) &amp;&amp;
   containsValue(problems1)  &amp;&amp;
-  containsValue(problems2)
-]), eq(connectorScope))</pre>
+  containsValue(problems2) ]
+verify(jobFactory).create(argThat(matcher) as Map&lt;IResource, List&lt;Problem&gt;&gt;, eq(connectorScope))</pre>
 </li><li><p id="schedules_update_job" class="example notrun"><strong>schedules update job</strong></p>
 <pre class="prettyprint lang-spec linenums">
 subject.commandSent
@@ -78,6 +78,9 @@ import static org.jnario.lib.JnarioCollectionLiterals.*
 import static org.jnario.lib.Should.*
 import static org.mockito.Matchers.*
 import static org.mockito.Mockito.*
+import org.eclipse.core.resources.IResource
+import java.util.List
+import java.util.Map
 
 @CreateWith(typeof(MockInjector))
 describe LoadModelCallback {
@@ -123,12 +126,12 @@ describe LoadModelCallback {
     subject.commandSent
     subject.handleResponse(loadedModel)
     
-    verify(jobFactory).create(argThat(matches(&quot;problems&quot;)[
+    val matcher = matches(&quot;problems&quot;)[Map&lt;IResource, List&lt;Problem&gt;&gt; it | 
       containsKey(resolvedFile1) &amp;&amp;
       containsKey(resolvedFile2) &amp;&amp;
       containsValue(problems1)  &amp;&amp;
-      containsValue(problems2)
-    ]), eq(connectorScope))
+      containsValue(problems2) ]
+    verify(jobFactory).create(argThat(matcher) as Map&lt;IResource, List&lt;Problem&gt;&gt;, eq(connectorScope))
   }
   
   fact &quot;schedules update job&quot;{

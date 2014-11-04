@@ -3,7 +3,6 @@ package org.rtext.lang.specs.unit.backend;
 import java.util.List;
 import org.eclipse.xtext.xbase.lib.ObjectExtensions;
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
-import org.hamcrest.StringDescription;
 import org.jnario.lib.Assert;
 import org.jnario.lib.JnarioIterableExtensions;
 import org.jnario.lib.Should;
@@ -18,9 +17,9 @@ import org.rtext.lang.commands.Response;
 import org.rtext.lang.commands.ResponseParser;
 import org.rtext.lang.specs.util.TestCallBack;
 
-@SuppressWarnings("all")
 @Named("ResponseParser")
 @RunWith(ExampleGroupRunner.class)
+@SuppressWarnings("all")
 public class ResponseParserSpec {
   @Subject
   public ResponseParser subject;
@@ -34,19 +33,18 @@ public class ResponseParserSpec {
     this.<Response>parse("{\"type\":\"response\", \"invocation_id\":111, \"problems\":[], \"total_problems\":0}", Response.class);
     Response _response = this.callback.getResponse();
     final Procedure1<Response> _function = new Procedure1<Response>() {
-        public void apply(final Response it) {
-          String _type = it.getType();
-          boolean _doubleArrow = Should.operator_doubleArrow(_type, "response");
-          Assert.assertTrue("\nExpected type => \"response\" but"
-           + "\n     type is " + new StringDescription().appendValue(_type).toString() + "\n", _doubleArrow);
-          
-          int _invocationId = it.getInvocationId();
-          boolean _doubleArrow_1 = Should.operator_doubleArrow(Integer.valueOf(_invocationId), Integer.valueOf(111));
-          Assert.assertTrue("\nExpected invocationId => 111 but"
-           + "\n     invocationId is " + new StringDescription().appendValue(Integer.valueOf(_invocationId)).toString() + "\n", _doubleArrow_1);
-          
-        }
-      };
+      public void apply(final Response it) {
+        String _type = it.getType();
+        boolean _doubleArrow = Should.<String>operator_doubleArrow(_type, "response");
+        Assert.assertTrue("\nExpected type => \"response\" but"
+         + "\n     type is " + new org.hamcrest.StringDescription().appendValue(_type).toString() + "\n", _doubleArrow);
+        
+        int _invocationId = it.getInvocationId();
+        Assert.assertTrue("\nExpected invocationId => 111 but"
+         + "\n     invocationId is " + new org.hamcrest.StringDescription().appendValue(Integer.valueOf(_invocationId)).toString() + "\n", Should.<Integer>operator_doubleArrow(Integer.valueOf(_invocationId), Integer.valueOf(111)));
+        
+      }
+    };
     ObjectExtensions.<Response>operator_doubleArrow(_response, _function);
   }
   
@@ -58,18 +56,17 @@ public class ResponseParserSpec {
     List<Progress> _progress = this.callback.getProgress();
     Progress _first = JnarioIterableExtensions.<Progress>first(_progress);
     final Procedure1<Progress> _function = new Procedure1<Progress>() {
-        public void apply(final Progress it) {
-          boolean _doubleArrow = Should.operator_doubleArrow(it, Progress.class);
-          Assert.assertTrue("\nExpected it => typeof(Progress) but"
-           + "\n     it is " + new StringDescription().appendValue(it).toString() + "\n", _doubleArrow);
-          
-          String _type = it.getType();
-          boolean _doubleArrow_1 = Should.operator_doubleArrow(_type, "progress");
-          Assert.assertTrue("\nExpected type => \"progress\" but"
-           + "\n     type is " + new StringDescription().appendValue(_type).toString() + "\n", _doubleArrow_1);
-          
-        }
-      };
+      public void apply(final Progress it) {
+        boolean _doubleArrow = Should.operator_doubleArrow(it, Progress.class);
+        Assert.assertTrue("\nExpected it => typeof(Progress) but"
+         + "\n     it is " + new org.hamcrest.StringDescription().appendValue(it).toString() + "\n", _doubleArrow);
+        
+        String _type = it.getType();
+        Assert.assertTrue("\nExpected type => \"progress\" but"
+         + "\n     type is " + new org.hamcrest.StringDescription().appendValue(_type).toString() + "\n", Should.<String>operator_doubleArrow(_type, "progress"));
+        
+      }
+    };
     ObjectExtensions.<Progress>operator_doubleArrow(_first, _function);
   }
   
@@ -83,11 +80,9 @@ public class ResponseParserSpec {
   public <T extends Response> TestCallBack<? extends Response> parse(final String input, final Class<T> responseType) {
     TestCallBack<? extends Response> _xblockexpression = null;
     {
-      TestCallBack<T> _testCallBack = new TestCallBack<T>();
-      final TestCallBack<T> callback = _testCallBack;
+      final TestCallBack<T> callback = new TestCallBack<T>();
       this.subject.<T>parse(input, callback, responseType);
-      TestCallBack<? extends Response> _callback = this.callback = callback;
-      _xblockexpression = (_callback);
+      _xblockexpression = this.callback = callback;
     }
     return _xblockexpression;
   }

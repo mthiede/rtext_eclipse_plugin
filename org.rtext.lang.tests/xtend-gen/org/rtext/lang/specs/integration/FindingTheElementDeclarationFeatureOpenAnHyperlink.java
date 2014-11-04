@@ -1,14 +1,12 @@
 package org.rtext.lang.specs.integration;
 
 import java.util.List;
-import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
-import org.hamcrest.StringDescription;
 import org.jnario.lib.Assert;
 import org.jnario.lib.JnarioIterableExtensions;
 import org.jnario.lib.Should;
@@ -28,63 +26,63 @@ public class FindingTheElementDeclarationFeatureOpenAnHyperlink extends FindingT
   @Test
   @Order(0)
   @Named("Given a project \\\"test\\\" linked to \\\"rtext/test/integration/model/\\\"")
-  public void givenAProjectTestLinkedToRtextTestIntegrationModel() {
-    super.givenAProjectTestLinkedToRtextTestIntegrationModel();
+  public void _givenAProjectTestLinkedToRtextTestIntegrationModel() {
+    super._givenAProjectTestLinkedToRtextTestIntegrationModel();
   }
   
   @Test
   @Order(1)
   @Named("And a backend for \\\"rtext/test/integration/model/test_metamodel.ect\\\"")
-  public void andABackendForRtextTestIntegrationModelTestMetamodelEct() {
-    super.andABackendForRtextTestIntegrationModelTestMetamodelEct();
+  public void _andABackendForRtextTestIntegrationModelTestMetamodelEct() {
+    super._andABackendForRtextTestIntegrationModelTestMetamodelEct();
   }
   
   @Test
   @Order(2)
   @Named("And a hyperlink detector")
-  public void andAHyperlinkDetector() {
-    super.andAHyperlinkDetector();
+  public void _andAHyperlinkDetector() {
+    super._andAHyperlinkDetector();
   }
   
   @Test
   @Order(3)
   @Named("Given the model is loaded")
-  public void givenTheModelIsLoaded() {
+  public void _givenTheModelIsLoaded() {
     this.b.loadModel();
   }
   
   @Test
   @Order(4)
   @Named("When I get the hyperlinks for \\\"/StatemachineMM/State\\\"")
-  public void whenIGetTheHyperlinksForStatemachineMMState() {
-    StepArguments _stepArguments = new StepArguments("/StatemachineMM/State");
-    final StepArguments args = _stepArguments;
-    IDocument _document = this.b.getDocument();
+  public void _whenIGetTheHyperlinksForStatemachineMMState() {
+    final StepArguments args = new StepArguments("/StatemachineMM/State");
     String _first = JnarioIterableExtensions.<String>first(args);
     Region _regionOf = this.b.regionOf(_first);
-    IHyperlink[] _detectHyperLinks = this.hyperLinkDetector.detectHyperLinks(_document, _regionOf);
+    IHyperlink[] _detectHyperLinks = this.hyperLinkDetector.detectHyperLinks(this.b.document, _regionOf);
     this.hyperlinks = ((List<IHyperlink>)Conversions.doWrapArray(_detectHyperLinks));
   }
   
   @Test
   @Order(5)
   @Named("Then it opens an editor for \\\"test_metamodel.ect\\\"")
-  public void thenItOpensAnEditorForTestMetamodelEct() {
-    StepArguments _stepArguments = new StepArguments("test_metamodel.ect");
-    final StepArguments args = _stepArguments;
+  public void _thenItOpensAnEditorForTestMetamodelEct() {
+    final StepArguments args = new StepArguments("test_metamodel.ect");
     IHyperlink _head = IterableExtensions.<IHyperlink>head(this.hyperlinks);
     _head.open();
     IWorkbenchPage _activePage = Workbenches.getActivePage();
     IEditorPart _activeEditor = _activePage.getActiveEditor();
-    String _title = _activeEditor==null?(String)null:_activeEditor.getTitle();
+    String _title = null;
+    if (_activeEditor!=null) {
+      _title=_activeEditor.getTitle();
+    }
     String _first = JnarioIterableExtensions.<String>first(args);
-    boolean _should_contain = Should.should_contain(_title, _first);
     Assert.assertTrue("\nExpected Workbenches::activePage.activeEditor?.title should contain args.first but"
-     + "\n     Workbenches::activePage.activeEditor?.title is " + new StringDescription().appendValue(_title).toString()
-     + "\n     Workbenches::activePage.activeEditor is " + new StringDescription().appendValue(_activeEditor).toString()
-     + "\n     Workbenches::activePage is " + new StringDescription().appendValue(_activePage).toString()
-     + "\n     args.first is " + new StringDescription().appendValue(_first).toString()
-     + "\n     args is " + new StringDescription().appendValue(args).toString() + "\n", _should_contain);
+     + "\n     Workbenches::activePage.activeEditor?.title is " + new org.hamcrest.StringDescription().appendValue(_title).toString()
+     + "\n     Workbenches::activePage.activeEditor is " + new org.hamcrest.StringDescription().appendValue(_activeEditor).toString()
+     + "\n     Workbenches::activePage is " + new org.hamcrest.StringDescription().appendValue(_activePage).toString()
+     + "\n     Workbenches is " + new org.hamcrest.StringDescription().appendValue(Workbenches.class).toString()
+     + "\n     args.first is " + new org.hamcrest.StringDescription().appendValue(_first).toString()
+     + "\n     args is " + new org.hamcrest.StringDescription().appendValue(args).toString() + "\n", Should.<Object>should_contain(_title, _first));
     
   }
 }
