@@ -29,7 +29,7 @@ xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLS
 					<configuration>
 						<artifacts>
 							<artifact>
-								<file>juno.target</file>
+								<file>kepler.target</file>
 								<type>target</type>
 								<classifier>juno</classifier>
 							</artifact>
