@@ -1,0 +1,140 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<?metadataRepository version='1.1.0'?>
+<repository name='org.rtext.lang.updatesite' type='org.eclipse.equinox.internal.p2.metadata.repository.LocalMetadataRepository' version='1.0.0'>
+  <properties size='1'>
+    <property name='p2.timestamp' value='1416416474025'/>
+  </properties>
+  <units size='4'>
+    <unit id='201411191701.rtext' version='1.0.0.05-cKp2nh7735A555K5G35'>
+      <properties size='2'>
+        <property name='org.eclipse.equinox.p2.name' value='RText'/>
+        <property name='org.eclipse.equinox.p2.type.category' value='true'/>
+      </properties>
+      <provides size='1'>
+        <provided namespace='org.eclipse.equinox.p2.iu' name='201411191701.rtext' version='1.0.0.05-cKp2nh7735A555K5G35'/>
+      </provides>
+      <requires size='1'>
+        <required namespace='org.eclipse.equinox.p2.iu' name='org.rtext.lang.feature.feature.group' range='[0.3.0.201411191701,0.3.0.201411191701]'/>
+      </requires>
+      <touchpoint id='null' version='0.0.0'/>
+    </unit>
+    <unit id='org.rtext.lang.feature.feature.group' version='0.3.0.201411191701' singleton='false'>
+      <update id='org.rtext.lang.feature.feature.group' range='[0.0.0,0.3.0.201411191701)' severity='0'/>
+      <properties size='8'>
+        <property name='org.eclipse.equinox.p2.name' value='RText Editor'/>
+        <property name='org.eclipse.equinox.p2.description' value='The simple and lightweight DSL toolkit.'/>
+        <property name='org.eclipse.equinox.p2.description.url' value='http://www.rtext-lang.org'/>
+        <property name='org.eclipse.equinox.p2.provider' value='E.S.R. Labs'/>
+        <property name='org.eclipse.equinox.p2.type.group' value='true'/>
+        <property name='maven-groupId' value='org.rtext.lang'/>
+        <property name='maven-artifactId' value='org.rtext.lang.feature'/>
+        <property name='maven-version' value='0.3.0-SNAPSHOT'/>
+      </properties>
+      <provides size='1'>
+        <provided namespace='org.eclipse.equinox.p2.iu' name='org.rtext.lang.feature.feature.group' version='0.3.0.201411191701'/>
+      </provides>
+      <requires size='2'>
+        <required namespace='org.eclipse.equinox.p2.iu' name='org.rtext.lang.editor' range='[0.3.0.201411191701,0.3.0.201411191701]'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='org.rtext.lang.feature.feature.jar' range='[0.3.0.201411191701,0.3.0.201411191701]'>
+          <filter>
+            (org.eclipse.update.install.features=true)
+          </filter>
+        </required>
+      </requires>
+      <touchpoint id='null' version='0.0.0'/>
+      <licenses size='1'>
+        <license uri='http://opensource.org/licenses/MIT' url='http://opensource.org/licenses/MIT'>
+          Permission is hereby granted, free of charge, to any person obtaining&#xA;a copy of this software and associated documentation files (the&#xA;&quot;Software&quot;), to deal in the Software without restriction, including&#xA;without limitation the rights to use, copy, modify, merge, publish,&#xA;distribute, sublicense, and/or sell copies of the Software, and to&#xA;permit persons to whom the Software is furnished to do so, subject to&#xA;the following conditions:&#xA;&#xA;The above copyright notice and this permission notice shall be&#xA;included in all copies or substantial portions of the Software.&#xA;&#xA;THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND,&#xA;EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF&#xA;MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND&#xA;NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE&#xA;LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION&#xA;OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION&#xA;WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+        </license>
+      </licenses>
+      <copyright>
+        Copyright 2012 E.S.R. Labs and other contributors&#xA;http://www.esrlabs.com/
+      </copyright>
+    </unit>
+    <unit id='org.rtext.lang.editor' version='0.3.0.201411191701'>
+      <update id='org.rtext.lang.editor' range='[0.0.0,0.3.0.201411191701)' severity='0'/>
+      <properties size='5'>
+        <property name='org.eclipse.equinox.p2.name' value='RText Editor Plug-in'/>
+        <property name='org.eclipse.equinox.p2.provider' value='E.S.R. Labs'/>
+        <property name='maven-groupId' value='org.rtext.lang'/>
+        <property name='maven-artifactId' value='org.rtext.lang.editor'/>
+        <property name='maven-version' value='0.3.0-SNAPSHOT'/>
+      </properties>
+      <provides size='13'>
+        <provided namespace='org.eclipse.equinox.p2.iu' name='org.rtext.lang.editor' version='0.3.0.201411191701'/>
+        <provided namespace='osgi.bundle' name='org.rtext.lang.editor' version='0.3.0.201411191701'/>
+        <provided namespace='java.package' name='com.google.gson' version='0.0.0'/>
+        <provided namespace='java.package' name='org.rtext.lang' version='0.0.0'/>
+        <provided namespace='java.package' name='org.rtext.lang.backend' version='0.0.0'/>
+        <provided namespace='java.package' name='org.rtext.lang.commands' version='0.0.0'/>
+        <provided namespace='java.package' name='org.rtext.lang.document' version='0.0.0'/>
+        <provided namespace='java.package' name='org.rtext.lang.editor' version='0.0.0'/>
+        <provided namespace='java.package' name='org.rtext.lang.model' version='0.0.0'/>
+        <provided namespace='java.package' name='org.rtext.lang.proposals' version='0.0.0'/>
+        <provided namespace='java.package' name='org.rtext.lang.util' version='0.0.0'/>
+        <provided namespace='java.package' name='org.rtext.lang.workspace' version='0.0.0'/>
+        <provided namespace='org.eclipse.equinox.p2.eclipse.type' name='bundle' version='1.0.0'/>
+      </provides>
+      <requires size='9'>
+        <required namespace='osgi.bundle' name='org.eclipse.ui' range='0.0.0'/>
+        <required namespace='osgi.bundle' name='org.eclipse.core.runtime' range='0.0.0'/>
+        <required namespace='osgi.bundle' name='org.eclipse.ui.editors' range='0.0.0'/>
+        <required namespace='osgi.bundle' name='org.eclipse.jface.text' range='0.0.0'/>
+        <required namespace='osgi.bundle' name='org.eclipse.core.resources' range='0.0.0'/>
+        <required namespace='osgi.bundle' name='org.eclipse.ui.console' range='0.0.0'/>
+        <required namespace='osgi.bundle' name='org.eclipse.core.expressions' range='0.0.0'/>
+        <required namespace='osgi.bundle' name='org.eclipse.ui.ide' range='0.0.0'/>
+        <required namespace='osgi.bundle' name='org.eclipse.ui.views' range='0.0.0'/>
+      </requires>
+      <artifacts size='1'>
+        <artifact classifier='osgi.bundle' id='org.rtext.lang.editor' version='0.3.0.201411191701'/>
+      </artifacts>
+      <touchpoint id='org.eclipse.equinox.p2.osgi' version='1.0.0'/>
+      <touchpointData size='1'>
+        <instructions size='1'>
+          <instruction key='manifest'>
+            Bundle-SymbolicName: org.rtext.lang.editor;singleton:=true&#xA;Bundle-Version: 0.3.0.201411191701
+          </instruction>
+        </instructions>
+      </touchpointData>
+    </unit>
+    <unit id='org.rtext.lang.feature.feature.jar' version='0.3.0.201411191701'>
+      <properties size='7'>
+        <property name='org.eclipse.equinox.p2.name' value='RText Editor'/>
+        <property name='org.eclipse.equinox.p2.description' value='The simple and lightweight DSL toolkit.'/>
+        <property name='org.eclipse.equinox.p2.description.url' value='http://www.rtext-lang.org'/>
+        <property name='org.eclipse.equinox.p2.provider' value='E.S.R. Labs'/>
+        <property name='maven-groupId' value='org.rtext.lang'/>
+        <property name='maven-artifactId' value='org.rtext.lang.feature'/>
+        <property name='maven-version' value='0.3.0-SNAPSHOT'/>
+      </properties>
+      <provides size='3'>
+        <provided namespace='org.eclipse.equinox.p2.iu' name='org.rtext.lang.feature.feature.jar' version='0.3.0.201411191701'/>
+        <provided namespace='org.eclipse.equinox.p2.eclipse.type' name='feature' version='1.0.0'/>
+        <provided namespace='org.eclipse.update.feature' name='org.rtext.lang.feature' version='0.3.0.201411191701'/>
+      </provides>
+      <filter>
+        (org.eclipse.update.install.features=true)
+      </filter>
+      <artifacts size='1'>
+        <artifact classifier='org.eclipse.update.feature' id='org.rtext.lang.feature' version='0.3.0.201411191701'/>
+      </artifacts>
+      <touchpoint id='org.eclipse.equinox.p2.osgi' version='1.0.0'/>
+      <touchpointData size='1'>
+        <instructions size='1'>
+          <instruction key='zipped'>
+            true
+          </instruction>
+        </instructions>
+      </touchpointData>
+      <licenses size='1'>
+        <license uri='http://opensource.org/licenses/MIT' url='http://opensource.org/licenses/MIT'>
+          Permission is hereby granted, free of charge, to any person obtaining&#xA;a copy of this software and associated documentation files (the&#xA;&quot;Software&quot;), to deal in the Software without restriction, including&#xA;without limitation the rights to use, copy, modify, merge, publish,&#xA;distribute, sublicense, and/or sell copies of the Software, and to&#xA;permit persons to whom the Software is furnished to do so, subject to&#xA;the following conditions:&#xA;&#xA;The above copyright notice and this permission notice shall be&#xA;included in all copies or substantial portions of the Software.&#xA;&#xA;THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND,&#xA;EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF&#xA;MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND&#xA;NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE&#xA;LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION&#xA;OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION&#xA;WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+        </license>
+      </licenses>
+      <copyright>
+        Copyright 2012 E.S.R. Labs and other contributors&#xA;http://www.esrlabs.com/
+      </copyright>
+    </unit>
+  </units>
+</repository>
