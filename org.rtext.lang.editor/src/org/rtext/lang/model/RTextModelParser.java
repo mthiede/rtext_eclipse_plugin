@@ -36,7 +36,7 @@ public class RTextModelParser extends AbstractRTextParser<Element> {
 		return result;
 	}
 
-	private void init() {
+	protected void init() {
 		parents = new Stack<ElementBuilder>();
 		roots.clear();
 		current = null;

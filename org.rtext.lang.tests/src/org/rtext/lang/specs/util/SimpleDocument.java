@@ -336,7 +336,11 @@ public class SimpleDocument implements IDocument {
 	 * @see org.eclipse.jface.text.IDocument#getNumberOfLines(int, int)
 	 */
 	public int getNumberOfLines(int offset, int length) {
-		throw new UnsupportedOperationException();
+		try {
+			return tracker.getNumberOfLines(offset, length);
+		} catch (BadLocationException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	/* (non-Javadoc)
@@ -358,8 +362,11 @@ public class SimpleDocument implements IDocument {
 	 * @see org.eclipse.jface.text.IDocument#getLineDelimiter(int)
 	 */
 	public String getLineDelimiter(int line) {
-		throw new UnsupportedOperationException();
-		
+		try {
+			return tracker.getLineDelimiter(line);
+		} catch (BadLocationException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	/**

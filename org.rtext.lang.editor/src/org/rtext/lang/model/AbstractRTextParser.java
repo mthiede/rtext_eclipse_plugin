@@ -24,8 +24,6 @@ public abstract class AbstractRTextParser<T> {
 	private int fTokenStart;
 	private boolean fNewLine = false;
 
-	private boolean fEscapeLineBreak;
-
 	public int getTokenLength() {
 		return fOffset - fTokenStart;
 	}
@@ -139,8 +137,11 @@ public abstract class AbstractRTextParser<T> {
 	private boolean consumeWord() {
 		boolean result = false;
 		char c = readChar();
+		StringBuilder sb = new StringBuilder();
+		sb.append(c);
 		while (isLetterOrDigit(c) || c == '_') {
 			c = readChar();
+			sb.append(c);
 			result = true;
 		}
 		unreadChar();
@@ -200,6 +201,7 @@ public abstract class AbstractRTextParser<T> {
 	private boolean consumeWhitespace() {
 		boolean result = false;
 		char c = readChar();
+		boolean fEscapeLineBreak = false;
 		while (Character.isWhitespace(c) || c == ',' || c == '\\') {
 			if (c == ',' || c == '\\') {
 				fEscapeLineBreak = true;
@@ -277,7 +279,7 @@ public abstract class AbstractRTextParser<T> {
 	public void setRange(IDocument document, int offset, int length) {
 		fNewLine = true;
 		fDocument = document;
-		fOffset = offset;
+		fOffset = 0;
 	}
 
 	protected abstract T createComment();
