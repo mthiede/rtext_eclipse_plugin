@@ -7,16 +7,12 @@
  *******************************************************************************/
 package org.rtext.lang.specs.unit.parser
 
-import org.jnario.lib.Should
-import org.junit.Assert
+import java.util.List
 import org.rtext.lang.model.Element
 import org.rtext.lang.model.RTextModelParser
+import org.rtext.lang.specs.util.SimpleDocument
 
 import static org.rtext.lang.specs.util.IsElement.*
-
-import static extension org.jnario.lib.JnarioIterableExtensions.*
-import java.util.List
-import org.rtext.lang.specs.util.SimpleDocument
 
 describe RTextModelParser {
 	SimpleDocument document
@@ -178,7 +174,6 @@ describe RTextModelParser {
 			"".parse.size => 0
 		}
 	}
-	
 	
 	def fullText(Element element, CharSequence s){
 		document.get(element.position.offset, element.position.length)		

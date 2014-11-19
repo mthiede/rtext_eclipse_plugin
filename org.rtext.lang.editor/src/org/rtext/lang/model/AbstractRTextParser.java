@@ -17,12 +17,14 @@ public abstract class AbstractRTextParser<T> {
 
 	private static final char PATH_SEPARATOR = '/';
 
-	public static final char EOL = (char)0;
+	public static final char EOL = (char) 0;
 
 	private IDocument fDocument;
 	private int fOffset;
 	private int fTokenStart;
 	private boolean fNewLine = false;
+
+	private boolean fEscapeLineBreak;
 
 	public int getTokenLength() {
 		return fOffset - fTokenStart;
@@ -38,51 +40,46 @@ public abstract class AbstractRTextParser<T> {
 			return createEndOfFile();
 		}
 		tokenStart();
-		if(consumeWhitespace()){
+		if (consumeWhitespace()) {
 			result = createDefault();
-		}else if (nextIsChar('#')) {
+		} else if (nextIsChar('#')) {
 			consumeUntilEOL();
 			result = createComment();
-		}else if (nextIsChar('@')) {
+		} else if (nextIsChar('@')) {
 			consumeUntilEOL();
 			result = createAnnotation();
-		}else if (nextIsWordStartCharacter()) {
+		} else if (nextIsWordStartCharacter()) {
 			consumeWord();
 			if (consumeChar(':') && !fNewLine) {
 				result = createLabel();
-			}
-			else if (isReference()) {
+			} else if (isReference()) {
 				result = consumeReference();
-			}
-			else {
+			} else {
 				if (fNewLine) {
 					result = createCommand();
 					fNewLine = false;
-				}
-				else {
+				} else {
 					result = createIdentifier();
 				}
 			}
-		}else if (nextIsDigit())	{
+		} else if (nextIsDigit()) {
 			consumeNumber();
 			result = createNumber();
-		}else if (isReference()) {
+		} else if (isReference()) {
 			result = consumeReference();
-		}else if (nextIsChar('"')) {
+		} else if (nextIsChar('"')) {
 			consumeString();
 			result = createString();
-		}else if (consume("<%")) {
+		} else if (consume("<%")) {
 			consumeEscapedGenerics();
 			result = createGenerics();
-		}else if (nextIsChar('<')) {
+		} else if (nextIsChar('<')) {
 			consumeGenerics();
 			result = createGenerics();
-		}
-		else {
+		} else {
 			if (nextIsChar('{')) {
 				openBlock();
-			}
-			else if (nextIsChar('}')) {
+			} else if (nextIsChar('}')) {
 				closeBlock();
 			}
 			consumeAnyChar();
@@ -95,13 +92,12 @@ public abstract class AbstractRTextParser<T> {
 		consumeUntil("%>");
 	}
 
-
 	private void consumeUntil(String string) {
 		char c = ' ';
-		while(!consume(string) && c != EOL){
+		while (!consume(string) && c != EOL) {
 			c = readChar();
 		}
-		if(c == EOL){
+		if (c == EOL) {
 			unreadChar();
 		}
 	}
@@ -135,7 +131,8 @@ public abstract class AbstractRTextParser<T> {
 	}
 
 	private void consumeDigits() {
-		while (isDigit(readChar()));
+		while (isDigit(readChar()))
+			;
 		unreadChar();
 	}
 
@@ -158,8 +155,7 @@ public abstract class AbstractRTextParser<T> {
 	private boolean consumeChar(char c) {
 		if (readChar() == c) {
 			return true;
-		}
-		else {
+		} else {
 			unreadChar();
 			return false;
 		}
@@ -168,7 +164,7 @@ public abstract class AbstractRTextParser<T> {
 	private void consumeString() {
 		consumeInside('"', '"');
 	}
-	
+
 	private void consumeGenerics() {
 		consumeInside('<', '>');
 	}
@@ -180,7 +176,7 @@ public abstract class AbstractRTextParser<T> {
 			c = readChar();
 		}
 	}
-	
+
 	public void consumeInside(String prefix, String postfix) {
 		consume(prefix);
 		char c = readChar();
@@ -190,9 +186,9 @@ public abstract class AbstractRTextParser<T> {
 	}
 
 	private boolean consume(String string) {
-		for(int i = 0; i < string.length(); i++){
-			if(!consumeChar(string.charAt(i))){
-				for(int j = 0; j < i; j++){
+		for (int i = 0; i < string.length(); i++) {
+			if (!consumeChar(string.charAt(i))) {
+				for (int j = 0; j < i; j++) {
 					unreadChar();
 				}
 				return false;
@@ -204,9 +200,19 @@ public abstract class AbstractRTextParser<T> {
 	private boolean consumeWhitespace() {
 		boolean result = false;
 		char c = readChar();
-		while (Character.isWhitespace(c)) {
-			if (c == '\n') {
-				fNewLine = true;
+		while (Character.isWhitespace(c) || c == ',' || c == '\\') {
+			if (c == ',' || c == '\\') {
+				fEscapeLineBreak = true;
+			} else if (c == '\n') {
+				if (fEscapeLineBreak) {
+					fEscapeLineBreak = false;
+				} else {
+					fNewLine = true;
+				}
+			} else if (Character.isWhitespace(c)) {
+
+			} else {
+				break;
 			}
 			c = readChar();
 			result = true;
@@ -255,8 +261,8 @@ public abstract class AbstractRTextParser<T> {
 		fOffset++;
 		return result;
 	}
-	
-	protected String get(int offset, int length){
+
+	protected String get(int offset, int length) {
 		try {
 			return fDocument.get(offset, length);
 		} catch (BadLocationException e) {
@@ -273,7 +279,7 @@ public abstract class AbstractRTextParser<T> {
 		fDocument = document;
 		fOffset = offset;
 	}
-	
+
 	protected abstract T createComment();
 
 	protected abstract T createLabel();
@@ -289,11 +295,11 @@ public abstract class AbstractRTextParser<T> {
 	protected abstract T createString();
 
 	protected abstract T createDefault();
-	
+
 	protected abstract T createAnnotation();
-	
+
 	protected abstract T createGenerics();
-	
+
 	protected int currentOffset() {
 		return fOffset;
 	}

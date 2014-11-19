@@ -77,40 +77,41 @@ Type name, label: /a/Reference
 <pre class="prettyprint lang-spec linenums">
 '''
 Type name, label: /a/Reference
-'''.scan.get(5) =&gt; LABEL</pre>
+'''.scan.get(4) =&gt; LABEL</pre>
 </li><li><p id="parse_reference" class="example notrun"><strong>parse reference</strong></p>
 <pre class="prettyprint lang-spec linenums">
 '''
 Type name, label: /long/a/Reference
-'''.scan.get(7) =&gt; REFERENCE</pre>
+'''.scan.get(6) =&gt; REFERENCE</pre>
 </li><li><p id="parse_macros" class="example notrun"><strong>parse macros</strong></p>
 <pre class="prettyprint lang-spec linenums">
 '''
 Type name, label: &lt;generic&gt;
-'''.scan.get(7) =&gt; GENERICS</pre>
+'''.scan.get(6) =&gt; GENERICS</pre>
 </li><li><p id="parse_reference_without_leading" class="example notrun"><strong>parse reference without leading '/'</strong></p>
 <pre class="prettyprint lang-spec linenums">
 '''
 Type name, label: a/long/Reference
-'''.scan.get(7) =&gt; REFERENCE</pre>
+'''.scan.get(6) =&gt; REFERENCE</pre>
 </li><li><p id="parse_number" class="example notrun"><strong>parse number</strong></p>
 <pre class="prettyprint lang-spec linenums">
 '''
 Type name, label: 8
-'''.scan.get(7) =&gt; NUMBER</pre>
+'''.scan.get(6) =&gt; NUMBER</pre>
 </li><li><p id="parse_string" class="example notrun"><strong>parse string</strong></p>
 <pre class="prettyprint lang-spec linenums">
-'''
+val string = '''
 Type name, label: &quot;a string&quot;
-'''.scan.get(7) =&gt; STRING</pre>
+'''.scan
+string.get(6) =&gt; STRING</pre>
 </li><li><p id="parse_enum" class="example notrun"><strong>parse enum</strong></p>
 <pre class="prettyprint lang-spec linenums">
 '''
 Type name, label: enum
-'''.scan.get(7) =&gt; IDENTIFIER</pre>
+'''.scan.get(6) =&gt; IDENTIFIER</pre>
 </li><li><p id="parse_whitespace" class="example notrun"><strong>parse whitespace</strong></p>
 <pre class="prettyprint lang-spec linenums">
-&quot;Type name, label: enum\r\n&quot;.scan.fifth =&gt; IDENTIFIER</pre>
+&quot;Type name, label: enum\r\n&quot;.scan.get(6) =&gt; IDENTIFIER</pre>
 </li><li><p id="parse_whitespace_after_command" class="example notrun"><strong>parse whitespace after command</strong></p>
 <pre class="prettyprint lang-spec linenums">
 val input = &quot;Type   &quot;
@@ -118,7 +119,24 @@ input.scan
 assert subject.tokenOffset + subject.tokenLength &lt;= input.length</pre>
 </li><li><p id="parse_string_until_EOL" class="example notrun"><strong>parse string until EOL</strong></p>
 <pre class="prettyprint lang-spec linenums">
-('Type name, label: &quot;a string ' + EOL).scan.get(7) =&gt; STRING</pre>
+('Type name, label: &quot;a string ' + EOL).scan.get(6) =&gt; STRING</pre>
+</li><li><p id="line_breaks_after_comma" class="example notrun"><strong>line breaks after comma</strong></p>
+<pre class="prettyprint lang-spec linenums">
+('''
+Type name,
+label: &quot;a string&quot;
+''').scan.get(6) =&gt; STRING</pre>
+</li><li><p id="line_breaks_after" class="example notrun"><strong>line breaks after ''</strong></p>
+<pre class="prettyprint lang-spec linenums">
+('''
+Type name, label: \ &quot;a string&quot;
+''').scan.get(6) =&gt; STRING</pre>
+</li><li><p id="line_breaks_after_backslash" class="example notrun"><strong>line breaks after backslash</strong></p>
+<pre class="prettyprint lang-spec linenums">
+('''
+Type name, label: \
+ &quot;a string&quot;
+''').scan.get(6) =&gt; STRING</pre>
 </li><li><p id="positions_macros_correctly" class="example notrun"><strong>positions macros correctly</strong></p>
 <pre class="prettyprint lang-spec linenums">
 '''
@@ -172,12 +190,8 @@ import org.rtext.lang.editor.ColorManager
 import org.rtext.lang.editor.SyntaxScanner
 import org.rtext.lang.specs.util.SimpleDocument
 
-import static org.jnario.lib.JnarioCollectionLiterals.*
 import static org.rtext.lang.editor.IColorConstants.*
 import static org.rtext.lang.model.AbstractRTextParser.*
-
-import static extension org.jnario.lib.JnarioIterableExtensions.*
-import static extension org.jnario.lib.Should.*
 
 describe SyntaxScanner {
    
@@ -233,47 +247,48 @@ describe SyntaxScanner {
   fact &quot;parse label&quot;{
     '''
     Type name, label: /a/Reference
-    '''.scan.get(5) =&gt; LABEL
+    '''.scan.get(4) =&gt; LABEL
   }
   
   fact &quot;parse reference&quot;{
     '''
     Type name, label: /long/a/Reference
-    '''.scan.get(7) =&gt; REFERENCE
+    '''.scan.get(6) =&gt; REFERENCE
   }
   
   fact &quot;parse macros&quot;{
     '''
     Type name, label: &lt;generic&gt;
-    '''.scan.get(7) =&gt; GENERICS
+    '''.scan.get(6) =&gt; GENERICS
   }
   
   fact &quot;parse reference without leading '/'&quot;{
     '''
     Type name, label: a/long/Reference
-    '''.scan.get(7) =&gt; REFERENCE
+    '''.scan.get(6) =&gt; REFERENCE
   }
   
   fact &quot;parse number&quot;{
     '''
     Type name, label: 8
-    '''.scan.get(7) =&gt; NUMBER
+    '''.scan.get(6) =&gt; NUMBER
   }
   
   fact &quot;parse string&quot;{
-    '''
+    val string = '''
     Type name, label: &quot;a string&quot;
-    '''.scan.get(7) =&gt; STRING
+    '''.scan
+    string.get(6) =&gt; STRING
   }
   
   fact &quot;parse enum&quot;{
     '''
     Type name, label: enum
-    '''.scan.get(7) =&gt; IDENTIFIER
+    '''.scan.get(6) =&gt; IDENTIFIER
   }
   
   fact &quot;parse whitespace&quot;{
-    &quot;Type name, label: enum\r\n&quot;.scan.fifth =&gt; IDENTIFIER
+    &quot;Type name, label: enum\r\n&quot;.scan.get(6) =&gt; IDENTIFIER
   }
   
   fact &quot;parse whitespace after command&quot;{
@@ -283,9 +298,27 @@ describe SyntaxScanner {
   }
   
   fact &quot;parse string until EOL&quot;{
-    ('Type name, label: &quot;a string ' + EOL).scan.get(7) =&gt; STRING
+    ('Type name, label: &quot;a string ' + EOL).scan.get(6) =&gt; STRING
   }
   
+  fact &quot;line breaks after comma&quot;{
+    ('''
+    Type name,
+    label: &quot;a string&quot;
+    ''').scan.get(6) =&gt; STRING
+  }
+
+  fact &quot;line breaks after '\'&quot;{
+    ('''
+    Type name, label: \ &quot;a string&quot;
+    ''').scan.get(6) =&gt; STRING
+  }
+  fact &quot;line breaks after backslash&quot;{
+    ('''
+    Type name, label: \
+     &quot;a string&quot;
+    ''').scan.get(6) =&gt; STRING
+  }
   fact &quot;positions macros correctly&quot;{
     '''
     EPackage{

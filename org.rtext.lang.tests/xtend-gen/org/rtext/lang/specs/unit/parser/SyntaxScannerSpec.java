@@ -186,9 +186,9 @@ public class SyntaxScannerSpec {
     _builder.append("Type name, label: /a/Reference");
     _builder.newLine();
     List<RGB> _scan = this.scan(_builder);
-    RGB _get = _scan.get(5);
-    Assert.assertTrue("\nExpected \'\'\'\n\t\tType name, label: /a/Reference\n\t\t\'\'\'.scan.get(5) => LABEL but"
-     + "\n     \'\'\'\n\t\tType name, label: /a/Reference\n\t\t\'\'\'.scan.get(5) is " + new org.hamcrest.StringDescription().appendValue(_get).toString()
+    RGB _get = _scan.get(4);
+    Assert.assertTrue("\nExpected \'\'\'\n\t\tType name, label: /a/Reference\n\t\t\'\'\'.scan.get(4) => LABEL but"
+     + "\n     \'\'\'\n\t\tType name, label: /a/Reference\n\t\t\'\'\'.scan.get(4) is " + new org.hamcrest.StringDescription().appendValue(_get).toString()
      + "\n     \'\'\'\n\t\tType name, label: /a/Reference\n\t\t\'\'\'.scan is " + new org.hamcrest.StringDescription().appendValue(_scan).toString()
      + "\n     \'\'\'\n\t\tType name, label: /a/Reference\n\t\t\'\'\' is " + new org.hamcrest.StringDescription().appendValue(_builder).toString()
      + "\n     LABEL is " + new org.hamcrest.StringDescription().appendValue(IColorConstants.LABEL).toString() + "\n", Should.<RGB>operator_doubleArrow(_get, IColorConstants.LABEL));
@@ -203,9 +203,9 @@ public class SyntaxScannerSpec {
     _builder.append("Type name, label: /long/a/Reference");
     _builder.newLine();
     List<RGB> _scan = this.scan(_builder);
-    RGB _get = _scan.get(7);
-    Assert.assertTrue("\nExpected \'\'\'\n\t\tType name, label: /long/a/Reference\n\t\t\'\'\'.scan.get(7) => REFERENCE but"
-     + "\n     \'\'\'\n\t\tType name, label: /long/a/Reference\n\t\t\'\'\'.scan.get(7) is " + new org.hamcrest.StringDescription().appendValue(_get).toString()
+    RGB _get = _scan.get(6);
+    Assert.assertTrue("\nExpected \'\'\'\n\t\tType name, label: /long/a/Reference\n\t\t\'\'\'.scan.get(6) => REFERENCE but"
+     + "\n     \'\'\'\n\t\tType name, label: /long/a/Reference\n\t\t\'\'\'.scan.get(6) is " + new org.hamcrest.StringDescription().appendValue(_get).toString()
      + "\n     \'\'\'\n\t\tType name, label: /long/a/Reference\n\t\t\'\'\'.scan is " + new org.hamcrest.StringDescription().appendValue(_scan).toString()
      + "\n     \'\'\'\n\t\tType name, label: /long/a/Reference\n\t\t\'\'\' is " + new org.hamcrest.StringDescription().appendValue(_builder).toString()
      + "\n     REFERENCE is " + new org.hamcrest.StringDescription().appendValue(IColorConstants.REFERENCE).toString() + "\n", Should.<RGB>operator_doubleArrow(_get, IColorConstants.REFERENCE));
@@ -220,9 +220,9 @@ public class SyntaxScannerSpec {
     _builder.append("Type name, label: <generic>");
     _builder.newLine();
     List<RGB> _scan = this.scan(_builder);
-    RGB _get = _scan.get(7);
-    Assert.assertTrue("\nExpected \'\'\'\n\t\tType name, label: <generic>\n\t\t\'\'\'.scan.get(7) => GENERICS but"
-     + "\n     \'\'\'\n\t\tType name, label: <generic>\n\t\t\'\'\'.scan.get(7) is " + new org.hamcrest.StringDescription().appendValue(_get).toString()
+    RGB _get = _scan.get(6);
+    Assert.assertTrue("\nExpected \'\'\'\n\t\tType name, label: <generic>\n\t\t\'\'\'.scan.get(6) => GENERICS but"
+     + "\n     \'\'\'\n\t\tType name, label: <generic>\n\t\t\'\'\'.scan.get(6) is " + new org.hamcrest.StringDescription().appendValue(_get).toString()
      + "\n     \'\'\'\n\t\tType name, label: <generic>\n\t\t\'\'\'.scan is " + new org.hamcrest.StringDescription().appendValue(_scan).toString()
      + "\n     \'\'\'\n\t\tType name, label: <generic>\n\t\t\'\'\' is " + new org.hamcrest.StringDescription().appendValue(_builder).toString()
      + "\n     GENERICS is " + new org.hamcrest.StringDescription().appendValue(IColorConstants.GENERICS).toString() + "\n", Should.<RGB>operator_doubleArrow(_get, IColorConstants.GENERICS));
@@ -237,9 +237,9 @@ public class SyntaxScannerSpec {
     _builder.append("Type name, label: a/long/Reference");
     _builder.newLine();
     List<RGB> _scan = this.scan(_builder);
-    RGB _get = _scan.get(7);
-    Assert.assertTrue("\nExpected \'\'\'\n\t\tType name, label: a/long/Reference\n\t\t\'\'\'.scan.get(7) => REFERENCE but"
-     + "\n     \'\'\'\n\t\tType name, label: a/long/Reference\n\t\t\'\'\'.scan.get(7) is " + new org.hamcrest.StringDescription().appendValue(_get).toString()
+    RGB _get = _scan.get(6);
+    Assert.assertTrue("\nExpected \'\'\'\n\t\tType name, label: a/long/Reference\n\t\t\'\'\'.scan.get(6) => REFERENCE but"
+     + "\n     \'\'\'\n\t\tType name, label: a/long/Reference\n\t\t\'\'\'.scan.get(6) is " + new org.hamcrest.StringDescription().appendValue(_get).toString()
      + "\n     \'\'\'\n\t\tType name, label: a/long/Reference\n\t\t\'\'\'.scan is " + new org.hamcrest.StringDescription().appendValue(_scan).toString()
      + "\n     \'\'\'\n\t\tType name, label: a/long/Reference\n\t\t\'\'\' is " + new org.hamcrest.StringDescription().appendValue(_builder).toString()
      + "\n     REFERENCE is " + new org.hamcrest.StringDescription().appendValue(IColorConstants.REFERENCE).toString() + "\n", Should.<RGB>operator_doubleArrow(_get, IColorConstants.REFERENCE));
@@ -254,9 +254,9 @@ public class SyntaxScannerSpec {
     _builder.append("Type name, label: 8");
     _builder.newLine();
     List<RGB> _scan = this.scan(_builder);
-    RGB _get = _scan.get(7);
-    Assert.assertTrue("\nExpected \'\'\'\n\t\tType name, label: 8\n\t\t\'\'\'.scan.get(7) => NUMBER but"
-     + "\n     \'\'\'\n\t\tType name, label: 8\n\t\t\'\'\'.scan.get(7) is " + new org.hamcrest.StringDescription().appendValue(_get).toString()
+    RGB _get = _scan.get(6);
+    Assert.assertTrue("\nExpected \'\'\'\n\t\tType name, label: 8\n\t\t\'\'\'.scan.get(6) => NUMBER but"
+     + "\n     \'\'\'\n\t\tType name, label: 8\n\t\t\'\'\'.scan.get(6) is " + new org.hamcrest.StringDescription().appendValue(_get).toString()
      + "\n     \'\'\'\n\t\tType name, label: 8\n\t\t\'\'\'.scan is " + new org.hamcrest.StringDescription().appendValue(_scan).toString()
      + "\n     \'\'\'\n\t\tType name, label: 8\n\t\t\'\'\' is " + new org.hamcrest.StringDescription().appendValue(_builder).toString()
      + "\n     NUMBER is " + new org.hamcrest.StringDescription().appendValue(IColorConstants.NUMBER).toString() + "\n", Should.<RGB>operator_doubleArrow(_get, IColorConstants.NUMBER));
@@ -270,12 +270,11 @@ public class SyntaxScannerSpec {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("Type name, label: \"a string\"");
     _builder.newLine();
-    List<RGB> _scan = this.scan(_builder);
-    RGB _get = _scan.get(7);
-    Assert.assertTrue("\nExpected \'\'\'\n\t\tType name, label: \"a string\"\n\t\t\'\'\'.scan.get(7) => STRING but"
-     + "\n     \'\'\'\n\t\tType name, label: \"a string\"\n\t\t\'\'\'.scan.get(7) is " + new org.hamcrest.StringDescription().appendValue(_get).toString()
-     + "\n     \'\'\'\n\t\tType name, label: \"a string\"\n\t\t\'\'\'.scan is " + new org.hamcrest.StringDescription().appendValue(_scan).toString()
-     + "\n     \'\'\'\n\t\tType name, label: \"a string\"\n\t\t\'\'\' is " + new org.hamcrest.StringDescription().appendValue(_builder).toString()
+    final List<RGB> string = this.scan(_builder);
+    RGB _get = string.get(6);
+    Assert.assertTrue("\nExpected string.get(6) => STRING but"
+     + "\n     string.get(6) is " + new org.hamcrest.StringDescription().appendValue(_get).toString()
+     + "\n     string is " + new org.hamcrest.StringDescription().appendValue(string).toString()
      + "\n     STRING is " + new org.hamcrest.StringDescription().appendValue(IColorConstants.STRING).toString() + "\n", Should.<RGB>operator_doubleArrow(_get, IColorConstants.STRING));
     
   }
@@ -288,9 +287,9 @@ public class SyntaxScannerSpec {
     _builder.append("Type name, label: enum");
     _builder.newLine();
     List<RGB> _scan = this.scan(_builder);
-    RGB _get = _scan.get(7);
-    Assert.assertTrue("\nExpected \'\'\'\n\t\tType name, label: enum\n\t\t\'\'\'.scan.get(7) => IDENTIFIER but"
-     + "\n     \'\'\'\n\t\tType name, label: enum\n\t\t\'\'\'.scan.get(7) is " + new org.hamcrest.StringDescription().appendValue(_get).toString()
+    RGB _get = _scan.get(6);
+    Assert.assertTrue("\nExpected \'\'\'\n\t\tType name, label: enum\n\t\t\'\'\'.scan.get(6) => IDENTIFIER but"
+     + "\n     \'\'\'\n\t\tType name, label: enum\n\t\t\'\'\'.scan.get(6) is " + new org.hamcrest.StringDescription().appendValue(_get).toString()
      + "\n     \'\'\'\n\t\tType name, label: enum\n\t\t\'\'\'.scan is " + new org.hamcrest.StringDescription().appendValue(_scan).toString()
      + "\n     \'\'\'\n\t\tType name, label: enum\n\t\t\'\'\' is " + new org.hamcrest.StringDescription().appendValue(_builder).toString()
      + "\n     IDENTIFIER is " + new org.hamcrest.StringDescription().appendValue(IColorConstants.IDENTIFIER).toString() + "\n", Should.<RGB>operator_doubleArrow(_get, IColorConstants.IDENTIFIER));
@@ -302,11 +301,11 @@ public class SyntaxScannerSpec {
   @Order(16)
   public void _parseWhitespace() throws Exception {
     List<RGB> _scan = this.scan("Type name, label: enum\r\n");
-    RGB _fifth = JnarioIterableExtensions.<RGB>fifth(_scan);
-    Assert.assertTrue("\nExpected \"Type name, label: enum\\r\\n\".scan.fifth => IDENTIFIER but"
-     + "\n     \"Type name, label: enum\\r\\n\".scan.fifth is " + new org.hamcrest.StringDescription().appendValue(_fifth).toString()
+    RGB _get = _scan.get(6);
+    Assert.assertTrue("\nExpected \"Type name, label: enum\\r\\n\".scan.get(6) => IDENTIFIER but"
+     + "\n     \"Type name, label: enum\\r\\n\".scan.get(6) is " + new org.hamcrest.StringDescription().appendValue(_get).toString()
      + "\n     \"Type name, label: enum\\r\\n\".scan is " + new org.hamcrest.StringDescription().appendValue(_scan).toString()
-     + "\n     IDENTIFIER is " + new org.hamcrest.StringDescription().appendValue(IColorConstants.IDENTIFIER).toString() + "\n", Should.<RGB>operator_doubleArrow(_fifth, IColorConstants.IDENTIFIER));
+     + "\n     IDENTIFIER is " + new org.hamcrest.StringDescription().appendValue(IColorConstants.IDENTIFIER).toString() + "\n", Should.<RGB>operator_doubleArrow(_get, IColorConstants.IDENTIFIER));
     
   }
   
@@ -336,9 +335,9 @@ public class SyntaxScannerSpec {
   @Order(18)
   public void _parseStringUntilEOL() throws Exception {
     List<RGB> _scan = this.scan(("Type name, label: \"a string " + Character.valueOf(AbstractRTextParser.EOL)));
-    RGB _get = _scan.get(7);
-    Assert.assertTrue("\nExpected (\'Type name, label: \"a string \' + EOL).scan.get(7) => STRING but"
-     + "\n     \'Type name, label: \"a string \' + EOL).scan.get(7 is " + new org.hamcrest.StringDescription().appendValue(_get).toString()
+    RGB _get = _scan.get(6);
+    Assert.assertTrue("\nExpected (\'Type name, label: \"a string \' + EOL).scan.get(6) => STRING but"
+     + "\n     \'Type name, label: \"a string \' + EOL).scan.get(6 is " + new org.hamcrest.StringDescription().appendValue(_get).toString()
      + "\n     (\'Type name, label: \"a string \' + EOL).scan is " + new org.hamcrest.StringDescription().appendValue(_scan).toString()
      + "\n     \'Type name, label: \"a string \' + EOL is " + new org.hamcrest.StringDescription().appendValue(("Type name, label: \"a string " + Character.valueOf(AbstractRTextParser.EOL))).toString()
      + "\n     EOL is " + new org.hamcrest.StringDescription().appendValue(Character.valueOf(AbstractRTextParser.EOL)).toString()
@@ -347,8 +346,64 @@ public class SyntaxScannerSpec {
   }
   
   @Test
-  @Named("positions macros correctly")
+  @Named("line breaks after comma")
   @Order(19)
+  public void _lineBreaksAfterComma() throws Exception {
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.append("Type name,");
+    _builder.newLine();
+    _builder.append("label: \"a string\"");
+    _builder.newLine();
+    List<RGB> _scan = this.scan(_builder);
+    RGB _get = _scan.get(6);
+    Assert.assertTrue("\nExpected (\'\'\'\n\t\tType name,\n\t\tlabel: \"a string\"\n\t\t\'\'\').scan.get(6) => STRING but"
+     + "\n     \'\'\'\n\t\tType name,\n\t\tlabel: \"a string\"\n\t\t\'\'\').scan.get(6 is " + new org.hamcrest.StringDescription().appendValue(_get).toString()
+     + "\n     (\'\'\'\n\t\tType name,\n\t\tlabel: \"a string\"\n\t\t\'\'\').scan is " + new org.hamcrest.StringDescription().appendValue(_scan).toString()
+     + "\n     \'\'\'\n\t\tType name,\n\t\tlabel: \"a string\"\n\t\t\'\'\' is " + new org.hamcrest.StringDescription().appendValue(_builder).toString()
+     + "\n     STRING is " + new org.hamcrest.StringDescription().appendValue(IColorConstants.STRING).toString() + "\n", Should.<RGB>operator_doubleArrow(_get, IColorConstants.STRING));
+    
+  }
+  
+  @Test
+  @Named("line breaks after \\\'\\\'")
+  @Order(20)
+  public void _lineBreaksAfter() throws Exception {
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.append("Type name, label: \\ \"a string\"");
+    _builder.newLine();
+    List<RGB> _scan = this.scan(_builder);
+    RGB _get = _scan.get(6);
+    Assert.assertTrue("\nExpected (\'\'\'\n\t\tType name, label: \\ \"a string\"\n\t\t\'\'\').scan.get(6) => STRING but"
+     + "\n     \'\'\'\n\t\tType name, label: \\ \"a string\"\n\t\t\'\'\').scan.get(6 is " + new org.hamcrest.StringDescription().appendValue(_get).toString()
+     + "\n     (\'\'\'\n\t\tType name, label: \\ \"a string\"\n\t\t\'\'\').scan is " + new org.hamcrest.StringDescription().appendValue(_scan).toString()
+     + "\n     \'\'\'\n\t\tType name, label: \\ \"a string\"\n\t\t\'\'\' is " + new org.hamcrest.StringDescription().appendValue(_builder).toString()
+     + "\n     STRING is " + new org.hamcrest.StringDescription().appendValue(IColorConstants.STRING).toString() + "\n", Should.<RGB>operator_doubleArrow(_get, IColorConstants.STRING));
+    
+  }
+  
+  @Test
+  @Named("line breaks after backslash")
+  @Order(21)
+  public void _lineBreaksAfterBackslash() throws Exception {
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.append("Type name, label: \\");
+    _builder.newLine();
+    _builder.append(" ");
+    _builder.append("\"a string\"");
+    _builder.newLine();
+    List<RGB> _scan = this.scan(_builder);
+    RGB _get = _scan.get(6);
+    Assert.assertTrue("\nExpected (\'\'\'\n\t\tType name, label: \\\n\t\t \"a string\"\n\t\t\'\'\').scan.get(6) => STRING but"
+     + "\n     \'\'\'\n\t\tType name, label: \\\n\t\t \"a string\"\n\t\t\'\'\').scan.get(6 is " + new org.hamcrest.StringDescription().appendValue(_get).toString()
+     + "\n     (\'\'\'\n\t\tType name, label: \\\n\t\t \"a string\"\n\t\t\'\'\').scan is " + new org.hamcrest.StringDescription().appendValue(_scan).toString()
+     + "\n     \'\'\'\n\t\tType name, label: \\\n\t\t \"a string\"\n\t\t\'\'\' is " + new org.hamcrest.StringDescription().appendValue(_builder).toString()
+     + "\n     STRING is " + new org.hamcrest.StringDescription().appendValue(IColorConstants.STRING).toString() + "\n", Should.<RGB>operator_doubleArrow(_get, IColorConstants.STRING));
+    
+  }
+  
+  @Test
+  @Named("positions macros correctly")
+  @Order(22)
   public void _positionsMacrosCorrectly() throws Exception {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("EPackage{");
@@ -382,7 +437,7 @@ public class SyntaxScannerSpec {
   
   @Test
   @Named("support escaped macros")
-  @Order(20)
+  @Order(23)
   public void _supportEscapedMacros() throws Exception {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("EPackage{");
@@ -416,7 +471,7 @@ public class SyntaxScannerSpec {
   
   @Test
   @Named("support escaped macros without end")
-  @Order(21)
+  @Order(24)
   public void _supportEscapedMacrosWithoutEnd() throws Exception {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("EPackage{");

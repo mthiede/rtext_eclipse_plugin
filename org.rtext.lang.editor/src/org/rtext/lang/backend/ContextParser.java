@@ -26,7 +26,6 @@ public class ContextParser {
 		for (String line : parseContext(offset)) {
 			result.add(line);
 		}
-		 
 		return new DocumentContext(parseContext(offset), getOffsetInLine(offset));		
 	}
 

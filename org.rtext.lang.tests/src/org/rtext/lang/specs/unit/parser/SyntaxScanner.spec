@@ -13,12 +13,8 @@ import org.rtext.lang.editor.ColorManager
 import org.rtext.lang.editor.SyntaxScanner
 import org.rtext.lang.specs.util.SimpleDocument
 
-import static org.jnario.lib.JnarioCollectionLiterals.*
 import static org.rtext.lang.editor.IColorConstants.*
 import static org.rtext.lang.model.AbstractRTextParser.*
-
-import static extension org.jnario.lib.JnarioIterableExtensions.*
-import static extension org.jnario.lib.Should.*
 
 describe SyntaxScanner {
  	
@@ -74,47 +70,48 @@ describe SyntaxScanner {
 	fact "parse label"{
 		'''
 		Type name, label: /a/Reference
-		'''.scan.get(5) => LABEL
+		'''.scan.get(4) => LABEL
 	}
 	
 	fact "parse reference"{
 		'''
 		Type name, label: /long/a/Reference
-		'''.scan.get(7) => REFERENCE
+		'''.scan.get(6) => REFERENCE
 	}
 	
 	fact "parse macros"{
 		'''
 		Type name, label: <generic>
-		'''.scan.get(7) => GENERICS
+		'''.scan.get(6) => GENERICS
 	}
 	
 	fact "parse reference without leading '/'"{
 		'''
 		Type name, label: a/long/Reference
-		'''.scan.get(7) => REFERENCE
+		'''.scan.get(6) => REFERENCE
 	}
 	
 	fact "parse number"{
 		'''
 		Type name, label: 8
-		'''.scan.get(7) => NUMBER
+		'''.scan.get(6) => NUMBER
 	}
 	
 	fact "parse string"{
-		'''
+		val string = '''
 		Type name, label: "a string"
-		'''.scan.get(7) => STRING
+		'''.scan
+		string.get(6) => STRING
 	}
 	
 	fact "parse enum"{
 		'''
 		Type name, label: enum
-		'''.scan.get(7) => IDENTIFIER
+		'''.scan.get(6) => IDENTIFIER
 	}
 	
 	fact "parse whitespace"{
-		"Type name, label: enum\r\n".scan.fifth => IDENTIFIER
+		"Type name, label: enum\r\n".scan.get(6) => IDENTIFIER
 	}
 	
 	fact "parse whitespace after command"{
@@ -124,9 +121,27 @@ describe SyntaxScanner {
 	}
 	
 	fact "parse string until EOL"{
-		('Type name, label: "a string ' + EOL).scan.get(7) => STRING
+		('Type name, label: "a string ' + EOL).scan.get(6) => STRING
 	}
 	
+	fact "line breaks after comma"{
+		('''
+		Type name,
+		label: "a string"
+		''').scan.get(6) => STRING
+	}
+
+	fact "line breaks after '\'"{
+		('''
+		Type name, label: \ "a string"
+		''').scan.get(6) => STRING
+	}
+	fact "line breaks after backslash"{
+		('''
+		Type name, label: \
+		 "a string"
+		''').scan.get(6) => STRING
+	}
 	fact "positions macros correctly"{
 		'''
 		EPackage{
