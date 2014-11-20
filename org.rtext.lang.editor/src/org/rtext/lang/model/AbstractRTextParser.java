@@ -287,19 +287,32 @@ public abstract class AbstractRTextParser<T> {
 	}
 
 	private boolean isNewLine() {
-		try {
-			int line = fDocument.getLineOfOffset(fOffset);
-			if(line == 0){
+		int offset = fOffset;
+		String previousLine = "";
+		while (previousLine.trim().isEmpty()) {
+			previousLine = previousLineAt(offset);
+			if (previousLine == null) {
 				return true;
 			}
+			offset = fOffset - previousLine.length()-1;
+		}
+		return !escapesLineBreak(lastChar(previousLine));
+	}
+
+	private char lastChar(String string) {
+		return string.charAt(string.length() - 1);
+	}
+
+	private String previousLineAt(int offset) {
+		try {
+			int line = fDocument.getLineOfOffset(offset);
 			line--;
 			int lineOffset = fDocument.getLineOffset(line);
 			int lineLength = fDocument.getLineLength(line);
 			String lineText = fDocument.get(lineOffset, lineLength).trim();
-			char lastChar = lineText.charAt(lineText.length()-1);
-			return !escapesLineBreak(lastChar);
+			return lineText;
 		} catch (BadLocationException e) {
-			return true;
+			return null;
 		}
 	}
 
