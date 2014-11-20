@@ -169,6 +169,20 @@ EPackage{
     EOperation{
       EAnnotation source:&lt;%text&gt;text'''.regions.get(12) 
 region =&gt; &quot;&lt;%text&gt;text&quot;</pre>
+</li></ul><h3 class="exampleGroup notrun"  id="incremental_parsing">Incremental parsing</h3>
+<ul><li><p id="after_comma" class="example notrun"><strong>after comma</strong></p>
+<pre class="prettyprint lang-spec linenums">
+'''
+  Type name,
+  |label: &quot;a string&quot;
+'''.incrementalScan.get(0) =&gt; LABEL</pre>
+</li><li><p id="after_comma_with_empty_line" class="example notrun"><strong>after comma with empty line</strong></p>
+<pre class="prettyprint lang-spec linenums">
+'''
+  Type name,
+
+  |label: &quot;a string&quot;
+'''.incrementalScan.get(0) =&gt; LABEL</pre>
 </li></ul>
 							</div>
 						    <div class="tab-pane" id="source">
@@ -353,6 +367,32 @@ describe SyntaxScanner {
           EAnnotation source:&lt;%text&gt;text'''.regions.get(12) 
     region =&gt; &quot;&lt;%text&gt;text&quot;
   } 
+  
+  describe &quot;incremental parsing&quot;{
+    
+        fact &quot;after comma&quot;{
+      '''
+        Type name,
+        |label: &quot;a string&quot;
+      '''.incrementalScan.get(0) =&gt; LABEL
+    }
+
+        fact &quot;after comma with empty line&quot;{
+      '''
+        Type name,
+
+        |label: &quot;a string&quot;
+      '''.incrementalScan.get(0) =&gt; LABEL
+    }
+  }
+  
+  def incrementalScan(CharSequence s){
+    val text = s.toString
+    val offset = text.indexOf(&quot;|&quot;)
+    val document = new SimpleDocument(text.replace(&quot;|&quot;, &quot;&quot;))
+    subject.setRange(document, offset, s.length)
+    return tokens
+  }
 
   def regions(CharSequence s){
     val document = new SimpleDocument(s.toString)
@@ -371,7 +411,11 @@ describe SyntaxScanner {
   def scan(CharSequence s){
     val document = new SimpleDocument(s.toString)
     subject.setRange(document, 0, s.length)
+    return tokens()
     
+  }
+  
+  def tokens(){
     val tokens = &lt;IToken&gt;list
     var token= subject.nextToken()
     while (!token.isEOF()) {
@@ -379,8 +423,7 @@ describe SyntaxScanner {
       token= subject.nextToken()
     }
     tokens.map[
-      val attr = it.data as TextAttribute
-      attr.foreground.RGB
+      (it.data as TextAttribute).foreground.RGB
     ]
   }
 }

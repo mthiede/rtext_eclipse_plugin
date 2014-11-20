@@ -19,6 +19,7 @@ import org.jnario.lib.Assert;
 import org.jnario.lib.JnarioCollectionLiterals;
 import org.jnario.lib.JnarioIterableExtensions;
 import org.jnario.lib.Should;
+import org.jnario.runner.Contains;
 import org.jnario.runner.ExampleGroupRunner;
 import org.jnario.runner.Named;
 import org.jnario.runner.Order;
@@ -29,8 +30,10 @@ import org.rtext.lang.editor.ColorManager;
 import org.rtext.lang.editor.IColorConstants;
 import org.rtext.lang.editor.SyntaxScanner;
 import org.rtext.lang.model.AbstractRTextParser;
+import org.rtext.lang.specs.unit.parser.SyntaxScannerIncrementalParsingSpec;
 import org.rtext.lang.specs.util.SimpleDocument;
 
+@Contains(SyntaxScannerIncrementalParsingSpec.class)
 @Named("SyntaxScanner")
 @RunWith(ExampleGroupRunner.class)
 @SuppressWarnings("all")
@@ -491,6 +494,16 @@ public class SyntaxScannerSpec {
     
   }
   
+  public List<RGB> incrementalScan(final CharSequence s) {
+    final String text = s.toString();
+    final int offset = text.indexOf("|");
+    String _replace = text.replace("|", "");
+    final SimpleDocument document = new SimpleDocument(_replace);
+    int _length = s.length();
+    this.subject.setRange(document, offset, _length);
+    return this.tokens();
+  }
+  
   public List<String> regions(final CharSequence s) {
     List<String> _xblockexpression = null;
     {
@@ -516,12 +529,16 @@ public class SyntaxScannerSpec {
   }
   
   public List<RGB> scan(final CharSequence s) {
+    String _string = s.toString();
+    final SimpleDocument document = new SimpleDocument(_string);
+    int _length = s.length();
+    this.subject.setRange(document, 0, _length);
+    return this.tokens();
+  }
+  
+  public List<RGB> tokens() {
     List<RGB> _xblockexpression = null;
     {
-      String _string = s.toString();
-      final SimpleDocument document = new SimpleDocument(_string);
-      int _length = s.length();
-      this.subject.setRange(document, 0, _length);
       final List<IToken> tokens = JnarioCollectionLiterals.<IToken>list();
       IToken token = this.subject.nextToken();
       while ((!token.isEOF())) {
@@ -533,14 +550,9 @@ public class SyntaxScannerSpec {
       }
       final Function1<IToken, RGB> _function = new Function1<IToken, RGB>() {
         public RGB apply(final IToken it) {
-          RGB _xblockexpression = null;
-          {
-            Object _data = it.getData();
-            final TextAttribute attr = ((TextAttribute) _data);
-            Color _foreground = attr.getForeground();
-            _xblockexpression = _foreground.getRGB();
-          }
-          return _xblockexpression;
+          Object _data = it.getData();
+          Color _foreground = ((TextAttribute) _data).getForeground();
+          return _foreground.getRGB();
         }
       };
       _xblockexpression = ListExtensions.<IToken, RGB>map(tokens, _function);

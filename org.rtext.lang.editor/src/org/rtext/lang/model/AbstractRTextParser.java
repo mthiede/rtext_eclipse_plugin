@@ -201,13 +201,13 @@ public abstract class AbstractRTextParser<T> {
 	private boolean consumeWhitespace() {
 		boolean result = false;
 		char c = readChar();
-		boolean fEscapeLineBreak = false;
-		while (Character.isWhitespace(c) || c == ',' || c == '\\') {
-			if (c == ',' || c == '\\') {
-				fEscapeLineBreak = true;
+		boolean escapeLineBreak = false;
+		while (Character.isWhitespace(c) || escapesLineBreak(c)) {
+			if (escapesLineBreak(c)) {
+				escapeLineBreak = true;
 			} else if (c == '\n') {
-				if (fEscapeLineBreak) {
-					fEscapeLineBreak = false;
+				if (escapeLineBreak) {
+					escapeLineBreak = false;
 				} else {
 					fNewLine = true;
 				}
@@ -221,6 +221,10 @@ public abstract class AbstractRTextParser<T> {
 		}
 		unreadChar();
 		return result;
+	}
+
+	private boolean escapesLineBreak(char c) {
+		return c == ',' || c == '\\';
 	}
 
 	private void consumeUntilEOL() {
@@ -277,9 +281,26 @@ public abstract class AbstractRTextParser<T> {
 	}
 
 	public void setRange(IDocument document, int offset, int length) {
-		fNewLine = true;
 		fDocument = document;
-		fOffset = 0;
+		fOffset = offset;
+		fNewLine = isNewLine();
+	}
+
+	private boolean isNewLine() {
+		try {
+			int line = fDocument.getLineOfOffset(fOffset);
+			if(line == 0){
+				return true;
+			}
+			line--;
+			int lineOffset = fDocument.getLineOffset(line);
+			int lineLength = fDocument.getLineLength(line);
+			String lineText = fDocument.get(lineOffset, lineLength).trim();
+			char lastChar = lineText.charAt(lineText.length()-1);
+			return !escapesLineBreak(lastChar);
+		} catch (BadLocationException e) {
+			return true;
+		}
 	}
 
 	protected abstract T createComment();

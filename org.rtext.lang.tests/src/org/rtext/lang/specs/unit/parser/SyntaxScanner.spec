@@ -176,6 +176,32 @@ describe SyntaxScanner {
 					EAnnotation source:<%text>text'''.regions.get(12) 
 		region => "<%text>text"
 	} 
+	
+	describe "incremental parsing"{
+		
+        fact "after comma"{
+			'''
+				Type name,
+				|label: "a string"
+			'''.incrementalScan.get(0) => LABEL
+		}
+
+        fact "after comma with empty line"{
+			'''
+				Type name,
+
+				|label: "a string"
+			'''.incrementalScan.get(0) => LABEL
+		}
+	}
+	
+	def incrementalScan(CharSequence s){
+		val text = s.toString
+		val offset = text.indexOf("|")
+		val document = new SimpleDocument(text.replace("|", ""))
+		subject.setRange(document, offset, s.length)
+		return tokens
+	}
 
 	def regions(CharSequence s){
 		val document = new SimpleDocument(s.toString)
@@ -194,7 +220,11 @@ describe SyntaxScanner {
 	def scan(CharSequence s){
 		val document = new SimpleDocument(s.toString)
 		subject.setRange(document, 0, s.length)
+		return tokens()
 		
+	}
+	
+	def tokens(){
 		val tokens = <IToken>list
 		var token= subject.nextToken()
 		while (!token.isEOF()) {
@@ -202,8 +232,7 @@ describe SyntaxScanner {
 			token= subject.nextToken()
 		}
 		tokens.map[
-			val attr = it.data as TextAttribute
-			attr.foreground.RGB
+			(it.data as TextAttribute).foreground.RGB
 		]
 	}
 } 
