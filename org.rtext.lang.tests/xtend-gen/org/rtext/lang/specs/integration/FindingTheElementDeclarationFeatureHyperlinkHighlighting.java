@@ -1,15 +1,10 @@
 package org.rtext.lang.specs.integration;
 
 import java.util.List;
-import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.xtext.xbase.lib.Conversions;
-import org.eclipse.xtext.xbase.lib.Exceptions;
-import org.eclipse.xtext.xbase.lib.IterableExtensions;
-import org.jnario.lib.Assert;
 import org.jnario.lib.JnarioIterableExtensions;
-import org.jnario.lib.Should;
 import org.jnario.lib.StepArguments;
 import org.jnario.runner.FeatureRunner;
 import org.jnario.runner.Named;
@@ -65,26 +60,9 @@ public class FindingTheElementDeclarationFeatureHyperlinkHighlighting extends Fi
   @Order(5)
   @Named("Then the hyperlink text is \\\"/StatemachineMM/State\\\"")
   public void _thenTheHyperlinkTextIsStatemachineMMState() {
-    try {
-      final StepArguments args = new StepArguments("/StatemachineMM/State");
-      IHyperlink _head = IterableExtensions.<IHyperlink>head(this.hyperlinks);
-      final IRegion region = _head.getHyperlinkRegion();
-      int _offset = region.getOffset();
-      int _length = region.getLength();
-      String _get = this.b.document.get(_offset, _length);
-      String _first = JnarioIterableExtensions.<String>first(args);
-      Assert.assertTrue("\nExpected b.document.get(region.offset, region.length) => args.first but"
-       + "\n     b.document.get(region.offset, region.length) is " + new org.hamcrest.StringDescription().appendValue(_get).toString()
-       + "\n     b.document is " + new org.hamcrest.StringDescription().appendValue(this.b.document).toString()
-       + "\n     b is " + new org.hamcrest.StringDescription().appendValue(this.b).toString()
-       + "\n     region.offset is " + new org.hamcrest.StringDescription().appendValue(_offset).toString()
-       + "\n     region is " + new org.hamcrest.StringDescription().appendValue(region).toString()
-       + "\n     region.length is " + new org.hamcrest.StringDescription().appendValue(_length).toString()
-       + "\n     args.first is " + new org.hamcrest.StringDescription().appendValue(_first).toString()
-       + "\n     args is " + new org.hamcrest.StringDescription().appendValue(args).toString() + "\n", Should.<String>operator_doubleArrow(_get, _first));
-      
-    } catch (Throwable _e) {
-      throw Exceptions.sneakyThrow(_e);
-    }
+    throw new Error("Unresolved compilation problems:"
+      + "\nThe method or field hyperlinks is undefined for the type Scenario: Hyperlink highlighting\n"
+      + "\nThe method or field b is undefined for the type Scenario: Hyperlink highlighting\n"
+      + "\nAmbiguous feature call.\nThe extension methods\n\t<T> first(Iterable<T>) in JnarioIterableExtensions and\n\t<T> first(Iterator<T>) in JnarioIteratorExtensions\nboth match.");
   }
 }

@@ -4,10 +4,7 @@ import java.util.List;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.xtext.xbase.lib.Conversions;
-import org.eclipse.xtext.xbase.lib.IterableExtensions;
-import org.jnario.lib.Assert;
 import org.jnario.lib.JnarioIterableExtensions;
-import org.jnario.lib.Should;
 import org.jnario.lib.StepArguments;
 import org.jnario.runner.FeatureRunner;
 import org.jnario.runner.Named;
@@ -45,7 +42,8 @@ public class FindingTheElementDeclarationFeatureDisconnectedBackend extends Find
   @Order(3)
   @Named("Given the backend is disconnected")
   public void _givenTheBackendIsDisconnected() {
-    this.b.connector.disconnect();
+    throw new Error("Unresolved compilation problems:"
+      + "\nThe method or field b is undefined for the type Scenario: Disconnected backend\n");
   }
   
   @Test
@@ -63,16 +61,8 @@ public class FindingTheElementDeclarationFeatureDisconnectedBackend extends Find
   @Order(5)
   @Named("Then the hyperlink message is \\\"model not yet loaded\\\"")
   public void _thenTheHyperlinkMessageIsModelNotYetLoaded() {
-    final StepArguments args = new StepArguments("model not yet loaded");
-    IHyperlink _head = IterableExtensions.<IHyperlink>head(this.hyperlinks);
-    String _hyperlinkText = _head.getHyperlinkText();
-    String _first = JnarioIterableExtensions.<String>first(args);
-    Assert.assertTrue("\nExpected hyperlinks.head.hyperlinkText => args.first but"
-     + "\n     hyperlinks.head.hyperlinkText is " + new org.hamcrest.StringDescription().appendValue(_hyperlinkText).toString()
-     + "\n     hyperlinks.head is " + new org.hamcrest.StringDescription().appendValue(_head).toString()
-     + "\n     hyperlinks is " + new org.hamcrest.StringDescription().appendValue(this.hyperlinks).toString()
-     + "\n     args.first is " + new org.hamcrest.StringDescription().appendValue(_first).toString()
-     + "\n     args is " + new org.hamcrest.StringDescription().appendValue(args).toString() + "\n", Should.<String>operator_doubleArrow(_hyperlinkText, _first));
-    
+    throw new Error("Unresolved compilation problems:"
+      + "\nThe method or field hyperlinks is undefined for the type Scenario: Disconnected backend\n"
+      + "\nAmbiguous feature call.\nThe extension methods\n\t<T> first(Iterable<T>) in JnarioIterableExtensions and\n\t<T> first(Iterator<T>) in JnarioIteratorExtensions\nboth match.");
   }
 }
