@@ -94,14 +94,14 @@ describe ContextParser {
 			'''
 				A {
 				  B {
-				    C name,a1: v1,a2: "v2"|
+				    C name,      a1: v1,        a2: "v2"|
 			''',
 			'''
 				A {
 				  B {
 				    C name,
-				      a1: v1,
-				      a2: "v2"|
+      a1: v1,  
+      a2: "v2"|
 			''')
 	}
 
@@ -110,17 +110,17 @@ describe ContextParser {
 			'''
 				A {
 				  B {
-				    C name,a1: [v1,v2],a2: |5
+				    C name,	a1: [         v1,        v2      ],      a2: |5
 			''',
 			'''
 				A {
 				  B {
 				    C name,
-				      a1: [   
-				        v1,
-				        v2
-				      ], 
-				      a2: |5
+	a1: [ 
+        v1,
+        v2
+      ], 
+      a2: |5
 			''')
 	}
 
@@ -128,7 +128,7 @@ describe ContextParser {
 		assert_context(
 			'''
 				A {
-				  B name,|
+				  B name,				    |
 			''',
 			'''
 				A {
@@ -141,7 +141,7 @@ describe ContextParser {
 		assert_context(
 			'''
 				A {
-				  B name,|
+				  B name,				 |
 			''',
 			'''
 				A {
@@ -154,13 +154,13 @@ describe ContextParser {
 		assert_context(
 			'''
 				A {
-				  B name,a1: |
+				  B name, 	  a1: |
 			''',
 			'''
 				A {
 				  B name, 
-				
-				  a1: |
+ 	
+  a1: |
 			''')
 	}
 
@@ -187,7 +187,7 @@ describe ContextParser {
 	
 	fact "test_line_break"{
 		assert_context('''
-		EPackage StatemachineMM,  cnsURI: "",|''',
+		EPackage StatemachineMM,  cnsURI: "",		|''',
 		'''
 		EPackage StatemachineMM,  cnsURI: "", 
 		|

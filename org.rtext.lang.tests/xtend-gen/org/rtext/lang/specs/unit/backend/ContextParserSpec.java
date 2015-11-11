@@ -209,7 +209,7 @@ public class ContextParserSpec {
     _builder.append("B {");
     _builder.newLine();
     _builder.append("    ");
-    _builder.append("C name,a1: v1,a2: \"v2\"|");
+    _builder.append("C name,      a1: v1,        a2: \"v2\"|");
     _builder.newLine();
     StringConcatenation _builder_1 = new StringConcatenation();
     _builder_1.append("A {");
@@ -221,7 +221,7 @@ public class ContextParserSpec {
     _builder_1.append("C name,");
     _builder_1.newLine();
     _builder_1.append("      ");
-    _builder_1.append("a1: v1,");
+    _builder_1.append("a1: v1,  ");
     _builder_1.newLine();
     _builder_1.append("      ");
     _builder_1.append("a2: \"v2\"|");
@@ -240,7 +240,7 @@ public class ContextParserSpec {
     _builder.append("B {");
     _builder.newLine();
     _builder.append("    ");
-    _builder.append("C name,a1: [v1,v2],a2: |5");
+    _builder.append("C name,      a1: [           v1,        v2      ],       a2: |5");
     _builder.newLine();
     StringConcatenation _builder_1 = new StringConcatenation();
     _builder_1.append("A {");
@@ -277,7 +277,7 @@ public class ContextParserSpec {
     _builder.append("A {");
     _builder.newLine();
     _builder.append("  ");
-    _builder.append("B name,|");
+    _builder.append("B name,    |");
     _builder.newLine();
     StringConcatenation _builder_1 = new StringConcatenation();
     _builder_1.append("A {");
@@ -299,7 +299,7 @@ public class ContextParserSpec {
     _builder.append("A {");
     _builder.newLine();
     _builder.append("  ");
-    _builder.append("B name,|");
+    _builder.append("B name, |");
     _builder.newLine();
     StringConcatenation _builder_1 = new StringConcatenation();
     _builder_1.append("A {");
@@ -321,7 +321,7 @@ public class ContextParserSpec {
     _builder.append("A {");
     _builder.newLine();
     _builder.append("  ");
-    _builder.append("B name,a1: |");
+    _builder.append("B name,   a1: |");
     _builder.newLine();
     StringConcatenation _builder_1 = new StringConcatenation();
     _builder_1.append("A {");
@@ -387,7 +387,7 @@ public class ContextParserSpec {
   @Order(11)
   public void _testLineBreak() throws Exception {
     StringConcatenation _builder = new StringConcatenation();
-    _builder.append("EPackage StatemachineMM,  cnsURI: \"\",|");
+    _builder.append("EPackage StatemachineMM,  cnsURI: \"\", |");
     StringConcatenation _builder_1 = new StringConcatenation();
     _builder_1.append("EPackage StatemachineMM,  cnsURI: \"\", ");
     _builder_1.newLine();
