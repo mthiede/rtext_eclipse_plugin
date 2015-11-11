@@ -44,7 +44,7 @@
 <repository location="http://download.eclipse.org/releases/kepler/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.jdt.junit.runners.feature.feature.group" version="0.1.0.201409011002"/>
+<unit id="org.eclipse.jdt.junit.runners.feature.feature.group" version="0.1.0.201411181552"/>
 <repository location="http://meysholdt.github.io/eclipse_jdt_junit_runners/updatesite/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
@@ -55,10 +55,10 @@
 <repository location="http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.jnario.m2e.feature.group" version="1.1.0.201410281546"/>
-<unit id="org.jnario.ui.feature.group" version="1.1.0.201410281546"/>
-<unit id="org.jnario.sdk.feature.group" version="1.1.0.201410281546"/>
-<unit id="org.jnario.feature.group" version="1.1.0.201410281546"/>
+<unit id="org.jnario.m2e.feature.group" version="1.1.0.201411251333"/>
+<unit id="org.jnario.ui.feature.group" version="1.1.0.201411251333"/>
+<unit id="org.jnario.sdk.feature.group" version="1.1.0.201411251333"/>
+<unit id="org.jnario.feature.group" version="1.1.0.201411251333"/>
 <repository location="http://jnario.org/updates/snapshot"/>
 </location>
 </locations>
