@@ -2,6 +2,8 @@ package org.rtext.lang.backend;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 
 import org.rtext.lang.util.Strings;
 
@@ -10,14 +12,16 @@ public class DocumentContext {
 	public static final DocumentContext INVALID = DocumentContext.create(0);
 	private List<String> parseContext;
 	private int column;
+	private Set<Integer> lineBreaks;
 
 	public static DocumentContext create(int column, String... parseContext) {
-		return new DocumentContext(Arrays.asList(parseContext), column);
+		return new DocumentContext(Arrays.asList(parseContext), column, new HashSet<Integer>());
 	}
 
-	public DocumentContext(List<String> parseContext, int column) {
+	public DocumentContext(List<String> parseContext, int column, Set<Integer> lineBreaks) {
 		this.parseContext = parseContext;
 		this.column = column;
+		this.lineBreaks = lineBreaks;
 	}
 
 	public int getColumn() {
@@ -26,6 +30,10 @@ public class DocumentContext {
 
 	public List<String> getParseContext() {
 		return parseContext;
+	}
+
+	public Set<Integer> getLineBreaks() {
+		return lineBreaks;
 	}
 
 	@Override

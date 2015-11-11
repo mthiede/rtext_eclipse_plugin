@@ -11,6 +11,9 @@ import static org.rtext.lang.util.Workbenches.getActivePage;
 
 import java.util.List;
 import java.util.Vector;
+import java.util.Set;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
@@ -36,14 +39,16 @@ public class HyperlinkDetector implements IHyperlinkDetector {
 		private IRegion region;
 		private IDocument document;
 		private IHyperlink[] result = null;
+		private Set<Integer> lineBreaks;
 
-		public ReferenceTargetsHandler(IDocument document, IRegion region) {
+		public ReferenceTargetsHandler(IDocument document, IRegion region, Set<Integer> lineBreaks) {
 			this.document = document;
 			this.region = region;
+			this.lineBreaks = lineBreaks;
 		}
 
 		public void handleResult(ReferenceTargets referenceTargets) {
-			result = createHyperlinks(document, region, referenceTargets);
+			result = createHyperlinks(document, region, referenceTargets, lineBreaks);
 		}
 
 		public void handle(String message) {
@@ -53,6 +58,7 @@ public class HyperlinkDetector implements IHyperlinkDetector {
 	}
 
 	private CommandExecutor commandExecutor;
+	private static final Pattern WORD = Pattern.compile("\\w+");
 
 	public HyperlinkDetector(CommandExecutor commandExecutor) {
 		this.commandExecutor = commandExecutor;
@@ -66,7 +72,7 @@ public class HyperlinkDetector implements IHyperlinkDetector {
 	public IHyperlink[] detectHyperLinks(IDocument document, IRegion region) {
 		DocumentContext context = createContext(document, region);
 		Command<ReferenceTargets> command = new ReferenceTargetsCommand(context);
-		ReferenceTargetsHandler executionHandler = new ReferenceTargetsHandler(document, region);
+		ReferenceTargetsHandler executionHandler = new ReferenceTargetsHandler(document, region, context.getLineBreaks());
 		commandExecutor.run(command, executionHandler);
 		return executionHandler.result;
 	}
@@ -79,8 +85,9 @@ public class HyperlinkDetector implements IHyperlinkDetector {
 		return new ContextParser(document).getContext(region.getOffset());
 	}
 	
-	private IHyperlink[] createHyperlinks(IDocument document, IRegion region, ReferenceTargets referenceTargets) {
-		Region hyperLinkRegion = createHyperLinkRegion(document, region, referenceTargets);
+	private IHyperlink[] createHyperlinks(IDocument document, IRegion region, ReferenceTargets referenceTargets,
+			Set<Integer> lineBreaks) {
+		Region hyperLinkRegion = createHyperLinkRegion(document, region, referenceTargets, lineBreaks);
 		if (referenceTargets.getTargets().isEmpty()) {
 			return null;
 		}
@@ -95,14 +102,34 @@ public class HyperlinkDetector implements IHyperlinkDetector {
 		return links.toArray(new IHyperlink[0]);
 	}
 
-	private Region createHyperLinkRegion(IDocument document, IRegion region, ReferenceTargets referenceTargets) {
+	private Region createHyperLinkRegion(IDocument document, IRegion region, ReferenceTargets referenceTargets,
+			Set<Integer> lineBreaks) {
+		if (referenceTargets.getTargets().size() == 0) {
+			return new Region(0, 0);
+		}
 		int endColumn  = referenceTargets.getBeginColumn();
 		int beginColumn = referenceTargets.getEndColumn();
 		try {
 			int line = document.getLineOfOffset(region.getOffset());
 			int lineOffset = document.getLineOffset(line);
-			int offset = lineOffset + beginColumn - 1;
 			int length = endColumn - beginColumn + 1;
+			int offset = lineOffset + beginColumn - 1;
+			/* current line is after a linebreak, need to substract part from the offset
+			 * which belongs to the previous line(s) */
+			if (lineBreaks.contains(line)) {
+				int lineLength = document.getLineLength(line);
+				String s = document.get(lineOffset, lineLength);
+				/* find beginning of the link */
+				Matcher m = WORD.matcher(s);
+				offset -= (beginColumn - 1);
+				int prevStart = 0;
+				while (m.find() && (region.getOffset() > (offset + length))) {
+					/* there is text (labels or other links) earlier in the line before this one,
+					 * scroll ahead until we are until we are within the currently selected link */
+					offset += (m.start() - prevStart);
+					prevStart = m.start();
+				}
+			}
 			return new Region(offset, length);
 		} catch (BadLocationException e) {
 			return new Region(0, 0);
