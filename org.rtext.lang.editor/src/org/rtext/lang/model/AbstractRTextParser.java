@@ -48,7 +48,7 @@ public abstract class AbstractRTextParser<T> {
 			result = createAnnotation();
 		} else if (nextIsWordStartCharacter()) {
 			consumeWord();
-			if (consumeChar(':') && !fNewLine) {
+			if (consumeChar(':')) {
 				result = createLabel();
 			} else if (isReference()) {
 				result = consumeReference();
@@ -224,7 +224,7 @@ public abstract class AbstractRTextParser<T> {
 	}
 
 	private boolean escapesLineBreak(char c) {
-		return c == ',' || c == '\\';
+		return c == ',' || c == '\\' || c == '[';
 	}
 
 	private void consumeUntilEOL() {
