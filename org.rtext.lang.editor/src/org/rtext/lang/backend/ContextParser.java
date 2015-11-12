@@ -144,7 +144,7 @@ public class ContextParser {
 		Integer lineind = 0;
 		while (lines.size() > 0) {
 			Integer lbind = lineind++;
-			outlines.add(lines.remove(0));
+			outlines.add(rstrip(lines.remove(0)));
 			String last = last(outlines);
 			while (lines.size() > 0
 					&& (LINE_BREAK.matcher(last).matches() ||
