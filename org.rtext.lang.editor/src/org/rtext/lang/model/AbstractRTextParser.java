@@ -291,7 +291,7 @@ public abstract class AbstractRTextParser<T> {
 		String previousLine = "";
 		while (previousLine.trim().isEmpty()) {
 			previousLine = previousLineAt(offset);
-			if (previousLine == null) {
+			if ((previousLine == null) || previousLine.isEmpty()) {
 				return true;
 			}
 			offset = fOffset - previousLine.length()-1;

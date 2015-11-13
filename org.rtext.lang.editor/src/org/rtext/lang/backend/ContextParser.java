@@ -81,6 +81,10 @@ public class ContextParser {
 		for (int i = 0; i < lines.size(); i++) {
 			String l = lines.get(i);
 			if (l.isEmpty()) {
+				if (result.isEmpty() || !last(result).isEmpty()) {
+					// skip multiple empty lines
+					unshift(result, l);
+				}
 				continue;
 			}
 			if (i == 0) {
