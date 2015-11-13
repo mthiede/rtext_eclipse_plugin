@@ -50,7 +50,6 @@ public class CodeCompletionFeatureProposalSignalsBackendCurrentlyLoading extends
   @Order(1)
   @Named("And the backend is busy")
   public void _andTheBackendIsBusy() {
-    this.b.busy();
   }
   
   @Test
@@ -88,7 +87,7 @@ public class CodeCompletionFeatureProposalSignalsBackendCurrentlyLoading extends
   @Order(3)
   @Named("Then the proposals should be")
   public void _thenTheProposalsShouldBe() {
-    final StepArguments args = new StepArguments("loading model\n");
+    final StepArguments args = new StepArguments("model not yet loaded\n");
     String _first = JnarioIterableExtensions.<String>first(args);
     String _trim = _first.trim();
     String[] _split = _trim.split("\r?\n");

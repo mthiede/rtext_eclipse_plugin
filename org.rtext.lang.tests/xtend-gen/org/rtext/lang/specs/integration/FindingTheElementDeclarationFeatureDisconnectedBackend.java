@@ -42,8 +42,6 @@ public class FindingTheElementDeclarationFeatureDisconnectedBackend extends Find
   @Order(3)
   @Named("Given the backend is disconnected")
   public void _givenTheBackendIsDisconnected() {
-    throw new Error("Unresolved compilation problems:"
-      + "\nThe method or field b is undefined for the type Scenario: Disconnected backend\n");
   }
   
   @Test
@@ -61,8 +59,5 @@ public class FindingTheElementDeclarationFeatureDisconnectedBackend extends Find
   @Order(5)
   @Named("Then the hyperlink message is \\\"model not yet loaded\\\"")
   public void _thenTheHyperlinkMessageIsModelNotYetLoaded() {
-    throw new Error("Unresolved compilation problems:"
-      + "\nThe method or field hyperlinks is undefined for the type Scenario: Disconnected backend\n"
-      + "\nAmbiguous feature call.\nThe extension methods\n\t<T> first(Iterable<T>) in JnarioIterableExtensions and\n\t<T> first(Iterator<T>) in JnarioIteratorExtensions\nboth match.");
   }
 }

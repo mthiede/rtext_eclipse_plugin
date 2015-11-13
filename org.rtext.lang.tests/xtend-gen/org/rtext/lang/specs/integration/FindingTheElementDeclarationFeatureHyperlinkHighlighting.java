@@ -60,9 +60,5 @@ public class FindingTheElementDeclarationFeatureHyperlinkHighlighting extends Fi
   @Order(5)
   @Named("Then the hyperlink text is \\\"/StatemachineMM/State\\\"")
   public void _thenTheHyperlinkTextIsStatemachineMMState() {
-    throw new Error("Unresolved compilation problems:"
-      + "\nThe method or field hyperlinks is undefined for the type Scenario: Hyperlink highlighting\n"
-      + "\nThe method or field b is undefined for the type Scenario: Hyperlink highlighting\n"
-      + "\nAmbiguous feature call.\nThe extension methods\n\t<T> first(Iterable<T>) in JnarioIterableExtensions and\n\t<T> first(Iterator<T>) in JnarioIteratorExtensions\nboth match.");
   }
 }

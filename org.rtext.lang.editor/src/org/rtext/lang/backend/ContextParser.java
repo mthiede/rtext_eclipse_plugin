@@ -3,8 +3,8 @@ package org.rtext.lang.backend;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
-import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.eclipse.jface.text.BadLocationException;
@@ -69,7 +69,7 @@ public class ContextParser {
 	 */
 	private DocumentContext extract(List<String> lines, int pos) {
 		lines = filter_lines(lines);
-		Pair<Pair<List<String>, Integer>, Set<Integer>> joined = join_lines(lines, pos);
+		Pair<Pair<List<String>, Integer>, Map<Integer, Integer>> joined = join_lines(lines, pos);
 		lines = joined.first.first;
 		int new_pos = joined.first.second;
 		int non_ignored_lines = 0;
@@ -78,20 +78,25 @@ public class ContextParser {
 		int last_element_line = 0;
 		List<String> result = new ArrayList<String>();
 		Collections.reverse(lines);
+		boolean prevEmpty = false;
 		for (int i = 0; i < lines.size(); i++) {
 			String l = lines.get(i);
-			if (l.isEmpty()) {
-				if (result.isEmpty() || !last(result).isEmpty()) {
+			String l_rstrip = rstrip(l);
+			if (l_rstrip.isEmpty()) {
+				if (result.isEmpty() || !prevEmpty) {
 					// skip multiple empty lines
 					unshift(result, l);
+					prevEmpty = true;
 				}
 				continue;
+			} else {
+				prevEmpty = false;
 			}
 			if (i == 0) {
 				unshift(result, l);
 			} else {
 				non_ignored_lines += 1;
-				char last = l.charAt(l.length() - 1);
+				char last = l_rstrip.charAt(l_rstrip.length() - 1);
 				if (last == '{') {
 					if (block_nesting > 0) {
 						block_nesting -= 1;
@@ -142,13 +147,13 @@ public class ContextParser {
 	 * correct even if the cursor is after the end of the last line # (i.e. with
 	 * whitespace after the last non-whitespace character)
 	 */
-	public Pair<Pair<List<String>, Integer>, Set<Integer>> join_lines(List<String> lines, int pos) {
+	public Pair<Pair<List<String>, Integer>, Map<Integer, Integer>> join_lines(List<String> lines, int pos) {
 		List<String> outlines = new ArrayList<String>();
-		Set<Integer> lineBreaks = new HashSet<Integer>();
+		Map<Integer, Integer> lineBreaks = new HashMap<Integer, Integer>();
 		Integer lineind = 0;
 		while (lines.size() > 0) {
 			Integer lbind = lineind++;
-			outlines.add(rstrip(lines.remove(0)));
+			outlines.add(lines.remove(0));
 			String last = last(outlines);
 			while (lines.size() > 0
 					&& (LINE_BREAK.matcher(last).matches() ||
@@ -157,10 +162,6 @@ public class ContextParser {
 						 (OPEN_BRACKET_ENDLINE.matcher(last).matches() ||
 						  (CLOSE_BRACKET.matcher(first(lines)).matches() &&
 						   OPEN_BRACKET.matcher(last).matches()))))) {
-				/* use preincrement, because lineBreaks represents the line that is after the linebreak,
-				 * ie. in the next line */
-				lineBreaks.add(++lbind);
-				++lineind;
 				String l = shift(lines);
 				if (lines.size() == 0) {
 					/*
@@ -169,7 +170,17 @@ public class ContextParser {
 					 */
 					pos = last.length() + pos;
 				}
-				outlines.add(outlines.remove((outlines.size() - 1)).replaceAll("\\\\", "") + l);
+				String toAdd = outlines.remove((outlines.size() - 1));
+				int len_orig = toAdd.length();
+				toAdd = toAdd.replaceAll("\\\\", "");
+				/* lineBreaks contains information about which line are after a linebreak (thus preincrement)
+				 * and what is their offset in the joined line; this is needed later for link highlighting
+				 * again in the broken line
+				 * NOTE: size of the backslash must be subtracted */
+				lineBreaks.put(++lbind, last.length() - (len_orig - toAdd.length()));
+				++lineind;
+
+				outlines.add(toAdd + l);
 				last = last(outlines);
 			}
 		}

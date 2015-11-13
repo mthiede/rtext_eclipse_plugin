@@ -11,7 +11,7 @@ import static org.rtext.lang.util.Workbenches.getActivePage;
 
 import java.util.List;
 import java.util.Vector;
-import java.util.Set;
+import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
@@ -39,9 +39,9 @@ public class HyperlinkDetector implements IHyperlinkDetector {
 		private IRegion region;
 		private IDocument document;
 		private IHyperlink[] result = null;
-		private Set<Integer> lineBreaks;
+		private Map<Integer, Integer> lineBreaks;
 
-		public ReferenceTargetsHandler(IDocument document, IRegion region, Set<Integer> lineBreaks) {
+		public ReferenceTargetsHandler(IDocument document, IRegion region, Map<Integer, Integer> lineBreaks) {
 			this.document = document;
 			this.region = region;
 			this.lineBreaks = lineBreaks;
@@ -86,7 +86,7 @@ public class HyperlinkDetector implements IHyperlinkDetector {
 	}
 	
 	private IHyperlink[] createHyperlinks(IDocument document, IRegion region, ReferenceTargets referenceTargets,
-			Set<Integer> lineBreaks) {
+			Map<Integer, Integer> lineBreaks) {
 		Region hyperLinkRegion = createHyperLinkRegion(document, region, referenceTargets, lineBreaks);
 		if (referenceTargets.getTargets().isEmpty()) {
 			return null;
@@ -103,7 +103,7 @@ public class HyperlinkDetector implements IHyperlinkDetector {
 	}
 
 	private Region createHyperLinkRegion(IDocument document, IRegion region, ReferenceTargets referenceTargets,
-			Set<Integer> lineBreaks) {
+			Map<Integer, Integer> lineBreaks) {
 		if (referenceTargets.getTargets().size() == 0) {
 			return new Region(0, 0);
 		}
@@ -113,22 +113,13 @@ public class HyperlinkDetector implements IHyperlinkDetector {
 			int line = document.getLineOfOffset(region.getOffset());
 			int lineOffset = document.getLineOffset(line);
 			int length = endColumn - beginColumn + 1;
-			int offset = lineOffset + beginColumn - 1;
-			/* current line is after a linebreak, need to substract part from the offset
+			int offset;
+			/* current line is after a linebreak, need to subtract part from the offset
 			 * which belongs to the previous line(s) */
-			if (lineBreaks.contains(line)) {
-				int lineLength = document.getLineLength(line);
-				String s = document.get(lineOffset, lineLength);
-				/* find beginning of the link */
-				Matcher m = WORD.matcher(s);
-				offset -= (beginColumn - 1);
-				int prevStart = 0;
-				while (m.find() && (region.getOffset() > (offset + length))) {
-					/* there is text (labels or other links) earlier in the line before this one,
-					 * scroll ahead until we are until we are within the currently selected link */
-					offset += (m.start() - prevStart);
-					prevStart = m.start();
-				}
+			if (lineBreaks.containsKey(line)) {
+				offset = lineOffset + (beginColumn - lineBreaks.get(line)) - 1;
+			} else {
+				offset = lineOffset + beginColumn - 1;
 			}
 			return new Region(offset, length);
 		} catch (BadLocationException e) {
@@ -139,5 +130,4 @@ public class HyperlinkDetector implements IHyperlinkDetector {
 	public static IHyperlinkDetector create(Connected connected) {
 		return new HyperlinkDetector(CommandExecutor.create(connected));
 	}
-
 }
