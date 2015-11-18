@@ -14,6 +14,7 @@ import org.eclipse.jface.text.DocumentCommand;
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.Region;
 import org.eclipse.swt.custom.VerifyKeyListener;
 import org.eclipse.swt.events.VerifyEvent;
 import org.rtext.lang.document.DocumentUtil;
@@ -24,6 +25,7 @@ public abstract class AbstractEditStrategy  implements IAutoEditStrategy, Verify
 	private String rightTerminal;
 	private boolean skipNext = false;
 	protected DocumentUtil util = new DocumentUtil();
+	private static final int MAX_SIZE = 4000;
 	
 	protected abstract void internalCustomizeDocumentCommand(IDocument document,
 			DocumentCommand command) throws BadLocationException;
@@ -85,6 +87,9 @@ public abstract class AbstractEditStrategy  implements IAutoEditStrategy, Verify
 	protected IRegion findStopTerminal(IDocument document, int offset) throws BadLocationException {
 		int stopOffset = offset;
 		int startOffset = offset;
+		if (document.getNumberOfLines() > MAX_SIZE) {
+			return new Region(0,1); // auto indentation works, auto closing brackets only when opening a new bracket for a new command
+		}
 		while (true) {
 			IRegion stop = util.searchInSamePartition(getRightTerminal(), document, stopOffset);
 			if (stop==null)
@@ -104,6 +109,9 @@ public abstract class AbstractEditStrategy  implements IAutoEditStrategy, Verify
 	protected IRegion findStartTerminal(IDocument document, int offset) throws BadLocationException {
 		int stopOffset = offset;
 		int startOffset = offset;
+		if (document.getNumberOfLines() > (MAX_SIZE * 2)) {
+			return null; // this breaks auto-indentation of newlines (closing brackets will still be added when opening)
+		}
 		while(true) {
 			IRegion start = util.searchBackwardsInSamePartition(getLeftTerminal(), document, startOffset);
 			if (start==null)
