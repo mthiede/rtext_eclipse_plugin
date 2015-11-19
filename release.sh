@@ -5,7 +5,7 @@ echo "release version:"
 read version
 echo "next version:"
 read nextversion
-echo "Releasing $version"
+echo "Releasing $nextversion"
 
 #pull the latest state from the repository
 git pull --rebase
