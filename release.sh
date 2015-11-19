@@ -1,3 +1,4 @@
+#!/bin/sh
 set -e
 timestamp=$(date +%Y%m%d%H%M)
 echo "preparing release"
