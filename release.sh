@@ -2,9 +2,9 @@
 set -e
 timestamp=$(date +%Y%m%d%H%M)
 echo "preparing release"
-echo "release version:"
+echo "previous version:"
 read version
-echo "next version:"
+echo "release version:"
 read nextversion
 echo "Releasing $nextversion"
 
@@ -15,7 +15,7 @@ git pull --rebase
 mvn clean verify
 
 #create release branch
-git branch rb-$version
+git branch rb-$nextversion
 
 #change the releng/update-site/category.xml file. Replace <version>.qualifier by <version+1>
 sed -i "s/$version/$nextversion/g" org.rtext.lang.update-site/category.xml
@@ -28,14 +28,12 @@ git commit -s -a -m "new version $nextversion-SNAPSHOT"
 git push
 
 #checkout the release branch
-git checkout rb-$version
+git checkout rb-$nextversion
 
 #pick release BUILDQUALIFIER (eg, 20100924-1107) and update release branch to the release version
-mvn -Dtycho.mode=maven org.eclipse.tycho:tycho-versions-plugin:set-version -DnewVersion=$version.$timestamp
-  
-#commit and tag your changes
-git commit -s -a -m "new release $version"
-git tag v$version
-git push --tags  origin master
+mvn -Dtycho.mode=maven org.eclipse.tycho:tycho-versions-plugin:set-version -DnewVersion=$nextversion.$timestamp
 
-exit 1
+#commit and tag your changes
+git commit -s -a -m "new release $nextversion"
+git tag v$nextversion
+git push --tags origin master
