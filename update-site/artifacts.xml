@@ -2,7 +2,7 @@
 <?artifactRepository version='1.1.0'?>
 <repository name='org.rtext.lang.updatesite' type='org.eclipse.equinox.p2.artifact.repository.simpleRepository' version='1'>
   <properties size='2'>
-    <property name='p2.timestamp' value='1416490888704'/>
+    <property name='p2.timestamp' value='1447943114745'/>
     <property name='publishPackFilesAsSiblings' value='true'/>
   </properties>
   <mappings size='5'>
@@ -13,20 +13,20 @@
     <rule filter='(&amp; (classifier=org.eclipse.update.feature))' output='${repoUrl}/features/${id}_${version}.jar'/>
   </mappings>
   <artifacts size='2'>
-    <artifact classifier='org.eclipse.update.feature' id='org.rtext.lang.feature' version='0.3.0.201411201341'>
+    <artifact classifier='org.eclipse.update.feature' id='org.rtext.lang.feature' version='0.3.0.201511191425'>
       <properties size='6'>
-        <property name='artifact.size' value='3332'/>
-        <property name='download.size' value='3332'/>
+        <property name='artifact.size' value='3337'/>
+        <property name='download.size' value='3337'/>
         <property name='maven-groupId' value='org.rtext.lang'/>
         <property name='maven-artifactId' value='org.rtext.lang.feature'/>
         <property name='maven-version' value='0.3.0-SNAPSHOT'/>
         <property name='download.contentType' value='application/zip'/>
       </properties>
     </artifact>
-    <artifact classifier='osgi.bundle' id='org.rtext.lang.editor' version='0.3.0.201411201341'>
+    <artifact classifier='osgi.bundle' id='org.rtext.lang.editor' version='0.3.0.201511191425'>
       <properties size='5'>
-        <property name='artifact.size' value='351351'/>
-        <property name='download.size' value='351351'/>
+        <property name='artifact.size' value='358107'/>
+        <property name='download.size' value='358107'/>
         <property name='maven-groupId' value='org.rtext.lang'/>
         <property name='maven-artifactId' value='org.rtext.lang.editor'/>
         <property name='maven-version' value='0.3.0-SNAPSHOT'/>
