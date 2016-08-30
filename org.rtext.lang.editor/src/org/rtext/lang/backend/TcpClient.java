@@ -59,14 +59,18 @@ public class TcpClient implements Connection {
 
 		protected <T extends Response> void receiveResponse(Task<T> task)
 				throws IOException {
-			boolean responseReceived = false;
-			while (!responseReceived) {
-				int messageLength = readMessageLength();
-				String message = readMessage(messageLength);
-				responseReceived = responseParser.parse(message, task.callback,	task.command.getResponseType());
-				if(responseReceived){
-					listener.messageReceived(message);
+			try {
+				boolean responseReceived = false;
+				while (!responseReceived) {
+					int messageLength = readMessageLength();
+					String message = readMessage(messageLength);
+					responseReceived = responseParser.parse(message, task.callback,	task.command.getResponseType());
+					if(responseReceived){
+						listener.messageReceived(message);
+					}
 				}
+			} catch (NumberFormatException e) {
+				throw new IOException("Invalid response: can't read message length", e);
 			}
 		}
 

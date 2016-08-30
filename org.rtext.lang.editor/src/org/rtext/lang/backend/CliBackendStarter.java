@@ -24,6 +24,7 @@ import java.util.concurrent.TimeoutException;
 import org.rtext.lang.editor.RTextConsole;
 import org.rtext.lang.util.Condition;
 import org.rtext.lang.util.Exceptions;
+import org.rtext.lang.backend.OutputHandler;
 
 public final class CliBackendStarter implements BackendStarter {
 	
@@ -173,5 +174,14 @@ public final class CliBackendStarter implements BackendStarter {
 
 	public static BackendStarter create(ConnectorConfig connectorConfig) {
 		return new CliBackendStarter(new PortParser(), connectorConfig, new RTextConsole(connectorConfig));
+	}
+	
+	@SuppressWarnings("unused")
+	private static class StdoutOutputWriter implements OutputHandler {
+
+		public void handle(String string) {
+			System.out.println(string);			
+		}
+		
 	}
 }
