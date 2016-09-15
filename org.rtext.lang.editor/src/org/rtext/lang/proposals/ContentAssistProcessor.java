@@ -12,6 +12,8 @@ import static java.util.Arrays.asList;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
@@ -66,6 +68,7 @@ public class ContentAssistProcessor implements IContentAssistProcessor, IComplet
 	private static final String ERROR_REPLACEMENT_STRING = "";
 	private static final IContextInformation[] NO_CONTEXTS = {};
 	private static final char[] PROPOSAL_ACTIVATION_CHARS = { ':', '/', ',' };
+	private static final Pattern CURSOR_POSITION_PATTERN = Pattern.compile("\\|\\d*(\\|[a-zA-Z]*(\\|[^\\|]+)?)?\\|");
 
 	private ImageHelper imageHelper;
 	private CommandExecutor commandExecutor;
@@ -94,7 +97,7 @@ public class ContentAssistProcessor implements IContentAssistProcessor, IComplet
 			Option option = options.get(i);
 			String replacementString = option.getInsert();
 			if (filterCompletionOption(replacementString, wordStart)) {
-				result.add(createProposal(prefix, wordStart, wordStartOffset, option));
+				result.add(createProposal(prefix, wordStart, wordStartOffset, option, document, offset));
 			}
 		}
 		return result.toArray(new ICompletionProposal[result.size()]);
@@ -109,20 +112,45 @@ public class ContentAssistProcessor implements IContentAssistProcessor, IComplet
 		return prefix;
 	}
 
-	protected CompletionProposal createProposal(String prefix, String wordStart, int wordStartOffset, Option option) {
+	protected CompletionProposal createProposal(String prefix, String wordStart, int wordStartOffset, Option option, IDocument document, int offset) {
 		String replacementString = option.getInsert();
 		Image image = imageHelper.getImage("element.gif");
 		if(wordStart.length() == 0 && (prefix.equals(":") || prefix.equals(","))){
 			replacementString = " " + replacementString;
 		}
+		String display = option.getDisplay();
+		int cursorPosition = replacementString.length();
+		
+		// Handle cursor positions
+		Matcher matcher = CURSOR_POSITION_PATTERN.matcher(replacementString);
+		int previousEndOffset = 0;
+		StringBuilder newReplacementStringBuilder = new StringBuilder();
+		while (matcher.find()) {
+			newReplacementStringBuilder.append(replacementString.substring(previousEndOffset, matcher.start()));
+			String cursorPositionGroup = matcher.group(1);
+			if (cursorPositionGroup != null) {
+				String cursorPositionNumber = cursorPositionGroup.split(Pattern.quote("|"))[0];
+				if (cursorPositionNumber.isEmpty() || Integer.parseInt(cursorPositionNumber) == 1) {
+					cursorPosition = newReplacementStringBuilder.length();
+				}
+			} else {
+				cursorPosition = newReplacementStringBuilder.length();
+			}
+			previousEndOffset = matcher.end();
+		}
+		newReplacementStringBuilder.append(replacementString.substring(previousEndOffset, replacementString.length()));
+		replacementString = newReplacementStringBuilder.toString();
+		
 		return new CompletionProposal(replacementString, wordStartOffset,
-				wordStart.length(), replacementString.length(), image,
-				option.getDisplay(), new ContextInformation(
-						option.getDisplay(), ""), null);
+				wordStart.length(), cursorPosition, image,
+				display, new ContextInformation(display, ""), null);
 	}
 
 	private boolean filterCompletionOption(String option, String wordStart) {
 		if (option.length() == 0) {
+			return true;
+		}
+		if (option.contains("|")) {
 			return true;
 		}
 		if(option.startsWith("\"") && !wordStart.startsWith("\"")){

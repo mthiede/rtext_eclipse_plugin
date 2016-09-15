@@ -10,6 +10,7 @@ package org.rtext.lang.editor;
 import java.net.MalformedURLException;
 import java.util.ResourceBundle;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.action.Action;
@@ -95,6 +96,13 @@ public class RTextEditor extends TextEditor implements Connected{
 
 	protected void editorSaved() {
 		super.editorSaved();
+	}
+	
+	@Override
+	protected void doSetInput(IEditorInput input) throws CoreException {
+		super.doSetInput(input);
+		// Ensure connected and ready to serve requests
+		connectorProvider.get(currentConfig()).connect();
 	}
 	
 	private IPath getInputPath() {

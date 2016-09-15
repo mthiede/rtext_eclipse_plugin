@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 public class Strings {
 	private static final Pattern COMMAND_PATTERN = Pattern
 			.compile("[^\\s\"']+|\"([^\"]*)\"|'([^']*)'");
-
+	
 	public static String[] splitCommand(String s) {
 		List<String> matchList = new ArrayList<String>();
 		Matcher regexMatcher = COMMAND_PATTERN.matcher(s);

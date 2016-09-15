@@ -14,6 +14,7 @@ public class Command<T extends Response> {
 	private static int COMMAND_COUNTER = 0;
 	private final String type;
 	private final String command;
+	private final int version = 1;
 	@SerializedName("invocation_id") private final int invocationId;
 	private transient Class<T> responseType;
 	
@@ -47,6 +48,10 @@ public class Command<T extends Response> {
 	
 	public Class<T> getResponseType(){
 		return responseType;
+	}
+	
+	public int getVersion() {
+		return version;
 	}
 
 	@Override
