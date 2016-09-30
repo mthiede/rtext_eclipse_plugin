@@ -10,7 +10,6 @@ import org.rtext.lang.specs.unit.backend.ConnectorConfigSpec;
 import org.rtext.lang.specs.unit.backend.ConnectorProviderSpec;
 import org.rtext.lang.specs.unit.backend.ConnectorSpec;
 import org.rtext.lang.specs.unit.backend.ContextParserSpec;
-import org.rtext.lang.specs.unit.backend.ConvertingCommandsToJSONSpec;
 import org.rtext.lang.specs.unit.backend.DefaultConnectorProviderSpec;
 import org.rtext.lang.specs.unit.backend.LoadModelCallbackSpec;
 import org.rtext.lang.specs.unit.backend.RTextFileParserSpec;
@@ -25,7 +24,7 @@ import org.rtext.lang.specs.unit.workspace.ConnectorScopeSpec;
 import org.rtext.lang.specs.unit.workspace.RTextFileChangeListenerSpec;
 
 @Named("Regression")
-@Contains({ CommandExecutorSpec.class, CommandQueueSpec.class, ConnectorSpec.class, ConnectorConfigSpec.class, ConnectorProviderSpec.class, ConnectorScopeSpec.class, ContextParserSpec.class, ConvertingCommandsToJSONSpec.class, DefaultConnectorProviderSpec.class, FilesSpec.class, LoadModelCallbackSpec.class, ResponseParserSpec.class, RTextFileChangeListenerSpec.class, RTextFileParserSpec.class, RTextFilesSpec.class, RTextModelParserSpec.class, StringsSpec.class, SyntaxScannerSpec.class, TcpClientSpec.class })
+@Contains({ CommandExecutorSpec.class, CommandQueueSpec.class, ConnectorSpec.class, ConnectorConfigSpec.class, ConnectorProviderSpec.class, ConnectorScopeSpec.class, ContextParserSpec.class, DefaultConnectorProviderSpec.class, FilesSpec.class, LoadModelCallbackSpec.class, ResponseParserSpec.class, RTextFileChangeListenerSpec.class, RTextFileParserSpec.class, RTextFilesSpec.class, RTextModelParserSpec.class, StringsSpec.class, SyntaxScannerSpec.class, TcpClientSpec.class })
 @RunWith(ExampleGroupRunner.class)
 @SuppressWarnings("all")
 public class RegressionSuite {
